@@ -8,7 +8,7 @@ namespace
 {
 const int explosionTimerMax = 5;
 const int safeTimerMax = 10;
-const float baseBlastPower = 5.0f;
+const float baseBlastPower = 0.0f;
 const int bombAliveTimerMax = 60;
 
 }

@@ -139,7 +139,7 @@ void GameScene::TitleUpdate()
 
 	bombs.KingCollision(&king);
 
-	if (Player::GetPlayer()->IsDetonatingTrigger()) { bombs.Explosion(); }
+	//if (Player::GetPlayer()->IsDetonatingTrigger()) { bombs.Explosion(); }
 
 	Player::GetPlayer()->Update(bombs.GetBombAlive());
 	//KingSample::king.GetModel().Update();

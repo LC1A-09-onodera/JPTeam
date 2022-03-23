@@ -9,14 +9,22 @@
 
 Player::Player()
 {
-	XMFLOAT3 pos = { 0,0,0 };
-	XMFLOAT3 vec3 = { 0,0,0 };
-	int activeCount = 0;
-	int invincibleCount = 0;
-	bool isActive = true;
-	bool isInvincible = false;
-	bool isShoot = false;
-	bool isDetonating = false;
+	pos = { 0,0,0 };			//プレイヤーの座標
+	vec3 = { 0,0,0 };			//向いている方向（正規化済）
+	hitEnemypos = { 0,0,0 };	//当たった敵の座標
+	hitBombpos = { 0,0,0 };		//爆風が当たった時の爆弾の座標
+	lastVec3 = { 0,0,0 };		//最後に向いていた方向
+	activeCount = 0;			//行動不能カウント
+	invincibleCount = 0;		//無敵カウント
+	hp = MAX_HP;				//playerのHP
+	bombForce = 0.0f;			//ボムの力保存用
+	enemyForce = 0.0f;			//敵の力保存用
+	isActive = true;			//行動できるかどうか
+	isHitBomb = false;			//ボムに当たって飛ばされてるかどうか
+	isHitEnemy = false;			//敵に当たって飛ばされてるかどうか
+	isInvincible = false;		//無敵かどうか
+	isShoot = false;			//射撃中かどうか（弾があるか）
+	isDetonating = false;		//起爆したかどうか
 }
 
 Player::~Player()
@@ -39,11 +47,12 @@ void Player::Init()
 	vec3 = { 0,0,0 };			//向いている方向（正規化済）
 	hitEnemypos = { 0,0,0 };	//当たった敵の座標
 	hitBombpos = { 0,0,0 };		//爆風が当たった時の爆弾の座標
-	lastVec3 = { 0,0,1 };		//最後に向いていた方向
+	lastVec3 = { 0,0,0 };		//最後に向いていた方向
 	activeCount = 0;			//行動不能カウント
 	invincibleCount = 0;		//無敵カウント
-	bombForce = 0;				//ボムの力保存用
-	enemyForce = 0;				//敵の力保存用
+	hp = MAX_HP;				//playerのHP
+	bombForce = 0.0f;			//ボムの力保存用
+	enemyForce = 0.0f;			//敵の力保存用
 	isActive = true;			//行動できるかどうか
 	isHitBomb = false;			//ボムに当たって飛ばされてるかどうか
 	isHitEnemy = false;			//敵に当たって飛ばされてるかどうか
@@ -55,6 +64,12 @@ void Player::Init()
 //更新
 void Player::Update(bool isBombAlive)
 {
+	/*HPリセット*/
+	if (Input::KeyTrigger(DIK_R)) { Init(); }
+
+	/*HP判定*/
+	if (!CheakHP()) { return; }
+
 	/*移動*/
 	CheakIsInput();
 	//行動可能かつ吹っ飛んでなければ
@@ -70,7 +85,7 @@ void Player::Update(bool isBombAlive)
 	CheakHitEnemy();
 
 	/*自機が穴に当たった時の判定*/
-	CheakHitHole();
+	//CheakHitHole();
 
 	/*自機が周りの線に当たった時の判定*/
 	CheakHitDeathLine();
@@ -118,6 +133,8 @@ void Player::HitBomb(const float& BombForce, XMFLOAT3 bombPos)
 
 		//吹っ飛び中にする
 		isHitBomb = true;
+
+		hp--;
 	}
 }
 
@@ -219,6 +236,7 @@ void Player::CheakHitEnemy()
 
 		//当たったら行動不能にする
 		hitEnemypos = itr->GetPosition();
+		hp--;
 		isActive = false;
 		break;
 	}
@@ -257,14 +275,19 @@ void Player::CheakHitHole()
 
 void Player::CheakHitDeathLine()
 {
-	if (pos.x > Imgui::dethLine ||
+	/*if (pos.x > Imgui::dethLine ||
 		pos.x < -Imgui::dethLine ||
 		pos.z > Imgui::dethLine ||
 		pos.z < -Imgui::dethLine)
 	{
 		pos = { 0,0,0 };
 		isActive = false;
-	}
+	}*/
+
+	if (pos.x > Imgui::dethLine) { pos.x = Imgui::dethLine; }
+	if (pos.x < -Imgui::dethLine) { pos.x = -Imgui::dethLine; }
+	if (pos.z > Imgui::dethLine) { pos.z = Imgui::dethLine; }
+	if (pos.z < -Imgui::dethLine) { pos.z = -Imgui::dethLine; }
 }
 
 void Player::CalcActiveCount()

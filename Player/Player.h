@@ -34,7 +34,9 @@ private:
 	const int MAX_STAN_COUNT = 30;			//行動不能フレーム
 	const int MAX_INVICIBLE_COUNT = 30;		//無敵フレーム
 
-	const float MAX_ENEMY_FORCE = 4.0f;		//敵と当たった時に吹っ飛ぶ力（10.0->9.0->8.0,,,,）
+	const int MAX_HP = 5;
+
+	const float MAX_ENEMY_FORCE = 0.0f;		//敵と当たった時に吹っ飛ぶ力（10.0->9.0->8.0,,,,）
 
 	const float RESISTANCE_VALUE = 1.0f;	//Forceを減算する定数
 	const float MINIMUM_FORCE = 2.0f;		//数値以下になったら強制的にForceを0にする
@@ -48,6 +50,7 @@ private:
 	XMFLOAT3 lastVec3;		//最後に向いていた方向
 	int activeCount;		//行動不能カウント
 	int invincibleCount;	//無敵カウント
+	int hp;					//playerのHP
 	float bombForce;		//ボムの力保存用
 	float enemyForce;		//敵の力保存用
 	bool isActive;			//行動できるかどうか
@@ -119,4 +122,6 @@ private:
 		if (r < diff) { return false; }
 		else { return true; }
 	}
+
+	bool CheakHP() { if (hp <= 0) { return false; } return true; }
 };
