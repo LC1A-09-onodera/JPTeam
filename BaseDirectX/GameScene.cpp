@@ -96,11 +96,11 @@ void GameScene::Init()
 	{
 		if (rand() % 2 == 0)
 		{
-			Enemys::AddEnemy(EnemyType::NONE);
+			Enemys::AddEnemy(EnemyType::NONE, EnemyMoveDirection::RIGHT);
 		}
 		else
 		{
-			Enemys::AddEnemy(EnemyType::SUPER);
+			Enemys::AddEnemy(EnemyType::SUPER, EnemyMoveDirection::HATE);
 		}
 	}
 	king.Init();
@@ -143,7 +143,7 @@ void GameScene::TitleUpdate()
 
 	Player::GetPlayer()->Update(bombs.GetBombAlive());
 	//KingSample::king.GetModel().Update();
-	Enemys::Update(king);
+	Enemys::Update(Player::GetPlayer()->GetPos());
 	bombs.Update();
 	Holes::Update();
 	king.Update();
