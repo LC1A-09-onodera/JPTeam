@@ -19,6 +19,15 @@ enum class Target
 	CROWN,
 };
 
+enum class EnemyMoveDirection
+{
+	RIGHT,
+	LEFT,
+	UP,
+	BOTTOM,
+	HATE,
+};
+
 class EnemyModel : public Model
 {
 
@@ -36,8 +45,11 @@ class EnemyBase
 {
 //private:
 protected:
-	//
+	//モデル
 	EnemyModel enemy;
+	//個々の座標
+	EachInfo each;
+
 	//イージングスタート位置
 	XMFLOAT3 startPos;
 	//イージングの終了位置
@@ -46,10 +58,12 @@ protected:
 	float easeTime;
 	//イージングタイムの増加率
 	float easeAddTime;
-	//
-	EachInfo each;
-
+	
+	//エネミーの属性
 	EnemyType type;
+	//動く方向
+	EnemyMoveDirection moveDireciotnEnum;
+	//体力
 	int hp;
 	//死んでたらtrue
 	bool isDead;
@@ -57,16 +71,20 @@ protected:
 	bool isWind;
 	//動く速度
 	float moveSpeed;
-	//
+	//重さ
 	float weight;
+
 	//キングの方向
-	XMFLOAT3 kingDirection;
+	XMFLOAT3 moveDirection;
 	//爆風の押し出しPower
 	XMFLOAT3 windDirection;
 	//プレイヤーとの押し出し
 	XMFLOAT3 playerPushDirection;
-	//
+
+	//ヘイト方向
 	Target target;
+
+	//最大値
 	const int MaxHP = 1;
 	const float MaxMoveSpeed = 0.01f;
 	const float MaxWeight = 1.0f;
@@ -79,7 +97,7 @@ public:
 	void SetIsWind(bool isWind) { this->isWind = isWind; }
 	void SetWeight(float weight) { this->weight = weight; }
 	void SetMoveSpeed(float moveSpeed) { this->moveSpeed = moveSpeed; }
-	void SetKingDirection(XMFLOAT3 direction) { this->kingDirection = direction; }
+	void SetKingDirection(XMFLOAT3 direction) { this->moveDirection = direction; }
 	void SetWindDirection(XMFLOAT3 windDirection) { this->windDirection = windDirection; }
 	void SetPlayerPushDirection(XMFLOAT3 playerPushDirection) { this->playerPushDirection = playerPushDirection; }
 	int GetHP() { return hp; }
@@ -87,18 +105,18 @@ public:
 	bool GetIsWind() { return isWind; }
 	bool GetWeight() { return weight; }
 	float GetIsMoveSpeed() { return moveSpeed; }
-	XMFLOAT3 GetKingDirection() { return kingDirection; }
+	XMFLOAT3 GetKingDirection() { return moveDirection; }
 	XMFLOAT3 GetWindDirection() { return windDirection; }
 	XMFLOAT3 GetPosition() { return ConvertXMVECTORtoXMFLOAT3(each.position); }
 	EnemyModel GetModel() { return enemy; }
 
-	void Init();
-	void Update(King &king);
+	void Init(const EnemyMoveDirection &direction);
+	void Update(XMFLOAT3 &hate);
 	void Draw();
 	//ランダムポジションに生成
 	void SetRandomPosition();
 	//Init時にFlagをセットする
-	void SetAlive();
+	void SetAlive(const EnemyMoveDirection &direction);
 	//ヘイトの方向を取得する
 	void UpdateKingDirection(XMFLOAT3 &kingPos);
 	//枠に触れているかなどの処理
@@ -107,6 +125,8 @@ public:
 	void AddWindForce();
 	//ヘイト方向へ動く
 	void GoHate(XMFLOAT3 &hatePosition);
+	//
+	void GoMoveDirection();
 	//
 	void SampleAddForce();
 
@@ -117,7 +137,6 @@ public:
 	void CheckHitKing(King& kingPos);
 	bool IsKingHit(XMFLOAT3& kingPos);
 	float KingToLenght(XMFLOAT3& kingPos);
-
 };
 
 class SuperEnemy : public EnemyBase
@@ -127,8 +146,8 @@ private:
 	const float MaxMoveSpeed = 0.01f;
 	const float MaxWeight = 2.0f;
 public:
-	void Init();
-	void SetAlive();
+	void Init(const EnemyMoveDirection& direction);
+	void SetAlive(const EnemyMoveDirection& direction);
 };
 
 class Enemys
@@ -136,8 +155,8 @@ class Enemys
 public:
 	static list<EnemyBase> enemys;
 	static list<list<EnemyBase>::iterator> deleteEnemys;
-	static void AddEnemy(EnemyType type);
+	static void AddEnemy(EnemyType type, const EnemyMoveDirection &direction);
 	static void DeathEnemy(EnemyBase &enemy);
-	static void Update(King &king);
+	static void Update(XMFLOAT3& hate);
 	static void Draw();
 };
