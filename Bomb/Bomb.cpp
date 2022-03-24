@@ -4,14 +4,15 @@
 #include "../Player/Player.h"
 #include "../Hole/Hole.h"
 #include "../King/King.h"
+#include "Blast.h"
 namespace
 {
 const int explosionTimerMax = 5;
 const int safeTimerMax = 10;
 const float baseBlastPower = 0.0f;
 const int bombAliveTimerMax = 60;
-
 }
+
 Bomb::Bomb()
 {
 }
@@ -20,11 +21,14 @@ Bomb::~Bomb()
 {
 }
 
-void Bomb::Init()
+void Bomb::Init(const Model &model)
 {
-	bombObject.CreateModel("Block", ShaderManager::playerShader);
-	blastObject.CreateModel("Block", ShaderManager::playerShader);
-	data.blastPower = baseBlastPower;
+	MeshCopy(model);
+	each.position = {};
+	each.scale = {1, 1, 1};
+	each.rotation = {};
+	each.CreateConstBuff0();
+	each.CreateConstBuff1();
 }
 
 void Bomb::Update()
@@ -32,14 +36,8 @@ void Bomb::Update()
 	if (data.isAlive)
 	{
 		BombUpdate();
+		bombObject.Update(&each);
 	}
-	if (data.isExplosion)
-	{
-		BlastUpdate();
-	}
-
-	bombObject.Update();
-	blastObject.Update();
 }
 
 void Bomb::Finailize()
@@ -51,10 +49,6 @@ void Bomb::Draw()
 	if (data.isAlive)
 	{
 		Draw3DObject(bombObject);
-	}
-	if (data.isExplosion)
-	{
-		Draw3DObject(blastObject);
 	}
 }
 
@@ -71,9 +65,9 @@ bool Bomb::Shot(DirectX::XMFLOAT3 angle, DirectX::XMFLOAT3 pos)
 	return true;
 }
 
-void Bomb::EnemyBombCollision(EnemyBase& enemyData)
+bool Bomb::EnemyBombCollision(EnemyBase& enemyData)
 {
-	if (enemyData.GetIsWind())return;
+	if (enemyData.GetIsWind())return false;
 	//“G‚ÌÀ•W
 	XMVECTOR enemyPosition = ConvertXMFLOAT3toXMVECTOR(enemyData.GetPosition());
 
@@ -83,68 +77,21 @@ void Bomb::EnemyBombCollision(EnemyBase& enemyData)
 	//”š’e‚ÆÚG‚µ‚Ä‚¢‚½‚ç”š”­‚·‚é
 	if (IsBlast)
 	{
-		//”š’e–{‘Ì‚ÆÚG‚µ‚Ä‚¢‚é‚©‚Ì”»’è
+		Explosion();
 		Hole hole;
 		XMFLOAT3 enemyPos = ConvertXMVECTORtoXMFLOAT3(enemyPosition);
 		hole.Init(enemyPos);
 		Holes::AddHole(hole);
-		BombCollision(enemyPosition, 0);
-		Explosion();
+		return true;
 	}
-
-
-	//”š•—‚ÌƒxƒNƒgƒ‹
-	XMFLOAT3 blastPower;
-
-	//”š•—‚É“–‚½‚Á‚½‚©ƒtƒ‰ƒO
-	bool IsBlastHit = BlastCollision(enemyPosition, 0, &blastPower);
-	XMVECTOR tmpBlast = ConvertXMFLOAT3toXMVECTOR(blastPower);
-	if (std::isnan(XMVector3Length(tmpBlast).m128_f32[0]))
-	{
-		blastPower = { 5, 0, 0 };
-	}
-	//“–‚½‚Á‚½î•ñ‚ðŠeƒf[ƒ^‚É“ü‚ê‚é
-	if (IsBlastHit)
-	{
-		enemyData.SetIsWind(IsBlastHit);
-		enemyData.SetWindDirection(blastPower);
-	}
+	return false;
 }
 
-void Bomb::KingBlastCollision(King *king)
+
+void Bomb::Explosion()
 {
-	XMFLOAT3 tmpForce;
-	bool isKingHit = false;
-	float radius = 1;
-	isKingHit = BlastCollision(ConvertXMFLOAT3toXMVECTOR(king->GetPosition()), radius, &tmpForce);
-
-	if (isKingHit)
-	{
-		king->SetIsWind(isKingHit);
-		king->SetWindDirection(tmpForce);
-	}
+	data.isAlive = false;
 }
-
-float Bomb::PlayerBlastCollision(XMFLOAT3 pos, float radius)
-{
-	XMVECTOR force;
-	XMFLOAT3 tmpForce;
-	bool isPlayerHit = false;
-	isPlayerHit = BlastCollision(ConvertXMFLOAT3toXMVECTOR(pos), radius, &tmpForce);
-
-	if (isPlayerHit)
-	{
-		force = ConvertXMFLOAT3toXMVECTOR(tmpForce);
-
-		float power = XMVector3Length(force).m128_f32[0];
-		//ƒVƒ“ƒOƒ‹ƒgƒ“‚È‚Ì‚ðˆ«—p‚µ‚Ä‚¢‚Ü‚·
-		XMFLOAT3 pos = ConvertXMVECTORtoXMFLOAT3(data.pos);
-		Player::GetPlayer()->HitBomb(power, pos);
-		return power;
-	}
-	return 0.0f;
-}
-
 
 
 void Bomb::BombUpdate()
@@ -152,24 +99,12 @@ void Bomb::BombUpdate()
 	DirectX::XMVECTOR moveSpeed = (data.bombAngle * data.bombSpeed);
 	data.pos += moveSpeed;
 
-	bombObject.each.position = data.pos;
+	each.position = data.pos;
 	data.bombAliveTimer++;
 
 	if (data.bombAliveTimer >= bombAliveTimerMax)
 	{
 		data.isAlive = false;
-	}
-}
-
-void Bomb::BlastUpdate()
-{
-	data.blastTimer++;
-	blastObject.each.position = data.pos;
-
-	blastObject.each.scale = (XMFLOAT3{ data.blastRadius, data.blastRadius, data.blastRadius });
-	if (data.blastTimer >= explosionTimerMax)
-	{
-		data.isExplosion = false;
 	}
 }
 
@@ -196,45 +131,4 @@ bool Bomb::BombCollision(const XMVECTOR& pos, const float& radius)
 	{
 		return true;
 	}
-}
-
-bool Bomb::BlastCollision(const XMVECTOR& pos, const float& radius, XMFLOAT3* blastPower)
-{
-	//”š”­‚µ‚Ä‚¢‚È‚©‚Á‚½‚ç
-	if (!data.isExplosion)return false;
-
-	//”š’e‚©‚ç“G‚Ü‚Å‚ÌƒxƒNƒgƒ‹‚ðŒvŽZ
-	XMVECTOR distance = (pos - data.pos);
-	//“G‚Æ”š’e‚Æ‚Ì‹——£ŒvŽZ
-	float bombEnemyLenght = XMVector3Length(distance).m128_f32[0];
-
-	//“G‚Æ“–‚½‚Á‚Ä‚¢‚é‚©‚Ì”»’è
-	if (data.blastRadius <= bombEnemyLenght)
-	{//”š•—‚ª“G‚ÆÚG‚µ‚Ä‚¢‚È‚©‚Á‚½‚ç‘¬“xƒ[ƒ‚ð•Ô‚·
-		return false;
-	}
-
-
-	//”š’e‚©‚ç“G‚ÉŒü‚©‚Á‚Ä‚Ì•ûŒüŒvŽZ
-	XMVECTOR blastAngle = XMVector3Normalize(distance);
-	//”š”­‚Ì”ÍˆÍ‚Æ”š•—‚Ì”ÍˆÍ‚Ì’·‚³‚ð”äŠr
-	float power = 1.0f - (bombEnemyLenght / data.blastRadius);
-	//”ä—¦‚É‰ž‚¶‚Ä‰Ÿ‚µ–ß‚µ‚Ì—Í‚Ì‘å‚«‚³‚ð•ÏX
-	power *= data.blastPower;
-	//Œü‚«‚Æ—Í‚Ì‘å‚«‚³‚ðæŽZ‚µ‚ÄƒxƒNƒgƒ‹‚É‚µ‚ÄŠµ«
-	DirectX::XMVECTOR blastVector = blastAngle * power;
-	//“–‚½‚Á‚Ä‚¢‚é”»’è
-	if (blastPower)
-	{
-		*blastPower = ConvertXMVECTORtoXMFLOAT3(blastVector);
-	}
-	return true;
-}
-
-void Bomb::Explosion()
-{
-	data.blastTimer = 0;
-	data.isAlive = false;
-	data.isExplosion = true;
-	blastObject.each.scale = XMFLOAT3{ 1.0f, 1.0f, 1.0f };
 }

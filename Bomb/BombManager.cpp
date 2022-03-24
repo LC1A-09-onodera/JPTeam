@@ -1,9 +1,12 @@
 #include "BombManager.h"
-
+#include "../Shader/ShaderManager.h"
 namespace
 {
 	const int bombsMaxCount = 10;
 }
+
+Model BombMesh::bombMesh;
+Model BombMesh::blastMesh;
 BombManager::BombManager()
 {
 	bombs.resize(bombsMaxCount);
@@ -17,8 +20,10 @@ void BombManager::Init()
 {
 	for (int i = 0; i < bombs.size(); i++)
 	{
-		bombs[i].Init();
+		bombs[i].Init(BombMesh::bombMesh);
 	}
+	if(blasts.size() <=0)return;
+	blasts.clear();
 }
 
 void BombManager::Update()
@@ -27,6 +32,15 @@ void BombManager::Update()
 	{
 		bombs[i].Update();
 	}
+
+	if(blasts.size()<=0) return;
+
+	auto itr = blasts.begin();
+	for (; itr != blasts.end(); itr++)
+	{
+		itr->Update();
+	}
+	BlastDelete();
 }
 
 void BombManager::Finalize()
@@ -43,6 +57,11 @@ void BombManager::Draw()
 	{
 		bombs[i].Draw();
 	}
+	auto itr = blasts.begin();
+	for (; itr != blasts.end(); itr++)
+	{
+		itr->Draw();
+	}
 }
 
 void BombManager::Shot(DirectX::XMFLOAT3 angle, DirectX::XMFLOAT3 pos)
@@ -57,11 +76,7 @@ void BombManager::Shot(DirectX::XMFLOAT3 angle, DirectX::XMFLOAT3 pos)
 			return;
 		}
 
-		//”­ŽË‚Å‚«‚é‚©
-		if (!bombs[i].GetIsAlve() && !bombs[i].GetIsExplosion())
-		{
-			bombNumber = i;
-		}
+		bombNumber = i;
 
 	}
 	if (bombNumber != Nothing)
@@ -84,33 +99,55 @@ bool BombManager::GetBombAlive()
 
 void BombManager::enemyCollision(std::list<EnemyBase> &data)
 {
+	enemyBombCollision(data);
+	enemyBlastCollision(data);
+}
+
+void BombManager::enemyBombCollision(std::list<EnemyBase> &data)
+{
+	auto itr = data.begin();
+	for (; itr != Enemys::enemys.end(); ++itr)
 	{
-		auto itr = data.begin();
-		for (; itr != Enemys::enemys.end(); ++itr)
+		if(itr->GetIsDead() == true)continue;
+		for (int i = 0; i < bombs.size(); i++)
 		{
-			for (int i = 0; i < bombs.size(); i++)
+			if (bombs[i].EnemyBombCollision(*itr))
 			{
-				bombs[i].EnemyBombCollision(*itr);
+				BlastSpawn(ConvertXMVECTORtoXMFLOAT3(bombs[i].GetPos()));
+				BlastSpawn(itr->GetPosition());
 			}
 		}
 	}
 
 }
 
-void BombManager::PlayerCollision(XMFLOAT3 pos, float radius)
+void BombManager::enemyBlastCollision(std::list<EnemyBase> &data)
 {
-	float power = 0.0f;
-	for (int i = 0; i < bombs.size(); i++)
+	auto enemyItr = data.begin();
+	auto blastItr = blasts.begin();
+	for (; enemyItr != Enemys::enemys.end(); ++enemyItr)
 	{
-		bombs[i].PlayerBlastCollision(pos, radius);
+		if(enemyItr->GetIsDead() == true)continue;
+		for (; blastItr != blasts.end(); blastItr++)
+		{
+			if (blastItr->EnemyBombCollision(*enemyItr))
+			{
+				BlastSpawn(enemyItr->GetPosition());
+				break;
+			}
+		}
 	}
 }
 
-void BombManager::KingCollision(King *king)
+void BombManager::PlayerCollision(XMFLOAT3 pos, float radius)
 {
-	for (int i = 0; i < bombs.size(); i++)
+	if (blasts.size() <= 0)return;
+
+	float power = 0.0f;
+	auto itr = blasts.begin();
+	for (; itr != blasts.end(); itr++)
 	{
-		bombs[i].KingBlastCollision(king);
+		itr->PlayerBlastCollision(pos, radius);
 	}
 }
 
@@ -119,9 +156,70 @@ void BombManager::Explosion()
 	//”š’e‚Ì”š”j
 	for (int i = 0; i < bombs.size(); i++)
 	{
-		if (!bombs[i].GetIsExplosion() && bombs[i].GetIsAlve())
+		if (!bombs[i].GetIsAlve() && bombs[i].GetIsAlve())
 		{
-			bombs[i].Explosion();
+			BlastSpawn(ConvertXMVECTORtoXMFLOAT3(bombs[i].GetPos()));
 		}
 	}
+}
+
+void BombManager::BlastBombCollision()
+{
+	if (blasts.size() <= 0)return;
+	for (int i = 0; i < bombs.size(); i++)
+	{
+		if (bombs[i].GetIsAlve())
+		{
+			auto itr = blasts.begin();
+			for (; itr != blasts.end(); itr++)
+			{
+				if (itr->ChainCollision(bombs[i]))
+				{
+					bombs[i].Explosion();
+					BlastSpawn(ConvertXMVECTORtoXMFLOAT3(bombs[i].GetPos()));
+					break;
+				}
+			}
+		}
+	}
+}
+
+void BombManager::BlastSpawn(const XMFLOAT3 &pos)
+{
+	Blast blast;
+	blast.Init(BombMesh::blastMesh);
+	blast.Spawn(pos);
+	AddBlast(blast);
+}
+
+void BombManager::AddBlast(Blast &blast)
+{
+	blasts.push_back(blast);
+}
+
+void BombManager::BlastDelete()
+{
+	if (blasts.size() <= 0) return;
+	auto itr = blasts.begin();
+	list<list<Blast>::iterator> deleteBlasts;
+	for (; itr != blasts.end(); ++itr)
+	{
+		if (itr->GetIsAlve() <= 0)
+		{
+			deleteBlasts.push_back(itr);
+		}
+	}
+	if (deleteBlasts.size() <= 0) return;
+	auto deleteItr = deleteBlasts.begin();
+	for (; deleteItr != deleteBlasts.end(); ++deleteItr)
+	{
+		blasts.erase(*deleteItr);
+	}
+	deleteBlasts.clear();
+}
+
+void BombMesh::LoadModel()
+{
+	bombMesh.CreateModel("Block", ShaderManager::playerShader);
+	blastMesh.CreateModel("Block", ShaderManager::playerShader);
 }
