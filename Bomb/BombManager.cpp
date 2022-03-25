@@ -22,7 +22,7 @@ void BombManager::Init()
 	{
 		bombs[i].Init(BombMesh::bombMesh);
 	}
-	if(blasts.size() <=0)return;
+	if (blasts.size() <= 0)return;
 	blasts.clear();
 }
 
@@ -33,7 +33,7 @@ void BombManager::Update()
 		bombs[i].Update();
 	}
 
-	if(blasts.size()<=0) return;
+	if (blasts.size() <= 0) return;
 
 	auto itr = blasts.begin();
 	for (; itr != blasts.end(); itr++)
@@ -108,7 +108,7 @@ void BombManager::enemyBombCollision(std::list<EnemyBase> &data)
 	auto itr = data.begin();
 	for (; itr != Enemys::enemys.end(); ++itr)
 	{
-		if(itr->GetIsDead() == true)continue;
+		if (itr->GetIsDead() == true)continue;
 		for (int i = 0; i < bombs.size(); i++)
 		{
 			if (bombs[i].EnemyBombCollision(*itr))
@@ -125,13 +125,14 @@ void BombManager::enemyBlastCollision(std::list<EnemyBase> &data)
 {
 	auto enemyItr = data.begin();
 	auto blastItr = blasts.begin();
-	for (; enemyItr != Enemys::enemys.end(); ++enemyItr)
+	for (; blastItr != blasts.end(); blastItr++)
 	{
-		if(enemyItr->GetIsDead() == true)continue;
-		for (; blastItr != blasts.end(); blastItr++)
+		for (; enemyItr != Enemys::enemys.end(); ++enemyItr)
 		{
-			if (blastItr->EnemyBombCollision(*enemyItr))
+			if (blastItr->EnemyBombCollision(*enemyItr) && !enemyItr->GetIsDead())
 			{
+				enemyItr->SetIsDead(true);
+
 				BlastSpawn(enemyItr->GetPosition());
 				break;
 			}
@@ -187,7 +188,7 @@ void BombManager::BlastBombCollision()
 void BombManager::BlastSpawn(const XMFLOAT3 &pos)
 {
 	Blast blast;
-	blast.Init(BombMesh::blastMesh);
+	blast.Init( &BombMesh::blastMesh);
 	blast.Spawn(pos);
 	AddBlast(blast);
 }

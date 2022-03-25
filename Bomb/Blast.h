@@ -21,7 +21,7 @@ public:
 	Blast();
 	~Blast();
 	//‰Šú‰»
-	void Init(const Model &model);
+	void Init(Model *model);
 	//XVˆ—
 	void Update();
 	//I—¹ˆ—
@@ -60,10 +60,13 @@ private:
 	/// <returns></returns>
 	bool BlastCollision(const XMVECTOR &pos, const float &radius, XMFLOAT3 *blastPower = nullptr);
 
+	void BlastEasign();
 private:
-	void MeshCopy(const Model &model) { this->blastObject = model; }
+	void MeshCopy(Model *model) { this->blastObject = model; }
 
 	BlastData data;
-	Model blastObject;
+	Model *blastObject;
 	EachInfo each;
+
+	bool isEase = false;
 };

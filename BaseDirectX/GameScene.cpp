@@ -93,7 +93,7 @@ void GameScene::Init()
 	BombMesh::LoadModel();
 	HoleModels::Init();
 	Holes::Init();
-	for (int i = 0; i < 100; i++)
+	for (int i = 0; i < 30; i++)
 	{
 		if (rand() % 2 == 0)
 		{
