@@ -90,6 +90,7 @@ void GameScene::Init()
 	//ƒvƒŒƒCƒ„[‚Ì‰Šú‰»
 	Player::GetPlayer()->Init();
 	EnemyModels::LoadModels();
+	BombMesh::LoadModel();
 	HoleModels::Init();
 	Holes::Init();
 	for (int i = 0; i < 100; i++)
@@ -137,7 +138,8 @@ void GameScene::TitleUpdate()
 
 	bombs.enemyCollision(Enemys::enemys);
 
-	bombs.KingCollision(&king);
+	bombs.BlastBombCollision();
+	//bombs.KingCollision(&king);
 
 	//if (Player::GetPlayer()->IsDetonatingTrigger()) { bombs.Explosion(); }
 
