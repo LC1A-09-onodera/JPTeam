@@ -61,6 +61,26 @@ void Player::Init()
 	isDetonating = false;		//起爆したかどうか
 }
 
+void Player::Restart()
+{
+	pos = { 0,0,0 };			//プレイヤーの座標
+	vec3 = { 0,0,0 };			//向いている方向（正規化済）
+	hitEnemypos = { 0,0,0 };	//当たった敵の座標
+	hitBombpos = { 0,0,0 };		//爆風が当たった時の爆弾の座標
+	lastVec3 = { 0,0,0 };		//最後に向いていた方向
+	activeCount = 0;			//行動不能カウント
+	invincibleCount = 0;		//無敵カウント
+	hp = MAX_HP;				//playerのHP
+	bombForce = 0.0f;			//ボムの力保存用
+	enemyForce = 0.0f;			//敵の力保存用
+	isActive = true;			//行動できるかどうか
+	isHitBomb = false;			//ボムに当たって飛ばされてるかどうか
+	isHitEnemy = false;			//敵に当たって飛ばされてるかどうか
+	isInvincible = false;		//無敵かどうか
+	isShoot = false;			//射撃中かどうか（弾があるか）
+	isDetonating = false;		//起爆したかどうか
+}
+
 //更新
 void Player::Update(bool isBombAlive)
 {

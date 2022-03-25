@@ -73,6 +73,8 @@ public:
 	static Player* GetPlayer();
 	//‰Šú‰»
 	void Init();
+	//CreateˆÈŠO‚Ì‰Šú‰»
+	void Restart();
 	//XV
 	void Update(bool isBombAlive);
 	//•`‰æ
