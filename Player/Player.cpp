@@ -9,22 +9,24 @@
 
 Player::Player()
 {
-	pos = { 0,0,0 };			//プレイヤーの座標
-	vec3 = { 0,0,0 };			//向いている方向（正規化済）
-	hitEnemypos = { 0,0,0 };	//当たった敵の座標
-	hitBombpos = { 0,0,0 };		//爆風が当たった時の爆弾の座標
-	lastVec3 = { 0,0,0 };		//最後に向いていた方向
-	activeCount = 0;			//行動不能カウント
-	invincibleCount = 0;		//無敵カウント
-	hp = MAX_HP;				//playerのHP
-	bombForce = 0.0f;			//ボムの力保存用
-	enemyForce = 0.0f;			//敵の力保存用
-	isActive = true;			//行動できるかどうか
-	isHitBomb = false;			//ボムに当たって飛ばされてるかどうか
-	isHitEnemy = false;			//敵に当たって飛ばされてるかどうか
-	isInvincible = false;		//無敵かどうか
-	isShoot = false;			//射撃中かどうか（弾があるか）
-	isDetonating = false;		//起爆したかどうか
+	pos = { 0,0,0 };				//プレイヤーの座標
+	vec3 = { 0,0,0 };				//向いている方向（正規化済）
+	hitEnemypos = { 0,0,0 };		//当たった敵の座標
+	hitBombpos = { 0,0,0 };			//爆風が当たった時の爆弾の座標
+	//lastVec3 = { 0,0,0 };			//最後に向いていた方向
+	firstButtonVec3 = { 0,0,0 };	//ボタン入力保存用
+	secondButtonVec3 = { 0,0,0 };	//ボタン入力保存用
+	activeCount = 0;				//行動不能カウント
+	invincibleCount = 0;			//無敵カウント
+	hp = MAX_HP;					//playerのHP
+	bombForce = 0.0f;				//ボムの力保存用
+	enemyForce = 0.0f;				//敵の力保存用
+	isActive = true;				//行動できるかどうか
+	isHitBomb = false;				//ボムに当たって飛ばされてるかどうか
+	isHitEnemy = false;				//敵に当たって飛ばされてるかどうか
+	isInvincible = false;			//無敵かどうか
+	isShoot = false;				//射撃中かどうか（弾があるか）
+	isDetonating = false;			//起爆したかどうか
 }
 
 Player::~Player()
@@ -43,42 +45,46 @@ void Player::Init()
 	player.CreateModel("Block", ShaderManager::playerShader);
 	//water.CreateWater();
 
-	pos = { 0,0,0 };			//プレイヤーの座標
-	vec3 = { 0,0,0 };			//向いている方向（正規化済）
-	hitEnemypos = { 0,0,0 };	//当たった敵の座標
-	hitBombpos = { 0,0,0 };		//爆風が当たった時の爆弾の座標
-	lastVec3 = { 0,0,0 };		//最後に向いていた方向
-	activeCount = 0;			//行動不能カウント
-	invincibleCount = 0;		//無敵カウント
-	hp = MAX_HP;				//playerのHP
-	bombForce = 0.0f;			//ボムの力保存用
-	enemyForce = 0.0f;			//敵の力保存用
-	isActive = true;			//行動できるかどうか
-	isHitBomb = false;			//ボムに当たって飛ばされてるかどうか
-	isHitEnemy = false;			//敵に当たって飛ばされてるかどうか
-	isInvincible = false;		//無敵かどうか
-	isShoot = false;			//射撃中かどうか（弾があるか）
-	isDetonating = false;		//起爆したかどうか
+	pos = { 0,0,0 };				//プレイヤーの座標
+	vec3 = { 0,0,0 };				//向いている方向（正規化済）
+	hitEnemypos = { 0,0,0 };		//当たった敵の座標
+	hitBombpos = { 0,0,0 };			//爆風が当たった時の爆弾の座標
+	//lastVec3 = { 0,0,0 };			//最後に向いていた方向
+	firstButtonVec3 = { 0,0,0 };	//ボタン入力保存用
+	secondButtonVec3 = { 0,0,0 };	//ボタン入力保存用
+	activeCount = 0;				//行動不能カウント
+	invincibleCount = 0;			//無敵カウント
+	hp = MAX_HP;					//playerのHP
+	bombForce = 0.0f;				//ボムの力保存用
+	enemyForce = 0.0f;				//敵の力保存用
+	isActive = true;				//行動できるかどうか
+	isHitBomb = false;				//ボムに当たって飛ばされてるかどうか
+	isHitEnemy = false;				//敵に当たって飛ばされてるかどうか
+	isInvincible = false;			//無敵かどうか
+	isShoot = false;				//射撃中かどうか（弾があるか）
+	isDetonating = false;			//起爆したかどうか
 }
 
 void Player::Restart()
 {
-	pos = { 0,0,0 };			//プレイヤーの座標
-	vec3 = { 0,0,0 };			//向いている方向（正規化済）
-	hitEnemypos = { 0,0,0 };	//当たった敵の座標
-	hitBombpos = { 0,0,0 };		//爆風が当たった時の爆弾の座標
-	lastVec3 = { 0,0,0 };		//最後に向いていた方向
-	activeCount = 0;			//行動不能カウント
-	invincibleCount = 0;		//無敵カウント
-	hp = MAX_HP;				//playerのHP
-	bombForce = 0.0f;			//ボムの力保存用
-	enemyForce = 0.0f;			//敵の力保存用
-	isActive = true;			//行動できるかどうか
-	isHitBomb = false;			//ボムに当たって飛ばされてるかどうか
-	isHitEnemy = false;			//敵に当たって飛ばされてるかどうか
-	isInvincible = false;		//無敵かどうか
-	isShoot = false;			//射撃中かどうか（弾があるか）
-	isDetonating = false;		//起爆したかどうか
+	pos = { 0,0,0 };				//プレイヤーの座標
+	vec3 = { 0,0,0 };				//向いている方向（正規化済）
+	hitEnemypos = { 0,0,0 };		//当たった敵の座標
+	hitBombpos = { 0,0,0 };			//爆風が当たった時の爆弾の座標
+	//lastVec3 = { 0,0,0 };			//最後に向いていた方向
+	firstButtonVec3 = { 0,0,0 };	//ボタン入力保存用
+	secondButtonVec3 = { 0,0,0 };	//ボタン入力保存用
+	activeCount = 0;				//行動不能カウント
+	invincibleCount = 0;			//無敵カウント
+	hp = MAX_HP;					//playerのHP
+	bombForce = 0.0f;				//ボムの力保存用
+	enemyForce = 0.0f;				//敵の力保存用
+	isActive = true;				//行動できるかどうか
+	isHitBomb = false;				//ボムに当たって飛ばされてるかどうか
+	isHitEnemy = false;				//敵に当たって飛ばされてるかどうか
+	isInvincible = false;			//無敵かどうか
+	isShoot = false;				//射撃中かどうか（弾があるか）
+	isDetonating = false;			//起爆したかどうか
 }
 
 //更新
@@ -172,14 +178,14 @@ void Player::CheakIsInput()
 		vec3.x = DirectInput::leftStickX();
 		vec3.z = DirectInput::leftStickY();
 
-		lastVec3 = vec3;
-		VecNormaliz(lastVec3);
+		//lastVec3 = vec3;
+		//VecNormaliz(lastVec3);
 	}
 
-	if (!Input::Key(DIK_LEFT) &&
-		!Input::Key(DIK_RIGHT) &&
-		!Input::Key(DIK_UP) &&
-		!Input::Key(DIK_DOWN))
+	if (!Input::Key(DIK_A) &&
+		!Input::Key(DIK_D) &&
+		!Input::Key(DIK_W) &&
+		!Input::Key(DIK_S))
 	{
 		if (DirectInput::leftStickX() == 0.0f &&
 			DirectInput::leftStickY() == 0.0f)
@@ -192,13 +198,13 @@ void Player::CheakIsInput()
 		if (DirectInput::leftStickX() == 0.0f &&
 			DirectInput::leftStickY() == 0.0f)
 		{
-			if (Input::Key(DIK_LEFT)) { vec3.x = -1.0f; }
-			if (Input::Key(DIK_RIGHT)) { vec3.x = 1.0f; }
-			if (Input::Key(DIK_UP)) { vec3.z = -1.0f; }
-			if (Input::Key(DIK_DOWN)) { vec3.z = 1.0f; }
+			if (Input::Key(DIK_A)) { vec3.x = -1.0f; }
+			if (Input::Key(DIK_D)) { vec3.x = 1.0f; }
+			if (Input::Key(DIK_W)) { vec3.z = -1.0f; }
+			if (Input::Key(DIK_S)) { vec3.z = 1.0f; }
 
-			lastVec3 = vec3;
-			VecNormaliz(lastVec3);
+			//lastVec3 = vec3;
+			//VecNormaliz(lastVec3);
 		}
 	}
 }
@@ -215,11 +221,11 @@ void Player::CheakIsActive()
 
 void Player::CheakShootTrigger(bool isBombAlive)
 {
-	/*発射トリガー*/
+	/*発射トリガー(A->B->X->Y)*/
 	if (DirectInput::IsButtonPush(DirectInput::ButtonKind::Button01) ||
-		Input::KeyTrigger(DIK_B))
+		Input::KeyTrigger(DIK_DOWN))
 	{
-		if (!isBombAlive && isActive) { isShoot = true; }
+		if (firstButtonVec3.x != 0 && firstButtonVec3.z != 0) { firstButtonVec3 = { 0,0,-1 }; }
 	}
 	else { isShoot = false; }
 }

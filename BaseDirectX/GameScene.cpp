@@ -129,8 +129,8 @@ void GameScene::TitleUpdate()
 	}
 	if (Player::GetPlayer()->IsShootTrigger())
 	{
-		XMFLOAT3 lastVec3 = Player::GetPlayer()->GetLastVec3();
-		lastVec3.z = -lastVec3.z;
+		XMFLOAT3 lastVec3 = { 1,0,0 };
+		//lastVec3.z = -lastVec3.z;
 		bombs.Shot(/*Œü‚«*/lastVec3, /*À•W*/Player::GetPlayer()->GetPos());
 	}
 	bombs.PlayerCollision(Player::GetPlayer()->GetPos(), 1.2f);

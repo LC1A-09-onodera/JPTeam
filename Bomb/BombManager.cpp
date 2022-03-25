@@ -52,15 +52,16 @@ void BombManager::Shot(DirectX::XMFLOAT3 angle, DirectX::XMFLOAT3 pos)
 	int bombNumber = Nothing;
 	for (int i = 0; i < bombs.size(); i++)
 	{
-		if (bombs[i].GetIsAlve())
-		{
-			return;
-		}
+		//if (bombs[i].GetIsAlve())
+		//{
+		//	return;
+		//}
 
 		//”­ŽË‚Å‚«‚é‚©
-		if (!bombs[i].GetIsAlve() && !bombs[i].GetIsExplosion())
+		if (!bombs[i].GetIsAlve())
 		{
 			bombNumber = i;
+			break;
 		}
 
 	}
