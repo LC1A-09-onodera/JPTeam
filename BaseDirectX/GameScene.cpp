@@ -67,7 +67,7 @@ void GameScene::Init()
 	BaseDirectX::GetAdress();
 	//カメラ初期化
 	Camera::Init();
-	Camera::eye = { 0, 50, -1.0 };
+	Camera::eye = { 0, 30, -1.0 };
 	Camera::target = { 0, 0, 0 };
 	Camera::Update();
 	//Imguiの初期化
@@ -92,7 +92,7 @@ void GameScene::Init()
 	EnemyModels::LoadModels();
 	HoleModels::Init();
 	Holes::Init();
-	for (int i = 0; i < 100; i++)
+	for (int i = 0; i < 10; i++)
 	{
 		if (rand() % 2 == 0)
 		{
@@ -116,42 +116,34 @@ void GameScene::Init()
 	object->SetModel(model);
 	object->PlayAnimation();*/
 
+	triangle.CreateModel("Triangle", ShaderManager::playerShader);
+
 	bombs.Init();
 }
 
 void GameScene::TitleUpdate()
 {
-	if (Input::KeyTrigger(DIK_N))
+	if (Input::KeyTrigger(DIK_D))
 	{
-		Hole hole;
-		hole.Init(XMFLOAT3(rand() % 20 - 10, 0, rand() % 20 - 10));
-		Holes::AddHole(hole);
+		//triangle.each.position.m128_f32[0] += 1.414f;
+		triangle.each.rotation.x -= 0.0f;
+		triangle.each.rotation.y += 60.0f;
+		triangle.each.rotation.z -= 180.0f;
 	}
-	if (Player::GetPlayer()->IsShootTrigger())
+	if (Input::KeyTrigger(DIK_A))
 	{
-		XMFLOAT3 lastVec3 = Player::GetPlayer()->GetLastVec3();
-		lastVec3.z = -lastVec3.z;
-		bombs.Shot(/*向き*/lastVec3, /*座標*/Player::GetPlayer()->GetPos());
+		//triangle.each.position.m128_f32[0] -= 1.414f;
+		triangle.each.rotation.x += 0.0f;
+		triangle.each.rotation.y -= 60.0f;
+		triangle.each.rotation.z += 180.0f;
 	}
-	bombs.PlayerCollision(Player::GetPlayer()->GetPos(), 1.2f);
-
-	bombs.enemyCollision(Enemys::enemys);
-
-	bombs.KingCollision(&king);
-
-	Player::GetPlayer()->Update(bombs.GetBombAlive());
-	//KingSample::king.GetModel().Update();
-	Enemys::Update(king);
-	bombs.Update();
-	Holes::Update();
-	king.Update();
-	ParticleControl::Update();
-	if (Input::KeyTrigger(DIK_SPACE))
+	triangle.Update();
+	/*if (Input::KeyTrigger(DIK_SPACE))
 	{
 		SceneNum = GAME;
 		Camera::eye.v.y = 20;
 		Camera::eye.v.z = -10;
-	}
+	}*/
 }
 
 void GameScene::SelectUpdate()
@@ -206,13 +198,8 @@ void GameScene::TitleDraw()
 	//PostEffectのPreDraw
 	postEffect.PreDraw();
 
-	Player::GetPlayer()->Draw();
-	Enemys::Draw();
-	king.Draw();
-	Holes::Draw();
-	//PostEffectのPostDraw
-	postEffect.PostDraw();
-	bombs.Draw();
+	Draw3DObject(triangle);
+	
 	ParticleControl::Draw();
 	BaseDirectX::clearColor[0] = 0.0f;
 	BaseDirectX::clearColor[1] = 0.0f;
@@ -224,8 +211,6 @@ void GameScene::TitleDraw()
 
 	//スプライトの描画-------------------------
 	//titleSprite.SpriteDraw();
-	stageFrameSp.ChangeSize(stageFrameTex, 1280, 720);
-	stageFrameSp.SpriteDraw();
 	Imgui::DrawImGui();
 	//描画コマンドここまで
 	BaseDirectX::UpdateBack();
