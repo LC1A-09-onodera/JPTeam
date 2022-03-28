@@ -63,4 +63,6 @@ public://ƒV[ƒ“‚Åg‚¤‚à‚Ì
 	PostEffect postEffect;
 	King king;
 	BombManager bombs;
+
+	Model triangle;
 };
