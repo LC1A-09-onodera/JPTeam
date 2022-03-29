@@ -30,9 +30,6 @@ private:
 	void ResultDraw();
 	int SceneNum = TITLE;
 
-	XMFLOAT3 UpdateMousePosition();
-	XMFLOAT3 EyeToMouseVec();
-	XMFLOAT3 MousePosition(float z);
 public:
 	GameScene();
 	~GameScene();
