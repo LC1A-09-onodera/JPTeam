@@ -16,4 +16,5 @@ public:
 	static void CheckMsg();
 	static void Update();
 	static void Gethwnd();
+	static POINT GetMousePos();
 };
