@@ -30,6 +30,9 @@ private:
 	void ResultDraw();
 	int SceneNum = TITLE;
 
+	XMFLOAT3 UpdateMousePosition();
+	XMFLOAT3 EyeToMouseVec();
+	XMFLOAT3 MousePosition(float z);
 public:
 	GameScene();
 	~GameScene();
@@ -61,8 +64,5 @@ public://ÉVÅ[ÉìÇ≈égÇ§Ç‡ÇÃ
 	Sprite stageFrameSp;
 
 	PostEffect postEffect;
-	King king;
-	BombManager bombs;
-
-	Model triangle;
+	Model sample;
 };

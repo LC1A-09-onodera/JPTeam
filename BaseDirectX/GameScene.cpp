@@ -14,6 +14,60 @@
 #include"../Enemy/Enemy.h"
 #include "../Hole/Hole.h"
 
+XMFLOAT3 GameScene::UpdateMousePosition()
+{
+	//スクリーン系
+	POINT mouse = WindowsAPI::GetMousePos();
+	XMFLOAT2 mouseFloat;
+	mouseFloat = XMFLOAT2(mouse.x, mouse.y);
+	//クリップ系
+	mouseFloat.x = mouseFloat.x / (float)window_width;
+	mouseFloat.y = mouseFloat.y / (float)window_height;
+	mouseFloat.x = mouseFloat.x * 2.0f;
+	mouseFloat.y = mouseFloat.y * 2.0f;
+	mouseFloat.x = mouseFloat.x - 1.0f;
+	mouseFloat.y = mouseFloat.y - 1.0f;
+	mouseFloat.y = mouseFloat.y * -1.0f;
+	//ビュー座標
+	XMVECTOR mousePosition;
+	XMMATRIX invProj, invView;
+	invProj = XMMatrixInverse(nullptr, BaseDirectX::matProjection);
+	invView = XMMatrixInverse(nullptr, Camera::matView);
+	mousePosition = XMLoadFloat3(&XMFLOAT3(mouseFloat.x, mouseFloat.y, 0));
+	mousePosition = XMVector3Transform(mousePosition, invProj);
+	mousePosition = XMVector3Transform(mousePosition, invView);
+	XMFLOAT3 result;
+	result.x = mousePosition.m128_f32[0];
+	result.y = mousePosition.m128_f32[1];
+	result.z = mousePosition.m128_f32[2];
+	//result.z = 0.0f;
+	return result;
+}
+
+XMFLOAT3 GameScene::EyeToMouseVec()
+{
+	XMFLOAT3 mouse;
+	mouse = UpdateMousePosition();
+	XMFLOAT3 eyePos;
+	eyePos = Camera::eye.v;
+	XMFLOAT3 result;
+	result = mouse - eyePos;
+	return Normalize(result);
+}
+
+XMFLOAT3 GameScene::MousePosition(float z)
+{
+	XMFLOAT3 mouseVec = EyeToMouseVec();
+	int count;
+	count = z - Camera::eye.v.z / mouseVec.z;
+	float x;
+	x = mouseVec.x * count;
+	float y;
+	y = mouseVec.y * count;
+	XMFLOAT3 result = { x, y, z };
+	return result;
+}
+
 GameScene::GameScene()
 {
 	SceneNum = TITLE;
@@ -67,7 +121,7 @@ void GameScene::Init()
 	BaseDirectX::GetAdress();
 	//カメラ初期化
 	Camera::Init();
-	Camera::eye = { 0, 30, -1.0 };
+	Camera::eye = { 0, 0, -20.0 };
 	Camera::target = { 0, 0, 0 };
 	Camera::Update();
 	//Imguiの初期化
@@ -89,56 +143,25 @@ void GameScene::Init()
 	Model::SetLight(light);
 	//プレイヤーの初期化
 	Player::GetPlayer()->Init();
-	EnemyModels::LoadModels();
-	BombMesh::LoadModel();
-	HoleModels::Init();
-	Holes::Init();
-	for (int i = 0; i < 10; i++)
-	{
-		if (rand() % 2 == 0)
-		{
-			Enemys::AddEnemy(EnemyType::NONE, EnemyMoveDirection::RIGHT);
-		}
-		else
-		{
-			Enemys::AddEnemy(EnemyType::SUPER, EnemyMoveDirection::HATE);
-		}
-	}
-	king.Init();
+	
 	//ポストエフェクトの初期化
 	postEffect.Initialize();
 
-	stageFrameTex.LoadGraph(L"Resource/Img/StageFrame.png");
-	stageFrameSp.CreateSprite(stageFrameTex, XMFLOAT3(0, 0, 0));
-
+	
 	/*model = FbxLoader::GetInstance()->LoadModelFromFile("boneTest");
 	object = new FBXObject;
 	object->Initialize();
 	object->SetModel(model);
 	object->PlayAnimation();*/
-
-	triangle.CreateModel("Triangle", ShaderManager::playerShader);
-
-	bombs.Init();
+	sample.CreateModel("oserro", ShaderManager::playerShader);
+	sample.each.rotation.x = 90;
 }
 
 void GameScene::TitleUpdate()
 {
-	if (Input::KeyTrigger(DIK_D))
-	{
-		//triangle.each.position.m128_f32[0] += 1.414f;
-		triangle.each.rotation.x -= 0.0f;
-		triangle.each.rotation.y += 60.0f;
-		triangle.each.rotation.z -= 180.0f;
-	}
-	if (Input::KeyTrigger(DIK_A))
-	{
-		//triangle.each.position.m128_f32[0] -= 1.414f;
-		triangle.each.rotation.x += 0.0f;
-		triangle.each.rotation.y -= 60.0f;
-		triangle.each.rotation.z += 180.0f;
-	}
-	triangle.Update();
+	//WindowsAPI::GetMousePos();
+	sample.each.position = ConvertXMFLOAT3toXMVECTOR(MousePosition(0.0f));
+	sample.Update();
 	/*if (Input::KeyTrigger(DIK_SPACE))
 	{
 		SceneNum = GAME;
@@ -198,8 +221,7 @@ void GameScene::TitleDraw()
 {
 	//PostEffectのPreDraw
 	postEffect.PreDraw();
-
-	Draw3DObject(triangle);
+	Draw3DObject(sample);
 	
 	ParticleControl::Draw();
 	BaseDirectX::clearColor[0] = 0.0f;
