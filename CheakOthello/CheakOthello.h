@@ -43,7 +43,6 @@ public:
 	~CheakOthello();
 	void Init();
 	void Update(const OthelloData(&othelloData)[MAX_SIZE_Y][MAX_SIZE_Y]);
-	OthelloData* GetOthelloData() { return othelloDatas; }
 
 private:
 
