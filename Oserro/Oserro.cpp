@@ -231,46 +231,54 @@ void Othello::Controll(const XMFLOAT3 &mousePos)
 
 	if (!isOver)
 	{
-		if (data.isFront)
-		{
-			if (Input::KeyTrigger(DIK_1))
-			{
-				int hoge = 0;
-			}
-			if (fabs(angle.m128_f32[0]) > fabs(angle.m128_f32[1]))
-			{//横のほうが長かったら
-				//左右どちらか
-				playerPos.m128_f32[0] += dist.m128_f32[0];
-				each.rotation.y = dist.m128_f32[0] * -90;
-				each.rotation.x = 0;
-			}
-			else
-			{//縦のほうが長かったら
+		//if (data.isFront)
+		//{
+		//	if (Input::KeyTrigger(DIK_1))
+		//	{
+		//		int hoge = 0;
+		//	}
+		//	if (fabs(angle.m128_f32[0]) > fabs(angle.m128_f32[1]))
+		//	{//横のほうが長かったら
+		//		//左右どちらか
+		//		playerPos.m128_f32[0] += dist.m128_f32[0];
+		//		each.rotation.y = dist.m128_f32[0] * -90;
+		//		each.rotation.x = 0;
+		//	}
+		//	else
+		//	{//縦のほうが長かったら
 
-				playerPos.m128_f32[1] += dist.m128_f32[1];
-				//上下どちらか
-				each.rotation.x = dist.m128_f32[1] * 90;
-				each.rotation.y = 0;
-			}
-		}
-		else
-		{
-			if (fabs(angle.m128_f32[0]) > fabs(angle.m128_f32[1]))
-			{//横のほうが長かったら
-				//左右どちらか
-				playerPos.m128_f32[0] += dist.m128_f32[0];
-				each.rotation.y = dist.m128_f32[0] * -90 + 180;
-				each.rotation.x = 0;
-			}
-			else
-			{//縦のほうが長かったら
-				playerPos.m128_f32[1] += dist.m128_f32[1];
-				//上下どちらか
-				each.rotation.x = dist.m128_f32[1] * 90 + 180;
-				each.rotation.y = 0;
-			}
+		//		playerPos.m128_f32[1] += dist.m128_f32[1];
+		//		//上下どちらか
+		//		each.rotation.x = dist.m128_f32[1] * 90;
+		//		each.rotation.y = 0;
+		//	}
+		//}
+		//else
+		//{
+		//	if (fabs(angle.m128_f32[0]) > fabs(angle.m128_f32[1]))
+		//	{//横のほうが長かったら
+		//		//左右どちらか
+		//		playerPos.m128_f32[0] += dist.m128_f32[0];
+		//		each.rotation.y = dist.m128_f32[0] * -90 + 180;
+		//		each.rotation.x = 0;
+		//	}
+		//	else
+		//	{//縦のほうが長かったら
+		//		playerPos.m128_f32[1] += dist.m128_f32[1];
+		//		//上下どちらか
+		//		each.rotation.x = dist.m128_f32[1] * 90 + 180;
+		//		each.rotation.y = 0;
+		//	}
 
-		}
+		//}
+	}
+	if(data.isFront)
+	{
+		each.rotation.y = 0;
+	}
+	else
+	{
+		each.rotation.y = 180;
 	}
 	each.position = playerPos;
 }
@@ -339,18 +347,18 @@ void OthelloManager::Finalize()
 void OthelloManager::Controll()
 {
 	//マウスのクリックがされた瞬間
-	if (false)
+	if (Input::MouseTrigger(VK_LBUTTON))
 	{
 		SetPlayer();
 	}
 	//マウスがドラッグ中
-	if (true)
+	if (Input::Mouse(VK_LBUTTON))
 	{
 		Move();
 	}
 
 	//マウスをドロップしたら
-	if (false)
+	if (!Input::Mouse(VK_LBUTTON))
 	{
 		RemovePlayer();
 	}
@@ -361,10 +369,10 @@ void OthelloManager::Controll()
 void OthelloManager::SetPlayer()
 {
 	XMFLOAT3 MousePos = Camera::MousePosition(0.0f);
-	XMFLOAT3 stagePos = MousePos - stageLeftTop;
+	XMFLOAT3 stagePos = MousePos - stageLeftTop - XMFLOAT3{-cellScale/2, cellScale / 2 , 0};
 	//どのマスにマウスがあるのかを確認
-	int x = stagePos.x / cellScale;
-	int y = stagePos.y / cellScale;
+	int x = stagePos.x / (cellScale*2);
+	int y = stagePos.y / -(cellScale * 2);
 	auto itr = othellos.begin();
 	for (; itr != othellos.end(); itr++)
 	{
@@ -381,8 +389,8 @@ void OthelloManager::Move()
 	XMFLOAT3 MousePos = Camera::MousePosition(0.0f);
 	XMFLOAT3 stagePos = MousePos - stageLeftTop;
 	//どのマスにマウスがあるのかを確認
-	int x = stagePos.x / cellScale;
-	int y = stagePos.y / cellScale;
+	int x = stagePos.x / (cellScale * 2);
+	int y = stagePos.y / (cellScale * 2);
 
 	auto itr = othellos.begin();
 
@@ -394,6 +402,10 @@ void OthelloManager::Move()
 		{
 			break;
 		}
+	}
+	if (itr == othellos.end())
+	{
+		return;
 	}
 	itr->Controll(MousePos);
 	//（まうすの座標がプレイヤーのマスの座標と同一だったら）または、
@@ -413,6 +425,10 @@ void OthelloManager::RemovePlayer()
 			break;
 		}
 	}
+	if (itr == othellos.end())
+	{
+		return;
+	}
 	itr->GetGameData()->isPlayer = false;
 	int x = itr->GetGameData()->widthPos;
 	int y = itr->GetGameData()->heightPos;
@@ -421,19 +437,19 @@ void OthelloManager::RemovePlayer()
 void OthelloManager::AddPanel()
 {
 	Othello panelA, panelB, panelC, panelD;
-	panelA.Spawn(NORMAL, 2, 0, true);
+	panelA.Spawn(NORMAL, 0, 0, true);
 	panelA.Init(&oserroModel);
 	othellos.push_back(panelA);
 
-	panelB.Spawn(NORMAL, 3, 0, false);
+	panelB.Spawn(NORMAL, 1, 1, false);
 	panelB.Init(&oserroModel);
 	othellos.push_back(panelB);
 
-	panelC.Spawn(NORMAL, 3, 1, false);
+	panelC.Spawn(NORMAL, 2, 2, false);
 	panelC.Init(&oserroModel);
 	othellos.push_back(panelC);
 	
-	panelD.Spawn(NORMAL, 3, 2, true);
+	panelD.Spawn(NORMAL, 3, 3, true);
 	panelD.Init(&oserroModel);
 	othellos.push_back(panelD);
 }

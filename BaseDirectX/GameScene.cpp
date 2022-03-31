@@ -99,8 +99,8 @@ void GameScene::Init()
 	object->Initialize();
 	object->SetModel(model);
 	object->PlayAnimation();*/
-	sample.CreateModel("newOserro", ShaderManager::playerShader);
-	sample.each.rotation.x = 0;
+	//sample.CreateModel("newOserro", ShaderManager::playerShader);
+	//sample.each.rotation.x = 0;
 
 	othelloManager.Init();
 	othelloManager.AddPanel();
@@ -111,8 +111,8 @@ void GameScene::Init()
 void GameScene::TitleUpdate()
 {
 	//WindowsAPI::GetMousePos();
-	sample.each.position = ConvertXMFLOAT3toXMVECTOR(Camera::MousePosition(0.0f));
-	sample.Update();
+	//sample.each.position = ConvertXMFLOAT3toXMVECTOR(Camera::MousePosition(0.0f));
+	//sample.Update();
 
 	othelloManager.Controll();
 	othelloManager.Update();
@@ -179,7 +179,7 @@ void GameScene::TitleDraw()
 {
 	//PostEffect‚ÌPreDraw
 	postEffect.PreDraw();
-	Draw3DObject(sample);
+	//Draw3DObject(sample);
 	othelloManager.Draw();
 	ParticleControl::Draw();
 	BaseDirectX::clearColor[0] = 0.0f;
