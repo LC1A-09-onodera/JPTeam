@@ -152,6 +152,7 @@ void Othello::Controll(const XMFLOAT3 &mousePos)
 		float length = XMVector3Length(dist).m128_f32[0];
 		//距離がマスの大きさより長かった場合
 
+		panelPos tmpPos = {data.widthPos,data.heightPos};
 			//縦横どちらが長いか
 		if (fabs(angle.m128_f32[0]) > fabs(angle.m128_f32[1]))
 		{//横のほうが長かったら
@@ -161,11 +162,11 @@ void Othello::Controll(const XMFLOAT3 &mousePos)
 				//左右どちらか
 				if (angle.m128_f32[0] > 0)
 				{//右に行く
-					data.widthPos++;
+					tmpPos.x++;
 				}
 				else
 				{//左に行く
-					data.widthPos--;
+					tmpPos.x--;
 				}
 			}
 			else
@@ -181,11 +182,11 @@ void Othello::Controll(const XMFLOAT3 &mousePos)
 				//上下どちらか
 				if (angle.m128_f32[1] < 0)
 				{//下に行く
-					data.heightPos++;
+					tmpPos.y++;
 				}
 				else
 				{//上に行く
-					data.heightPos--;
+					tmpPos.y--;
 				}
 
 			}
@@ -195,6 +196,22 @@ void Othello::Controll(const XMFLOAT3 &mousePos)
 			}
 		}
 
+		bool moveEnd = false;
+		auto itr = data.panels.begin();
+		for (; itr != data.panels.end(); itr++)
+		{
+			if (tmpPos.x == itr->x && tmpPos.y == itr->y)
+			{
+				moveEnd = true;
+				break;
+			}
+		}
+		if (moveEnd)
+		{
+			break;
+		}
+		data.widthPos = tmpPos.x;
+		data.heightPos = tmpPos.y;
 		//範囲を超過したか
 
 		isOver = (data.widthPos < 0 ||
@@ -242,16 +259,25 @@ void Othello::Controll(const XMFLOAT3 &mousePos)
 			if (fabs(angle.m128_f32[0]) > fabs(angle.m128_f32[1]))
 			{//横のほうが長かったら
 				//左右どちらか
-				playerPos.m128_f32[0] += dist.m128_f32[0];
-				each.rotation.y = dist.m128_f32[0] * -90;
+				float length = dist.m128_f32[0];
+				if (fabs(length) >= 1.0f)
+				{
+					length /= fabs(length);
+				}
+				playerPos.m128_f32[0] += length;
+				each.rotation.y = length * -90;
 				each.rotation.x = 0;
 			}
 			else
 			{//縦のほうが長かったら
-
-				playerPos.m128_f32[1] += dist.m128_f32[1];
+				float length = dist.m128_f32[1];
+				if (fabs(length) >= 1.0f)
+				{
+					length /= fabs(length);
+				}
+				playerPos.m128_f32[1] += length;
 				//上下どちらか
-				each.rotation.x = dist.m128_f32[1] * 90;
+				each.rotation.x = length * 90;
 				each.rotation.y = 0;
 			}
 		}
@@ -264,15 +290,25 @@ void Othello::Controll(const XMFLOAT3 &mousePos)
 			if (fabs(angle.m128_f32[0]) > fabs(angle.m128_f32[1]))
 			{//横のほうが長かったら
 				//左右どちらか
-				playerPos.m128_f32[0] += dist.m128_f32[0];
-				each.rotation.y = dist.m128_f32[0] * -90 + 180;
+				float length = dist.m128_f32[0];
+				if (fabs(length) >= 1.0f)
+				{
+					length /= fabs(length);
+				}
+				playerPos.m128_f32[0] += length;
+				each.rotation.y = length * -90 + 180;
 				each.rotation.x = 0;
 			}
 			else
 			{//縦のほうが長かったら
-				playerPos.m128_f32[1] += dist.m128_f32[1];
+				float length = dist.m128_f32[1];
+				if (fabs(length) >= 1.0f)
+				{
+					length /= fabs(length);
+				}
+				playerPos.m128_f32[1] += length;
 				//上下どちらか
-				each.rotation.x = dist.m128_f32[1] * 90 + 180;
+				each.rotation.x = length * 90 + 180;
 				each.rotation.y = 0;
 			}
 
@@ -372,21 +408,33 @@ void OthelloManager::SetPlayer()
 	int x = stagePos.x / (cellScale*2);
 	int y = stagePos.y / -(cellScale * 2);
 	auto itr = othellos.begin();
+	auto playerItr = othellos.begin();
 	for (; itr != othellos.end(); itr++)
 	{
 		if (itr->GetGameData()->widthPos == x && itr->GetGameData()->heightPos == y)
 		{
 			itr->GetGameData()->isPlayer = true;
+			playerItr = itr;
 			break;
 		}
 	}
 
 	itr = othellos.begin();
+
+	list<panelPos> tmpPanels;
 	for (; itr != othellos.end(); itr++)
 	{
 		itr->GetGameData()->isMove = false;
-	}
+		if (itr != playerItr)
+		{
+			int x = itr->GetGameData()->widthPos;
+			int y = itr->GetGameData()->heightPos;
+			panelPos data = {x, y};
 
+			tmpPanels.push_back(data);
+		}
+	}
+	playerItr->GetGameData()->panels = tmpPanels;
 }
 
 void OthelloManager::Move()

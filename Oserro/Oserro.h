@@ -10,6 +10,15 @@ enum OthelloType
 	HARF,
 	NONE,
 };
+namespace
+{
+	struct panelPos
+	{
+		int x;
+		int y;
+	};
+}
+
 struct OthelloData
 {
 	//îzóÒÇ…Ç‘ÇøçûÇﬁ
@@ -36,6 +45,9 @@ struct OthelloData
 
 
 	bool isMove = false;
+
+
+	list<panelPos> panels;
 	OthelloData();
 };
 
