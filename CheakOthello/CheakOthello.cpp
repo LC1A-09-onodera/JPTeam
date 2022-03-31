@@ -70,7 +70,7 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData)
 				if (cheakLeft)
 				{
 					//‰½‚à‚È‚©‚Á‚½‚ç
-					if (othelloDatas[lastY][lastX - i].type == NONE)
+					if (othelloDatas[lastY][lastX - i].type != NORMAL)
 					{
 						cheakLeft = false;
 					}
@@ -98,7 +98,7 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData)
 				if (cheakRight)
 				{
 					//‰½‚à‚È‚©‚Á‚½‚ç
-					if (othelloDatas[lastY][lastX + i].type == NONE)
+					if (othelloDatas[lastY][lastX + i].type != NORMAL)
 					{
 						cheakRight = false;
 					}
@@ -126,7 +126,7 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData)
 				if (cheakUp)
 				{
 					//‰½‚à‚È‚©‚Á‚½‚ç
-					if (othelloDatas[lastY - i][lastX].type == NONE)
+					if (othelloDatas[lastY - i][lastX].type != NORMAL)
 					{
 						cheakUp = false;
 					}
@@ -154,7 +154,7 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData)
 				if (cheakDown)
 				{
 					//‰½‚à‚È‚©‚Á‚½‚ç
-					if (othelloDatas[lastY + i][lastX].type == NONE)
+					if (othelloDatas[lastY + i][lastX].type != NORMAL)
 					{
 						cheakDown = false;
 					}
@@ -185,7 +185,7 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData)
 				if (cheakTopLeft)
 				{
 					//‰½‚à‚È‚©‚Á‚½‚ç
-					if (othelloDatas[lastY - i][lastX - i].type == NONE)
+					if (othelloDatas[lastY - i][lastX - i].type != NORMAL)
 					{
 						cheakTopLeft = false;
 					}
@@ -216,7 +216,7 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData)
 				if (cheakBottomLeft)
 				{
 					//‰½‚à‚È‚©‚Á‚½‚ç
-					if (othelloDatas[lastY + i][lastX - i].type == NONE)
+					if (othelloDatas[lastY + i][lastX - i].type != NORMAL)
 					{
 						cheakBottomLeft = false;
 					}
@@ -247,7 +247,7 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData)
 				if (cheakTopRight)
 				{
 					//‰½‚à‚È‚©‚Á‚½‚ç
-					if (othelloDatas[lastY - i][lastX + i].type == NONE)
+					if (othelloDatas[lastY - i][lastX + i].type != NORMAL)
 					{
 						cheakTopRight = false;
 					}
@@ -278,7 +278,7 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData)
 				if (cheakBottomRight)
 				{
 					//‰½‚à‚È‚©‚Á‚½‚ç
-					if (othelloDatas[lastY + i][lastX + i].type == NONE)
+					if (othelloDatas[lastY + i][lastX + i].type != NORMAL)
 					{
 						cheakBottomRight = false;
 					}
