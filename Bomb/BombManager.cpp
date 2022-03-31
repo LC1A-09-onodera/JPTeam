@@ -71,13 +71,11 @@ void BombManager::Shot(DirectX::XMFLOAT3 angle, DirectX::XMFLOAT3 pos)
 	int bombNumber = Nothing;
 	for (int i = 0; i < bombs.size(); i++)
 	{
-		if (bombs[i].GetIsAlve())
+		if (!bombs[i].GetIsAlve())
 		{
-			return;
+			bombNumber = i;
+			break;
 		}
-
-		bombNumber = i;
-
 	}
 	if (bombNumber != Nothing)
 	{
@@ -95,6 +93,19 @@ bool BombManager::GetBombAlive()
 		}
 	}
 	return false;
+}
+
+int BombManager::GetBombAliveCount()
+{
+	int aliveCount = 0;
+	for (int i = 0; i < bombs.size(); i++)
+	{
+		if (!bombs[i].GetIsAlve())
+		{
+			aliveCount++;
+		}
+	}
+	return aliveCount;
 }
 
 void BombManager::enemyCollision(std::list<EnemyBase> &data)

@@ -106,7 +106,7 @@ void GameScene::Init()
 void GameScene::TitleUpdate()
 {
 	//WindowsAPI::GetMousePos();
-	sample.each.position = ConvertXMFLOAT3toXMVECTOR(MousePosition(0.0f));
+	sample.each.position = ConvertXMFLOAT3toXMVECTOR(Camera::MousePosition(0.0f));
 	sample.Update();
 	/*if (Input::KeyTrigger(DIK_SPACE))
 	{

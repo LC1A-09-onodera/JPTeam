@@ -15,6 +15,8 @@ public:
 	void Shot(DirectX::XMFLOAT3 angle, DirectX::XMFLOAT3 pos);
 
 	bool GetBombAlive();
+	int GetBombAliveCount();
+
 
 	/// <summary>
 	/// ”š’e‚Æ“G &”š•—‚Æ“G‚ÌƒRƒŠƒWƒ‡ƒ“‚ð“Z‚ß‚½‚à‚Ì

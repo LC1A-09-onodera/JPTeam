@@ -43,22 +43,23 @@ private:
 
 	const float MAX_SPEED = 0.5f;			//自機スピード
 
-	XMFLOAT3 pos;			//プレイヤーの座標
-	XMFLOAT3 vec3;			//向いている方向（正規化済）
-	XMFLOAT3 hitEnemypos;	//当たった敵の座標
-	XMFLOAT3 hitBombpos;	//爆風が当たった時の爆弾の座標
-	XMFLOAT3 lastVec3;		//最後に向いていた方向
-	int activeCount;		//行動不能カウント
-	int invincibleCount;	//無敵カウント
-	int hp;					//playerのHP
-	float bombForce;		//ボムの力保存用
-	float enemyForce;		//敵の力保存用
-	bool isActive;			//行動できるかどうか
-	bool isHitBomb;			//ボムに当たって飛ばされてるかどうか
-	bool isHitEnemy;		//敵に当たって飛ばされてるかどうか
-	bool isInvincible;		//無敵かどうか
-	bool isShoot;			//射撃中かどうか（弾があるか）
-	bool isDetonating;		//起爆したかどうか
+	XMFLOAT3 pos;				//プレイヤーの座標
+	XMFLOAT3 vec3;				//向いている方向（正規化済）
+	XMFLOAT3 hitEnemypos;		//当たった敵の座標
+	XMFLOAT3 hitBombpos;		//爆風が当たった時の爆弾の座標
+	XMFLOAT3 firstButtonVec3;	//ボタン入力保存用
+	XMFLOAT3 secondButtonVec3;	//ボタン入力保存用
+	int activeCount;			//行動不能カウント
+	int invincibleCount;		//無敵カウント
+	int hp;						//playerのHP
+	float bombForce;			//ボムの力保存用
+	float enemyForce;			//敵の力保存用
+	bool isActive;				//行動できるかどうか
+	bool isHitBomb;				//ボムに当たって飛ばされてるかどうか
+	bool isHitEnemy;			//敵に当たって飛ばされてるかどうか
+	bool isInvincible;			//無敵かどうか
+	bool isShoot;				//射撃中かどうか（弾があるか）
+	bool isDetonating;			//起爆したかどうか
 
 private:
 	XMVECTOR oldPlayerPos;
@@ -73,6 +74,8 @@ public:
 	static Player* GetPlayer();
 	//初期化
 	void Init();
+	//Create以外の初期化
+	void Restart();
 	//更新
 	void Update(bool isBombAlive);
 	//描画
@@ -83,7 +86,7 @@ public:
 
 	XMFLOAT3 GetPos() { return pos; }						//プレイヤーの座標					がわかるよ
 	XMFLOAT3 GetVec3() { return vec3; }						//向いている方向（正規化済）			がわかるよ
-	XMFLOAT3 GetLastVec3() { return lastVec3; }				//最後に向いていた方向（正規化済）	がわかるよ
+	//XMFLOAT3 GetLastVec3() { return lastVec3; }				//最後に向いていた方向（正規化済）	がわかるよ
 	bool IsActive() { return isActive; }					//行動できるか						がわかるよ
 	bool IsInvincible() { return isInvincible; }			//無敵かどうか						がわかるよ
 
