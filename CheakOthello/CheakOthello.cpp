@@ -277,6 +277,8 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>> &othelloData)
 				std::back_inserter(comboOthelloDataPos));
 			combo++;
 			saveOthelloDataPos.clear();
+			lastY = comboOthelloDataPos.front().first;
+			lastX = comboOthelloDataPos.front().second;
 		}
 	}
 
