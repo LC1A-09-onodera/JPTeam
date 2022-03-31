@@ -148,7 +148,7 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData)
 		int maxDown = MAX_SIZE_Y - lastY;
 		if (maxDown > 2)
 		{
-			for (int i = 1; i < maxUp; i++)
+			for (int i = 1; i < maxDown; i++)
 			{
 				//‰ºŠm”F
 				if (cheakDown)
