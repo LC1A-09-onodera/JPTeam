@@ -118,6 +118,8 @@ void GameScene::TitleUpdate()
 	othelloManager.Update();
 
 	checkObject.Update(othelloManager.Send());
+	othelloManager.Receive(checkObject.GetOthelloDatas());
+
 	/*if (Input::KeyTrigger(DIK_SPACE))
 	{
 		SceneNum = GAME;

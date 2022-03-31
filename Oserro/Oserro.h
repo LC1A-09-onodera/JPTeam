@@ -108,6 +108,8 @@ public:
 	void AddPanel();
 
 	const vector<vector<SendOthelloData>> &Send();
+	void Receive(const vector<vector<SendOthelloData>> &data);
+
 private:
 	void SetPlayer();
 	void Move();

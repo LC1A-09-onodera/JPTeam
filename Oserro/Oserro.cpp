@@ -474,10 +474,27 @@ const vector<vector<SendOthelloData>> &OthelloManager::Send()
 		data.isFront = gameDatas.isFront;
 		data.type = gameDatas.type;
 
-		//å„Ç≈é°Çπå„Ç≈é°Çπå„Ç≈é°Çπå„Ç≈é°Çπå„Ç≈é°Çπå„Ç≈é°Çπå„Ç≈é°Çπå„Ç≈é°Çπå„Ç≈é°Çπå„Ç≈é°Çπå„Ç≈é°Çπ
+		//å„Ç≈é°Çπå„Ç≈é°Çπå„Ç≈é°Çπå„Ç≈é°Çπå„Ç≈é°Çπå„Ç≈é°Çπå„Ç≈é°Çπå„Ç≈é°Çπå„Ç≈é°Çπå„Ç≈é°Çπå„Ç≈é°Çπå„Ç≈é°Çπå„Ç≈é°Çπå„Ç≈é°Çπå„Ç≈é°Çπå„Ç≈é°Çπå„Ç≈é°Çπå„Ç≈é°Çπå„Ç≈é°Çπå„Ç≈é°Çπå„Ç≈é°Çπå„Ç≈é°Çπå„Ç≈é°Çπå„Ç≈é°Çπå„Ç≈é°Çπ
 		data.isMove = gameDatas.isPlayer;
 		sendDatas[gameDatas.heightPos][gameDatas.widthPos] = data;
 	}
 
 	return sendDatas;
+}
+
+void OthelloManager::Receive(const vector<vector<SendOthelloData>> &data)
+{
+	sendDatas = data;
+
+	//
+	auto itr = othellos.begin();
+	for (; itr != othellos.end(); itr++)
+	{
+		OthelloData *gameDatas = itr->GetGameData();
+		int x = gameDatas->widthPos;
+		int y = gameDatas->heightPos;
+
+		gameDatas->isFront = sendDatas[y][x].isFront;
+	}
+
 }
