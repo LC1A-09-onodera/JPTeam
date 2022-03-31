@@ -70,7 +70,12 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData)
 				if (cheakLeft)
 				{
 					//何もなかったら
-					if (othelloDatas[lastY][lastX - i].type != NORMAL)
+					if (othelloDatas[lastY][lastX - i].type == NONE)
+					{
+						cheakLeft = false;
+					}
+					//隣接かつ同じ色だったら
+					else if (othelloDatas[lastY][lastX - i].isFront == side && i == 1)
 					{
 						cheakLeft = false;
 					}
@@ -98,7 +103,12 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData)
 				if (cheakRight)
 				{
 					//何もなかったら
-					if (othelloDatas[lastY][lastX + i].type != NORMAL)
+					if (othelloDatas[lastY][lastX + i].type == NONE)
+					{
+						cheakRight = false;
+					}
+					//隣接かつ同じ色だったら
+					else if (othelloDatas[lastY][lastX + i].isFront == side && i == 1)
 					{
 						cheakRight = false;
 					}
@@ -126,7 +136,12 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData)
 				if (cheakUp)
 				{
 					//何もなかったら
-					if (othelloDatas[lastY - i][lastX].type != NORMAL)
+					if (othelloDatas[lastY - i][lastX].type == NONE)
+					{
+						cheakUp = false;
+					}
+					//隣接かつ同じ色だったら
+					else if (othelloDatas[lastY - i][lastX].isFront == side && i == 1)
 					{
 						cheakUp = false;
 					}
@@ -154,7 +169,12 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData)
 				if (cheakDown)
 				{
 					//何もなかったら
-					if (othelloDatas[lastY + i][lastX].type != NORMAL)
+					if (othelloDatas[lastY + i][lastX].type == NONE)
+					{
+						cheakDown = false;
+					}
+					//隣接かつ同じ色だったら
+					else if (othelloDatas[lastY + i][lastX].isFront == side && i == 1)
 					{
 						cheakDown = false;
 					}
@@ -185,7 +205,12 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData)
 				if (cheakTopLeft)
 				{
 					//何もなかったら
-					if (othelloDatas[lastY - i][lastX - i].type != NORMAL)
+					if (othelloDatas[lastY - i][lastX - i].type == NONE)
+					{
+						cheakTopLeft = false;
+					}
+					//隣接かつ同じ色だったら
+					else if (othelloDatas[lastY - i][lastX - i].isFront == side && i == 1)
 					{
 						cheakTopLeft = false;
 					}
@@ -216,7 +241,12 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData)
 				if (cheakBottomLeft)
 				{
 					//何もなかったら
-					if (othelloDatas[lastY + i][lastX - i].type != NORMAL)
+					if (othelloDatas[lastY + i][lastX - i].type == NONE)
+					{
+						cheakBottomLeft = false;
+					}
+					//隣接かつ同じ色だったら
+					else if (othelloDatas[lastY + i][lastX - i].isFront == side && i == 1)
 					{
 						cheakBottomLeft = false;
 					}
@@ -247,7 +277,12 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData)
 				if (cheakTopRight)
 				{
 					//何もなかったら
-					if (othelloDatas[lastY - i][lastX + i].type != NORMAL)
+					if (othelloDatas[lastY - i][lastX + i].type == NONE)
+					{
+						cheakTopRight = false;
+					}
+					//隣接かつ同じ色だったら
+					else if (othelloDatas[lastY - i][lastX + i].isFront == side && i == 1)
 					{
 						cheakTopRight = false;
 					}
@@ -278,7 +313,12 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData)
 				if (cheakBottomRight)
 				{
 					//何もなかったら
-					if (othelloDatas[lastY + i][lastX + i].type != NORMAL)
+					if (othelloDatas[lastY + i][lastX + i].type == NONE)
+					{
+						cheakBottomRight = false;
+					}
+					//隣接かつ同じ色だったら
+					else if (othelloDatas[lastY + i][lastX + i].isFront == side && i == 1)
 					{
 						cheakBottomRight = false;
 					}
