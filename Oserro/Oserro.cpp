@@ -28,12 +28,13 @@ void Othello::Update()
 	//タイプがNONE出なかったら生きている
 	bool isAlive = data.type != NONE;
 	if (!isAlive) return;
-	float x = (data.widthPos * cellScale * 2);
+	float x = (data.widthPos * cellScale * 2 );
 	float y = -(data.heightPos * cellScale * 2);
 
 	if (!data.isPlayer)
 	{
 		each.position = XMVECTOR{ x, y ,0, 0 };
+		each.position += ConvertXMFLOAT3toXMVECTOR(stageLeftTop);
 		if (data.isFront)
 		{
 			each.rotation.y = 0;

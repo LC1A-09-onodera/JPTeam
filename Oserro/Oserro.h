@@ -63,7 +63,7 @@ namespace OthelloConstData
 {//íËêî
 	const int fieldSize = 8;
 	const float cellScale = 1.0f;
-	const XMFLOAT3 stageLeftTop{ 0, 0, 0 };
+	const XMFLOAT3 stageLeftTop{ -cellScale * fieldSize / 2, cellScale * fieldSize / 2, 0 };
 }
 
 class Othello
