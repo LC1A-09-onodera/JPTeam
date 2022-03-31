@@ -384,7 +384,7 @@ void OthelloManager::SetPlayer()
 	itr = othellos.begin();
 	for (; itr != othellos.end(); itr++)
 	{
-			itr->GetGameData()->isMove = false;
+		itr->GetGameData()->isMove = false;
 	}
 
 }
