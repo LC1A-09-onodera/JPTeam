@@ -61,7 +61,7 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData)
 	{
 		/*-----左-----*/
 		int maxLeft = lastX + 1;
-		if (lastX > 2)
+		if (maxLeft > 2 && lastX >= 2)
 		{
 			for (int i = 1; i < maxLeft; i++)
 			{
@@ -95,7 +95,7 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData)
 
 		/*-----右-----*/
 		int maxRight = MAX_SIZE_X - lastX;
-		if (maxRight > 2)
+		if (maxRight > 2 && lastX <= MAX_SIZE_X - 3)
 		{
 			for (int i = 1; i < maxRight; i++)
 			{
@@ -128,7 +128,7 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData)
 
 		/*-----上-----*/
 		int maxUp = lastY + 1;
-		if (maxUp > 2)
+		if (maxUp > 2 && lastY >= 2)
 		{
 			for (int i = 1; i < maxUp; i++)
 			{
@@ -161,9 +161,9 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData)
 
 		/*-----下-----*/
 		int maxDown = MAX_SIZE_Y - lastY;
-		if (maxDown > 2)
+		if (maxDown > 2 && lastY <= MAX_SIZE_Y - 3)
 		{
-			for (int i = 1; i < maxUp; i++)
+			for (int i = 1; i < maxDown; i++)
 			{
 				//下確認
 				if (cheakDown)
@@ -197,7 +197,7 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData)
 		else { maxTopLeft = lastY + 1; }
 
 		/*-----左斜め上-----*/
-		if (maxTopLeft > 2)
+		if (maxTopLeft > 2 && lastX >= 2 && lastY >= 2)
 		{
 			for (int i = 1; i < maxTopLeft; i++)
 			{
@@ -229,13 +229,13 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData)
 		}
 
 		int maxBottomLeft;
-		if (lastX <= lastY) { maxBottomLeft = lastX + 1; }
-		else { maxBottomLeft = lastY + 1; }
+		if (lastX <= lastY) { maxBottomLeft = lastY + 1; }
+		else { maxBottomLeft = lastX + 1; }
 
 		/*-----左斜め下-----*/
-		if (maxBottomLeft > 2)
+		if (maxBottomLeft > 2 && lastX >= 2 && lastY <= MAX_SIZE_Y - 3)
 		{
-			for (int i = 1; i < maxTopLeft; i++)
+			for (int i = 1; i < maxBottomLeft; i++)
 			{
 				//左斜め下確認
 				if (cheakBottomLeft)
@@ -265,11 +265,11 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData)
 		}
 
 		int maxTopRight;
-		if (lastX <= lastY) { maxTopRight = lastX + 1; }
-		else { maxTopRight = lastY + 1; }
+		if (lastX <= lastY) { maxTopRight = lastY + 1; }
+		else { maxTopRight = lastX + 1; }
 
 		/*-----右斜め上-----*/
-		if (maxTopLeft > 2)
+		if (maxTopRight > 2 && lastX <= MAX_SIZE_X - 3 && lastY >= 2)
 		{
 			for (int i = 1; i < maxTopRight; i++)
 			{
@@ -301,11 +301,11 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData)
 		}
 
 		int maxBottomRight;
-		if (lastX <= lastY) { maxBottomRight = lastX + 1; }
-		else { maxBottomRight = lastY + 1; }
+		if (lastX <= lastY) { maxBottomRight = MAX_SIZE_Y - lastY; }
+		else { maxBottomRight = MAX_SIZE_X - lastX; }
 
 		/*-----右斜め下-----*/
-		if (maxBottomRight > 2)
+		if (maxBottomRight > 2 && lastX <= MAX_SIZE_X - 3 && lastY <= MAX_SIZE_Y - 3)
 		{
 			for (int i = 1; i < maxBottomRight; i++)
 			{
