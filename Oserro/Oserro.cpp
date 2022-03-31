@@ -37,10 +37,12 @@ void Othello::Update()
 		if (data.isFront)
 		{
 			each.rotation.y = 0;
+			each.rotation.x = 0;
 		}
 		else
 		{
 			each.rotation.y = 180;
+			each.rotation.x = 0;
 		}
 	}
 }
@@ -231,54 +233,50 @@ void Othello::Controll(const XMFLOAT3 &mousePos)
 
 	if (!isOver)
 	{
-		//if (data.isFront)
-		//{
-		//	if (Input::KeyTrigger(DIK_1))
-		//	{
-		//		int hoge = 0;
-		//	}
-		//	if (fabs(angle.m128_f32[0]) > fabs(angle.m128_f32[1]))
-		//	{//â°ÇÃÇŸÇ§Ç™í∑Ç©Ç¡ÇΩÇÁ
-		//		//ç∂âEÇ«ÇøÇÁÇ©
-		//		playerPos.m128_f32[0] += dist.m128_f32[0];
-		//		each.rotation.y = dist.m128_f32[0] * -90;
-		//		each.rotation.x = 0;
-		//	}
-		//	else
-		//	{//ècÇÃÇŸÇ§Ç™í∑Ç©Ç¡ÇΩÇÁ
+		if (data.isFront)
+		{
+			if (Input::KeyTrigger(DIK_1))
+			{
+				int hoge = 0;
+			}
+			if (fabs(angle.m128_f32[0]) > fabs(angle.m128_f32[1]))
+			{//â°ÇÃÇŸÇ§Ç™í∑Ç©Ç¡ÇΩÇÁ
+				//ç∂âEÇ«ÇøÇÁÇ©
+				playerPos.m128_f32[0] += dist.m128_f32[0];
+				each.rotation.y = dist.m128_f32[0] * -90;
+				each.rotation.x = 0;
+			}
+			else
+			{//ècÇÃÇŸÇ§Ç™í∑Ç©Ç¡ÇΩÇÁ
 
-		//		playerPos.m128_f32[1] += dist.m128_f32[1];
-		//		//è„â∫Ç«ÇøÇÁÇ©
-		//		each.rotation.x = dist.m128_f32[1] * 90;
-		//		each.rotation.y = 0;
-		//	}
-		//}
-		//else
-		//{
-		//	if (fabs(angle.m128_f32[0]) > fabs(angle.m128_f32[1]))
-		//	{//â°ÇÃÇŸÇ§Ç™í∑Ç©Ç¡ÇΩÇÁ
-		//		//ç∂âEÇ«ÇøÇÁÇ©
-		//		playerPos.m128_f32[0] += dist.m128_f32[0];
-		//		each.rotation.y = dist.m128_f32[0] * -90 + 180;
-		//		each.rotation.x = 0;
-		//	}
-		//	else
-		//	{//ècÇÃÇŸÇ§Ç™í∑Ç©Ç¡ÇΩÇÁ
-		//		playerPos.m128_f32[1] += dist.m128_f32[1];
-		//		//è„â∫Ç«ÇøÇÁÇ©
-		//		each.rotation.x = dist.m128_f32[1] * 90 + 180;
-		//		each.rotation.y = 0;
-		//	}
+				playerPos.m128_f32[1] += dist.m128_f32[1];
+				//è„â∫Ç«ÇøÇÁÇ©
+				each.rotation.x = dist.m128_f32[1] * 90;
+				each.rotation.y = 0;
+			}
+		}
+		else
+		{
+			if (Input::KeyTrigger(DIK_1))
+			{
+				int hoge = 0;
+			}
+			if (fabs(angle.m128_f32[0]) > fabs(angle.m128_f32[1]))
+			{//â°ÇÃÇŸÇ§Ç™í∑Ç©Ç¡ÇΩÇÁ
+				//ç∂âEÇ«ÇøÇÁÇ©
+				playerPos.m128_f32[0] += dist.m128_f32[0];
+				each.rotation.y = dist.m128_f32[0] * -90 + 180;
+				each.rotation.x = 0;
+			}
+			else
+			{//ècÇÃÇŸÇ§Ç™í∑Ç©Ç¡ÇΩÇÁ
+				playerPos.m128_f32[1] += dist.m128_f32[1];
+				//è„â∫Ç«ÇøÇÁÇ©
+				each.rotation.x = dist.m128_f32[1] * 90 + 180;
+				each.rotation.y = 0;
+			}
 
-		//}
-	}
-	if(data.isFront)
-	{
-		each.rotation.y = 0;
-	}
-	else
-	{
-		each.rotation.y = 180;
+		}
 	}
 	each.position = playerPos;
 }
@@ -301,7 +299,7 @@ void OthelloManager::Init()
 	player.Spawn(NORMAL, 4, 4);
 	player.Init(&oserroModel);
 	OthelloData *playerData = player.GetGameData();
-	playerData->isPlayer = true;
+	playerData->isPlayer = false;
 	othellos.push_back(player);
 
 	sendDatas.resize(fieldSize);
@@ -382,6 +380,13 @@ void OthelloManager::SetPlayer()
 			break;
 		}
 	}
+
+	itr = othellos.begin();
+	for (; itr != othellos.end(); itr++)
+	{
+			itr->GetGameData()->isMove = false;
+	}
+
 }
 
 void OthelloManager::Move()
@@ -429,7 +434,10 @@ void OthelloManager::RemovePlayer()
 	{
 		return;
 	}
+
+
 	itr->GetGameData()->isPlayer = false;
+	itr->GetGameData()->isMove = true;
 	int x = itr->GetGameData()->widthPos;
 	int y = itr->GetGameData()->heightPos;
 }
@@ -490,8 +498,7 @@ const vector<vector<SendOthelloData>> &OthelloManager::Send()
 		data.isFront = gameDatas.isFront;
 		data.type = gameDatas.type;
 
-		//å„Ç≈é°Çπå„Ç≈é°Çπå„Ç≈é°Çπå„Ç≈é°Çπå„Ç≈é°Çπå„Ç≈é°Çπå„Ç≈é°Çπå„Ç≈é°Çπå„Ç≈é°Çπå„Ç≈é°Çπå„Ç≈é°Çπå„Ç≈é°Çπå„Ç≈é°Çπå„Ç≈é°Çπå„Ç≈é°Çπå„Ç≈é°Çπå„Ç≈é°Çπå„Ç≈é°Çπå„Ç≈é°Çπå„Ç≈é°Çπå„Ç≈é°Çπå„Ç≈é°Çπå„Ç≈é°Çπå„Ç≈é°Çπå„Ç≈é°Çπ
-		data.isMove = gameDatas.isPlayer;
+		data.isMove = gameDatas.isMove;
 		sendDatas[gameDatas.heightPos][gameDatas.widthPos] = data;
 	}
 
