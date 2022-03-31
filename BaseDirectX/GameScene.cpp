@@ -128,12 +128,29 @@ void GameScene::TitleUpdate()
 		hole.Init(XMFLOAT3(rand() % 20 - 10, 0, rand() % 20 - 10));
 		Holes::AddHole(hole);
 	}
-	if (Player::GetPlayer()->IsShootTrigger())
+
+	bool bombFlag;
+	if (bombs.GetBombAliveCount() > 2) { bombFlag = true; }
+	else { bombFlag = false; }
+
+	if (Player::GetPlayer()->CheakEmpty(
+		Player::GetPlayer()->GetFirstButtonVec3()))
 	{
-		XMFLOAT3 lastVec3 = { 1,0,0 };
-		//lastVec3.z = -lastVec3.z;
-		bombs.Shot(/*Œü‚«*/lastVec3, /*À•W*/Player::GetPlayer()->GetPos());
+		if (bombFlag)
+		{
+			bombs.Shot(Player::GetPlayer()->GetFirstButtonVec3(), Player::GetPlayer()->GetPos());
+		}
 	}
+	if (Player::GetPlayer()->CheakEmpty(
+		Player::GetPlayer()->GetSecondButtonVec3()))
+	{
+		if (bombFlag)
+		{
+			bombs.Shot(Player::GetPlayer()->GetSecondButtonVec3(), Player::GetPlayer()->GetPos());
+		}
+	}
+
+
 	bombs.PlayerCollision(Player::GetPlayer()->GetPos(), 1.2f);
 
 	bombs.enemyCollision(Enemys::enemys);

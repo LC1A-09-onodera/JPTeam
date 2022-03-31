@@ -53,7 +53,8 @@ void CheakOthello::Update(const OthelloData(&othelloData)[MAX_SIZE_Y][MAX_SIZE_Y
 	while (!comboOthelloDataPos.empty() && !saveOthelloDataPos.empty())
 	{
 		// /*-----左-----*/
-		// int maxLeft=lastX;(最初から左に何もない場合無視も必要)
+		// int maxLeft=lastX+1;(最初から左に何もない場合無視も必要)
+		// if(maxLeft>2) {}
 		// for(int i=1;i<maxLeft;i++)
 		// {
 		// 
@@ -78,7 +79,8 @@ void CheakOthello::Update(const OthelloData(&othelloData)[MAX_SIZE_Y][MAX_SIZE_Y
 		// }
 		// 
 		// /*-----右-----*/
-		// int maxRight=MAX_SIZE_X-1-lastX;
+		// int maxRight=MAX_SIZE_X-lastX;
+		// if(maxRight>2) {}
 		// for(int i=1;i<maxRight;i++)
 		// {
 		//		//右確認
@@ -102,7 +104,8 @@ void CheakOthello::Update(const OthelloData(&othelloData)[MAX_SIZE_Y][MAX_SIZE_Y
 		// }
 		// 
 		// /*-----上-----*/
-		// int maxUp=lastY;(最初から左に何もない場合無視も必要)
+		// int maxUp=lastY+1;
+		// if(maxUp>2) {}
 		// for(int i=1;i<maxUp;i++)
 		// {
 		//		//上確認
@@ -126,7 +129,8 @@ void CheakOthello::Update(const OthelloData(&othelloData)[MAX_SIZE_Y][MAX_SIZE_Y
 		// }
 		// 
 		// /*-----下-----*/
-		// int maxDown=MAX_SIZE_Y-1-lastY;(最初から何もない場合無視も必要)
+		// int maxDown=MAX_SIZE_Y-lastY;
+		// if(maxDown>2) {}
 		// for(int i=1;i<maxUp;i++)
 		// {
 		//		//下確認
@@ -152,7 +156,8 @@ void CheakOthello::Update(const OthelloData(&othelloData)[MAX_SIZE_Y][MAX_SIZE_Y
 		int maxTopLeft;
 		if (lastX <= lastY) { maxTopLeft = lastX; }
 		else { maxTopLeft = lastY; }
-		// 
+
+		if (maxTopLeft > 2) {}
 		// /*-----左斜め上-----*/
 		// for(int i=1;i<maxTopLeft;i++)
 		// {
@@ -180,6 +185,7 @@ void CheakOthello::Update(const OthelloData(&othelloData)[MAX_SIZE_Y][MAX_SIZE_Y
 		if (lastX <= lastY) { maxBottomLeft = lastX; }
 		else { maxBottomLeft = lastY; }
 
+		if (maxBottomLeft > 2) {}
 		// /*-----左斜め下-----*/
 		// for(int i=1;i<maxTopLeft;i++)
 		// {
@@ -207,6 +213,7 @@ void CheakOthello::Update(const OthelloData(&othelloData)[MAX_SIZE_Y][MAX_SIZE_Y
 		if (lastX <= lastY) { maxTopRight = lastX; }
 		else { maxTopRight = lastY; }
 
+		if (maxTopRight > 2) {}
 		// /*-----右斜め上-----*/
 		// for(int i=1;i<maxTopRight;i++)
 		// {
@@ -234,6 +241,7 @@ void CheakOthello::Update(const OthelloData(&othelloData)[MAX_SIZE_Y][MAX_SIZE_Y
 		if (lastX <= lastY) { maxBottomRight = lastX; }
 		else { maxBottomRight = lastY; }
 
+		if (maxBottomRight > 2) {}
 		// /*-----右斜め下-----*/
 		// for(int i=1;i<maxBottomRight;i++)
 		// {
