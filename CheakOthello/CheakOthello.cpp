@@ -264,13 +264,19 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>> &othelloData)
 				}
 		 }
 
-		if (!comboOthelloDataPos.empty()) { comboOthelloDataPos.erase(comboOthelloDataPos.begin()); }
+		if (!comboOthelloDataPos.empty())
+		{ 
+			comboOthelloDataPos.erase(comboOthelloDataPos.begin());
+			lastY = comboOthelloDataPos.front().first;
+			lastX = comboOthelloDataPos.front().second;
+		}
 		else  if (!saveOthelloDataPos.empty()) {
 			std::copy(
 				saveOthelloDataPos.begin(),
 				saveOthelloDataPos.end(),
 				std::back_inserter(comboOthelloDataPos));
 			combo++;
+			saveOthelloDataPos.clear();
 		}
 	}
 
