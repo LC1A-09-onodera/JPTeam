@@ -300,3 +300,8 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData)
 
 	//最後にコンボ後の盤面データを送る
 }
+
+const vector<vector<SendOthelloData>> &CheakOthello::GetOthelloDatas()
+{
+	return othelloDatas;
+}

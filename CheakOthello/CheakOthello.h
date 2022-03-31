@@ -44,6 +44,8 @@ public:
 	void Init();
 	void Update(const vector<vector<SendOthelloData>> &othelloData);
 
+	const vector<vector<SendOthelloData>> &GetOthelloDatas();
+
 private:
 
 };
