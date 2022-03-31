@@ -56,53 +56,61 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData)
 		}
 	}
 
-	//最後のを基準に左右と斜め判定
+	//最後のを基準に左右と斜め判定(jのfor文の範囲、i+1する必要あるか??)
 	while (!comboOthelloDataPos.empty() || !saveOthelloDataPos.empty())
 	{
 		/*-----左-----*/
-		int maxLeft = lastX;
-		for (int i = 1; i < maxLeft; i++)
+		int maxLeft = lastX + 1;
+		if (lastX > 2)
 		{
-
-			//左確認
-			if (cheakLeft)
+			for (int i = 1; i < maxLeft; i++)
 			{
-				//何もなかったら
-				if (othelloDatas[lastY][lastX - i].type == NONE)
+
+				//左確認
+				if (cheakLeft)
 				{
-					cheakLeft = false;
-				}
-				//同じだったら
-				else if (othelloDatas[lastY][lastX - i].isFront == side && i != 1)
-				{
-					for (int j = 1; j < i + 1; j++)
+					//何もなかったら
+					if (othelloDatas[lastY][lastX - i].type == NONE)
 					{
-						othelloDatas[lastY][lastX - j].isFront = side;
-						saveOthelloDataPos.push_back(make_pair(lastY, lastX - j));
+						cheakLeft = false;
+					}
+					//同じだったら
+					else if (othelloDatas[lastY][lastX - i].isFront == side && i != 1)
+					{
+						for (int j = 1; j < i + 1; j++)
+						{
+							othelloDatas[lastY][lastX - j].isFront = side;
+							saveOthelloDataPos.push_back(make_pair(lastY, lastX - j));
+							cheakLeft = false;
+						}
 					}
 				}
 			}
 		}
 
 		/*-----右-----*/
-		int maxRight = MAX_SIZE_X - 1 - lastX;
-		for (int i = 1; i < maxRight; i++)
+		int maxRight = MAX_SIZE_X - lastX;
+		if (maxRight > 2)
 		{
-			//右確認
-			if (cheakRight)
+			for (int i = 1; i < maxRight; i++)
 			{
-				//何もなかったら
-				if (othelloDatas[lastY][lastX + i].type == NONE)
+				//右確認
+				if (cheakRight)
 				{
-					cheakRight = false;
-				}
-				//同じだったら
-				else if (othelloDatas[lastY][lastX + i].isFront == side && i != 1)
-				{
-					for (int j = 1; j < i + 1; j++)
+					//何もなかったら
+					if (othelloDatas[lastY][lastX + i].type == NONE)
 					{
-						othelloDatas[lastY][lastX + j].isFront = side;
-						saveOthelloDataPos.push_back(make_pair(lastY, lastX + j));
+						cheakRight = false;
+					}
+					//同じだったら
+					else if (othelloDatas[lastY][lastX + i].isFront == side && i != 1)
+					{
+						for (int j = 1; j < i + 1; j++)
+						{
+							othelloDatas[lastY][lastX + j].isFront = side;
+							saveOthelloDataPos.push_back(make_pair(lastY, lastX + j));
+							cheakRight = false;
+						}
 					}
 				}
 			}
@@ -110,47 +118,55 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData)
 
 		/*-----上-----*/
 		int maxUp = lastY;
-		for (int i = 1; i < maxUp; i++)
+		if (maxUp > 2)
 		{
-			//上確認
-			if (cheakUp)
+			for (int i = 1; i < maxUp; i++)
 			{
-				//何もなかったら
-				if (othelloDatas[lastY - i][lastX].type == NONE)
+				//上確認
+				if (cheakUp)
 				{
-					cheakUp = false;
-				}
-				//同じだったら
-				else if (othelloDatas[lastY - i][lastX].isFront == side && i != 1)
-				{
-					for (int j = 1; j < i + 1; j++)
+					//何もなかったら
+					if (othelloDatas[lastY - i][lastX].type == NONE)
 					{
-						othelloDatas[lastY - j][lastX].isFront = side;
-						saveOthelloDataPos.push_back(make_pair(lastY - j, lastX));
+						cheakUp = false;
+					}
+					//同じだったら
+					else if (othelloDatas[lastY - i][lastX].isFront == side && i != 1)
+					{
+						for (int j = 1; j < i + 1; j++)
+						{
+							othelloDatas[lastY - j][lastX].isFront = side;
+							saveOthelloDataPos.push_back(make_pair(lastY - j, lastX));
+							cheakUp = false;
+						}
 					}
 				}
 			}
 		}
 
 		/*-----下-----*/
-		int maxDown = MAX_SIZE_Y - 1 - lastY;
-		for (int i = 1; i < maxUp; i++)
+		int maxDown = MAX_SIZE_Y - lastY;
+		if (maxDown > 2)
 		{
-			//下確認
-			if (cheakUp)
+			for (int i = 1; i < maxUp; i++)
 			{
-				//何もなかったら
-				if (othelloDatas[lastY + i][lastX].type == NONE)
+				//下確認
+				if (cheakDown)
 				{
-					cheakDown = false;
-				}
-				//同じだったら
-				else if (othelloDatas[lastY + i][lastX].isFront == side && i != 1)
-				{
-					for (int j = 1; j < i + 1; j++)
+					//何もなかったら
+					if (othelloDatas[lastY + i][lastX].type == NONE)
 					{
-						othelloDatas[lastY + j][lastX].isFront = side;
-						saveOthelloDataPos.push_back(make_pair(lastY + j, lastX));
+						cheakDown = false;
+					}
+					//同じだったら
+					else if (othelloDatas[lastY + i][lastX].isFront == side && i != 1)
+					{
+						for (int j = 1; j < i + 1; j++)
+						{
+							othelloDatas[lastY + j][lastX].isFront = side;
+							saveOthelloDataPos.push_back(make_pair(lastY + j, lastX));
+							cheakDown = false;
+						}
 					}
 				}
 			}
@@ -161,23 +177,27 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData)
 		else { maxTopLeft = lastY; }
 
 		/*-----左斜め上-----*/
-		for (int i = 1; i < maxTopLeft; i++)
+		if (maxTopLeft > 2)
 		{
-			//左斜め上確認
-			if (cheakTopLeft)
+			for (int i = 1; i < maxTopLeft; i++)
 			{
-				//何もなかったら
-				if (othelloDatas[lastY - i][lastX - i].type == NONE)
+				//左斜め上確認
+				if (cheakTopLeft)
 				{
-					cheakTopLeft = false;
-				}
-				//同じだったら
-				else if (othelloDatas[lastY - i][lastX - i].isFront == side && i != 1)
-				{
-					for (int j = 1; j < i + 1; j++)
+					//何もなかったら
+					if (othelloDatas[lastY - i][lastX - i].type == NONE)
 					{
-						othelloDatas[lastY - j][lastX - j].isFront = side;
-						saveOthelloDataPos.push_back(make_pair(lastY - j, lastX - j));
+						cheakTopLeft = false;
+					}
+					//同じだったら
+					else if (othelloDatas[lastY - i][lastX - i].isFront == side && i != 1)
+					{
+						for (int j = 1; j < i + 1; j++)
+						{
+							othelloDatas[lastY - j][lastX - j].isFront = side;
+							saveOthelloDataPos.push_back(make_pair(lastY - j, lastX - j));
+							cheakTopLeft = false;
+						}
 					}
 				}
 			}
@@ -188,23 +208,27 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData)
 		else { maxBottomLeft = lastY; }
 
 		/*-----左斜め下-----*/
-		for (int i = 1; i < maxTopLeft; i++)
+		if (maxBottomLeft > 2)
 		{
-			//左斜め下確認
-			if (cheakBottomLeft)
+			for (int i = 1; i < maxTopLeft; i++)
 			{
-				//何もなかったら
-				if (othelloDatas[lastY + i][lastX - i].type == NONE)
+				//左斜め下確認
+				if (cheakBottomLeft)
 				{
-					cheakBottomLeft = false;
-				}
-				//同じだったら
-				else if (othelloDatas[lastY + i][lastX - i].isFront == side && i != 1)
-				{
-					for (int j = 1; j < i + 1; j++)
+					//何もなかったら
+					if (othelloDatas[lastY + i][lastX - i].type == NONE)
 					{
-						othelloDatas[lastY + j][lastX - j].isFront = side;
-						saveOthelloDataPos.push_back(make_pair(lastY + j, lastX - j));
+						cheakBottomLeft = false;
+					}
+					//同じだったら
+					else if (othelloDatas[lastY + i][lastX - i].isFront == side && i != 1)
+					{
+						for (int j = 1; j < i + 1; j++)
+						{
+							othelloDatas[lastY + j][lastX - j].isFront = side;
+							saveOthelloDataPos.push_back(make_pair(lastY + j, lastX - j));
+							cheakBottomLeft = false;
+						}
 					}
 				}
 			}
@@ -215,23 +239,27 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData)
 		else { maxTopRight = lastY; }
 
 		/*-----右斜め上-----*/
-		for (int i = 1; i < maxTopRight; i++)
+		if (maxTopLeft > 2)
 		{
-			//右斜め上確認
-			if (cheakTopRight)
+			for (int i = 1; i < maxTopRight; i++)
 			{
-				//何もなかったら
-				if (othelloDatas[lastY - i][lastX + i].type == NONE)
+				//右斜め上確認
+				if (cheakTopRight)
 				{
-					cheakTopRight = false;
-				}
-				//同じだったら
-				else if (othelloDatas[lastY - i][lastX + i].isFront == side && i != 1)
-				{
-					for (int j = 1; j < i + 1; j++)
+					//何もなかったら
+					if (othelloDatas[lastY - i][lastX + i].type == NONE)
 					{
-						othelloDatas[lastY - j][lastX + j].isFront = side;
-						saveOthelloDataPos.push_back(make_pair(lastY - j, lastX + j));
+						cheakTopRight = false;
+					}
+					//同じだったら
+					else if (othelloDatas[lastY - i][lastX + i].isFront == side && i != 1)
+					{
+						for (int j = 1; j < i + 1; j++)
+						{
+							othelloDatas[lastY - j][lastX + j].isFront = side;
+							saveOthelloDataPos.push_back(make_pair(lastY - j, lastX + j));
+							cheakTopRight = false;
+						}
 					}
 				}
 			}
@@ -242,23 +270,27 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData)
 		else { maxBottomRight = lastY; }
 
 		/*-----右斜め下-----*/
-		for (int i = 1; i < maxBottomRight; i++)
+		if (maxBottomRight > 2)
 		{
-			//右斜め上確認
-			if (cheakBottomRight)
+			for (int i = 1; i < maxBottomRight; i++)
 			{
-				//何もなかったら
-				if (othelloDatas[lastY + i][lastX + i].type == NONE)
+				//右斜め上確認
+				if (cheakBottomRight)
 				{
-					cheakTopRight = false;
-				}
-				//同じだったら
-				else if (othelloDatas[lastY + i][lastX + i].isFront == side && i != 1)
-				{
-					for (int j = 1; j < i + 1; j++)
+					//何もなかったら
+					if (othelloDatas[lastY + i][lastX + i].type == NONE)
 					{
-						othelloDatas[lastY + j][lastX + j].isFront = side;
-						saveOthelloDataPos.push_back(make_pair(lastY + j, lastX + j));
+						cheakBottomRight = false;
+					}
+					//同じだったら
+					else if (othelloDatas[lastY + i][lastX + i].isFront == side && i != 1)
+					{
+						for (int j = 1; j < i + 1; j++)
+						{
+							othelloDatas[lastY + j][lastX + j].isFront = side;
+							saveOthelloDataPos.push_back(make_pair(lastY + j, lastX + j));
+							cheakBottomRight = false;
+						}
 					}
 				}
 			}
