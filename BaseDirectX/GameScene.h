@@ -11,6 +11,8 @@
 #include "../FbxLoader/FbxLoader.h"
 #include "../King/King.h"
 #include "../Bomb/BombManager.h"
+#include "../Oserro/Oserro.h"
+#include "../CheakOthello/CheakOthello.h"
 enum GameSceneName{TITLE, SELECT, GAME, END, RESULT};
 
 class GameScene
@@ -62,4 +64,6 @@ public://ÉVÅ[ÉìÇ≈égÇ§Ç‡ÇÃ
 
 	PostEffect postEffect;
 	Model sample;
+	OthelloManager othelloManager;
+	CheakOthello checkObject;
 };

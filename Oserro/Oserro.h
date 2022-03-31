@@ -2,6 +2,8 @@
 #include "../3DModel/Model.h"
 #include "../DX12operator.h"
 #include <list>
+
+
 enum OthelloType
 {
 	NORMAL,
@@ -10,20 +12,48 @@ enum OthelloType
 };
 struct OthelloData
 {
+	//配列にぶち込む
 	int widthPos = 0;
 	int heightPos = 0;
+
+
 	//専用のタイプが必要かもしれない
-	OthelloType type = NORMAL;
-	//表 = 白
-	bool IsFront = true;
+	OthelloType type = NONE;
+
+
+	//表 = 青
+	bool isFront = true;
+
+	//特殊な向きが出てきたら
 	bool isUp = true;
 	bool isRight = true;
+
+	//大賞の向き
 	list<bool> FrontActiveAngle;
 
+	//おれか俺じゃないか
 	bool isPlayer = false;
+
+
 	bool isMove = false;
 	OthelloData();
 };
+
+struct SendOthelloData
+{
+	OthelloType type = NONE;
+	bool isFront = true;
+	list<bool> FrontActiveAngle;
+	bool isMove = false;
+};
+
+namespace OthelloConstData
+{//定数
+	const int fieldSize = 8;
+	const float cellScale = 1.0f;
+	const XMFLOAT3 stageLeftTop{ 0, 0, 0 };
+}
+
 class Othello
 {
 public:
@@ -52,7 +82,7 @@ public:
 	void Draw();
 	void Finalize();
 
-	void Spawn(OthelloType type, int x, int y);
+	void Spawn(OthelloType type, int x, int y, bool isFront = true);
 
 	void Controll(const XMFLOAT3 &mousePos);
 
@@ -76,6 +106,8 @@ public:
 	void Finalize();
 	void Controll();
 	void AddPanel();
+
+	const vector<vector<SendOthelloData>> &Send();
 private:
 	void SetPlayer();
 	void Move();
@@ -84,4 +116,5 @@ private:
 	XMFLOAT3 mousePoint;
 	static list<Othello> othellos;
 	static OthelloModel oserroModel;
+	static vector<vector<SendOthelloData>> sendDatas;
 };

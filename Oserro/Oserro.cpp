@@ -5,13 +5,8 @@
 
 list<Othello> OthelloManager::othellos;
 OthelloModel OthelloManager::oserroModel;
-
-namespace
-{
-	const int fieldSize = 8;
-	const float cellScale = 1.0f;
-	const XMFLOAT3 stageLeftTop{ 0, 0, 0 };
-}
+vector<vector<SendOthelloData>> OthelloManager::sendDatas;
+using namespace OthelloConstData;
 
 OthelloData::OthelloData()
 {
@@ -33,12 +28,20 @@ void Othello::Update()
 	//タイプがNONE出なかったら生きている
 	bool isAlive = data.type != NONE;
 	if (!isAlive) return;
-	float x = (data.widthPos * cellScale) + (cellScale / 2);
-	float y = (data.heightPos * cellScale) + (cellScale / 2);
+	float x = (data.widthPos * cellScale * 2);
+	float y = -(data.heightPos * cellScale * 2);
 
 	if (!data.isPlayer)
 	{
-		each.position = { x, y ,0 };
+		each.position = XMVECTOR{ x, y ,0, 0 };
+		if (data.isFront)
+		{
+			each.rotation.y = 0;
+		}
+		else
+		{
+			each.rotation.y = 180;
+		}
 	}
 }
 
@@ -63,7 +66,7 @@ void Othello::RightRevers()
 	float rate = 0;
 	float easeRate = EaseInOutQuad(XMFLOAT3{}, XMFLOAT3{ 1, 0, 0 }, rate).x;
 
-	if (data.IsFront)
+	if (data.isFront)
 	{
 		each.rotation.y = 180.0f * easeRate;
 	}
@@ -78,8 +81,8 @@ void Othello::RightRevers()
 		//回転フラグoff
 
 		//表裏の変更
-		data.IsFront = !data.IsFront;
-		if (data.IsFront)
+		data.isFront = !data.isFront;
+		if (data.isFront)
 		{
 			each.rotation.y = 0;
 		}
@@ -94,7 +97,7 @@ void Othello::LeftRevers()
 {
 	float rate = 0;
 	float easeRate = EaseInOutQuad(XMFLOAT3{}, XMFLOAT3{ 1, 0, 0 }, rate).x;
-	if (data.IsFront)
+	if (data.isFront)
 	{
 		each.rotation.y = -180.0f * easeRate;
 	}
@@ -108,9 +111,9 @@ void Othello::LeftRevers()
 		//回転フラグoff
 
 		//表裏の変更
-		data.IsFront = !data.IsFront;
+		data.isFront = !data.isFront;
 
-		if (data.IsFront)
+		if (data.isFront)
 		{
 			each.rotation.y = 0;
 		}
@@ -123,17 +126,14 @@ void Othello::LeftRevers()
 }
 void Othello::Controll(const XMFLOAT3 &mousePos)
 {
-	//data.widthPos = data.heightPos = 1;
 	XMVECTOR playerPos = { data.widthPos * cellScale,data.heightPos * -cellScale , 0, 0 };
-	//XMVECTOR playerPos = each.position;
-
-	//XMFLOAT3 tmp = { 8.56402779, 6.03010273, 0 };
 
 	playerPos += ConvertXMFLOAT3toXMVECTOR(stageLeftTop);
 	XMVECTOR dist = ConvertXMFLOAT3toXMVECTOR(mousePos - playerPos);
 	XMVECTOR angle = XMVector3Normalize(dist);
 
 
+	bool isOver = false;
 	while (true)
 	{
 		if (Input::KeyTrigger(DIK_1))
@@ -193,63 +193,96 @@ void Othello::Controll(const XMFLOAT3 &mousePos)
 			}
 		}
 
-		data.IsFront = !data.IsFront;
+		//範囲を超過したか
+
+		isOver = (data.widthPos < 0 ||
+			data.widthPos >= fieldSize ||
+			data.heightPos < 0 ||
+			data.heightPos >= fieldSize);
+		if (isOver)
+		{
+			if (data.widthPos < 0)
+			{
+				data.widthPos = 0;
+			}
+			if (data.widthPos >= fieldSize)
+			{
+				data.widthPos = fieldSize - 1;
+			}
+			if (data.heightPos < 0)
+			{
+				data.heightPos = 0;
+			}
+			if (data.heightPos >= fieldSize)
+			{
+				data.heightPos = fieldSize - 1;
+			}
+
+			break;
+		}
+		//ひっくり返る
+		data.isFront = !data.isFront;
 
 	}
 
 
 	//傾かせる
 	//縦横どちらが長いか
-	if (data.IsFront)
+
+	if (!isOver)
 	{
-		if (Input::KeyTrigger(DIK_1))
+		if (data.isFront)
 		{
-			int hoge = 0;
-		}
-		if (fabs(angle.m128_f32[0]) > fabs(angle.m128_f32[1]))
-		{//横のほうが長かったら
-			//左右どちらか
-			playerPos.m128_f32[0] += dist.m128_f32[0];
-			each.rotation.y = dist.m128_f32[0] * -90;
-			each.rotation.x = 0;
+			if (Input::KeyTrigger(DIK_1))
+			{
+				int hoge = 0;
+			}
+			if (fabs(angle.m128_f32[0]) > fabs(angle.m128_f32[1]))
+			{//横のほうが長かったら
+				//左右どちらか
+				playerPos.m128_f32[0] += dist.m128_f32[0];
+				each.rotation.y = dist.m128_f32[0] * -90;
+				each.rotation.x = 0;
+			}
+			else
+			{//縦のほうが長かったら
+
+				playerPos.m128_f32[1] += dist.m128_f32[1];
+				//上下どちらか
+				each.rotation.x = dist.m128_f32[1] * 90;
+				each.rotation.y = 0;
+			}
 		}
 		else
-		{//縦のほうが長かったら
+		{
+			if (fabs(angle.m128_f32[0]) > fabs(angle.m128_f32[1]))
+			{//横のほうが長かったら
+				//左右どちらか
+				playerPos.m128_f32[0] += dist.m128_f32[0];
+				each.rotation.y = dist.m128_f32[0] * -90 + 180;
+				each.rotation.x = 0;
+			}
+			else
+			{//縦のほうが長かったら
+				playerPos.m128_f32[1] += dist.m128_f32[1];
+				//上下どちらか
+				each.rotation.x = dist.m128_f32[1] * 90 + 180;
+				each.rotation.y = 0;
+			}
 
-			playerPos.m128_f32[1] += dist.m128_f32[1];
-			//上下どちらか
-			each.rotation.x = dist.m128_f32[1] * 90;
-			each.rotation.y = 0;
 		}
-	}
-	else
-	{
-		if (fabs(angle.m128_f32[0]) > fabs(angle.m128_f32[1]))
-		{//横のほうが長かったら
-			//左右どちらか
-			playerPos.m128_f32[0] += dist.m128_f32[0];
-			each.rotation.y = dist.m128_f32[0] * -90 + 180;
-			each.rotation.x = 0;
-		}
-		else
-		{//縦のほうが長かったら
-			playerPos.m128_f32[1] += dist.m128_f32[1];
-			//上下どちらか
-			each.rotation.x = dist.m128_f32[1] * 90 + 180;
-			each.rotation.y = 0;
-		}
-
 	}
 	each.position = playerPos;
 }
 
-void Othello::Spawn(OthelloType type, int x, int y)
+void Othello::Spawn(OthelloType type, int x, int y, bool isFront)
 {
 	if (data.type == NONE)
 	{
 		data.widthPos = x;
 		data.heightPos = y;
 		data.type = type;
+		data.isFront = isFront;
 	}
 }
 
@@ -262,6 +295,14 @@ void OthelloManager::Init()
 	OthelloData *playerData = player.GetGameData();
 	playerData->isPlayer = true;
 	othellos.push_back(player);
+
+	sendDatas.resize(fieldSize);
+
+	auto itr = sendDatas.begin();
+	for (; itr != sendDatas.end(); itr++)
+	{
+		itr->resize(fieldSize);
+	}
 }
 
 void OthelloManager::Update()
@@ -375,4 +416,68 @@ void OthelloManager::RemovePlayer()
 	itr->GetGameData()->isPlayer = false;
 	int x = itr->GetGameData()->widthPos;
 	int y = itr->GetGameData()->heightPos;
+}
+
+void OthelloManager::AddPanel()
+{
+	Othello panelA, panelB, panelC, panelD;
+	panelA.Spawn(NORMAL, 2, 0, true);
+	panelA.Init(&oserroModel);
+	othellos.push_back(panelA);
+
+	panelB.Spawn(NORMAL, 3, 0, false);
+	panelB.Init(&oserroModel);
+	othellos.push_back(panelB);
+
+	panelC.Spawn(NORMAL, 3, 1, false);
+	panelC.Init(&oserroModel);
+	othellos.push_back(panelC);
+	
+	panelD.Spawn(NORMAL, 3, 2, true);
+	panelD.Init(&oserroModel);
+	othellos.push_back(panelD);
+}
+
+const vector<vector<SendOthelloData>> &OthelloManager::Send()
+{
+	if (Input::KeyTrigger(DIK_1))
+	{
+		int hoge = 0;
+	}
+	SendOthelloData empty;
+	//空を作る
+	empty.isFront = false;
+	empty.isMove = false;
+	empty.type = NONE;
+	for (int i = 0; i < 8; i++)
+	{
+		empty.FrontActiveAngle.push_back(false);
+	}
+
+	//一回全体を空の駒で埋める
+	for (int i = 0; i < fieldSize; i++)
+	{
+		for (int j = 0; j < fieldSize; j++)
+		{
+			sendDatas[i][j] = empty;
+		}
+	}
+
+	//今存在する駒を突っ込んでいく
+	auto itr = othellos.begin();
+	for(;itr != othellos.end();itr++)
+	{
+		OthelloData gameDatas = *itr->GetGameData();
+		SendOthelloData data;
+
+		data.FrontActiveAngle = gameDatas.FrontActiveAngle;
+		data.isFront = gameDatas.isFront;
+		data.type = gameDatas.type;
+
+		//後で治せ後で治せ後で治せ後で治せ後で治せ後で治せ後で治せ後で治せ後で治せ後で治せ後で治せ
+		data.isMove = gameDatas.isPlayer;
+		sendDatas[gameDatas.heightPos][gameDatas.widthPos] = data;
+	}
+
+	return sendDatas;
 }
