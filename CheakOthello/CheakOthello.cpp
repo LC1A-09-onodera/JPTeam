@@ -59,6 +59,16 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData)
 	//最後のを基準に左右と斜め判定(jのfor文の範囲、i+1する必要あるか??)
 	while (!comboOthelloDataPos.empty() || !saveOthelloDataPos.empty())
 	{
+		//初期化
+		cheakRight = true;
+		cheakLeft = true;
+		cheakUp = true;
+		cheakDown = true;
+		cheakTopLeft = true;
+		cheakBottomLeft = true;
+		cheakTopRight = true;
+		cheakBottomRight = true;
+
 		/*-----左-----*/
 		int maxLeft = lastX + 1;
 		if (maxLeft > 2 && lastX >= 2)
@@ -369,7 +379,7 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData)
 			lastX = comboOthelloDataPos.front().second;
 		}
 	}
-
+	combo = 0;
 	//最後にコンボ後の盤面データを送る
 }
 

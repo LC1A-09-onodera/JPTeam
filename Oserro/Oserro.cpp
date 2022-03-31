@@ -296,7 +296,7 @@ void OthelloManager::Init()
 {
 	oserroModel.CreateModel("newOserro", ShaderManager::playerShader);
 	Othello player;
-	player.Spawn(NORMAL, 4, 4);
+	player.Spawn(NORMAL, 2, 2);
 	player.Init(&oserroModel);
 	OthelloData *playerData = player.GetGameData();
 	playerData->isPlayer = false;
@@ -445,7 +445,7 @@ void OthelloManager::RemovePlayer()
 void OthelloManager::AddPanel()
 {
 	Othello panelA, panelB, panelC, panelD;
-	panelA.Spawn(NORMAL, 0, 0, true);
+	panelA.Spawn(NORMAL, 0, 1, true);
 	panelA.Init(&oserroModel);
 	othellos.push_back(panelA);
 
@@ -453,11 +453,11 @@ void OthelloManager::AddPanel()
 	panelB.Init(&oserroModel);
 	othellos.push_back(panelB);
 
-	panelC.Spawn(NORMAL, 2, 2, false);
+	panelC.Spawn(NORMAL, 2, 0, true);
 	panelC.Init(&oserroModel);
 	othellos.push_back(panelC);
 	
-	panelD.Spawn(NORMAL, 3, 3, true);
+	panelD.Spawn(NORMAL, 2, 1, false);
 	panelD.Init(&oserroModel);
 	othellos.push_back(panelD);
 }
