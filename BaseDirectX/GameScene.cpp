@@ -67,7 +67,7 @@ void GameScene::Init()
 	BaseDirectX::GetAdress();
 	//カメラ初期化
 	Camera::Init();
-	Camera::eye = { 0, 50, -1.0 };
+	Camera::eye = { 0, 0, -20.0 };
 	Camera::target = { 0, 0, 0 };
 	Camera::Update();
 	//Imguiの初期化
@@ -89,90 +89,41 @@ void GameScene::Init()
 	Model::SetLight(light);
 	//プレイヤーの初期化
 	Player::GetPlayer()->Init();
-	EnemyModels::LoadModels();
-	BombMesh::LoadModel();
-	HoleModels::Init();
-	Holes::Init();
-	for (int i = 0; i < 30; i++)
-	{
-		if (rand() % 2 == 0)
-		{
-			Enemys::AddEnemy(EnemyType::NONE, EnemyMoveDirection::RIGHT);
-		}
-		else
-		{
-			Enemys::AddEnemy(EnemyType::SUPER, EnemyMoveDirection::HATE);
-		}
-	}
-	king.Init();
+	
 	//ポストエフェクトの初期化
 	postEffect.Initialize();
 
-	stageFrameTex.LoadGraph(L"Resource/Img/StageFrame.png");
-	stageFrameSp.CreateSprite(stageFrameTex, XMFLOAT3(0, 0, 0));
-
+	
 	/*model = FbxLoader::GetInstance()->LoadModelFromFile("boneTest");
 	object = new FBXObject;
 	object->Initialize();
 	object->SetModel(model);
 	object->PlayAnimation();*/
+	sample.CreateModel("newOserro", ShaderManager::playerShader);
+	sample.each.rotation.x = 0;
 
-	bombs.Init();
+	othelloManager.Init();
+	othelloManager.AddPanel();
+
+	checkObject.Init();
 }
 
 void GameScene::TitleUpdate()
 {
-	if (Input::KeyTrigger(DIK_N))
-	{
-		Hole hole;
-		hole.Init(XMFLOAT3(rand() % 20 - 10, 0, rand() % 20 - 10));
-		Holes::AddHole(hole);
-	}
+	//WindowsAPI::GetMousePos();
+	sample.each.position = ConvertXMFLOAT3toXMVECTOR(Camera::MousePosition(0.0f));
+	sample.Update();
 
-	bool bombFlag;
-	if (bombs.GetBombAliveCount() > 2) { bombFlag = true; }
-	else { bombFlag = false; }
+	othelloManager.Controll();
+	othelloManager.Update();
 
-	if (Player::GetPlayer()->CheakEmpty(
-		Player::GetPlayer()->GetFirstButtonVec3()))
-	{
-		if (bombFlag)
-		{
-			bombs.Shot(Player::GetPlayer()->GetFirstButtonVec3(), Player::GetPlayer()->GetPos());
-		}
-	}
-	if (Player::GetPlayer()->CheakEmpty(
-		Player::GetPlayer()->GetSecondButtonVec3()))
-	{
-		if (bombFlag)
-		{
-			bombs.Shot(Player::GetPlayer()->GetSecondButtonVec3(), Player::GetPlayer()->GetPos());
-		}
-	}
-
-
-	bombs.PlayerCollision(Player::GetPlayer()->GetPos(), 1.2f);
-
-	bombs.enemyCollision(Enemys::enemys);
-
-	bombs.BlastBombCollision();
-	//bombs.KingCollision(&king);
-
-	//if (Player::GetPlayer()->IsDetonatingTrigger()) { bombs.Explosion(); }
-
-	Player::GetPlayer()->Update(bombs.GetBombAlive());
-	//KingSample::king.GetModel().Update();
-	Enemys::Update(Player::GetPlayer()->GetPos());
-	bombs.Update();
-	Holes::Update();
-	king.Update();
-	ParticleControl::Update();
-	if (Input::KeyTrigger(DIK_SPACE))
+	checkObject.Update(othelloManager.Send());
+	/*if (Input::KeyTrigger(DIK_SPACE))
 	{
 		SceneNum = GAME;
 		Camera::eye.v.y = 20;
 		Camera::eye.v.z = -10;
-	}
+	}*/
 }
 
 void GameScene::SelectUpdate()
@@ -226,14 +177,8 @@ void GameScene::TitleDraw()
 {
 	//PostEffectのPreDraw
 	postEffect.PreDraw();
-
-	Player::GetPlayer()->Draw();
-	Enemys::Draw();
-	king.Draw();
-	Holes::Draw();
-	//PostEffectのPostDraw
-	postEffect.PostDraw();
-	bombs.Draw();
+	Draw3DObject(sample);
+	othelloManager.Draw();
 	ParticleControl::Draw();
 	BaseDirectX::clearColor[0] = 0.0f;
 	BaseDirectX::clearColor[1] = 0.0f;
@@ -245,8 +190,6 @@ void GameScene::TitleDraw()
 
 	//スプライトの描画-------------------------
 	//titleSprite.SpriteDraw();
-	stageFrameSp.ChangeSize(stageFrameTex, 1280, 720);
-	stageFrameSp.SpriteDraw();
 	Imgui::DrawImGui();
 	//描画コマンドここまで
 	BaseDirectX::UpdateBack();

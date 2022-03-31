@@ -78,7 +78,16 @@ void WindowsAPI::Update()
 
 void WindowsAPI::Gethwnd()
 {
-    
+
+}
+
+POINT WindowsAPI::GetMousePos()
+{
+    POINT result;
+    GetCursorPos(&result);
+    ScreenToClient(hwnd, &result);
+
+    return result;
 }
 
 

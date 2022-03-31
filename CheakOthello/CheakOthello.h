@@ -1,15 +1,15 @@
 #pragma once
 #include <vector>
-
-struct OthelloData
-{
-	bool side;
-	//enum Status
-	//bool 表裏
-	//bool 最後に動いたか
-	//bool どっちかの色を基準とした方向[8]
-	//OthelloData othelloData[8][8]
-};
+#include "../Oserro/Oserro.h"
+//struct OthelloData
+//{
+//	bool side;
+//	//enum Status
+//	//bool 表裏
+//	//bool 最後に動いたか
+//	//bool どっちかの色を基準とした方向[8]
+//	//OthelloData othelloData[8][8]
+//};
 
 class CheakOthello
 {
@@ -36,13 +36,13 @@ private:
 	int combo;
 	std::vector<std::pair<int, int>> comboOthelloDataPos;
 	std::vector<std::pair<int, int>> saveOthelloDataPos;
-	OthelloData othelloDatas[MAX_SIZE_Y][MAX_SIZE_X];
+	vector<vector<SendOthelloData>> othelloDatas;
 
 public:
 	CheakOthello();
 	~CheakOthello();
 	void Init();
-	void Update(const OthelloData(&othelloData)[MAX_SIZE_Y][MAX_SIZE_Y]);
+	void Update(const vector<vector<SendOthelloData>> &othelloData);
 
 private:
 
