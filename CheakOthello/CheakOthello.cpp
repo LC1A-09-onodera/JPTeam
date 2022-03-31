@@ -77,7 +77,7 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData)
 					//同じだったら
 					else if (othelloDatas[lastY][lastX - i].isFront == side && i != 1)
 					{
-						for (int j = 1; j < i + 1; j++)
+						for (int j = 1; j < i; j++)
 						{
 							othelloDatas[lastY][lastX - j].isFront = side;
 							saveOthelloDataPos.push_back(make_pair(lastY, lastX - j));
@@ -105,7 +105,7 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData)
 					//同じだったら
 					else if (othelloDatas[lastY][lastX + i].isFront == side && i != 1)
 					{
-						for (int j = 1; j < i + 1; j++)
+						for (int j = 1; j < i; j++)
 						{
 							othelloDatas[lastY][lastX + j].isFront = side;
 							saveOthelloDataPos.push_back(make_pair(lastY, lastX + j));
@@ -117,7 +117,7 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData)
 		}
 
 		/*-----上-----*/
-		int maxUp = lastY;
+		int maxUp = lastY + 1;
 		if (maxUp > 2)
 		{
 			for (int i = 1; i < maxUp; i++)
@@ -133,7 +133,7 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData)
 					//同じだったら
 					else if (othelloDatas[lastY - i][lastX].isFront == side && i != 1)
 					{
-						for (int j = 1; j < i + 1; j++)
+						for (int j = 1; j < i; j++)
 						{
 							othelloDatas[lastY - j][lastX].isFront = side;
 							saveOthelloDataPos.push_back(make_pair(lastY - j, lastX));
@@ -161,7 +161,7 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData)
 					//同じだったら
 					else if (othelloDatas[lastY + i][lastX].isFront == side && i != 1)
 					{
-						for (int j = 1; j < i + 1; j++)
+						for (int j = 1; j < i; j++)
 						{
 							othelloDatas[lastY + j][lastX].isFront = side;
 							saveOthelloDataPos.push_back(make_pair(lastY + j, lastX));
@@ -173,8 +173,8 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData)
 		}
 
 		int maxTopLeft;
-		if (lastX <= lastY) { maxTopLeft = lastX; }
-		else { maxTopLeft = lastY; }
+		if (lastX <= lastY) { maxTopLeft = lastX + 1; }
+		else { maxTopLeft = lastY + 1; }
 
 		/*-----左斜め上-----*/
 		if (maxTopLeft > 2)
@@ -192,7 +192,7 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData)
 					//同じだったら
 					else if (othelloDatas[lastY - i][lastX - i].isFront == side && i != 1)
 					{
-						for (int j = 1; j < i + 1; j++)
+						for (int j = 1; j < i; j++)
 						{
 							othelloDatas[lastY - j][lastX - j].isFront = side;
 							saveOthelloDataPos.push_back(make_pair(lastY - j, lastX - j));
@@ -204,8 +204,8 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData)
 		}
 
 		int maxBottomLeft;
-		if (lastX <= lastY) { maxBottomLeft = lastX; }
-		else { maxBottomLeft = lastY; }
+		if (lastX <= lastY) { maxBottomLeft = lastX + 1; }
+		else { maxBottomLeft = lastY + 1; }
 
 		/*-----左斜め下-----*/
 		if (maxBottomLeft > 2)
@@ -223,7 +223,7 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData)
 					//同じだったら
 					else if (othelloDatas[lastY + i][lastX - i].isFront == side && i != 1)
 					{
-						for (int j = 1; j < i + 1; j++)
+						for (int j = 1; j < i; j++)
 						{
 							othelloDatas[lastY + j][lastX - j].isFront = side;
 							saveOthelloDataPos.push_back(make_pair(lastY + j, lastX - j));
@@ -235,8 +235,8 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData)
 		}
 
 		int maxTopRight;
-		if (lastX <= lastY) { maxTopRight = lastX; }
-		else { maxTopRight = lastY; }
+		if (lastX <= lastY) { maxTopRight = lastX + 1; }
+		else { maxTopRight = lastY + 1; }
 
 		/*-----右斜め上-----*/
 		if (maxTopLeft > 2)
@@ -254,7 +254,7 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData)
 					//同じだったら
 					else if (othelloDatas[lastY - i][lastX + i].isFront == side && i != 1)
 					{
-						for (int j = 1; j < i + 1; j++)
+						for (int j = 1; j < i; j++)
 						{
 							othelloDatas[lastY - j][lastX + j].isFront = side;
 							saveOthelloDataPos.push_back(make_pair(lastY - j, lastX + j));
@@ -266,8 +266,8 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData)
 		}
 
 		int maxBottomRight;
-		if (lastX <= lastY) { maxBottomRight = lastX; }
-		else { maxBottomRight = lastY; }
+		if (lastX <= lastY) { maxBottomRight = lastX + 1; }
+		else { maxBottomRight = lastY + 1; }
 
 		/*-----右斜め下-----*/
 		if (maxBottomRight > 2)
@@ -285,7 +285,7 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData)
 					//同じだったら
 					else if (othelloDatas[lastY + i][lastX + i].isFront == side && i != 1)
 					{
-						for (int j = 1; j < i + 1; j++)
+						for (int j = 1; j < i; j++)
 						{
 							othelloDatas[lastY + j][lastX + j].isFront = side;
 							saveOthelloDataPos.push_back(make_pair(lastY + j, lastX + j));
@@ -333,7 +333,7 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData)
 	//最後にコンボ後の盤面データを送る
 }
 
-const vector<vector<SendOthelloData>> &CheakOthello::GetOthelloDatas()
+const vector<vector<SendOthelloData>>& CheakOthello::GetOthelloDatas()
 {
 	return othelloDatas;
 }
