@@ -13,6 +13,7 @@
 #include "../Bomb/BombManager.h"
 #include "../Oserro/Oserro.h"
 #include "../CheakOthello/CheakOthello.h"
+#include "../water/water.h"
 enum GameSceneName{TITLE, SELECT, GAME, END, RESULT};
 
 class GameScene
@@ -66,4 +67,5 @@ public://ÉVÅ[ÉìÇ≈égÇ§Ç‡ÇÃ
 	Model sample;
 	OthelloManager othelloManager;
 	CheakOthello checkObject;
+	Water water;
 };
