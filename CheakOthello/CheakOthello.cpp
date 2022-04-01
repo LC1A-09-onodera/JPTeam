@@ -98,7 +98,7 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData)
 						for (int j = 1; j < i; j++)
 						{
 							if (!checkCombo) { combo++; checkCombo = true; }
-							othelloDatas[lastY][lastX - i].comboCount = combo;
+							othelloDatas[lastY][lastX - j].comboCount = combo;
 							othelloDatas[lastY][lastX - j].isFront = side;
 							saveOthelloDataPos.push_back(make_pair(lastY, lastX - j));
 							cheakLeft = false;
@@ -133,7 +133,7 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData)
 						for (int j = 1; j < i; j++)
 						{
 							if (!checkCombo) { combo++; checkCombo = true; }
-							othelloDatas[lastY][lastX + i].comboCount = combo;
+							othelloDatas[lastY][lastX + j].comboCount = combo;
 							othelloDatas[lastY][lastX + j].isFront = side;
 							saveOthelloDataPos.push_back(make_pair(lastY, lastX + j));
 							cheakRight = false;
