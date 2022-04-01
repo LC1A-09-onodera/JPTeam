@@ -580,6 +580,13 @@ void OthelloManager::SetPanel()
 	//どのマスにマウスがあるのかを確認
 	int x = stagePos.x / (cellScale * 2);
 	int y = stagePos.y / -(cellScale * 2);
+
+
+	bool isOutSide = (x < 0 || x >= fieldSize || y < 0 || y >= fieldSize);
+	if (isOutSide)
+	{
+		return;
+	}
 	auto itr = othellos.begin();
 	for (; itr != othellos.end(); itr++)
 	{
