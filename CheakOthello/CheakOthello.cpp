@@ -8,7 +8,7 @@ CheakOthello::CheakOthello()
 	//lastX = 0;
 	//lastY = 0;
 	//cheakSize = 0;
-	combo = 0;
+	//combo = 0;
 }
 
 CheakOthello::~CheakOthello()
@@ -17,21 +17,23 @@ CheakOthello::~CheakOthello()
 
 void CheakOthello::Init()
 {
-	combo = 0;
+	//combo = 0;
 }
 
 void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData)
 {
 	int lastX, lastY;				//最後の座標を保存する変数
-	bool side;					//表か裏か
-	bool cheakRight = true;
-	bool cheakLeft = true;
-	bool cheakUp = true;
-	bool cheakDown = true;
-	bool cheakTopLeft = true;
-	bool cheakBottomLeft = true;
-	bool cheakTopRight = true;
-	bool cheakBottomRight = true;
+	int combo = 0;					//コンボ保存用
+	bool side;						//表か裏か
+	bool cheakRight = true;			//右が探索中か
+	bool cheakLeft = true;			//左が探索中か
+	bool cheakUp = true;			//上が探索中か
+	bool cheakDown = true;			//下が探索中か
+	bool cheakTopLeft = true;		//左斜め上が探索中か
+	bool cheakBottomLeft = true;	//左斜め下が探索中か
+	bool cheakTopRight = true;		//右斜め上が探索中か
+	bool cheakBottomRight = true;	//右斜め下が探索中か
+	bool checkCombo = false;		//コンボが加算されたか
 
 
 	if (Input::KeyTrigger(DIK_1))
@@ -68,6 +70,7 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData)
 		cheakBottomLeft = true;
 		cheakTopRight = true;
 		cheakBottomRight = true;
+		checkCombo = false;
 
 		/*-----左-----*/
 		int maxLeft = lastX + 1;
@@ -94,6 +97,8 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData)
 					{
 						for (int j = 1; j < i; j++)
 						{
+							if (!checkCombo) { combo++; checkCombo = true; }
+							//othellDatas[lastY][lastX-i].combo=combo;
 							othelloDatas[lastY][lastX - j].isFront = side;
 							saveOthelloDataPos.push_back(make_pair(lastY, lastX - j));
 							cheakLeft = false;
@@ -127,6 +132,8 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData)
 					{
 						for (int j = 1; j < i; j++)
 						{
+							if (!checkCombo) { combo++; checkCombo = true; }
+							//othellDatas[lastY][lastX+i].combo=combo;
 							othelloDatas[lastY][lastX + j].isFront = side;
 							saveOthelloDataPos.push_back(make_pair(lastY, lastX + j));
 							cheakRight = false;
@@ -160,6 +167,8 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData)
 					{
 						for (int j = 1; j < i; j++)
 						{
+							if (!checkCombo) { combo++; checkCombo = true; }
+							//othellDatas[lastY-i][lastX].combo=combo;
 							othelloDatas[lastY - j][lastX].isFront = side;
 							saveOthelloDataPos.push_back(make_pair(lastY - j, lastX));
 							cheakUp = false;
@@ -193,6 +202,8 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData)
 					{
 						for (int j = 1; j < i; j++)
 						{
+							if (!checkCombo) { combo++; checkCombo = true; }
+							//othellDatas[lastY+i][lastX].combo=combo;
 							othelloDatas[lastY + j][lastX].isFront = side;
 							saveOthelloDataPos.push_back(make_pair(lastY + j, lastX));
 							cheakDown = false;
@@ -229,6 +240,8 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData)
 					{
 						for (int j = 1; j < i; j++)
 						{
+							if (!checkCombo) { combo++; checkCombo = true; }
+							//othellDatas[lastY-i][lastX-i].combo=combo;
 							othelloDatas[lastY - j][lastX - j].isFront = side;
 							saveOthelloDataPos.push_back(make_pair(lastY - j, lastX - j));
 							cheakTopLeft = false;
@@ -265,6 +278,8 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData)
 					{
 						for (int j = 1; j < i; j++)
 						{
+							if (!checkCombo) { combo++; checkCombo = true; }
+							//othellDatas[lastY+i][lastX-i].combo=combo;
 							othelloDatas[lastY + j][lastX - j].isFront = side;
 							saveOthelloDataPos.push_back(make_pair(lastY + j, lastX - j));
 							cheakBottomLeft = false;
@@ -301,6 +316,8 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData)
 					{
 						for (int j = 1; j < i; j++)
 						{
+							if (!checkCombo) { combo++; checkCombo = true; }
+							//othellDatas[lastY-ilastX+i].combo=combo;
 							othelloDatas[lastY - j][lastX + j].isFront = side;
 							saveOthelloDataPos.push_back(make_pair(lastY - j, lastX + j));
 							cheakTopRight = false;
@@ -337,6 +354,8 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData)
 					{
 						for (int j = 1; j < i; j++)
 						{
+							if (!checkCombo) { combo++; checkCombo = true; }
+							//othellDatas[lastY+i][lastX+i].combo=combo;
 							othelloDatas[lastY + j][lastX + j].isFront = side;
 							saveOthelloDataPos.push_back(make_pair(lastY + j, lastX + j));
 							cheakBottomRight = false;
@@ -356,7 +375,7 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData)
 						saveOthelloDataPos.begin(),
 						saveOthelloDataPos.end(),
 						std::back_inserter(comboOthelloDataPos));
-					combo++;
+					//combo++;
 					saveOthelloDataPos.clear();
 					lastY = comboOthelloDataPos.front().first;
 					lastX = comboOthelloDataPos.front().second;
@@ -368,18 +387,19 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData)
 				lastX = comboOthelloDataPos.front().second;
 			}
 		}
+		//↓そもそも通らないかも
 		else  if (!saveOthelloDataPos.empty()) {
 			std::copy(
 				saveOthelloDataPos.begin(),
 				saveOthelloDataPos.end(),
 				std::back_inserter(comboOthelloDataPos));
-			combo++;
+			//combo++;
 			saveOthelloDataPos.clear();
 			lastY = comboOthelloDataPos.front().first;
 			lastX = comboOthelloDataPos.front().second;
 		}
 	}
-	combo = 0;
+	//combo = 0;
 	//最後にコンボ後の盤面データを送る
 }
 
