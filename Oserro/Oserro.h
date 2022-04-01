@@ -54,6 +54,7 @@ struct OthelloData
 	bool isReverce = false;
 
 	int animationTimer = 0;
+	int waitTimer = 0;
 };
 struct SendOthelloData
 {
@@ -70,6 +71,7 @@ namespace OthelloConstData
 	const float cellScale = 1.0f;
 	const XMFLOAT3 stageLeftTop{ -cellScale * fieldSize / 2, cellScale * fieldSize / 2, 0 };
 	const int animationTimerMax = 30;
+	const int waitTimerMax = 30;
 }
 
 class Othello
