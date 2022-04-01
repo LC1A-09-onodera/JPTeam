@@ -348,7 +348,7 @@ XMFLOAT3 Camera::EyeToMouseVec()
 XMFLOAT3 Camera::MousePosition(float z)
 {
 	XMFLOAT3 mouseVec = EyeToMouseVec();
-	int count;
+	float count;
 	count = z - Camera::eye.v.z / mouseVec.z;
 	float x;
 	x = mouseVec.x * count;

@@ -1,5 +1,6 @@
 #pragma once
 #include <DirectXMath.h>
+#include <cstdlib>
 #define PI 3.141592f
 
 using namespace DirectX;
@@ -259,5 +260,14 @@ static XMFLOAT2 Dot(const float v1, const float v2)
 {
 	XMFLOAT2 result;
 
+	return result;
+}
+
+static XMFLOAT3 GetRandom(int length)
+{
+	XMFLOAT3 result;
+	result.x = (float)(std::rand() % (length * 2)) - length + 0.5f;
+	result.y = (float)(std::rand() % (length * 2)) - length + 0.5f;
+	result.z = (float)(std::rand() % (length * 2)) - length + 0.5f;
 	return result;
 }
