@@ -225,8 +225,10 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData)
 				//左斜め上確認
 				if (cheakTopLeft)
 				{
+					//範囲外の参照を防ぐ
+					if (lastY - i < 0 || lastX - i < 0) { cheakTopLeft = false; }
 					//何もなかったら
-					if (othelloDatas[lastY - i][lastX - i].type == NONE)
+					else if (othelloDatas[lastY - i][lastX - i].type == NONE)
 					{
 						cheakTopLeft = false;
 					}
@@ -263,8 +265,10 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData)
 				//左斜め下確認
 				if (cheakBottomLeft)
 				{
+					//範囲外の参照を防ぐ
+					if (lastY + i > MAX_SIZE_Y - 1 || lastX - i < 0) { cheakBottomLeft = false; }
 					//何もなかったら
-					if (othelloDatas[lastY + i][lastX - i].type == NONE)
+					else if (othelloDatas[lastY + i][lastX - i].type == NONE)
 					{
 						cheakBottomLeft = false;
 					}
@@ -290,8 +294,8 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData)
 		}
 
 		int maxTopRight;
-		if (lastX <= lastY) { maxTopRight = lastY + 1; }
-		else { maxTopRight = lastX + 1; }
+		if (lastX <= lastY) { maxTopRight = lastX + 1; }
+		else { maxTopRight = lastY + 1; }
 
 		/*-----右斜め上-----*/
 		if (maxTopRight > 2 && lastX <= MAX_SIZE_X - 3 && lastY >= 2)
@@ -301,8 +305,10 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData)
 				//右斜め上確認
 				if (cheakTopRight)
 				{
+					//範囲外の参照を防ぐ
+					if (lastY - i < 0 || lastX + i > MAX_SIZE_X - 1) { cheakTopRight = false; }
 					//何もなかったら
-					if (othelloDatas[lastY - i][lastX + i].type == NONE)
+					else if (othelloDatas[lastY - i][lastX + i].type == NONE)
 					{
 						cheakTopRight = false;
 					}
@@ -339,8 +345,10 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData)
 				//右斜め上確認
 				if (cheakBottomRight)
 				{
+					//範囲外の参照を防ぐ
+					if (lastY + i > MAX_SIZE_Y - 1 || lastX + i > MAX_SIZE_X - 1) { cheakBottomRight = false; }
 					//何もなかったら
-					if (othelloDatas[lastY + i][lastX + i].type == NONE)
+					else if (othelloDatas[lastY + i][lastX + i].type == NONE)
 					{
 						cheakBottomRight = false;
 					}
