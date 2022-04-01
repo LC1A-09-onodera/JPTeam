@@ -76,10 +76,12 @@ void Othello::Finalize()
 
 void Othello::Revers()
 {
-	
+
 	data.isReverce = true;
 	data.animationTimer = 0;
 	data.waitTimer = waitTimerMax * (data.comboCount - 1);
+	data.JumpTimer = 0;
+	data.isJumpUp = true;
 
 	//XMFLOAT3 sample;
 	//sample = ConvertXMVECTORtoXMFLOAT3(each.position);
@@ -105,7 +107,6 @@ void Othello::ReversUpdate()
 	data.animationTimer++;
 	float rate = static_cast<float>(data.animationTimer) / animationTimerMax;
 	float easeRate = EaseInOutQuad(XMFLOAT3{}, XMFLOAT3{ 1, 0, 0 }, rate).x;
-
 	if (data.isFront)
 	{
 		each.rotation.y = 180.0f * easeRate;
@@ -115,6 +116,31 @@ void Othello::ReversUpdate()
 	{
 		each.rotation.y = 180.0f * easeRate + 180.0f;
 		each.rotation.x = 0;
+	}
+
+	data.JumpTimer++;
+
+	const float jumpMax = 5.0f ;
+
+	float jumpRate = static_cast<float>(data.JumpTimer) / JumpTimerMax;
+	float jumpEaseRate = 0.0f;
+	if (data.isJumpUp)
+	{
+		jumpEaseRate = EaseOutQuad(XMFLOAT3{}, XMFLOAT3{ 1, 0, 0 }, jumpRate).x;
+
+		float hight = jumpEaseRate * jumpEaseRate * jumpEaseRate;
+		each.position.m128_f32[2] = -jumpMax * hight;
+		if (data.JumpTimer >= JumpTimerMax)
+		{
+			data.isJumpUp = false;
+			data.JumpTimer = 0;
+		}
+	}
+	else
+	{
+		jumpEaseRate = EaseInQuad(XMFLOAT3{}, XMFLOAT3{ 1, 0, 0 }, jumpRate).x;
+		float hight = 1 - (jumpEaseRate * jumpEaseRate * jumpEaseRate);
+		each.position.m128_f32[2] = -jumpMax * hight;
 	}
 
 

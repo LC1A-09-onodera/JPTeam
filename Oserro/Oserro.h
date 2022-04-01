@@ -55,6 +55,8 @@ struct OthelloData
 
 	int animationTimer = 0;
 	int waitTimer = 0;
+	int JumpTimer = 0;
+	bool isJumpUp = false;
 };
 struct SendOthelloData
 {
@@ -69,9 +71,10 @@ namespace OthelloConstData
 {//íËêî
 	const int fieldSize = 8;
 	const float cellScale = 1.0f;
-	const XMFLOAT3 stageLeftTop{ -cellScale * fieldSize / 2, cellScale * fieldSize / 2, 0 };
+	const XMFLOAT3 stageLeftTop{ -cellScale * fieldSize, cellScale * fieldSize, 0 };
 	const int animationTimerMax = 30;
 	const int waitTimerMax = 30;
+	const int JumpTimerMax = waitTimerMax / 2;
 }
 
 class Othello
@@ -109,8 +112,8 @@ public:
 	//Ç–Ç¡Ç≠ÇËï‘Ç∑
 	void Revers();
 private:
-		void ReversUpdate();
-		void LeftRevers();
+	void ReversUpdate();
+	void LeftRevers();
 };
 
 class OthelloModel : public Model
