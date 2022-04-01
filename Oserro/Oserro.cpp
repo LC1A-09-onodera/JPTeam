@@ -555,6 +555,8 @@ const vector<vector<SendOthelloData>> &OthelloManager::Send()
 		data.type = gameDatas.type;
 
 		data.isMove = gameDatas.isMove;
+		data.comboCount = 0;
+
 		sendDatas[gameDatas.heightPos][gameDatas.widthPos] = data;
 	}
 
@@ -574,6 +576,7 @@ void OthelloManager::Receive(const vector<vector<SendOthelloData>> &data)
 		int y = gameDatas->heightPos;
 
 		gameDatas->isFront = sendDatas[y][x].isFront;
+		gameDatas->comboCount = sendDatas[y][x].comboCount;
 	}
 
 }

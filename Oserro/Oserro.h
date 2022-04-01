@@ -49,6 +49,8 @@ struct OthelloData
 
 	list<panelPos> panels;
 	OthelloData();
+
+	int comboCount = 0;
 };
 
 struct SendOthelloData
@@ -57,6 +59,8 @@ struct SendOthelloData
 	bool isFront = true;
 	list<bool> FrontActiveAngle;
 	bool isMove = false;
+
+	int comboCount = 0;
 };
 
 namespace OthelloConstData
