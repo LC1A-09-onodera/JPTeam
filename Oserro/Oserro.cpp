@@ -407,6 +407,11 @@ void OthelloManager::SetPlayer()
 {
 	XMFLOAT3 MousePos = Camera::MousePosition(0.0f);
 	XMFLOAT3 stagePos = MousePos - stageLeftTop - XMFLOAT3{-cellScale/2, cellScale / 2 , 0};
+
+	if (othellos.size() <= 0)
+	{
+		return;
+	}
 	//どのマスにマウスがあるのかを確認
 	int x = stagePos.x / (cellScale*2);
 	int y = stagePos.y / -(cellScale * 2);
