@@ -103,7 +103,6 @@ void Othello::ReversUpdate()
 		sample = ConvertXMVECTORtoXMFLOAT3(each.position);
 		ObjectParticles::Init(sample, 10);
 	}
-	data.comboCount = 0;
 	data.animationTimer++;
 	float rate = static_cast<float>(data.animationTimer) / animationTimerMax;
 	float easeRate = EaseInOutQuad(XMFLOAT3{}, XMFLOAT3{ 1, 0, 0 }, rate).x;
@@ -120,15 +119,20 @@ void Othello::ReversUpdate()
 
 	data.JumpTimer++;
 
-	const float jumpMax = 5.0f ;
+	int count = data.comboCount;
+	const float jumpMax = 3.0f + (1 * count);
 
+	if (count >= 5)
+	{
+		count = 5;
+	}
 	float jumpRate = static_cast<float>(data.JumpTimer) / JumpTimerMax;
 	float jumpEaseRate = 0.0f;
 	if (data.isJumpUp)
 	{
 		jumpEaseRate = EaseOutQuad(XMFLOAT3{}, XMFLOAT3{ 1, 0, 0 }, jumpRate).x;
 
-		float hight = jumpEaseRate * jumpEaseRate * jumpEaseRate;
+		float hight = pow(jumpEaseRate, count);
 		each.position.m128_f32[2] = -jumpMax * hight;
 		if (data.JumpTimer >= JumpTimerMax)
 		{
@@ -139,7 +143,7 @@ void Othello::ReversUpdate()
 	else
 	{
 		jumpEaseRate = EaseInQuad(XMFLOAT3{}, XMFLOAT3{ 1, 0, 0 }, jumpRate).x;
-		float hight = 1 - (jumpEaseRate * jumpEaseRate * jumpEaseRate);
+		float hight = 1 - (pow(jumpEaseRate, count));
 		each.position.m128_f32[2] = -jumpMax * hight;
 	}
 
@@ -149,6 +153,8 @@ void Othello::ReversUpdate()
 		//回転フラグoff
 		data.isFront = !data.isFront;
 		data.isReverce = false;
+		data.comboCount = 0;
+
 		////表裏の変更
 		//data.isFront = !data.isFront;
 		//if (data.isFront)
@@ -643,9 +649,9 @@ void OthelloManager::Receive(const vector<vector<SendOthelloData>> &data)
 		int y = gameDatas->heightPos;
 
 		//gameDatas->isFront = sendDatas[y][x].isFront;
-		gameDatas->comboCount = sendDatas[y][x].comboCount;
-		if (gameDatas->comboCount >= 1)
+		if (sendDatas[y][x].comboCount >= 1)
 		{
+			gameDatas->comboCount = sendDatas[y][x].comboCount;
 			itr->Revers();
 		}
 		gameDatas->isMove = false;
