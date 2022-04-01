@@ -3,6 +3,7 @@
 #include "../Shader/ShaderManager.h"
 ObjectParticle ObjectParticle3D::object;
 list<ObjectParticle3D> ObjectParticles::particles;
+list<list<ObjectParticle3D>::iterator> ObjectParticles::deleteItr;
 void ObjectParticle3D::LoadObject()
 {
 	object.CreateModel("Triangle", ShaderManager::playerShader);
@@ -32,6 +33,9 @@ void ObjectParticle3D::Update()
 	speed = speed - acc;
 	each.position = ConvertXMFLOAT3toXMVECTOR(nowPosition);
 	each.rotation = each.rotation + addRotation;
+	each.scale.x -= 0.01f;
+	each.scale.y -= 0.01f;
+	each.scale.z -= 0.01f;
 	time--;
 }
 
@@ -56,7 +60,16 @@ void ObjectParticles::Update()
 	for (auto itr = particles.begin(); itr != particles.end(); ++itr)
 	{
 		itr->Update();
+		if (itr->time <= 0)
+		{
+			deleteItr.push_back(itr);
+		}
 	}
+	for (auto deleteitr = deleteItr.begin(); deleteitr != deleteItr.end(); ++deleteitr)
+	{
+		particles.erase(*deleteitr);
+	}
+	deleteItr.clear();
 }
 
 void ObjectParticles::Draw()
