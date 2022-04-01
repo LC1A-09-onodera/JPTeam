@@ -76,15 +76,31 @@ void Othello::Finalize()
 
 void Othello::Revers()
 {
+	
 	data.isReverce = true;
 	data.animationTimer = 0;
-	XMFLOAT3 sample;
-	sample = ConvertXMVECTORtoXMFLOAT3(each.position);
-	ObjectParticles::Init(sample, 10);
+	data.waitTimer = waitTimerMax * (data.comboCount - 1);
+
+	//XMFLOAT3 sample;
+	//sample = ConvertXMVECTORtoXMFLOAT3(each.position);
+
+	//ObjectParticles::Init(sample, 10);
 }
 
 void Othello::ReversUpdate()
 {
+	if (data.waitTimer > 0)
+	{
+		data.waitTimer--;
+		return;
+	}
+
+	if (data.animationTimer == 0)
+	{
+		XMFLOAT3 sample;
+		sample = ConvertXMVECTORtoXMFLOAT3(each.position);
+		ObjectParticles::Init(sample, 10);
+	}
 	data.comboCount = 0;
 	data.animationTimer++;
 	float rate = static_cast<float>(data.animationTimer) / animationTimerMax;
