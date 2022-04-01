@@ -294,8 +294,8 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData)
 		}
 
 		int maxTopRight;
-		if (lastX <= lastY) { maxTopRight = lastX + 1; }
-		else { maxTopRight = lastY + 1; }
+		if (lastX <= lastY) { maxTopRight = lastY + 1; }
+		else { maxTopRight = lastX + 1; }
 
 		/*-----‰EŽÎ‚ßã-----*/
 		if (maxTopRight > 2 && lastX <= MAX_SIZE_X - 3 && lastY >= 2)
