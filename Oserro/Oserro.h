@@ -102,7 +102,7 @@ public:
 	void Revers();
 private:
 		void RightRevers();
-	void LeftRevers();
+		void LeftRevers();
 };
 
 class OthelloModel : public Model
@@ -126,6 +126,7 @@ private:
 	void SetPlayer();
 	void Move();
 	void RemovePlayer();
+	void SetPanel();
 private:
 	XMFLOAT3 mousePoint;
 	static list<Othello> othellos;

@@ -382,23 +382,25 @@ void OthelloManager::Finalize()
 void OthelloManager::Controll()
 {
 	//マウスのクリックがされた瞬間
-	if (Input::MouseTrigger(VK_LBUTTON))
+	if (Input::MouseTrigger(MouseButton::LBUTTON))
 	{
 		SetPlayer();
 	}
 	//マウスがドラッグ中
-	if (Input::Mouse(VK_LBUTTON))
+	if (Input::Mouse(MouseButton::LBUTTON))
 	{
 		Move();
 	}
 
 	//マウスをドロップしたら
-	if (!Input::Mouse(VK_LBUTTON))
+	if (!Input::Mouse(MouseButton::LBUTTON))
 	{
 		RemovePlayer();
 	}
-
-
+	if(Input::MouseTrigger(MouseButton::RBUTTON))
+	{
+		SetPanel();
+	}
 }
 
 void OthelloManager::SetPlayer()
@@ -569,4 +571,41 @@ void OthelloManager::Receive(const vector<vector<SendOthelloData>> &data)
 		gameDatas->isFront = sendDatas[y][x].isFront;
 	}
 
+}
+
+void OthelloManager::SetPanel()
+{
+	XMFLOAT3 MousePos = Camera::MousePosition(0.0f);
+	XMFLOAT3 stagePos = MousePos - stageLeftTop - XMFLOAT3{ -cellScale / 2, cellScale / 2 , 0 };
+	//どのマスにマウスがあるのかを確認
+	int x = stagePos.x / (cellScale * 2);
+	int y = stagePos.y / -(cellScale * 2);
+	auto itr = othellos.begin();
+	for (; itr != othellos.end(); itr++)
+	{
+		if (itr->GetGameData()->widthPos == x && itr->GetGameData()->heightPos == y)
+		{
+			if (itr->GetGameData()->type == NORMAL)
+			{
+				if (itr->GetGameData()->isFront)
+				{
+					itr->GetGameData()->isFront = false;
+				}
+				else
+				{
+					othellos.erase(itr);
+				}
+				return;
+			}
+		}
+	}
+
+	if (itr == othellos.end())
+	{
+		Othello data;
+		data.Init(&oserroModel);
+		data.Spawn(NORMAL, x, y , true);
+		data.GetGameData()->isMove = false;
+		othellos.push_back(data);
+	}
 }

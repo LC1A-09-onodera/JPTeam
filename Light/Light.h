@@ -56,9 +56,9 @@ private:
 	//定数バッファ
 	ComPtr<ID3D12Resource> constBuff;
 	//ライト方向ベクトル
-	XMVECTOR lightdir = {0, -1, -0.1, 0};
+	XMVECTOR lightdir = {0, 0, 1.0f, 0};
 	//ライトの色
-	XMFLOAT3 lightcolor = {0.6f, 0.6f, 0.6f};
+	XMFLOAT3 lightcolor = {0.5f, 0.5f, 0.5f};
 	//ダーティフラグ
 	bool dirty = false;
 	void CreateBuff();
