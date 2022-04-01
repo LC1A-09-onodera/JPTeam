@@ -30,6 +30,7 @@ XMMATRIX ParticleManager::matBillboardY = XMMatrixIdentity();
 
 ParticleIndi *ParticleControl::attackEffect = nullptr;
 ParticleIndi *ParticleControl::expEffect = nullptr;
+ParticleIndi *ParticleControl::flashEffect = nullptr;
 
 bool ParticleManager::StaticInitialize(ID3D12Device *device,  int window_width, int window_height,XMFLOAT3 eye, XMFLOAT3 target, XMFLOAT3 up)
 {
@@ -970,6 +971,30 @@ void ParticleIndi::BackParticle(const DirectX::XMFLOAT3 emitterPosition, float s
 	Add(life, pos, vel, acc, startSize, endSize);
 }
 
+void ParticleIndi::FlashParticle(const DirectX::XMFLOAT3 emitterPosition, float startSize, float endSize, int life)
+{
+	XMFLOAT3 pos{};
+	XMFLOAT3 vel{};
+	XMFLOAT3 acc{};
+
+	float randam = rand();
+	pos = emitterPosition;
+	vel.x = 1.0f;
+	acc.x = -0.01f;
+	Add(life, pos, vel, acc, startSize, endSize);
+	vel.x = -1.0f;
+	acc.x = 0.01;
+	Add(life, pos, vel, acc, startSize, endSize);
+	vel.x = 0.0f;
+	acc.x = 0.0f;
+	vel.y = -1.0f;
+	acc.y = 0.01;
+	Add(life, pos, vel, acc, startSize, endSize);
+	vel.y = 1.0f;
+	acc.y = -0.01;
+	Add(life, pos, vel, acc, startSize, endSize);
+}
+
 ParticleControl::ParticleControl()
 {
 }
@@ -977,12 +1002,15 @@ ParticleControl::ParticleControl()
 ParticleControl::~ParticleControl()
 {
 	delete(attackEffect);
+	delete(expEffect);
+	delete(flashEffect);
 }
 
 void ParticleControl::Update()
 {
 	attackEffect->Update(Camera::eye.v, Camera::target.v, Camera::up.v);
 	expEffect->Update(Camera::eye.v, Camera::target.v, Camera::up.v);
+	flashEffect->Update(Camera::eye.v, Camera::target.v, Camera::up.v);
 }
 
 void ParticleControl::Init()
@@ -994,10 +1022,12 @@ void ParticleControl::Init()
 	}
 	attackEffect = attackEffect->Create(L"Resource/Img/attackEffect.png");
 	expEffect = expEffect->Create(L"Resource/Img/ExpSample.png");
+	flashEffect = flashEffect->Create(L"Resource/Img/Flash.png");
 }
 
 void ParticleControl::Draw()
 {
 	ParticleDraw(BaseDirectX::cmdList.Get(), attackEffect);
 	ParticleDraw(BaseDirectX::cmdList.Get(), expEffect);
+	ParticleDraw(BaseDirectX::cmdList.Get(), flashEffect);
 }

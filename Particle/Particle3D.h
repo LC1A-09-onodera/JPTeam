@@ -303,6 +303,8 @@ public:
 	void StarParticle(const DirectX::XMFLOAT3 emitterPosition = { 0, 0, 0 }, float startSize = 6.0f, float endSize = 3.0f, int life = 60, int count = 20);
 
 	void BackParticle(const DirectX::XMFLOAT3 emitterPosition = { 0, 0, 0 }, float startSize = 2.0f, float endSize = 2.0f, int life = 180);
+
+	void FlashParticle(const DirectX::XMFLOAT3 emitterPosition = { 0, 0, 0 }, float startSize = 2.0f, float endSize = 2.0f, int life = 60);
 };
 /// <summary>
 	/// •`‰æ
@@ -323,6 +325,7 @@ public:
 	ParticleControl &operator=(const ParticleControl &obj) = delete;
 	static ParticleIndi *attackEffect;
 	static ParticleIndi *expEffect;
+	static ParticleIndi *flashEffect;
 	static void Update();
 	static void Init();
 	static void Draw();
