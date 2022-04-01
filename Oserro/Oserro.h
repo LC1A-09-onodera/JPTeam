@@ -49,14 +49,20 @@ struct OthelloData
 
 	list<panelPos> panels;
 	OthelloData();
-};
 
+	int comboCount = 0;
+	bool isReverce = false;
+
+	int animationTimer = 0;
+	int waitTimer = 0;
+};
 struct SendOthelloData
 {
 	OthelloType type = NONE;
 	bool isFront = true;
 	list<bool> FrontActiveAngle;
 	bool isMove = false;
+	int comboCount = 0;
 };
 
 namespace OthelloConstData
@@ -64,6 +70,8 @@ namespace OthelloConstData
 	const int fieldSize = 8;
 	const float cellScale = 1.0f;
 	const XMFLOAT3 stageLeftTop{ -cellScale * fieldSize / 2, cellScale * fieldSize / 2, 0 };
+	const int animationTimerMax = 30;
+	const int waitTimerMax = 30;
 }
 
 class Othello
@@ -101,7 +109,7 @@ public:
 	//‚Ð‚Á‚­‚è•Ô‚·
 	void Revers();
 private:
-		void RightRevers();
+		void ReversUpdate();
 		void LeftRevers();
 };
 

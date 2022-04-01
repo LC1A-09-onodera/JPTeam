@@ -1003,14 +1003,14 @@ ParticleControl::~ParticleControl()
 {
 	delete(attackEffect);
 	delete(expEffect);
-	delete(flashEffect);
+	//delete(flashEffect);
 }
 
 void ParticleControl::Update()
 {
 	attackEffect->Update(Camera::eye.v, Camera::target.v, Camera::up.v);
 	expEffect->Update(Camera::eye.v, Camera::target.v, Camera::up.v);
-	flashEffect->Update(Camera::eye.v, Camera::target.v, Camera::up.v);
+	//flashEffect->Update(Camera::eye.v, Camera::target.v, Camera::up.v);
 }
 
 void ParticleControl::Init()
@@ -1022,12 +1022,12 @@ void ParticleControl::Init()
 	}
 	attackEffect = attackEffect->Create(L"Resource/Img/attackEffect.png");
 	expEffect = expEffect->Create(L"Resource/Img/ExpSample.png");
-	flashEffect = flashEffect->Create(L"Resource/Img/Flash.png");
+	//flashEffect = flashEffect->Create(L"Resource/Img/Flash.png");
 }
 
 void ParticleControl::Draw()
 {
 	ParticleDraw(BaseDirectX::cmdList.Get(), attackEffect);
 	ParticleDraw(BaseDirectX::cmdList.Get(), expEffect);
-	ParticleDraw(BaseDirectX::cmdList.Get(), flashEffect);
+	//ParticleDraw(BaseDirectX::cmdList.Get(), flashEffect);
 }

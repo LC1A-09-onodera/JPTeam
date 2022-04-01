@@ -13,6 +13,7 @@
 #include "../Shader/ShaderManager.h"
 #include"../Enemy/Enemy.h"
 #include "../Hole/Hole.h"
+#include "../3DObjectParticle/3DObjectParticle.h"
 
 GameScene::GameScene()
 {
@@ -106,6 +107,7 @@ void GameScene::Init()
 	othelloManager.AddPanel();
 
 	checkObject.Init();
+	ObjectParticle3D::LoadObject();
 }
 
 void GameScene::TitleUpdate()
@@ -119,6 +121,8 @@ void GameScene::TitleUpdate()
 
 	checkObject.Update(othelloManager.Send());
 	othelloManager.Receive(checkObject.GetOthelloDatas());
+
+	ObjectParticles::Update();
 
 	/*if (Input::KeyTrigger(DIK_SPACE))
 	{
@@ -181,6 +185,7 @@ void GameScene::TitleDraw()
 	postEffect.PreDraw();
 	//Draw3DObject(sample);
 	othelloManager.Draw();
+	ObjectParticles::Draw();
 	ParticleControl::Draw();
 	BaseDirectX::clearColor[0] = 0.0f;
 	BaseDirectX::clearColor[1] = 0.0f;

@@ -2,6 +2,7 @@
 #include "../Shader/ShaderManager.h"
 #include "../Camera/Camera.h"
 #include "../BaseDirectX/Input.h"
+#include "../3DObjectParticle/3DObjectParticle.h"
 
 list<Othello> OthelloManager::othellos;
 OthelloModel OthelloManager::oserroModel;
@@ -28,22 +29,31 @@ void Othello::Update()
 	//タイプがNONE出なかったら生きている
 	bool isAlive = data.type != NONE;
 	if (!isAlive) return;
-	float x = (data.widthPos * cellScale * 2 );
+	float x = (data.widthPos * cellScale * 2);
 	float y = -(data.heightPos * cellScale * 2);
 
-	if (!data.isPlayer)
+
+
+	if (data.isReverce)
 	{
-		each.position = XMVECTOR{ x, y ,0, 0 };
-		each.position += ConvertXMFLOAT3toXMVECTOR(stageLeftTop);
-		if (data.isFront)
+		ReversUpdate();
+	}
+	else
+	{
+		if (!data.isPlayer)
 		{
-			each.rotation.y = 0;
-			each.rotation.x = 0;
-		}
-		else
-		{
-			each.rotation.y = 180;
-			each.rotation.x = 0;
+			each.position = XMVECTOR{ x, y ,0, 0 };
+			each.position += ConvertXMFLOAT3toXMVECTOR(stageLeftTop);
+			if (data.isFront)
+			{
+				each.rotation.y = 0;
+				each.rotation.x = 0;
+			}
+			else
+			{
+				each.rotation.y = 180;
+				each.rotation.x = 0;
+			}
 		}
 	}
 }
@@ -64,35 +74,65 @@ void Othello::Finalize()
 {
 }
 
-void Othello::RightRevers()
+void Othello::Revers()
 {
-	float rate = 0;
+	
+	data.isReverce = true;
+	data.animationTimer = 0;
+	data.waitTimer = waitTimerMax * (data.comboCount - 1);
+
+	//XMFLOAT3 sample;
+	//sample = ConvertXMVECTORtoXMFLOAT3(each.position);
+
+	//ObjectParticles::Init(sample, 10);
+}
+
+void Othello::ReversUpdate()
+{
+	if (data.waitTimer > 0)
+	{
+		data.waitTimer--;
+		return;
+	}
+
+	if (data.animationTimer == 0)
+	{
+		XMFLOAT3 sample;
+		sample = ConvertXMVECTORtoXMFLOAT3(each.position);
+		ObjectParticles::Init(sample, 10);
+	}
+	data.comboCount = 0;
+	data.animationTimer++;
+	float rate = static_cast<float>(data.animationTimer) / animationTimerMax;
 	float easeRate = EaseInOutQuad(XMFLOAT3{}, XMFLOAT3{ 1, 0, 0 }, rate).x;
 
 	if (data.isFront)
 	{
 		each.rotation.y = 180.0f * easeRate;
+		each.rotation.x = 0;
 	}
 	else
 	{
 		each.rotation.y = 180.0f * easeRate + 180.0f;
+		each.rotation.x = 0;
 	}
 
 
 	if (rate >= 1.0f)
 	{
 		//回転フラグoff
-
-		//表裏の変更
 		data.isFront = !data.isFront;
-		if (data.isFront)
-		{
-			each.rotation.y = 0;
-		}
-		else
-		{
-			each.rotation.y = 180;
-		}
+		data.isReverce = false;
+		////表裏の変更
+		//data.isFront = !data.isFront;
+		//if (data.isFront)
+		//{
+		//	each.rotation.y = 0;
+		//}
+		//else
+		//{
+		//	each.rotation.y = 180;
+		//}
 
 	}
 }
@@ -153,8 +193,8 @@ void Othello::Controll(const XMFLOAT3 &mousePos)
 		float length = XMVector3Length(dist).m128_f32[0];
 		//距離がマスの大きさより長かった場合
 
-		panelPos tmpPos = {data.widthPos,data.heightPos};
-			//縦横どちらが長いか
+		panelPos tmpPos = { data.widthPos,data.heightPos };
+		//縦横どちらが長いか
 		if (fabs(angle.m128_f32[0]) > fabs(angle.m128_f32[1]))
 		{//横のほうが長かったら
 			float length = fabs(dist.m128_f32[0]);
@@ -351,6 +391,7 @@ void OthelloManager::Init()
 void OthelloManager::Update()
 {
 	auto itr = othellos.begin();
+
 	for (; itr != othellos.end(); ++itr)
 	{
 		itr->Update();
@@ -397,7 +438,7 @@ void OthelloManager::Controll()
 	{
 		RemovePlayer();
 	}
-	if(Input::MouseTrigger(MouseButton::RBUTTON))
+	if (Input::MouseTrigger(MouseButton::RBUTTON))
 	{
 		SetPanel();
 	}
@@ -406,9 +447,14 @@ void OthelloManager::Controll()
 void OthelloManager::SetPlayer()
 {
 	XMFLOAT3 MousePos = Camera::MousePosition(0.0f);
-	XMFLOAT3 stagePos = MousePos - stageLeftTop - XMFLOAT3{-cellScale/2, cellScale / 2 , 0};
+	XMFLOAT3 stagePos = MousePos - stageLeftTop - XMFLOAT3{ -cellScale / 2, cellScale / 2 , 0 };
+
+	if (othellos.size() <= 0)
+	{
+		return;
+	}
 	//どのマスにマウスがあるのかを確認
-	int x = stagePos.x / (cellScale*2);
+	int x = stagePos.x / (cellScale * 2);
 	int y = stagePos.y / -(cellScale * 2);
 	auto itr = othellos.begin();
 	auto playerItr = othellos.begin();
@@ -432,7 +478,7 @@ void OthelloManager::SetPlayer()
 		{
 			int x = itr->GetGameData()->widthPos;
 			int y = itr->GetGameData()->heightPos;
-			panelPos data = {x, y};
+			panelPos data = { x, y };
 
 			tmpPanels.push_back(data);
 		}
@@ -507,7 +553,7 @@ void OthelloManager::AddPanel()
 	panelC.Spawn(NORMAL, 2, 0, true);
 	panelC.Init(&oserroModel);
 	othellos.push_back(panelC);
-	
+
 	panelD.Spawn(NORMAL, 2, 1, false);
 	panelD.Init(&oserroModel);
 	othellos.push_back(panelD);
@@ -540,7 +586,7 @@ const vector<vector<SendOthelloData>> &OthelloManager::Send()
 
 	//今存在する駒を突っ込んでいく
 	auto itr = othellos.begin();
-	for(;itr != othellos.end();itr++)
+	for (; itr != othellos.end(); itr++)
 	{
 		OthelloData gameDatas = *itr->GetGameData();
 		SendOthelloData data;
@@ -550,6 +596,8 @@ const vector<vector<SendOthelloData>> &OthelloManager::Send()
 		data.type = gameDatas.type;
 
 		data.isMove = gameDatas.isMove;
+		data.comboCount = 0;
+
 		sendDatas[gameDatas.heightPos][gameDatas.widthPos] = data;
 	}
 
@@ -568,7 +616,13 @@ void OthelloManager::Receive(const vector<vector<SendOthelloData>> &data)
 		int x = gameDatas->widthPos;
 		int y = gameDatas->heightPos;
 
-		gameDatas->isFront = sendDatas[y][x].isFront;
+		//gameDatas->isFront = sendDatas[y][x].isFront;
+		gameDatas->comboCount = sendDatas[y][x].comboCount;
+		if (gameDatas->comboCount >= 1)
+		{
+			itr->Revers();
+		}
+		gameDatas->isMove = false;
 	}
 
 }
@@ -580,6 +634,13 @@ void OthelloManager::SetPanel()
 	//どのマスにマウスがあるのかを確認
 	int x = stagePos.x / (cellScale * 2);
 	int y = stagePos.y / -(cellScale * 2);
+
+
+	bool isOutSide = (x < 0 || x >= fieldSize || y < 0 || y >= fieldSize);
+	if (isOutSide)
+	{
+		return;
+	}
 	auto itr = othellos.begin();
 	for (; itr != othellos.end(); itr++)
 	{
@@ -604,7 +665,7 @@ void OthelloManager::SetPanel()
 	{
 		Othello data;
 		data.Init(&oserroModel);
-		data.Spawn(NORMAL, x, y , true);
+		data.Spawn(NORMAL, x, y, true);
 		data.GetGameData()->isMove = false;
 		othellos.push_back(data);
 	}
