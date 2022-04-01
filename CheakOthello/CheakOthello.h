@@ -33,7 +33,6 @@ private:
 	static const int MAX_SIZE_Y = 8;
 
 private:
-	int combo;
 	std::vector<std::pair<int, int>> comboOthelloDataPos;
 	std::vector<std::pair<int, int>> saveOthelloDataPos;
 	vector<vector<SendOthelloData>> othelloDatas;
