@@ -83,10 +83,6 @@ void Othello::Revers()
 	data.JumpTimer = 0;
 	data.isJumpUp = true;
 
-	//XMFLOAT3 sample;
-	//sample = ConvertXMVECTORtoXMFLOAT3(each.position);
-
-	//ObjectParticles::Init(sample, 10);
 }
 
 void Othello::ReversUpdate()
@@ -99,9 +95,7 @@ void Othello::ReversUpdate()
 
 	if (data.animationTimer == 0)
 	{
-		XMFLOAT3 sample;
-		sample = ConvertXMVECTORtoXMFLOAT3(each.position);
-		ObjectParticles::Init(sample, 10);
+		//MakeParticle();
 	}
 	data.animationTimer++;
 	float rate = static_cast<float>(data.animationTimer) / animationTimerMax;
@@ -155,6 +149,7 @@ void Othello::ReversUpdate()
 		data.isReverce = false;
 		data.comboCount = 0;
 
+		data.isDead = true;
 		////表裏の変更
 		//data.isFront = !data.isFront;
 		//if (data.isFront)
@@ -401,6 +396,13 @@ void Othello::Spawn(OthelloType type, int x, int y, bool isFront)
 	}
 }
 
+
+void Othello::MakeParticle()
+{
+	XMFLOAT3 sample;
+	sample = ConvertXMVECTORtoXMFLOAT3(each.position);
+	ObjectParticles::Init(sample, 10);
+}
 void OthelloManager::Init()
 {
 	oserroModel.CreateModel("newOserro", ShaderManager::playerShader);
@@ -422,6 +424,13 @@ void OthelloManager::Init()
 
 void OthelloManager::Update()
 {
+	//死ぬ
+	DeadPanel();
+
+	//生成
+	RandumSetPanel();
+
+	//更新
 	auto itr = othellos.begin();
 
 	for (; itr != othellos.end(); ++itr)
@@ -700,5 +709,91 @@ void OthelloManager::SetPanel()
 		data.Spawn(NORMAL, x, y, true);
 		data.GetGameData()->isMove = false;
 		othellos.push_back(data);
+	}
+}
+
+void OthelloManager::RandumSetPanel()
+{
+	//フィールドがパネルで満たされているか
+	bool isPanelMax = othellos.size() >= 64;
+	if (isPanelMax)
+	{
+		return;
+	}
+
+	spawnTimer++;
+
+	if (spawnTimer < spawnTimerMAx)
+	{
+		return;
+	}
+
+	spawnTimer = 0;
+	int x = rand() % 8;
+	int y = rand() % 8;
+
+	auto itr = othellos.begin();
+	bool isSpawn = false;
+
+	while (true)
+	{
+		itr = othellos.begin();
+		for (; itr != othellos.end(); itr++)
+		{
+			if (itr->GetGameData()->widthPos == x && itr->GetGameData()->heightPos == y)
+			{
+				if (itr->GetGameData()->type == NORMAL)
+				{
+					x++;
+					if(x >= fieldSize)
+					{
+						x = 0;
+						y++;
+						if (y >= fieldSize)
+						{
+							y = 0;
+						}
+					}
+					break;
+				}
+			}
+		}
+
+		if (itr == othellos.end())
+		{
+			break;
+		}
+
+	}
+	Othello data;
+	data.Init(&oserroModel);
+
+	bool randFront = rand() % 2;
+	data.Spawn(NORMAL, x, y, randFront);
+	data.GetGameData()->isMove = false;
+	othellos.push_back(data);
+}
+
+void OthelloManager::DeadPanel()
+{
+	auto itr = othellos.begin();
+	list<list<Othello>::iterator> deadOthellos;
+	
+	for (; itr != othellos.end(); itr++)
+	{
+		if (itr->GetGameData()->isDead)
+		{
+			deadOthellos.push_back(itr);
+			itr->MakeParticle();
+		}
+	}
+
+	if(deadOthellos.size() <= 0)return;
+
+
+	auto deadItr = deadOthellos.begin();
+	for(;deadItr !=deadOthellos.end();deadItr++)
+	{
+		othellos.erase(*deadItr);
 	}
 }
