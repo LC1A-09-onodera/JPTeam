@@ -36,7 +36,7 @@ void WindowsAPI::Set()
     AdjustWindowRect(&wrc, (WS_OVERLAPPEDWINDOW ^ WS_THICKFRAME ^ WS_MAXIMIZEBOX), false); // 自動でサイズ補正
 
     hwnd = CreateWindow(w.lpszClassName, // クラス名
-        L"LE2A_05_オノデラユウスケ",         // タイトルバーの文字
+        L"ll[thello]",         // タイトルバーの文字
         (WS_OVERLAPPEDWINDOW ^ WS_THICKFRAME ^ WS_MAXIMIZEBOX),        // 標準的なウィンドウスタイル
         CW_USEDEFAULT,              // 表示X座標（OSに任せる）
         CW_USEDEFAULT,              // 表示Y座標（OSに任せる）

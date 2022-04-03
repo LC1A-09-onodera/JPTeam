@@ -582,22 +582,22 @@ void OthelloManager::RemovePlayer()
 
 void OthelloManager::AddPanel()
 {
-	Othello panelA, panelB, panelC, panelD;
-	panelA.Spawn(NORMAL, 0, 1, true);
-	panelA.Init(&oserroModel);
-	othellos.push_back(panelA);
+	//Othello panelA, panelB, panelC, panelD;
+	//panelA.Spawn(NORMAL, 0, 1, true);
+	//panelA.Init(&oserroModel);
+	//othellos.push_back(panelA);
 
-	panelB.Spawn(NORMAL, 1, 1, false);
-	panelB.Init(&oserroModel);
-	othellos.push_back(panelB);
+	//panelB.Spawn(NORMAL, 1, 1, false);
+	//panelB.Init(&oserroModel);
+	//othellos.push_back(panelB);
 
-	panelC.Spawn(NORMAL, 2, 0, true);
-	panelC.Init(&oserroModel);
-	othellos.push_back(panelC);
+	//panelC.Spawn(NORMAL, 2, 0, true);
+	//panelC.Init(&oserroModel);
+	//othellos.push_back(panelC);
 
-	panelD.Spawn(NORMAL, 2, 1, false);
-	panelD.Init(&oserroModel);
-	othellos.push_back(panelD);
+	//panelD.Spawn(NORMAL, 2, 1, false);
+	//panelD.Init(&oserroModel);
+	//othellos.push_back(panelD);
 }
 
 const vector<vector<SendOthelloData>> &OthelloManager::Send()

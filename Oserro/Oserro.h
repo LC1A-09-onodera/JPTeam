@@ -77,7 +77,7 @@ namespace OthelloConstData
 	const int animationTimerMax = 30;
 	const int waitTimerMax = 30;
 	const int JumpTimerMax = waitTimerMax / 2;
-	const int spawnTimerMAx = 60;
+	const int spawnTimerMAx = 90;
 }
 
 class Othello
