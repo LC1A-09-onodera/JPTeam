@@ -108,6 +108,7 @@ void GameScene::Init()
 
 	checkObject.Init();
 	ObjectParticle3D::LoadObject();
+	water.CreateWater();
 }
 
 void GameScene::TitleUpdate()
@@ -185,6 +186,7 @@ void GameScene::TitleDraw()
 	postEffect.PreDraw();
 	//Draw3DObject(sample);
 	othelloManager.Draw();
+	water.Draw();
 	ObjectParticles::Draw();
 	ParticleControl::Draw();
 	BaseDirectX::clearColor[0] = 0.0f;
