@@ -57,6 +57,8 @@ struct OthelloData
 	int waitTimer = 0;
 	int JumpTimer = 0;
 	bool isJumpUp = false;
+
+	bool isDead = false;
 };
 struct SendOthelloData
 {
@@ -75,6 +77,7 @@ namespace OthelloConstData
 	const int animationTimerMax = 30;
 	const int waitTimerMax = 30;
 	const int JumpTimerMax = waitTimerMax / 2;
+	const int spawnTimerMAx = 60;
 }
 
 class Othello
@@ -111,6 +114,8 @@ public:
 
 	//‚Ð‚Á‚­‚è•Ô‚·
 	void Revers();
+
+	void MakeParticle();
 private:
 	void ReversUpdate();
 	void LeftRevers();
@@ -133,12 +138,18 @@ public:
 	const vector<vector<SendOthelloData>> &Send();
 	void Receive(const vector<vector<SendOthelloData>> &data);
 
+	
 private:
 	void SetPlayer();
 	void Move();
 	void RemovePlayer();
 	void SetPanel();
+
+	void RandumSetPanel();
+
+	void DeadPanel();
 private:
+	int spawnTimer = 0;
 	XMFLOAT3 mousePoint;
 	static list<Othello> othellos;
 	static OthelloModel oserroModel;

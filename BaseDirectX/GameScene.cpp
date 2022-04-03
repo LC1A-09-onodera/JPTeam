@@ -108,6 +108,7 @@ void GameScene::Init()
 
 	checkObject.Init();
 	ObjectParticle3D::LoadObject();
+
 	water.CreateWater();
 }
 
