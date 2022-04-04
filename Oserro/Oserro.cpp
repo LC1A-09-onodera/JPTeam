@@ -741,13 +741,6 @@ void OthelloManager::SetPanel()
 
 void OthelloManager::RandumSetPanel()
 {
-	//フィールドがパネルで満たされているか
-	bool isPanelMax = othellos.size() >= 64;
-	if (isPanelMax)
-	{
-		return;
-	}
-
 	spawnTimer++;
 
 	if (spawnTimer < spawnTimerMAx)
@@ -756,49 +749,61 @@ void OthelloManager::RandumSetPanel()
 	}
 
 	spawnTimer = 0;
-	int x = rand() % 8;
-	int y = rand() % 8;
 
-	auto itr = othellos.begin();
-	bool isSpawn = false;
-
-	while (true)
+	for (int i = 0; i < spawnPanelCount; i++)
 	{
-		itr = othellos.begin();
-		for (; itr != othellos.end(); itr++)
+		//フィールドがパネルで満たされているか
+		bool isPanelMax = othellos.size() >= 64;
+		if (isPanelMax)
 		{
-			if (itr->GetGameData()->widthPos == x && itr->GetGameData()->heightPos == y)
+			return;
+		}
+
+
+		int x = rand() % 8;
+		int y = rand() % 8;
+
+		auto itr = othellos.begin();
+		bool isSpawn = false;
+
+		while (true)
+		{
+			itr = othellos.begin();
+			for (; itr != othellos.end(); itr++)
 			{
-				if (itr->GetGameData()->type == NORMAL)
+				if (itr->GetGameData()->widthPos == x && itr->GetGameData()->heightPos == y)
 				{
-					x++;
-					if (x >= fieldSize)
+					if (itr->GetGameData()->type == NORMAL)
 					{
-						x = 0;
-						y++;
-						if (y >= fieldSize)
+						x++;
+						if (x >= fieldSize)
 						{
-							y = 0;
+							x = 0;
+							y++;
+							if (y >= fieldSize)
+							{
+								y = 0;
+							}
 						}
+						break;
 					}
-					break;
 				}
 			}
-		}
 
-		if (itr == othellos.end())
-		{
-			break;
-		}
+			if (itr == othellos.end())
+			{
+				break;
+			}
 
+		}
+		Othello data;
+		data.Init(&oserroModel);
+
+		bool randFront = rand() % 2;
+		data.Spawn(NORMAL, x, y, randFront);
+		data.GetGameData()->isMove = false;
+		othellos.push_back(data);
 	}
-	Othello data;
-	data.Init(&oserroModel);
-
-	bool randFront = rand() % 2;
-	data.Spawn(NORMAL, x, y, randFront);
-	data.GetGameData()->isMove = false;
-	othellos.push_back(data);
 }
 
 void OthelloManager::DeadPanel()
