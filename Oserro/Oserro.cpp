@@ -505,6 +505,7 @@ void OthelloManager::SetPlayer()
 		{
 			itr->GetGameData()->isPlayer = true;
 			playerItr = itr;
+			itr->GetGameData()->oldPos = { x, y };
 			break;
 		}
 	}
@@ -575,9 +576,15 @@ void OthelloManager::RemovePlayer()
 
 
 	itr->GetGameData()->isPlayer = false;
-	itr->GetGameData()->isMove = true;
 	int x = itr->GetGameData()->widthPos;
 	int y = itr->GetGameData()->heightPos;
+
+	panelPos tmpPos = itr->GetGameData()->oldPos;
+	bool notMove = (tmpPos.x == x && tmpPos.y == y);
+	if (!notMove)
+	{
+		itr->GetGameData()->isMove = true;
+	}
 }
 
 void OthelloManager::AddPanel()
@@ -745,7 +752,7 @@ void OthelloManager::RandumSetPanel()
 				if (itr->GetGameData()->type == NORMAL)
 				{
 					x++;
-					if(x >= fieldSize)
+					if (x >= fieldSize)
 					{
 						x = 0;
 						y++;
@@ -778,7 +785,7 @@ void OthelloManager::DeadPanel()
 {
 	auto itr = othellos.begin();
 	list<list<Othello>::iterator> deadOthellos;
-	
+
 	for (; itr != othellos.end(); itr++)
 	{
 		if (itr->GetGameData()->isDead)
@@ -788,11 +795,11 @@ void OthelloManager::DeadPanel()
 		}
 	}
 
-	if(deadOthellos.size() <= 0)return;
+	if (deadOthellos.size() <= 0)return;
 
 
 	auto deadItr = deadOthellos.begin();
-	for(;deadItr !=deadOthellos.end();deadItr++)
+	for (; deadItr != deadOthellos.end(); deadItr++)
 	{
 		othellos.erase(*deadItr);
 	}
