@@ -59,6 +59,8 @@ struct OthelloData
 	bool isJumpUp = false;
 
 	bool isDead = false;
+
+	panelPos oldPos = {0, 0};
 };
 struct SendOthelloData
 {
