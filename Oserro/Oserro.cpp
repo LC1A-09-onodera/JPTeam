@@ -536,22 +536,42 @@ void OthelloManager::Move()
 	int x = stagePos.x / (cellScale * 2);
 	int y = stagePos.y / (cellScale * 2);
 
-	auto itr = othellos.begin();
+	auto playerItr = othellos.begin();
 
 	//プレイヤーを探索
-	for (; itr != othellos.end(); ++itr)
+	for (; playerItr != othellos.end(); ++playerItr)
 	{
-		OthelloData *data = itr->GetGameData();
+		OthelloData *data = playerItr->GetGameData();
 		if (data->isPlayer)
 		{
 			break;
 		}
 	}
-	if (itr == othellos.end())
+	if (playerItr == othellos.end())
 	{
 		return;
 	}
-	itr->Controll(MousePos);
+
+	auto itr = othellos.begin();
+
+	list<panelPos> tmpPanels;
+	for (; itr != othellos.end(); itr++)
+	{
+		itr->GetGameData()->isMove = false;
+		if (itr != playerItr)
+		{
+			int x = itr->GetGameData()->widthPos;
+			int y = itr->GetGameData()->heightPos;
+			panelPos data = { x, y };
+
+			tmpPanels.push_back(data);
+		}
+	}
+	playerItr->GetGameData()->panels = tmpPanels;
+
+
+
+	playerItr->Controll(MousePos);
 	//（まうすの座標がプレイヤーのマスの座標と同一だったら）または、
 	//（移動先のマスに駒があったら）
 }
