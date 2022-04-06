@@ -194,7 +194,7 @@ void Othello::LeftRevers()
 	}
 
 }
-void Othello::Controll(const XMFLOAT3 &mousePos)
+void Othello::Controll(const XMFLOAT3 &mousePos, int &moveCount)
 {
 	XMVECTOR playerPos = { data.widthPos * cellScale,data.heightPos * -cellScale , 0, 0 };
 
@@ -309,7 +309,7 @@ void Othello::Controll(const XMFLOAT3 &mousePos)
 		}
 		//ひっくり返る
 		data.isFront = !data.isFront;
-
+		moveCount++;
 	}
 
 
@@ -571,7 +571,7 @@ void OthelloManager::Move()
 
 
 
-	playerItr->Controll(MousePos);
+	playerItr->Controll(MousePos, moveCount);
 	//（まうすの座標がプレイヤーのマスの座標と同一だったら）または、
 	//（移動先のマスに駒があったら）
 }
@@ -743,11 +743,13 @@ void OthelloManager::RandumSetPanel()
 {
 	spawnTimer++;
 
-	if (spawnTimer < spawnTimerMAx)
+	bool notSpawn = (spawnTimer < spawnTimerMAx && moveCount < spawnMoveCount);
+	if (notSpawn)
 	{
 		return;
 	}
 
+	moveCount = 0;
 	spawnTimer = 0;
 
 	for (int i = 0; i < spawnPanelCount; i++)

@@ -79,8 +79,9 @@ namespace OthelloConstData
 	const int animationTimerMax = 30;
 	const int waitTimerMax = 30;
 	const int JumpTimerMax = waitTimerMax / 2;
-	const int spawnTimerMAx = 300;
-	const int spawnPanelCount =5;
+	const int spawnTimerMAx = 480;
+	const int spawnMoveCount = 5;
+	const int spawnPanelCount =10;
 }
 
 class Othello
@@ -113,7 +114,7 @@ public:
 
 	void Spawn(OthelloType type, int x, int y, bool isFront = true);
 
-	void Controll(const XMFLOAT3 &mousePos);
+	void Controll(const XMFLOAT3 &mousePos , int &moveCount);
 
 	//‚Ð‚Á‚­‚è•Ô‚·
 	void Revers();
@@ -153,6 +154,7 @@ private:
 	void DeadPanel();
 private:
 	int spawnTimer = 0;
+	int moveCount = 0;
 	XMFLOAT3 mousePoint;
 	static list<Othello> othellos;
 	static OthelloModel oserroModel;
