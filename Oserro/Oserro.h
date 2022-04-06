@@ -12,11 +12,11 @@ enum OthelloType
 };
 namespace
 {
-	struct panelPos
-	{
-		int x;
-		int y;
-	};
+struct panelPos
+{
+	int x;
+	int y;
+};
 }
 
 struct OthelloData
@@ -60,7 +60,7 @@ struct OthelloData
 
 	bool isDead = false;
 
-	panelPos oldPos = {0, 0};
+	panelPos oldPos = { 0, 0 };
 };
 struct SendOthelloData
 {
@@ -73,15 +73,16 @@ struct SendOthelloData
 
 namespace OthelloConstData
 {//’è”
-	const int fieldSize = 8;
-	const float cellScale = 1.0f;
-	const XMFLOAT3 stageLeftTop{ -cellScale * fieldSize, cellScale * fieldSize, 0 };
-	const int animationTimerMax = 30;
-	const int waitTimerMax = 30;
-	const int JumpTimerMax = waitTimerMax / 2;
-	const int spawnTimerMAx = 480;
-	const int spawnMoveCount = 5;
-	const int spawnPanelCount =10;
+const int fieldSize = 8;
+const float cellScale = 1.0f;
+const XMFLOAT3 stageLeftTop{ -cellScale * fieldSize, cellScale * fieldSize, 0 };
+const int animationTimerMax = 30;
+const int waitTimerMax = 30;
+const int JumpTimerMax = waitTimerMax / 2;
+const int spawnTimerMAx = 120;
+const int spawnMoveCount = 10;
+const int spawnPanelCount = 10;
+
 }
 
 class Othello
@@ -92,7 +93,7 @@ private:
 	EachInfo each;
 	XMFLOAT3 startPos;
 	XMFLOAT3 endPos;
-	Model *model;
+	Model* model;
 	float startAngle;
 	float endAngle;
 	float time;
@@ -100,21 +101,21 @@ private:
 	OthelloData data;
 	XMVECTOR qRotation;
 public:
-	OthelloData *GetGameData() { return &data; }
+	OthelloData* GetGameData() { return &data; }
 	bool GetIsEase() { return isEase; }
 	XMFLOAT3 GetPosition() { return ConvertXMVECTORtoXMFLOAT3(each.position); }
 	void SetIsEase(bool isEase) { this->isEase = isEase; }
-	void SetPosition(XMFLOAT3 &position) { this->each.position = ConvertXMFLOAT3toXMVECTOR(position); }
+	void SetPosition(XMFLOAT3& position) { this->each.position = ConvertXMFLOAT3toXMVECTOR(position); }
 
 public:
-	void Init(Model *model);
+	void Init(Model* model);
 	void Update();
 	void Draw();
 	void Finalize();
 
 	void Spawn(OthelloType type, int x, int y, bool isFront = true);
 
-	void Controll(const XMFLOAT3 &mousePos , int &moveCount);
+	void Controll(const XMFLOAT3& mousePos, int& moveCount);
 
 	//‚Ð‚Á‚­‚è•Ô‚·
 	void Revers();
@@ -139,10 +140,10 @@ public:
 	void Controll();
 	void AddPanel();
 
-	const vector<vector<SendOthelloData>> &Send();
-	void Receive(const vector<vector<SendOthelloData>> &data);
+	const vector<vector<SendOthelloData>>& Send();
+	void Receive(const vector<vector<SendOthelloData>>& data);
 
-	
+
 private:
 	void SetPlayer();
 	void Move();
