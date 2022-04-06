@@ -38,6 +38,10 @@ void Othello::Update()
 	{
 		ReversUpdate();
 	}
+	else if (data.isVanish)
+	{
+		Sink();
+	}
 	else
 	{
 		if (!data.isPlayer)
@@ -149,7 +153,7 @@ void Othello::ReversUpdate()
 		data.isReverce = false;
 		data.comboCount = 0;
 
-		data.isDead = true;
+		data.isVanish = true;
 		////ï\ó†ÇÃïœçX
 		//data.isFront = !data.isFront;
 		//if (data.isFront)
@@ -396,6 +400,20 @@ void Othello::Spawn(OthelloType type, int x, int y, bool isFront)
 	}
 }
 
+void Othello::Sink()
+{
+	data.vanishTimer++;
+	if (data.vanishTimer >= vanishTimerMax)
+	{
+		data.isDead = true;
+	}
+	else
+	{
+		float a = static_cast<float>(data.vanishTimer) / vanishTimerMax;
+
+		each.scale = { 1 - a, 1 - a, 0 };
+	}
+}
 
 void Othello::MakeParticle()
 {
@@ -403,6 +421,7 @@ void Othello::MakeParticle()
 	sample = ConvertXMVECTORtoXMFLOAT3(each.position);
 	ObjectParticles::Init(sample, 10);
 }
+
 void OthelloManager::Init()
 {
 	oserroModel.CreateModel("newOserro", ShaderManager::playerShader);
@@ -427,6 +446,7 @@ void OthelloManager::Update()
 	//éÄÇ 
 	DeadPanel();
 
+	MinSpawn();
 	//ê∂ê¨
 	RandumSetPanel();
 
@@ -685,7 +705,7 @@ void OthelloManager::Receive(const vector<vector<SendOthelloData>> &data)
 		int y = gameDatas->heightPos;
 
 		//gameDatas->isFront = sendDatas[y][x].isFront;
-		if (sendDatas[y][x].comboCount >= 1)
+		if (sendDatas[y][x].comboCount >= 1 && !gameDatas->isVanish)
 		{
 			gameDatas->comboCount = sendDatas[y][x].comboCount;
 			itr->Revers();
@@ -743,7 +763,7 @@ void OthelloManager::RandumSetPanel()
 {
 	spawnTimer++;
 
-	bool notSpawn = (spawnTimer < spawnTimerMAx && moveCount < spawnMoveCount);
+	bool notSpawn = (spawnTimer < spawnTimerMAx &&moveCount < spawnMoveCount);
 	if (notSpawn)
 	{
 		return;
@@ -762,49 +782,7 @@ void OthelloManager::RandumSetPanel()
 		}
 
 
-		int x = rand() % 8;
-		int y = rand() % 8;
-
-		auto itr = othellos.begin();
-		bool isSpawn = false;
-
-		while (true)
-		{
-			itr = othellos.begin();
-			for (; itr != othellos.end(); itr++)
-			{
-				if (itr->GetGameData()->widthPos == x && itr->GetGameData()->heightPos == y)
-				{
-					if (itr->GetGameData()->type == NORMAL)
-					{
-						x++;
-						if (x >= fieldSize)
-						{
-							x = 0;
-							y++;
-							if (y >= fieldSize)
-							{
-								y = 0;
-							}
-						}
-						break;
-					}
-				}
-			}
-
-			if (itr == othellos.end())
-			{
-				break;
-			}
-
-		}
-		Othello data;
-		data.Init(&oserroModel);
-
-		bool randFront = rand() % 2;
-		data.Spawn(NORMAL, x, y, randFront);
-		data.GetGameData()->isMove = false;
-		othellos.push_back(data);
+		SpawnPanel();
 	}
 }
 
@@ -829,5 +807,65 @@ void OthelloManager::DeadPanel()
 	for (; deadItr != deadOthellos.end(); deadItr++)
 	{
 		othellos.erase(*deadItr);
+	}
+}
+
+
+void OthelloManager::SpawnPanel()
+{
+	int x = rand() % 8;
+	int y = rand() % 8;
+
+	auto itr = othellos.begin();
+	bool isSpawn = false;
+
+	while (true)
+	{
+		itr = othellos.begin();
+		for (; itr != othellos.end(); itr++)
+		{
+			if (itr->GetGameData()->widthPos == x && itr->GetGameData()->heightPos == y)
+			{
+				if (itr->GetGameData()->type == NORMAL)
+				{
+					x++;
+					if (x >= fieldSize)
+					{
+						x = 0;
+						y++;
+						if (y >= fieldSize)
+						{
+							y = 0;
+						}
+					}
+					break;
+				}
+			}
+		}
+
+		if (itr == othellos.end())
+		{
+			break;
+		}
+
+	}
+	Othello data;
+	data.Init(&oserroModel);
+
+	bool randFront = rand() % 2;
+	data.Spawn(NORMAL, x, y, randFront);
+	data.GetGameData()->isMove = false;
+	othellos.push_back(data);
+}
+
+void OthelloManager::MinSpawn()
+{
+	if (othellos.size() >= minPanelCount)return;
+
+	int minPanelUnderCount = minPanelCount - othellos.size();
+
+	for (int i = 0; i < minPanelUnderCount; i++)
+	{
+		SpawnPanel();
 	}
 }
