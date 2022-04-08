@@ -31,6 +31,7 @@ XMMATRIX ParticleManager::matBillboardY = XMMatrixIdentity();
 ParticleIndi *ParticleControl::attackEffect = nullptr;
 ParticleIndi *ParticleControl::expEffect = nullptr;
 ParticleIndi *ParticleControl::flashEffect = nullptr;
+ParticleIndi * ParticleControl::rockOnEffect = nullptr;
 
 bool ParticleManager::StaticInitialize(ID3D12Device *device,  int window_width, int window_height,XMFLOAT3 eye, XMFLOAT3 target, XMFLOAT3 up)
 {
@@ -571,30 +572,6 @@ void ParticleIndi::Update(XMFLOAT3 eye, XMFLOAT3 target, XMFLOAT3 up, XMFLOAT3 *
 		it->scale += it->s_scale;
 	}
 	
-
-	//else
-	//{
-	//	//全パーティクルの更新
-	//	for (std::forward_list<Particle>::iterator it = particles.begin(); it != particles.end(); it++)
-	//	{
-	//		//フレームの増加
-	//		it->frame++;
-	//		//速度に加速度を追加
-	//		it->velocity = it->velocity + it->accel;
-	//		if (pos != nullptr)
-	//		{
-	//			it->position.z = pos->z;
-	//		}
-	//		//移動
-	//		it->position = it->position + it->velocity;
-	//		//スケールの変更
-	//		float f = (float)it->num_frame / it->frame;
-	//		//スケールの線形補間
-	//		it->scale = (it->e_scale - it->s_scale) / f;
-	//		it->scale += it->s_scale;
-	//	}
-	//}
-
 	ParticleManager::UpdateViewMatrix(eye, target, up, isBilbord);
 
 	//頂点バッファへデータ転送
@@ -1003,7 +980,8 @@ ParticleControl::~ParticleControl()
 {
 	delete(attackEffect);
 	delete(expEffect);
-	//delete(flashEffect);
+	delete(flashEffect);
+	delete(rockOnEffect);
 }
 
 void ParticleControl::Update()
@@ -1011,6 +989,7 @@ void ParticleControl::Update()
 	attackEffect->Update(Camera::eye.v, Camera::target.v, Camera::up.v);
 	expEffect->Update(Camera::eye.v, Camera::target.v, Camera::up.v);
 	//flashEffect->Update(Camera::eye.v, Camera::target.v, Camera::up.v);
+	rockOnEffect->Update(Camera::eye.v, Camera::target.v, Camera::up.v);
 }
 
 void ParticleControl::Init()
@@ -1023,6 +1002,7 @@ void ParticleControl::Init()
 	attackEffect = attackEffect->Create(L"Resource/Img/attackEffect.png");
 	expEffect = expEffect->Create(L"Resource/Img/ExpSample.png");
 	//flashEffect = flashEffect->Create(L"Resource/Img/Flash.png");
+	rockOnEffect = rockOnEffect->Create(L"Resource/Img/rock.png");
 }
 
 void ParticleControl::Draw()
@@ -1030,4 +1010,5 @@ void ParticleControl::Draw()
 	ParticleDraw(BaseDirectX::cmdList.Get(), attackEffect);
 	ParticleDraw(BaseDirectX::cmdList.Get(), expEffect);
 	//ParticleDraw(BaseDirectX::cmdList.Get(), flashEffect);
+	ParticleDraw(BaseDirectX::cmdList.Get(), rockOnEffect);
 }

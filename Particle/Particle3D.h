@@ -326,6 +326,7 @@ public:
 	static ParticleIndi *attackEffect;
 	static ParticleIndi *expEffect;
 	static ParticleIndi *flashEffect;
+	static ParticleIndi *rockOnEffect;
 	static void Update();
 	static void Init();
 	static void Draw();

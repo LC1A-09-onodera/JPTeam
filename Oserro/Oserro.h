@@ -58,9 +58,15 @@ struct OthelloData
 	int JumpTimer = 0;
 	bool isJumpUp = false;
 
+	//îΩì]ÇÇ®Ç±Ç»Ç¡ÇΩÇ©
+	bool isVanish = false;
+
+	//è¡ñ≈ÇµÇ´Ç¡ÇΩÇ©
 	bool isDead = false;
 
-	panelPos oldPos = { 0, 0 };
+
+	panelPos oldPos = {0, 0};
+	int vanishTimer = 0;
 };
 struct SendOthelloData
 {
@@ -73,16 +79,17 @@ struct SendOthelloData
 
 namespace OthelloConstData
 {//íËêî
-const int fieldSize = 8;
-const float cellScale = 1.0f;
-const XMFLOAT3 stageLeftTop{ -cellScale * fieldSize, cellScale * fieldSize, 0 };
-const int animationTimerMax = 30;
-const int waitTimerMax = 30;
-const int JumpTimerMax = waitTimerMax / 2;
-const int spawnTimerMAx = 120;
-const int spawnMoveCount = 10;
-const int spawnPanelCount = 10;
-
+	const int fieldSize = 8;
+	const float cellScale = 1.0f;
+	const XMFLOAT3 stageLeftTop{ -cellScale * fieldSize, cellScale * fieldSize, 0 };
+	const int animationTimerMax = 30;
+	const int waitTimerMax = 30;
+	const int JumpTimerMax = waitTimerMax / 2;
+	const int spawnTimerMAx = 20000;
+	const int vanishTimerMax = 600;
+	const int spawnMoveCount = 2000;
+	const int spawnPanelCount = 2;
+	const int minPanelCount = 30;
 }
 
 class Othello
@@ -120,6 +127,8 @@ public:
 	//Ç–Ç¡Ç≠ÇËï‘Ç∑
 	void Revers();
 
+	void Sink();
+
 	void MakeParticle();
 private:
 	void ReversUpdate();
@@ -143,21 +152,42 @@ public:
 	const vector<vector<SendOthelloData>>& Send();
 	void Receive(const vector<vector<SendOthelloData>>& data);
 
-
+	void MinSpawn();
 private:
 	void SetPlayer();
-	void Move();
+
+	void KeySetPlayer();
+	void Move(const XMFLOAT3 &MousePos);
 	void RemovePlayer();
 	void SetPanel();
 
 	void RandumSetPanel();
 
 	void DeadPanel();
+
+	void SpawnPanel();
+
+	void MauseControll();
+	void PlayerControll();
+
+	void SartSetPos();
+
+	void playerMoveEnd();
+
+	void playerNotMove();
 private:
+
+	panelPos playerPanelPos;
 	int spawnTimer = 0;
 	int moveCount = 0;
 	XMFLOAT3 mousePoint;
 	static list<Othello> othellos;
 	static OthelloModel oserroModel;
 	static vector<vector<SendOthelloData>> sendDatas;
+
+	bool isOnPanel = true;
+	bool isOldOnPanel = true;
+
+	bool isPanelMove = false;
+	bool isPlayerEnd = true;
 };
