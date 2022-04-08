@@ -15,12 +15,14 @@ class OthlloPlayer
 	static XMFLOAT3 endPos;
 	static bool isEase;
 	static float easeTime;
+	static bool isMoveEnd;
 	static void Move();
 	static void EaseUpdate();
 public:
-	XMFLOAT3 GetPosition(){ return ConvertXMVECTORtoXMFLOAT3(each.position); }
-	XMFLOAT3 SetPosition(XMFLOAT3 position) { each.position = ConvertXMFLOAT3toXMVECTOR(position); }
-
+	static XMFLOAT3 GetPosition(){ return ConvertXMVECTORtoXMFLOAT3(each.position); }
+	static void SetPosition(XMFLOAT3 position) { each.position = ConvertXMFLOAT3toXMVECTOR(position); }
+	static bool GetIsMoveEnd(){return isMoveEnd;}
+	static void MoveCancel();
 	static void Init();
 	static void Update();
 	static void Draw();

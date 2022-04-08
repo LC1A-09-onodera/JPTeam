@@ -14,7 +14,7 @@
 #include"../Enemy/Enemy.h"
 #include "../Hole/Hole.h"
 #include "../3DObjectParticle/3DObjectParticle.h"
-
+#include "../OthlloPlayer/OthlloPlayer.h"
 GameScene::GameScene()
 {
 	SceneNum = TITLE;
@@ -110,6 +110,7 @@ void GameScene::Init()
 	ObjectParticle3D::LoadObject();
 
 	water.CreateWater();
+	OthlloPlayer::Init();
 }
 
 void GameScene::TitleUpdate()
@@ -117,6 +118,7 @@ void GameScene::TitleUpdate()
 	//WindowsAPI::GetMousePos();
 	//sample.each.position = ConvertXMFLOAT3toXMVECTOR(Camera::MousePosition(0.0f));
 	//sample.Update();
+	OthlloPlayer::Update();
 
 	othelloManager.Controll();
 	othelloManager.Update();
@@ -188,6 +190,8 @@ void GameScene::TitleDraw()
 	//Draw3DObject(sample);
 	othelloManager.Draw();
 	water.Draw();
+	
+	OthlloPlayer::Draw();
 	ObjectParticles::Draw();
 	ParticleControl::Draw();
 	BaseDirectX::clearColor[0] = 0.0f;

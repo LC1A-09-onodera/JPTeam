@@ -155,7 +155,9 @@ public:
 	void MinSpawn();
 private:
 	void SetPlayer();
-	void Move();
+
+	void KeySetPlayer();
+	void Move(const XMFLOAT3 &MousePos);
 	void RemovePlayer();
 	void SetPanel();
 
@@ -164,11 +166,28 @@ private:
 	void DeadPanel();
 
 	void SpawnPanel();
+
+	void MauseControll();
+	void PlayerControll();
+
+	void SartSetPos();
+
+	void playerMoveEnd();
+
+	void playerNotMove();
 private:
+
+	panelPos playerPanelPos;
 	int spawnTimer = 0;
 	int moveCount = 0;
 	XMFLOAT3 mousePoint;
 	static list<Othello> othellos;
 	static OthelloModel oserroModel;
 	static vector<vector<SendOthelloData>> sendDatas;
+
+	bool isOnPanel = true;
+	bool isOldOnPanel = true;
+
+	bool isPanelMove = false;
+	bool isPlayerEnd = true;
 };

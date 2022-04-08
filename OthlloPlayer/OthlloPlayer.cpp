@@ -9,7 +9,9 @@ EachInfo OthlloPlayer::each;
 XMFLOAT3 OthlloPlayer::startPos;
 XMFLOAT3 OthlloPlayer::endPos;
 bool OthlloPlayer::isEase;
+bool OthlloPlayer::isMoveEnd;
 float OthlloPlayer::easeTime;
+
 void OthlloPlayer::Init()
 {
 	player.CreateModel("maru", ShaderManager::playerShader);
@@ -24,6 +26,10 @@ void OthlloPlayer::Update()
 	if (isEase)
 	{
 		EaseUpdate();
+	}
+	else
+	{
+		isMoveEnd = false;
 	}
 }
 
@@ -41,6 +47,7 @@ void OthlloPlayer::Move()
 	bool W = Input::KeyTrigger(DIK_W);
 	if ((D || A || S || W) && !isEase)
 	{
+		isMoveEnd = false;
 		startPos = ConvertXMVECTORtoXMFLOAT3(each.position);
 		endPos = startPos;
 		if (D && each.position.m128_f32[0] < 6.0f)
@@ -71,6 +78,14 @@ void OthlloPlayer::EaseUpdate()
 	{
 		easeTime = 1.0f;
 		isEase = false;
+		isMoveEnd = true;
 	}
 	each.position = ConvertXMFLOAT3toXMVECTOR(EaseInQuad(startPos, endPos, easeTime));
+}
+
+
+void OthlloPlayer::MoveCancel()
+{
+	isEase = false;
+	isMoveEnd = false;
 }
