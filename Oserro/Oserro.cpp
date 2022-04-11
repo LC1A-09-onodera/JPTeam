@@ -88,7 +88,7 @@ void Othello::Revers()
 	data.isJumpUp = true;
 	XMFLOAT3 pos = ConvertXMVECTORtoXMFLOAT3(each.position);
 	pos.z = -0.3f;
-	ThunderModels::Init(pos, XMFLOAT3(0, 0 ,0));
+	ThunderModels::Init(pos, XMFLOAT3(0, 0, 0));
 }
 
 void Othello::ReversUpdate()
@@ -682,9 +682,14 @@ void OthelloManager::Receive(const vector<vector<SendOthelloData>> &data)
 		int y = gameDatas->heightPos;
 
 		//gameDatas->isFront = sendDatas[y][x].isFront;
-		if (sendDatas[y][x].comboCount >= 1 && !gameDatas->isVanish)
+		//if (sendDatas[y][x].comboCount >= 1 && !gameDatas->isVanish)
+		//{
+		//	gameDatas->comboCount = sendDatas[y][x].comboCount;
+		//	itr->Revers();
+		//}
+		if (sendDatas[y][x].isFront != gameDatas->isFront && !gameDatas->isVanish)
 		{
-			gameDatas->comboCount = sendDatas[y][x].comboCount;
+			gameDatas->comboCount = 1;
 			itr->Revers();
 		}
 		gameDatas->isMove = false;
