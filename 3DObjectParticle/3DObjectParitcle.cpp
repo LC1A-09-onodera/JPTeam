@@ -1,15 +1,10 @@
 #include "3DObjectParticle.h"
 #include "../DX12operator.h"
 #include "../Shader/ShaderManager.h"
-ObjectParticle ObjectParticle3D::object;
-list<ObjectParticle3D> ObjectParticles::particles;
-list<list<ObjectParticle3D>::iterator> ObjectParticles::deleteItr;
+#include "../WindowsAPI/WinAPI.h"
 
-void ObjectParticle3D::LoadObject()
-{
-	object.CreateModel("Triangle", ShaderManager::playerShader);
-}
-
+ObjectParticleInfo ObjectParticles::triangle;
+ObjectParticleInfo ObjectParticles::othello;
 void ObjectParticle3D::Add(XMFLOAT3& emitter, ParticleType type)
 {
 	if (type == ParticleType::Exprotion)
@@ -20,6 +15,11 @@ void ObjectParticle3D::Add(XMFLOAT3& emitter, ParticleType type)
 	else if (type == ParticleType::Converge)
 	{
 		InitConverge(emitter);
+		this->type = type;
+	}
+	else if (type == ParticleType::TITLE)
+	{
+		InitTitle();
 		this->type = type;
 	}
 }
@@ -34,9 +34,13 @@ void ObjectParticle3D::Update()
 	{
 		UpdateConverge();
 	}
+	else if (this->type == ParticleType::TITLE)
+	{
+		UpdateTitle();
+	}
 }
 
-void ObjectParticle3D::Draw()
+void ObjectParticle3D::Draw(ObjectParticle &object)
 {
 	object.Update(&each);
 	Draw3DObject(object);
@@ -88,6 +92,42 @@ void ObjectParticle3D::InitConverge(XMFLOAT3& emitter)
 	time = 1;
 }
 
+void ObjectParticle3D::InitTitle()
+{
+	int xSub = (rand() % 10 + 5.0f);
+	if (rand() % 2 == 0)
+	{
+		xSub = -xSub;
+	}
+	each.position.m128_f32[0] = rand() % 40 - 20;
+	int ySub = (rand() % 5 + 5.0f);
+	if (rand() % 2 == 0)
+	{
+		ySub = -ySub;
+	}
+	each.position.m128_f32[1] = rand() % 20 - 10;
+	int zSub = (rand() % 10 + 5.0f);
+	if (rand() % 2 == 0)
+	{
+		zSub = -zSub;
+	}
+	each.CreateConstBuff0();
+	each.CreateConstBuff1();
+	speed = GetRandom(2.0f);
+	acc = GetRandom(1.0f);
+	startPosition = ConvertXMVECTORtoXMFLOAT3(each.position);
+	speed.x = speed.x / 150.0f;
+	speed.y = speed.y / 150.0f;
+	speed.z = speed.z / 150.0f;
+	acc.x = acc.x / 500.0f;
+	acc.y = acc.y / 500.0f;
+	acc.z = acc.z / 500.0f;
+	each.scale = { 0.1f, 0.1f, 0.1f };
+	easeTime = 0;
+	isSize = false;
+	time = 600;
+}
+
 void ObjectParticle3D::UpdateExprotion()
 {
 	XMFLOAT3 nowPosition = ConvertXMVECTORtoXMFLOAT3(each.position);
@@ -113,7 +153,38 @@ void ObjectParticle3D::UpdateConverge()
 	}
 }
 
-void ObjectParticles::Init(XMFLOAT3& emitter, int count, ParticleType type)
+void ObjectParticle3D::UpdateTitle()
+{
+	if (!isSize && each.scale.x <= 1.0f)
+	{
+		each.scale.x += 0.01f;
+		each.scale.y += 0.01f;
+		each.scale.z += 0.01f;
+	}
+	else if(!isSize)
+	{
+		isSize = true;
+	}
+	else if (each.scale.x > 0.0f)
+	{
+		each.scale.x -= 0.01f;
+		each.scale.y -= 0.01f;
+		each.scale.z -= 0.01f;
+	}
+	else
+	{
+		time = 0;
+	}
+	XMFLOAT3 nowPosition = ConvertXMVECTORtoXMFLOAT3(each.position);
+	nowPosition = nowPosition + speed;
+	speed = speed - acc;
+	each.rotation.x += 1.0f;
+	each.rotation.y += 1.0f;
+	each.position = ConvertXMFLOAT3toXMVECTOR(nowPosition);
+	time--;
+}
+
+void ObjectParticleInfo::Init(XMFLOAT3& emitter, int count, ParticleType type)
 {
 	for (int i = 0; i < count; i++)
 	{
@@ -123,7 +194,7 @@ void ObjectParticles::Init(XMFLOAT3& emitter, int count, ParticleType type)
 	}
 }
 
-void ObjectParticles::Update()
+void ObjectParticleInfo::Update()
 {
 	for (auto itr = particles.begin(); itr != particles.end(); ++itr)
 	{
@@ -140,10 +211,41 @@ void ObjectParticles::Update()
 	deleteItr.clear();
 }
 
-void ObjectParticles::Draw()
+void ObjectParticleInfo::Draw(ObjectParticle &object)
 {
 	for (auto itr = particles.begin(); itr != particles.end(); ++itr)
 	{
-		itr->Draw();
+		itr->Draw(object);
 	}
+}
+
+void ObjectParticleInfo::DeleteAllParticle()
+{
+	particles.clear();
+	deleteItr.clear();
+}
+
+void ObjectParticles::LoadModels()
+{
+	triangle.object.CreateModel("Triangle", ShaderManager::playerShader);
+	othello.object.CreateModel("newOserro", ShaderManager::playerShader);
+}
+
+void ObjectParticles::Update()
+{
+	triangle.Update();
+	othello.Update();
+
+}
+
+void ObjectParticles::Draw()
+{
+	triangle.Draw(triangle.object);
+	othello.Draw(othello.object);
+}
+
+void ObjectParticles::DeleteAllParticles()
+{
+	triangle.DeleteAllParticle();
+	othello.DeleteAllParticle();
 }
