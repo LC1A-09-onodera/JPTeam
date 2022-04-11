@@ -33,13 +33,13 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData)
 
 		//全方位チェック
 		/*-----左-----*/
-		OthelloCheck(Direction_X::WEST, NONE);
+		OthelloCheck(Direction_X::WEST, NONE_DIRECTION);
 		/*-----右-----*/
-		OthelloCheck(Direction_X::EAST, NONE);
+		OthelloCheck(Direction_X::EAST, NONE_DIRECTION);
 		/*-----上-----*/
-		OthelloCheck(NONE, Direction_Y::SOUTH);
+		OthelloCheck(NONE_DIRECTION, Direction_Y::SOUTH);
 		/*-----下-----*/
-		OthelloCheck(NONE, Direction_Y::NOUTH);
+		OthelloCheck(NONE_DIRECTION, Direction_Y::NOUTH);
 
 		/*-----左斜め上-----*/
 		OthelloCheck(Direction_X::WEST, Direction_Y::NOUTH);
@@ -115,7 +115,7 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y)
 		if (count_y < 0 || count_y > OthelloConstData::fieldSize - 1) { break; }
 
 		//存在しない
-		if (othelloDatas[count_y][count_x].type == NONE) { break; }
+		if (othelloDatas[count_y][count_x].type == NONE_DIRECTION) { break; }
 		//同色と隣接
 		else if (othelloDatas[count_y][count_x].isFront == side && loop == 1) { break; }
 		//挟んだ場合

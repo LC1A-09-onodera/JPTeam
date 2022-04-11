@@ -17,7 +17,7 @@ private:
 		NOUTH = -1,
 	};
 
-	int NONE = 0;
+	int NONE_DIRECTION = 0;
 
 private:
 	static const int MAX_SIZE_X = 8;
