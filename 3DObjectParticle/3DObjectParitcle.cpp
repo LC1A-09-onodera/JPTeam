@@ -2,15 +2,9 @@
 #include "../DX12operator.h"
 #include "../Shader/ShaderManager.h"
 #include "../WindowsAPI/WinAPI.h"
-ObjectParticle ObjectParticle3D::object;
-list<ObjectParticle3D> ObjectParticles::particles;
-list<list<ObjectParticle3D>::iterator> ObjectParticles::deleteItr;
 
-void ObjectParticle3D::LoadObject()
-{
-	object.CreateModel("Triangle", ShaderManager::playerShader);
-}
-
+ObjectParticleInfo ObjectParticles::triangle;
+ObjectParticleInfo ObjectParticles::othello;
 void ObjectParticle3D::Add(XMFLOAT3& emitter, ParticleType type)
 {
 	if (type == ParticleType::Exprotion)
@@ -46,7 +40,7 @@ void ObjectParticle3D::Update()
 	}
 }
 
-void ObjectParticle3D::Draw()
+void ObjectParticle3D::Draw(ObjectParticle &object)
 {
 	object.Update(&each);
 	Draw3DObject(object);
@@ -190,7 +184,7 @@ void ObjectParticle3D::UpdateTitle()
 	time--;
 }
 
-void ObjectParticles::Init(XMFLOAT3& emitter, int count, ParticleType type)
+void ObjectParticleInfo::Init(XMFLOAT3& emitter, int count, ParticleType type)
 {
 	for (int i = 0; i < count; i++)
 	{
@@ -200,7 +194,7 @@ void ObjectParticles::Init(XMFLOAT3& emitter, int count, ParticleType type)
 	}
 }
 
-void ObjectParticles::Update()
+void ObjectParticleInfo::Update()
 {
 	for (auto itr = particles.begin(); itr != particles.end(); ++itr)
 	{
@@ -217,16 +211,41 @@ void ObjectParticles::Update()
 	deleteItr.clear();
 }
 
-void ObjectParticles::Draw()
+void ObjectParticleInfo::Draw(ObjectParticle &object)
 {
 	for (auto itr = particles.begin(); itr != particles.end(); ++itr)
 	{
-		itr->Draw();
+		itr->Draw(object);
 	}
 }
 
-void ObjectParticles::DeleteAllParticle()
+void ObjectParticleInfo::DeleteAllParticle()
 {
 	particles.clear();
 	deleteItr.clear();
+}
+
+void ObjectParticles::LoadModels()
+{
+	triangle.object.CreateModel("Triangle", ShaderManager::playerShader);
+	othello.object.CreateModel("newOserro", ShaderManager::playerShader);
+}
+
+void ObjectParticles::Update()
+{
+	triangle.Update();
+	othello.Update();
+
+}
+
+void ObjectParticles::Draw()
+{
+	triangle.Draw(triangle.object);
+	othello.Draw(othello.object);
+}
+
+void ObjectParticles::DeleteAllParticles()
+{
+	triangle.DeleteAllParticle();
+	othello.DeleteAllParticle();
 }

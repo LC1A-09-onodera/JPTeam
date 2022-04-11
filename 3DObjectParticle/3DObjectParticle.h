@@ -6,7 +6,6 @@ enum class ParticleType
 	Exprotion,
 	Converge,
 	TITLE,
-
 };
 
 class ObjectParticle : public Model
@@ -15,7 +14,6 @@ class ObjectParticle : public Model
 };
 class ObjectParticle3D
 {
-	static ObjectParticle object;
 	EachInfo each;
 	const int Life = 120;
 	
@@ -29,10 +27,9 @@ class ObjectParticle3D
 	bool isSize;
 	ParticleType type;
 public:
-	static void LoadObject();
 	void Add(XMFLOAT3& emitter, ParticleType type);
 	void Update();
-	void Draw();
+	void Draw(ObjectParticle &object);
 	void InitExprotion(XMFLOAT3& emitter);
 	void InitConverge(XMFLOAT3& emitter);
 	void InitTitle();
@@ -41,13 +38,27 @@ public:
 	void UpdateTitle();
 	int time;
 };
+
+class ObjectParticleInfo
+{
+	list<ObjectParticle3D> particles;
+	list<list<ObjectParticle3D>::iterator> deleteItr;
+public:
+	ObjectParticle object;
+	void Init(XMFLOAT3& emitter, int count, ParticleType type);
+	void Update();
+	void Draw(ObjectParticle &object);
+	void DeleteAllParticle();
+	
+};
+
 class ObjectParticles
 {
-	static list<ObjectParticle3D> particles;
-	static list<list<ObjectParticle3D>::iterator> deleteItr;
 public:
-	static void Init(XMFLOAT3& emitter, int count, ParticleType type);
+	static ObjectParticleInfo triangle;
+	static ObjectParticleInfo othello;
+	static void LoadModels();
 	static void Update();
 	static void Draw();
-	static void DeleteAllParticle();
+	static void DeleteAllParticles();
 };
