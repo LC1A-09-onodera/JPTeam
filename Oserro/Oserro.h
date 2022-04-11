@@ -129,6 +129,8 @@ public:
 	//‚Ð‚Á‚­‚è•Ô‚·
 	void Revers();
 
+	void Sandwich();
+	void SinkWait();
 	void Sink();
 
 	void MakeParticle();
