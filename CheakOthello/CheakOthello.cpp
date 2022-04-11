@@ -130,10 +130,16 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y)
 				pair_y += direction_y;
 			}
 
+			//‰Šú‰»
+			pair_x = last_x;
+			pair_y = last_y;
+
 			//‚Ğ‚Á‚­‚è•Ô‚·
 			for (int i = 1; i < loop; i++)
 			{
-				othelloDatas[last_y + direction_y][last_x + direction_x].isFront = side;
+				pair_x += direction_x;
+				pair_y += direction_y;
+				othelloDatas[pair_y][pair_x].isFront = side;
 			}
 
 			break;
