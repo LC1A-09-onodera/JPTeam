@@ -82,6 +82,7 @@ void Othello::Finalize()
 void Othello::Revers()
 {
 	data.isReverce = true;
+	data.isPlayer = false;
 	data.animationTimer = 0;
 	data.waitTimer = waitTimerMax * (data.comboCount - 1);
 	data.JumpTimer = 0;
@@ -661,7 +662,7 @@ const vector<vector<SendOthelloData>> &OthelloManager::Send()
 		data.type = gameDatas.type;
 
 		data.isMove = gameDatas.isMove;
-		data.comboCount = 0;
+		data.comboCount = gameDatas.comboCount;
 
 		sendDatas[gameDatas.heightPos][gameDatas.widthPos] = data;
 	}
@@ -681,7 +682,6 @@ void OthelloManager::Receive(const vector<vector<SendOthelloData>> &data)
 		int x = gameDatas->widthPos;
 		int y = gameDatas->heightPos;
 
-		//gameDatas->isFront = sendDatas[y][x].isFront;
 		//if (sendDatas[y][x].comboCount >= 1 && !gameDatas->isVanish)
 		//{
 		//	gameDatas->comboCount = sendDatas[y][x].comboCount;
@@ -689,7 +689,7 @@ void OthelloManager::Receive(const vector<vector<SendOthelloData>> &data)
 		//}
 		if (sendDatas[y][x].isFront != gameDatas->isFront && !gameDatas->isVanish)
 		{
-			gameDatas->comboCount = 1;
+			gameDatas->comboCount = sendDatas[y][x].comboCount + 1;
 			itr->Revers();
 		}
 		gameDatas->isMove = false;
@@ -968,6 +968,7 @@ void OthelloManager::KeySetPlayer()
 		}
 	}
 
+	bool OnPlayer = playerItr != othellos.end();
 	//ˆÚ“®æ‚Éƒpƒlƒ‹‚ª‚ ‚é‚©
 	if (nextItr != othellos.end())
 	{
@@ -980,12 +981,18 @@ void OthelloManager::KeySetPlayer()
 		isPanelMove = false;
 		nextItr->GetGameData()->isMove = false;
 		nextItr->GetGameData()->isPlayer = true;
-		playerItr->GetGameData()->isPlayer = false;
+		if (OnPlayer)
+		{
+			playerItr->GetGameData()->isPlayer = false;
+		}
 		playerPanelPos = { x, y };
 	}
 	else
 	{
-		isPanelMove = true;
+		if (OnPlayer)
+		{
+			isPanelMove = true;
+		}
 		playerPanelPos = { x, y };
 	}
 	isPlayerEnd = false;

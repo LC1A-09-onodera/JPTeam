@@ -52,6 +52,7 @@ struct OthelloData
 
 	int comboCount = 0;
 	bool isReverce = false;
+	bool isSandwich = false;
 
 	int animationTimer = 0;
 	int waitTimer = 0;
@@ -75,6 +76,7 @@ struct SendOthelloData
 	list<bool> FrontActiveAngle;
 	bool isMove = false;
 	int comboCount = 0;
+	bool isSandwich = false;
 };
 
 namespace OthelloConstData
