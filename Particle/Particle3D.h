@@ -149,11 +149,13 @@ class ParticleIndi
 		float s_scale = 1.0f;
 		//最終地
 		float e_scale = 0.0f;
+		
 	};
 	struct ConstBufferData
 	{
 		DirectX::XMMATRIX mat;
 		DirectX::XMMATRIX matBillboard;
+		float alpha;
 	};
 public:
 	// ルートシグネチャ
@@ -177,7 +179,9 @@ public:
 
 	//消滅しないためのフラグ
 	bool isUI = false;
-
+	//縦横を変更するなら仕様
+	bool isSize = false;
+	float alpha = 1.0f;
 	ComPtr<ID3D12Resource> constBuff; // 定数バッファ
 	// 色
 	DirectX::XMFLOAT4 color = { 1,1,1,1 };
@@ -327,6 +331,10 @@ public:
 	static ParticleIndi *expEffect;
 	static ParticleIndi *flashEffect;
 	static ParticleIndi *rockOnEffect;
+	static ParticleIndi *thunder1;
+	static ParticleIndi *thunder2;
+	static ParticleIndi *thunder3;
+	static ParticleIndi *numbers[10];
 	static void Update();
 	static void Init();
 	static void Draw();

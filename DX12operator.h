@@ -5,6 +5,18 @@
 
 using namespace DirectX;
 
+namespace ShlomonMath
+{
+	static const float Cos(float angle)
+	{
+		return cos(angle * PI / 180.0f);
+	}
+	static const float Sin(float angle)
+	{
+		return sin(angle * PI / 180.0f);
+	}
+}
+
 static const XMFLOAT3 operator +(const XMFLOAT3 v1, const XMFLOAT3 v2)
 {
 	XMFLOAT3 result;
@@ -128,6 +140,24 @@ static const XMFLOAT3 operator *(float s, const XMFLOAT3& v1)
 	v.x = v1.x * s;
 	v.y = v1.y * s;
 	v.z = v1.z * s;
+	return v;
+}
+
+//static XMVECTOR operator + (const XMVECTOR v1, const XMFLOAT3& v2)
+//{
+//	XMVECTOR v;
+//	v.m128_f32[0] += v2.x;
+//	v.m128_f32[1] += v2.y;
+//	v.m128_f32[2] += v2.z;
+//	return v;
+//}
+
+static XMVECTOR operator - (const XMVECTOR v1, const XMFLOAT3& v2)
+{
+	XMVECTOR v;
+	v.m128_f32[0] -= v2.x;
+	v.m128_f32[1] -= v2.y;
+	v.m128_f32[2] -= v2.z;
 	return v;
 }
 
