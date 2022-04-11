@@ -14,6 +14,8 @@
 #include"../Enemy/Enemy.h"
 #include "../Hole/Hole.h"
 #include "../3DObjectParticle/3DObjectParticle.h"
+#include "../OthlloPlayer/OthlloPlayer.h"
+#include "../Thunder/Thunder.h"
 
 GameScene::GameScene()
 {
@@ -110,28 +112,19 @@ void GameScene::Init()
 	ObjectParticle3D::LoadObject();
 
 	water.CreateWater();
+	OthlloPlayer::Init();
+
+	ThunderModels::LoadModels();
+	title.CreateSprite(L"Resource/Img/title.png", XMFLOAT3(0, 0 ,0));
+	space.CreateSprite(L"Resource/Img/PushSpace.png", XMFLOAT3(600, 600, 0));
 }
 
 void GameScene::TitleUpdate()
 {
-	//WindowsAPI::GetMousePos();
-	//sample.each.position = ConvertXMFLOAT3toXMVECTOR(Camera::MousePosition(0.0f));
-	//sample.Update();
-
-	othelloManager.Controll();
-	othelloManager.Update();
-
-	checkObject.Update(othelloManager.Send());
-	othelloManager.Receive(checkObject.GetOthelloDatas());
-
-	ObjectParticles::Update();
-
-	/*if (Input::KeyTrigger(DIK_SPACE))
+	if (Input::KeyTrigger(DIK_SPACE))
 	{
 		SceneNum = GAME;
-		Camera::eye.v.y = 20;
-		Camera::eye.v.z = -10;
-	}*/
+	}
 }
 
 void GameScene::SelectUpdate()
@@ -146,21 +139,16 @@ void GameScene::SelectUpdate()
 
 void GameScene::GameUpdate()
 {
-	Camera::eye.v.z = Player::GetPlayer()->GetPos().z - 10.0f;
-	GameScene::LightUpdate();
-	Camera::target.v = XMFLOAT3(Player::GetPlayer()->GetPos());
-	Camera::Update();	spotLightPos[0] = Player::GetPlayer()->GetPos().x;
-	spotLightPos[2] = Player::GetPlayer()->GetPos().z;
-	spotLightPos[1] = 3;
+	
+	OthlloPlayer::Update();
+	ThunderModels::Update();
+	othelloManager.Controll();
+	othelloManager.Update();
 
+	checkObject.Update(othelloManager.Send());
+	othelloManager.Receive(checkObject.GetOthelloDatas());
 
-	//Player::GetPlayer()->Update();
-	ParticleControl::Update();
-
-	if (Input::KeyTrigger(DIK_R))
-	{
-		SceneNum = SELECT;
-	}
+	ObjectParticles::Update();
 }
 
 void GameScene::ResultUpdate()
@@ -186,10 +174,6 @@ void GameScene::TitleDraw()
 	//PostEffectのPreDraw
 	postEffect.PreDraw();
 	//Draw3DObject(sample);
-	othelloManager.Draw();
-	water.Draw();
-	ObjectParticles::Draw();
-	ParticleControl::Draw();
 	BaseDirectX::clearColor[0] = 0.0f;
 	BaseDirectX::clearColor[1] = 0.0f;
 	BaseDirectX::clearColor[2] = 0.0f;
@@ -199,7 +183,8 @@ void GameScene::TitleDraw()
 	postEffect.Draw();
 
 	//スプライトの描画-------------------------
-	//titleSprite.SpriteDraw();
+	title.SpriteDraw();
+	space.SpriteDraw();
 	Imgui::DrawImGui();
 	//描画コマンドここまで
 	BaseDirectX::UpdateBack();
@@ -235,12 +220,14 @@ void GameScene::GameDraw()
 {
 	//PostEffectのPreDraw
 	postEffect.PreDraw();
-
-	Player::GetPlayer()->Draw();
-
-	//PostEffectのPostDraw
-	postEffect.PostDraw();
-
+	//Draw3DObject(sample);
+	othelloManager.Draw();
+	water.Draw();
+	ThunderModels::Draw();
+	OthlloPlayer::Draw();
+	ObjectParticles::Draw();
+	ParticleControl::Draw();
+	
 	BaseDirectX::clearColor[0] = 0.0f;
 	BaseDirectX::clearColor[1] = 0.0f;
 	BaseDirectX::clearColor[2] = 0.0f;
@@ -251,7 +238,6 @@ void GameScene::GameDraw()
 
 	//スプライトの描画-------------------------
 	//titleSprite.SpriteDraw();
-
 	Imgui::DrawImGui();
 	//描画コマンドここまで
 	BaseDirectX::UpdateBack();

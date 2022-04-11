@@ -32,6 +32,7 @@ class Sprite
 {
 public:
 	static SpriteCommon common;
+	Tex tex;
 	ComPtr<ID3DBlob> vsBlob;	// 頂点シェーダオブジェクト
 	ComPtr<ID3DBlob> psBlob;	// ピクセルシェーダオブジェクト
 	ComPtr<ID3DBlob> errorBlob;	// エラーオブジェクト
@@ -62,7 +63,7 @@ public:
 	XMFLOAT2 texSize = {100,100};
 
 	//スプライトの生成
-	void CreateSprite( Tex tex, XMFLOAT3 position, ComPtr<ID3D12Resource> texBuff = nullptr, bool back = false, bool TexSize = true);
+	void CreateSprite(const wchar_t* graph, XMFLOAT3 position, ComPtr<ID3D12Resource> texBuff = nullptr, bool back = false, bool TexSize = true);
 	//スプライト用パイプラインの設定コマンド
 	
 	//スプライト用描画コマンド

@@ -68,4 +68,6 @@ public://ƒV[ƒ“‚Åg‚¤‚à‚Ì
 	OthelloManager othelloManager;
 	CheakOthello checkObject;
 	Water water;
+	Sprite title;
+	Sprite space;
 };

@@ -147,7 +147,7 @@ void Thunder::Init(XMFLOAT3& position)
 
 void Thunder::Update()
 {
-	each.time -= 0.008f;
+	each.time -= 0.0017f;
 	if (each.time <= 0.0f)
 	{
 		isActive = false;
