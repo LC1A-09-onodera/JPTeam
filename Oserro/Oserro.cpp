@@ -4,6 +4,7 @@
 #include "../BaseDirectX/Input.h"
 #include "../3DObjectParticle/3DObjectParticle.h"
 #include "../OthlloPlayer/OthlloPlayer.h"
+#include "../Thunder/Thunder.h"
 list<Othello> OthelloManager::othellos;
 OthelloModel OthelloManager::oserroModel;
 vector<vector<SendOthelloData>> OthelloManager::sendDatas;
@@ -80,13 +81,14 @@ void Othello::Finalize()
 
 void Othello::Revers()
 {
-
 	data.isReverce = true;
 	data.animationTimer = 0;
 	data.waitTimer = waitTimerMax * (data.comboCount - 1);
 	data.JumpTimer = 0;
 	data.isJumpUp = true;
-
+	XMFLOAT3 pos = ConvertXMVECTORtoXMFLOAT3(each.position);
+	pos.z = -0.3f;
+	ThunderModels::Init(pos, XMFLOAT3(0, 0 ,0));
 }
 
 void Othello::ReversUpdate()
@@ -413,7 +415,7 @@ void Othello::MakeParticle()
 {
 	XMFLOAT3 sample;
 	sample = ConvertXMVECTORtoXMFLOAT3(each.position);
-	ObjectParticles::Init(sample, 10);
+	ObjectParticles::Init(sample, 10, ParticleType::Exprotion);
 }
 
 void OthelloManager::Init()

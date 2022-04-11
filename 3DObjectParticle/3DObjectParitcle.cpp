@@ -4,12 +4,45 @@
 ObjectParticle ObjectParticle3D::object;
 list<ObjectParticle3D> ObjectParticles::particles;
 list<list<ObjectParticle3D>::iterator> ObjectParticles::deleteItr;
+
 void ObjectParticle3D::LoadObject()
 {
 	object.CreateModel("Triangle", ShaderManager::playerShader);
 }
 
-void ObjectParticle3D::Add(XMFLOAT3& emitter)
+void ObjectParticle3D::Add(XMFLOAT3& emitter, ParticleType type)
+{
+	if (type == ParticleType::Exprotion)
+	{
+		InitExprotion(emitter);
+		this->type = type;
+	}
+	else if (type == ParticleType::Converge)
+	{
+		InitConverge(emitter);
+		this->type = type;
+	}
+}
+
+void ObjectParticle3D::Update()
+{
+	if (this->type == ParticleType::Exprotion)
+	{
+		UpdateExprotion();
+	}
+	else if (this->type == ParticleType::Converge)
+	{
+		UpdateConverge();
+	}
+}
+
+void ObjectParticle3D::Draw()
+{
+	object.Update(&each);
+	Draw3DObject(object);
+}
+
+void ObjectParticle3D::InitExprotion(XMFLOAT3& emitter)
 {
 	time = Life;
 	each.position = ConvertXMFLOAT3toXMVECTOR(emitter);
@@ -26,7 +59,36 @@ void ObjectParticle3D::Add(XMFLOAT3& emitter)
 	addRotation = GetRandom(2.0f);
 }
 
-void ObjectParticle3D::Update()
+void ObjectParticle3D::InitConverge(XMFLOAT3& emitter)
+{
+	int xSub = (rand() % 10 + 13.0f);
+	if (rand() % 2 == 0)
+	{
+		xSub = -xSub;
+	}
+	each.position.m128_f32[0] = emitter.x + xSub;
+	int ySub = (rand() % 5 + 13.0f);
+	if (rand() % 2 == 0)
+	{
+		ySub = -ySub;
+	}
+	each.position.m128_f32[1] = emitter.x + ySub;
+	int zSub = (rand() % 10 + 13.0f);
+	if (rand() % 2 == 0)
+	{
+		zSub = -zSub;
+	}
+	each.position.m128_f32[2] = emitter.x + zSub;
+	each.CreateConstBuff0();
+	each.CreateConstBuff1();
+	startPosition = ConvertXMVECTORtoXMFLOAT3(each.position);
+	each.scale = {0.2f, 0.2f, 0.2f};
+	endPosition = emitter;
+	easeTime = 0;
+	time = 1;
+}
+
+void ObjectParticle3D::UpdateExprotion()
 {
 	XMFLOAT3 nowPosition = ConvertXMVECTORtoXMFLOAT3(each.position);
 	nowPosition = nowPosition + speed;
@@ -39,18 +101,24 @@ void ObjectParticle3D::Update()
 	time--;
 }
 
-void ObjectParticle3D::Draw()
+void ObjectParticle3D::UpdateConverge()
 {
-	object.Update(&each);
-	Draw3DObject(object);
+	each.position = ConvertXMFLOAT3toXMVECTOR(EaseOutQuad(startPosition, endPosition, easeTime));
+	each.rotation.x += 3.0f;
+	each.rotation.z += 2.0f;
+	easeTime += addTime;
+	if (easeTime >= 1.0f)
+	{
+		time = 0;
+	}
 }
 
-void ObjectParticles::Init(XMFLOAT3& emitter, int count)
+void ObjectParticles::Init(XMFLOAT3& emitter, int count, ParticleType type)
 {
 	for (int i = 0; i < count; i++)
 	{
 		ObjectParticle3D element;
-		element.Add(emitter);
+		element.Add(emitter, type);
 		particles.push_back(element);
 	}
 }

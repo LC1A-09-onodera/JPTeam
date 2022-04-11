@@ -3,8 +3,9 @@
 
 SpriteCommon Sprite::common;
 
-void Sprite::CreateSprite( Tex tex, XMFLOAT3 position, ComPtr<ID3D12Resource> texBuff, bool back, bool TexSize)
+void Sprite::CreateSprite(const wchar_t* graph, XMFLOAT3 position, ComPtr<ID3D12Resource> texBuff, bool back, bool TexSize)
 {
+    tex.LoadGraph(graph);
     texNum = tex.Get();
     this->back = back;
     VertexPosUv Spritevertices[] = {
