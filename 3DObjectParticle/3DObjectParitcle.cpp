@@ -1,6 +1,7 @@
 #include "3DObjectParticle.h"
 #include "../DX12operator.h"
 #include "../Shader/ShaderManager.h"
+#include "../WindowsAPI/WinAPI.h"
 ObjectParticle ObjectParticle3D::object;
 list<ObjectParticle3D> ObjectParticles::particles;
 list<list<ObjectParticle3D>::iterator> ObjectParticles::deleteItr;
@@ -22,6 +23,11 @@ void ObjectParticle3D::Add(XMFLOAT3& emitter, ParticleType type)
 		InitConverge(emitter);
 		this->type = type;
 	}
+	else if (type == ParticleType::TITLE)
+	{
+		InitTitle();
+		this->type = type;
+	}
 }
 
 void ObjectParticle3D::Update()
@@ -33,6 +39,10 @@ void ObjectParticle3D::Update()
 	else if (this->type == ParticleType::Converge)
 	{
 		UpdateConverge();
+	}
+	else if (this->type == ParticleType::TITLE)
+	{
+		UpdateTitle();
 	}
 }
 
@@ -88,6 +98,42 @@ void ObjectParticle3D::InitConverge(XMFLOAT3& emitter)
 	time = 1;
 }
 
+void ObjectParticle3D::InitTitle()
+{
+	int xSub = (rand() % 10 + 5.0f);
+	if (rand() % 2 == 0)
+	{
+		xSub = -xSub;
+	}
+	each.position.m128_f32[0] = rand() % 40 - 20;
+	int ySub = (rand() % 5 + 5.0f);
+	if (rand() % 2 == 0)
+	{
+		ySub = -ySub;
+	}
+	each.position.m128_f32[1] = rand() % 20 - 10;
+	int zSub = (rand() % 10 + 5.0f);
+	if (rand() % 2 == 0)
+	{
+		zSub = -zSub;
+	}
+	each.CreateConstBuff0();
+	each.CreateConstBuff1();
+	speed = GetRandom(2.0f);
+	acc = GetRandom(1.0f);
+	startPosition = ConvertXMVECTORtoXMFLOAT3(each.position);
+	speed.x = speed.x / 150.0f;
+	speed.y = speed.y / 150.0f;
+	speed.z = speed.z / 150.0f;
+	acc.x = acc.x / 500.0f;
+	acc.y = acc.y / 500.0f;
+	acc.z = acc.z / 500.0f;
+	each.scale = { 0.1f, 0.1f, 0.1f };
+	easeTime = 0;
+	isSize = false;
+	time = 600;
+}
+
 void ObjectParticle3D::UpdateExprotion()
 {
 	XMFLOAT3 nowPosition = ConvertXMVECTORtoXMFLOAT3(each.position);
@@ -111,6 +157,37 @@ void ObjectParticle3D::UpdateConverge()
 	{
 		time = 0;
 	}
+}
+
+void ObjectParticle3D::UpdateTitle()
+{
+	if (!isSize && each.scale.x <= 1.0f)
+	{
+		each.scale.x += 0.01f;
+		each.scale.y += 0.01f;
+		each.scale.z += 0.01f;
+	}
+	else if(!isSize)
+	{
+		isSize = true;
+	}
+	else if (each.scale.x > 0.0f)
+	{
+		each.scale.x -= 0.01f;
+		each.scale.y -= 0.01f;
+		each.scale.z -= 0.01f;
+	}
+	else
+	{
+		time = 0;
+	}
+	XMFLOAT3 nowPosition = ConvertXMVECTORtoXMFLOAT3(each.position);
+	nowPosition = nowPosition + speed;
+	speed = speed - acc;
+	each.rotation.x += 1.0f;
+	each.rotation.y += 1.0f;
+	each.position = ConvertXMFLOAT3toXMVECTOR(nowPosition);
+	time--;
 }
 
 void ObjectParticles::Init(XMFLOAT3& emitter, int count, ParticleType type)
@@ -146,4 +223,10 @@ void ObjectParticles::Draw()
 	{
 		itr->Draw();
 	}
+}
+
+void ObjectParticles::DeleteAllParticle()
+{
+	particles.clear();
+	deleteItr.clear();
 }

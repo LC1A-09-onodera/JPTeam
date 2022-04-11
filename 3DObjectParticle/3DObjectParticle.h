@@ -5,6 +5,8 @@ enum class ParticleType
 {
 	Exprotion,
 	Converge,
+	TITLE,
+
 };
 
 class ObjectParticle : public Model
@@ -24,7 +26,7 @@ class ObjectParticle3D
 	XMFLOAT3 endPosition;
 	const float addTime = 0.002f;
 	float easeTime;
-
+	bool isSize;
 	ParticleType type;
 public:
 	static void LoadObject();
@@ -33,8 +35,10 @@ public:
 	void Draw();
 	void InitExprotion(XMFLOAT3& emitter);
 	void InitConverge(XMFLOAT3& emitter);
+	void InitTitle();
 	void UpdateExprotion();
 	void UpdateConverge();
+	void UpdateTitle();
 	int time;
 };
 class ObjectParticles
@@ -45,4 +49,5 @@ public:
 	static void Init(XMFLOAT3& emitter, int count, ParticleType type);
 	static void Update();
 	static void Draw();
+	static void DeleteAllParticle();
 };
