@@ -39,6 +39,10 @@ void Othello::Update()
 	{
 		ReversUpdate();
 	}
+	else if (data.isSandwich)
+	{
+		SinkWait();
+	}
 	else if (data.isVanish)
 	{
 		Sink();
@@ -90,6 +94,18 @@ void Othello::Revers()
 	XMFLOAT3 pos = ConvertXMVECTORtoXMFLOAT3(each.position);
 	pos.z = -0.3f;
 	ThunderModels::Init(pos, XMFLOAT3(0, 0, 0));
+}
+
+
+void Othello::Sandwich()
+{
+	data.isPlayer = false;
+	data.isSandwich = true;
+	data.waitTimer = animationTimerMax;
+	XMFLOAT3 pos = ConvertXMVECTORtoXMFLOAT3(each.position);
+	pos.z = -0.3f;
+	ThunderModels::Init(pos, XMFLOAT3(0, 0, 0));
+
 }
 
 void Othello::ReversUpdate()
@@ -154,7 +170,7 @@ void Othello::ReversUpdate()
 		//回転フラグoff
 		data.isFront = !data.isFront;
 		data.isReverce = false;
-		data.comboCount = 0;
+		//data.comboCount = 0;
 
 		data.isVanish = true;
 
@@ -395,6 +411,17 @@ void Othello::Spawn(OthelloType type, int x, int y, bool isFront)
 		data.type = type;
 		data.isFront = isFront;
 	}
+}
+
+void Othello::SinkWait()
+{
+	if (data.waitTimer > 0)
+	{
+		data.waitTimer--;
+		return;
+	}
+	data.isSandwich = false;
+	data.isVanish = true;
 }
 
 void Othello::Sink()
@@ -676,6 +703,10 @@ void OthelloManager::Receive(const vector<vector<SendOthelloData>> &data)
 
 	//
 	auto itr = othellos.begin();
+	list<list<Othello>::iterator> sandOthellos;
+
+	//生きているやつを挟んだフラグ
+	bool isSandFlip = false;
 	for (; itr != othellos.end(); itr++)
 	{
 		OthelloData *gameDatas = itr->GetGameData();
@@ -687,12 +718,34 @@ void OthelloManager::Receive(const vector<vector<SendOthelloData>> &data)
 		//	gameDatas->comboCount = sendDatas[y][x].comboCount;
 		//	itr->Revers();
 		//}
-		if (sendDatas[y][x].isFront != gameDatas->isFront && !gameDatas->isVanish)
+		if (sendDatas[y][x].isFront != gameDatas->isFront && !gameDatas->isVanish && !gameDatas->isSandwich)
 		{
 			gameDatas->comboCount = sendDatas[y][x].comboCount + 1;
 			itr->Revers();
+			//生きているやつを挟んだ
+			isSandFlip = true;
 		}
+		else if (sendDatas[y][x].isSandwich && !gameDatas->isVanish && !gameDatas->isSandwich)
+		{
+			gameDatas->comboCount = sendDatas[y][x].comboCount + 1;
+			sandOthellos.push_back(itr);
+		}
+
 		gameDatas->isMove = false;
+	}
+
+	auto SandItr = sandOthellos.begin();
+	for (; SandItr != sandOthellos.end(); SandItr++)
+	{
+		auto SandOthelloDataItr = *SandItr;
+		if(isSandFlip)
+		{
+			SandOthelloDataItr->Sandwich();
+		}
+		else
+		{
+			SandOthelloDataItr->GetGameData()->comboCount = 0;
+		}
 	}
 
 }
