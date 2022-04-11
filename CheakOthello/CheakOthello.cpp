@@ -82,7 +82,7 @@ void CheakOthello::CheckLastMove(const vector<vector<SendOthelloData>>& othelloD
 
 bool CheakOthello::SetCheckOthello()
 {
-	if (!othelloDatas.empty())
+	if (!comboOthelloDataPos.empty())
 	{
 		last_y = comboOthelloDataPos.front().first;
 		last_x = comboOthelloDataPos.front().second;
