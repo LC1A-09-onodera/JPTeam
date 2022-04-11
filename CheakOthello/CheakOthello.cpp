@@ -124,7 +124,8 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y)
 			//全部探索リストに入れる（自分と挟んだ駒まで）
 			for (int i = 0; i <= loop; i++)
 			{
-				comboOthelloDataPos.push_back(std::make_pair(pair_y, pair_x));
+				//comboOthelloDataPos.push_back(std::make_pair(pair_y, pair_x));
+				othelloDatas[pair_y][pair_x].isMove = true;
 				pair_x += direction_x;
 				pair_y += direction_y;
 			}
