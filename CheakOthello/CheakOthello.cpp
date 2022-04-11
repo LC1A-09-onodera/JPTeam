@@ -95,8 +95,8 @@ bool CheakOthello::SetCheckOthello()
 void CheakOthello::OthelloCheck(int direction_x, int direction_y)
 {
 	int loop = 1;
-	int count_x;
-	int count_y;
+	int count_x = last_x;
+	int count_y = last_y;
 	int pair_x = last_x;	//loop内
 	int pair_y = last_y;	//loop内
 
@@ -107,15 +107,15 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y)
 	while (1)
 	{
 		//次のマス
-		count_x = last_x + direction_x;
-		count_y = last_y + direction_y;
+		count_x += direction_x;
+		count_y += direction_y;
 
 		//範囲外
 		if (count_x < 0 || count_x > OthelloConstData::fieldSize - 1) { break; }
 		if (count_y < 0 || count_y > OthelloConstData::fieldSize - 1) { break; }
 
 		//存在しない
-		if (othelloDatas[count_y][count_x].type == NONE_DIRECTION) { break; }
+		if (othelloDatas[count_y][count_x].type == NONE) { break; }
 		//同色と隣接
 		else if (othelloDatas[count_y][count_x].isFront == side && loop == 1) { break; }
 		//挟んだ場合
