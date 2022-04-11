@@ -67,15 +67,15 @@ void CheakOthello::CheckLastMove(const vector<vector<SendOthelloData>>& othelloD
 	{
 		for (int j = 0; j < MAX_SIZE_X; j++)
 		{
-			//‚»‚ÌêŠ‚ª‹ó
-			if (othelloDatas[i][j].type == NONE) { continue; }
-			// ÅŒã‚É“®‚©‚µ‚Ä‚é‚â‚Â
-			if (!othelloDatas[i][j].isMove) { continue; }
-			//last_x = j;
-			//last_y = i;
+			if (!othelloDatas[i][j].isSandwich)
+			{
+				//‚»‚ÌêŠ‚ª‹ó
+				if (othelloDatas[i][j].type == NONE) { continue; }
+				//ÅŒã‚É“®‚©‚µ‚Ä‚é‚â‚Â
+				if (!othelloDatas[i][j].isMove) { continue; }
+			}
 			side = othelloDatas[i][j].isFront;
 			comboOthelloDataPos.push_back(std::make_pair(i, j));
-			//break;
 		}
 	}
 }
@@ -125,7 +125,8 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y)
 			for (int i = 0; i <= loop; i++)
 			{
 				//comboOthelloDataPos.push_back(std::make_pair(pair_y, pair_x));
-				othelloDatas[pair_y][pair_x].isMove = true;
+				//othelloDatas[pair_y][pair_x].isMove = true;
+				othelloDatas[pair_y][pair_x].isSandwich = true;
 				pair_x += direction_x;
 				pair_y += direction_y;
 			}
