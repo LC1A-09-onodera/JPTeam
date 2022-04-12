@@ -122,7 +122,7 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y)
 		else if (othelloDatas[count_y][count_x].isFront == side && loop != 0)
 		{
 			//全部探索リストに入れる（自分と挟んだ駒まで）←sandwichArrayが同じかも参照する
-			for (int i = 0; i <= loop; i++)
+			for (int i = 0; i <= loop + 1; i++)
 			{
 				othelloDatas[pair_y][pair_x].isSandwich = true;
 
@@ -146,6 +146,9 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y)
 			//初期化
 			pair_x = last_x;
 			pair_y = last_y;
+
+			//スコア計算
+
 
 			//ひっくり返す
 			for (int i = 1; i <= loop; i++)
