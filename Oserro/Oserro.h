@@ -12,11 +12,11 @@ enum OthelloType
 };
 namespace
 {
-struct panelPos
-{
-	int x;
-	int y;
-};
+	struct panelPos
+	{
+		int x;
+		int y;
+	};
 }
 
 struct OthelloData
@@ -65,8 +65,9 @@ struct OthelloData
 	//Á–Å‚µ‚«‚Á‚½‚©
 	bool isDead = false;
 
+	bool isHarf = false;
 
-	panelPos oldPos = {0, 0};
+	panelPos oldPos = { 0, 0 };
 	int vanishTimer = 0;
 };
 struct SendOthelloData
@@ -102,7 +103,7 @@ private:
 	EachInfo each;
 	XMFLOAT3 startPos;
 	XMFLOAT3 endPos;
-	Model* model;
+	Model *model;
 	float startAngle;
 	float endAngle;
 	float time;
@@ -110,21 +111,21 @@ private:
 	OthelloData data;
 	XMVECTOR qRotation;
 public:
-	OthelloData* GetGameData() { return &data; }
+	OthelloData *GetGameData() { return &data; }
 	bool GetIsEase() { return isEase; }
 	XMFLOAT3 GetPosition() { return ConvertXMVECTORtoXMFLOAT3(each.position); }
 	void SetIsEase(bool isEase) { this->isEase = isEase; }
-	void SetPosition(XMFLOAT3& position) { this->each.position = ConvertXMFLOAT3toXMVECTOR(position); }
+	void SetPosition(XMFLOAT3 &position) { this->each.position = ConvertXMFLOAT3toXMVECTOR(position); }
 
 public:
-	void Init(Model* model);
+	void Init(Model *model);
 	void Update();
 	void Draw();
 	void Finalize();
 
 	void Spawn(OthelloType type, int x, int y, bool isFront = true);
 
-	void Controll(const XMFLOAT3& mousePos, int& moveCount);
+	void Controll(const XMFLOAT3 &mousePos, int &moveCount);
 
 	//‚Ð‚Á‚­‚è•Ô‚·
 	void Revers();
@@ -153,8 +154,8 @@ public:
 	void Controll();
 	void AddPanel();
 
-	const vector<vector<SendOthelloData>>& Send();
-	void Receive(const vector<vector<SendOthelloData>>& data);
+	const vector<vector<SendOthelloData>> &Send();
+	void Receive(const vector<vector<SendOthelloData>> &data);
 
 	void MinSpawn();
 private:
@@ -179,6 +180,12 @@ private:
 	void playerMoveEnd();
 
 	void playerNotMove();
+private:
+	void TypeA(list<Othello>::iterator playerItr, list<Othello>::iterator nextItr, int x, int y);
+
+	void TypeB(list<Othello>::iterator playerItr, list<Othello>::iterator nextItr, int x, int y);
+
+	void TypeC(list<Othello>::iterator playerItr, list<Othello>::iterator nextItr, int x, int y);
 private:
 
 	panelPos playerPanelPos;

@@ -5,6 +5,7 @@
 #include "../3DObjectParticle/3DObjectParticle.h"
 #include "../OthlloPlayer/OthlloPlayer.h"
 #include "../Thunder/Thunder.h"
+#include "../imgui/ImguiControl.h"
 list<Othello> OthelloManager::othellos;
 OthelloModel OthelloManager::oserroModel;
 vector<vector<SendOthelloData>> OthelloManager::sendDatas;
@@ -434,7 +435,7 @@ void Othello::Sink()
 	else
 	{
 		float a = static_cast<float>(data.vanishTimer) / vanishTimerMax;
-
+		data.isHarf = (a>=0.5f);
 		each.scale = { 1 - a, 1 - a, 1.0f };
 	}
 }
@@ -1021,34 +1022,18 @@ void OthelloManager::KeySetPlayer()
 		}
 	}
 
-	bool OnPlayer = playerItr != othellos.end();
-	//移動先にパネルがあるか
-	if (nextItr != othellos.end())
+	if (Imgui::sample == 0)
 	{
-		bool isNotMove = nextItr->GetGameData()->isReverce || nextItr->GetGameData()->isVanish;
-		if (isNotMove)
-		{
-			playerNotMove();
-			return;
-		}
-		isPanelMove = false;
-		nextItr->GetGameData()->isMove = false;
-		nextItr->GetGameData()->isPlayer = true;
-		if (OnPlayer)
-		{
-			playerItr->GetGameData()->isPlayer = false;
-		}
-		playerPanelPos = { x, y };
+		TypeA(playerItr, nextItr, x, y);
+	}
+	else if (Imgui::sample == 1)
+	{
+		TypeB(playerItr, nextItr, x, y);
 	}
 	else
 	{
-		if (OnPlayer)
-		{
-			isPanelMove = true;
-		}
-		playerPanelPos = { x, y };
+		TypeC(playerItr, nextItr, x, y);
 	}
-	isPlayerEnd = false;
 }
 
 void OthelloManager::SartSetPos()
@@ -1121,4 +1106,123 @@ void OthelloManager::playerNotMove()
 	tmpPlayerPos.y = tmpy;
 	tmpPlayerPos = tmpPlayerPos + stageLeftTop;
 	OthlloPlayer::SetPosition(tmpPlayerPos);
+}
+
+void OthelloManager::TypeA(list<Othello>::iterator playerItr, list<Othello>::iterator nextItr, int x, int y)
+{
+	bool OnPlayer = playerItr != othellos.end();
+	//移動先にパネルがあるか
+	if (nextItr != othellos.end())
+	{
+		bool isNotMove = nextItr->GetGameData()->isReverce;
+		if (isNotMove)
+		{
+			playerNotMove();
+			return;
+		}
+
+		bool isOnVanish = nextItr->GetGameData()->isVanish;
+
+		if (isOnVanish)
+		{
+			nextItr->GetGameData()->isPlayer = false;
+		}
+		else
+		{
+			nextItr->GetGameData()->isPlayer = true;
+		}
+		isPanelMove = false;
+		nextItr->GetGameData()->isMove = false;
+
+		if (OnPlayer)
+		{
+			playerItr->GetGameData()->isPlayer = false;
+		}
+		playerPanelPos = { x, y };
+	}
+	else
+	{
+		if (OnPlayer)
+		{
+			isPanelMove = true;
+		}
+		playerPanelPos = { x, y };
+	}
+	isPlayerEnd = false;
+}
+
+void OthelloManager::TypeB(list<Othello>::iterator playerItr, list<Othello>::iterator nextItr, int x, int y)
+{
+	bool OnPlayer = playerItr != othellos.end();
+	//移動先にパネルがあるか
+	if (nextItr != othellos.end())
+	{
+		bool isNotMove = nextItr->GetGameData()->isReverce || nextItr->GetGameData()->isVanish;
+		if (isNotMove)
+		{
+			playerNotMove();
+			return;
+		}
+
+		isPanelMove = false;
+		nextItr->GetGameData()->isMove = false;
+		nextItr->GetGameData()->isPlayer = true;
+		if (OnPlayer)
+		{
+			playerItr->GetGameData()->isPlayer = false;
+		}
+		playerPanelPos = { x, y };
+	}
+	else
+	{
+		if (OnPlayer)
+		{
+			isPanelMove = true;
+		}
+		playerPanelPos = { x, y };
+	}
+	isPlayerEnd = false;
+}
+
+void OthelloManager::TypeC(list<Othello>::iterator playerItr, list<Othello>::iterator nextItr, int x, int y)
+{
+	bool OnPlayer = playerItr != othellos.end();
+	//移動先にパネルがあるか
+	if (nextItr != othellos.end())
+	{
+		bool isNotMove = (nextItr->GetGameData()->isReverce || nextItr->GetGameData()->isHarf);
+		if (isNotMove)
+		{
+			playerNotMove();
+			return;
+		}
+
+		bool isOnVanish = nextItr->GetGameData()->isVanish;
+
+		if (isOnVanish)
+		{
+			nextItr->GetGameData()->isPlayer = false;
+		}
+		else
+		{
+			nextItr->GetGameData()->isPlayer = true;
+		}
+		isPanelMove = false;
+		nextItr->GetGameData()->isMove = false;
+
+		if (OnPlayer)
+		{
+			playerItr->GetGameData()->isPlayer = false;
+		}
+		playerPanelPos = { x, y };
+	}
+	else
+	{
+		if (OnPlayer)
+		{
+			isPanelMove = true;
+		}
+		playerPanelPos = { x, y };
+	}
+	isPlayerEnd = false;
 }
