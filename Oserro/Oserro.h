@@ -70,6 +70,8 @@ struct OthelloData
 	panelPos oldPos = { 0, 0 };
 	int vanishTimer = 0;
 	vector<int> SandwichLength;
+
+	int score = 0;
 };
 struct SendOthelloData
 {
@@ -80,6 +82,7 @@ struct SendOthelloData
 	int comboCount = 0;
 	bool isSandwich = false;
 	vector<int> SandwichLength;
+	int score = 0;
 };
 
 namespace OthelloConstData
