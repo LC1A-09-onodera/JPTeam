@@ -444,7 +444,7 @@ void Othello::MakeParticle()
 {
 	XMFLOAT3 sample;
 	sample = ConvertXMVECTORtoXMFLOAT3(each.position);
-	ObjectParticles::Init(sample, 10, ParticleType::Exprotion);
+	//ObjectParticles::Init(sample, 10, ParticleType::Exprotion);
 }
 
 void OthelloManager::Init()
@@ -791,7 +791,12 @@ void OthelloManager::SetPanel()
 		Othello data;
 		data.Init(&oserroModel);
 		data.Spawn(NORMAL, x, y, true);
+		data.Update();
 		data.GetGameData()->isMove = false;
+		if (x == playerPanelPos.x && y == playerPanelPos.y)
+		{
+			data.GetGameData()->isPlayer = true;
+		}
 		othellos.push_back(data);
 	}
 }
@@ -891,7 +896,12 @@ void OthelloManager::SpawnPanel()
 
 	bool randFront = rand() % 2;
 	data.Spawn(NORMAL, x, y, randFront);
+	data.Update();
 	data.GetGameData()->isMove = false;
+	if (x == playerPanelPos.x && y == playerPanelPos.y)
+	{
+		data.GetGameData()->isPlayer = true;
+	}
 	othellos.push_back(data);
 }
 

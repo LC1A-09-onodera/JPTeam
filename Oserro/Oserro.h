@@ -87,14 +87,15 @@ namespace OthelloConstData
 	const int fieldSize = 8;
 	const float cellScale = 1.0f;
 	const XMFLOAT3 stageLeftTop{ -cellScale * fieldSize, cellScale * fieldSize, 0 };
+	const int spawnTimerMAx = 600;
+	const int spawnMoveCount = 100;
+	const int spawnPanelCount = 2;
+	const int minPanelCount = 30;
+	//アニメーション
+	const int vanishTimerMax = 600;
 	const int animationTimerMax = 30;
 	const int waitTimerMax = 30;
 	const int JumpTimerMax = waitTimerMax / 2;
-	const int spawnTimerMAx = 20000;
-	const int vanishTimerMax = 600;
-	const int spawnMoveCount = 2000;
-	const int spawnPanelCount = 2;
-	const int minPanelCount = 30;
 }
 
 class Othello
