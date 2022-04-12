@@ -183,11 +183,31 @@ private:
 
 	void playerNotMove();
 private:
+
+	/// <summary>
+	/// ©—R‚É“®‚«•ú‘è
+	/// </summary>
 	void TypeA(list<Othello>::iterator playerItr, list<Othello>::iterator nextItr, int x, int y);
 
+	/// <summary>
+	/// Á‚¦‚Ä‚é“r’†‚Ì‹î‚É‚Íæ‚ê‚È‚¢
+	/// </summary>
 	void TypeB(list<Othello>::iterator playerItr, list<Othello>::iterator nextItr, int x, int y);
 
+	/// <summary>
+	/// Á‚¦‚Ä‚é“r’†‚Ì‹î‚Ì‘å‚«‚³‚ª¬‚³‚­‚È‚é‚Æ’Ê‚ê‚È‚­‚È‚é
+	/// </summary>
 	void TypeC(list<Othello>::iterator playerItr, list<Othello>::iterator nextItr, int x, int y);
+
+	/// <summary>
+	/// TypeC‚Ì‹t
+	/// </summary>
+	void TypeD(list<Othello>::iterator playerItr, list<Othello>::iterator nextItr, int x, int y);
+
+	/// <summary>
+	/// XI[sai]‚Ì‚æ‚¤‚ÉÁ‚¦‚©‚¯‚Ì‹î‚©‚ç“o‚ê‚é
+	/// </summary>
+	void TypeXI(list<Othello>::iterator playerItr, list<Othello>::iterator nextItr, int x, int y);
 private:
 
 	panelPos playerPanelPos;

@@ -435,7 +435,7 @@ void Othello::Sink()
 	else
 	{
 		float a = static_cast<float>(data.vanishTimer) / vanishTimerMax;
-		data.isHarf = (a>=0.5f);
+		data.isHarf = (a >= 0.5f);
 		each.scale = { 1 - a, 1 - a, 1.0f };
 	}
 }
@@ -740,7 +740,7 @@ void OthelloManager::Receive(const vector<vector<SendOthelloData>> &data)
 	for (; SandItr != sandOthellos.end(); SandItr++)
 	{
 		auto SandOthelloDataItr = *SandItr;
-		if(isSandFlip)
+		if (isSandFlip)
 		{
 			SandOthelloDataItr->Sandwich();
 		}
@@ -1031,9 +1031,17 @@ void OthelloManager::KeySetPlayer()
 	{
 		TypeB(playerItr, nextItr, x, y);
 	}
-	else
+	else if (Imgui::sample == 2)
 	{
 		TypeC(playerItr, nextItr, x, y);
+	}
+	else if(Imgui::sample == 3)
+	{
+		TypeD(playerItr, nextItr, x, y);
+	}
+	else
+	{
+		TypeXI(playerItr, nextItr, x, y);
 	}
 }
 
@@ -1192,6 +1200,67 @@ void OthelloManager::TypeC(list<Othello>::iterator playerItr, list<Othello>::ite
 	if (nextItr != othellos.end())
 	{
 		bool isNotMove = (nextItr->GetGameData()->isReverce || nextItr->GetGameData()->isHarf);
+		if (isNotMove)
+		{
+			playerNotMove();
+			return;
+		}
+
+		bool isOnVanish = nextItr->GetGameData()->isVanish;
+
+		if (isOnVanish)
+		{
+			nextItr->GetGameData()->isPlayer = false;
+		}
+		else
+		{
+			nextItr->GetGameData()->isPlayer = true;
+		}
+		isPanelMove = false;
+		nextItr->GetGameData()->isMove = false;
+
+		if (OnPlayer)
+		{
+			playerItr->GetGameData()->isPlayer = false;
+		}
+		playerPanelPos = { x, y };
+	}
+	else
+	{
+		if (OnPlayer)
+		{
+			isPanelMove = true;
+		}
+		playerPanelPos = { x, y };
+	}
+	isPlayerEnd = false;
+}
+
+void OthelloManager::TypeD(list<Othello>::iterator playerItr, list<Othello>::iterator nextItr, int x, int y)
+{
+	nextItr->GetGameData()->isHarf = !nextItr->GetGameData()->isHarf;
+	TypeC(playerItr, nextItr, x, y);
+}
+
+void OthelloManager::TypeXI(list<Othello>::iterator playerItr, list<Othello>::iterator nextItr, int x, int y)
+{
+	bool OnPlayer = playerItr != othellos.end();
+	//à⁄ìÆêÊÇ…ÉpÉlÉãÇ™Ç†ÇÈÇ©
+	if (nextItr != othellos.end())
+	{
+		float nextStep = 1.0f - (static_cast<float>(nextItr->GetGameData()->vanishTimer) / vanishTimerMax);
+		float nowStep = 1.0f;
+		if (OnPlayer)
+		{
+			nowStep = 1.0f - static_cast<float>(playerItr->GetGameData()->vanishTimer) / vanishTimerMax;
+		}
+		else
+		{
+			nowStep = 0.0f;
+		}
+		float stepSize = nextStep - nowStep;
+		bool isStepUp = stepSize <=0.7;
+		bool isNotMove = (nextItr->GetGameData()->isReverce || !isStepUp);
 		if (isNotMove)
 		{
 			playerNotMove();
