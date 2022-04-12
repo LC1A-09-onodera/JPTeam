@@ -691,6 +691,7 @@ const vector<vector<SendOthelloData>> &OthelloManager::Send()
 
 		data.isMove = gameDatas.isMove;
 		data.comboCount = gameDatas.comboCount;
+		data.SandwichLength = gameDatas.SandwichLength;
 
 		sendDatas[gameDatas.heightPos][gameDatas.widthPos] = data;
 	}
