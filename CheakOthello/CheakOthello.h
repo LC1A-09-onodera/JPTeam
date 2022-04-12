@@ -24,13 +24,19 @@ private:
 	static const int MAX_SIZE_Y = 8;
 
 private:
+
+
+private:
 	std::vector<std::pair<int, int>> comboOthelloDataPos;
 	std::vector<vector<SendOthelloData>> othelloDatas;
 
 private:
-	int last_x;
-	int last_y;
-	bool side;
+	int last_x;				//最後に動かしたオセロのX座標
+	int last_y;				//最後に動かしたオセロのY座標
+	int baseScore;			//基礎点
+	int totalScore;			//合計点
+	int comboCount;			//現在のコンボ数←そのまま倍率に使用
+	bool side;				//表裏保存
 
 public:
 	CheakOthello();
@@ -48,4 +54,12 @@ private:
 	//8回呼ぶ
 	void OthelloCheck(int direction_x, int direction_y);
 
+private:
+	//Vectorの中身を判定
+	bool VectorFinder(std::vector<int> vec, int number) {
+		auto itr = std::find(vec.begin(), vec.end(), number);
+		size_t index = std::distance(vec.begin(), itr);
+		if (index != vec.size()) { return true; }
+		else { return false; }
+	}
 };
