@@ -90,4 +90,5 @@ public://ƒV[ƒ“‚Åg‚¤‚à‚Ì
 
 	int resultForTime;
 	const int gameMaxTime = 600;
+	Sprite numbers[10];
 };

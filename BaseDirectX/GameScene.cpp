@@ -119,6 +119,17 @@ void GameScene::Init()
 	space.CreateSprite(L"Resource/Img/PushSpace.png", XMFLOAT3(600, 600, 0));
 	sceneChage.CreateSprite(L"Resource/Img/SceneChange.png", XMFLOAT3(window_width / 2, window_height / 2, 0));
 	gameTime = gameMaxTime;
+
+	numbers[0].CreateSprite(L"Resource/Img/number_0.png", XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+	numbers[1].CreateSprite(L"Resource/Img/number_1.png", XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+	numbers[2].CreateSprite(L"Resource/Img/number_2.png", XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+	numbers[3].CreateSprite(L"Resource/Img/number_3.png", XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+	numbers[4].CreateSprite(L"Resource/Img/number_4.png", XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+	numbers[5].CreateSprite(L"Resource/Img/number_5.png", XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+	numbers[6].CreateSprite(L"Resource/Img/number_6.png", XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+	numbers[7].CreateSprite(L"Resource/Img/number_7.png", XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+	numbers[8].CreateSprite(L"Resource/Img/number_8.png", XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+	numbers[9].CreateSprite(L"Resource/Img/number_9.png", XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
 }
 
 void GameScene::TitleUpdate()
@@ -149,6 +160,7 @@ void GameScene::TitleUpdate()
 		eyeEaseTime = 0;
 		gameTime = gameMaxTime;
 		SceneNum = GAME;
+		countDown = 239;
 	}
 }
 
@@ -167,14 +179,21 @@ void GameScene::GameUpdate()
 	//カメラ変化が行われていない時にゲームを開始する
 	if (!isSceneChange && !isResultSceneChange)
 	{
-		OthlloPlayer::Update();
-		ThunderModels::Update();
-		othelloManager.Controll();
-		othelloManager.Update();
-		checkObject.Update(othelloManager.Send());
-		othelloManager.Receive(checkObject.GetOthelloDatas());
+		if (countDown <= 0)
+		{
+			OthlloPlayer::Update();
+			ThunderModels::Update();
+			othelloManager.Controll();
+			othelloManager.Update();
+			checkObject.Update(othelloManager.Send());
+			othelloManager.Receive(checkObject.GetOthelloDatas());
 
-		gameTime--;
+			gameTime--;
+		}
+		else
+		{
+			countDown--;
+		}
 	}
 	ObjectParticles::Update();
 	//タイトルからgameシーンへ
@@ -292,7 +311,7 @@ void GameScene::SelectDraw()
 
 	//スプライトの描画-------------------------
 	//titleSprite.SpriteDraw();
-
+	
 	Imgui::DrawImGui();
 	//描画コマンドここまで
 	BaseDirectX::UpdateBack();
@@ -320,6 +339,10 @@ void GameScene::GameDraw()
 
 	//スプライトの描画-------------------------
 	//titleSprite.SpriteDraw();
+	if (countDown > 0)
+	{
+		numbers[countDown / 60].SpriteDraw();
+	}
 	Imgui::DrawImGui();
 	//描画コマンドここまで
 	BaseDirectX::UpdateBack();
