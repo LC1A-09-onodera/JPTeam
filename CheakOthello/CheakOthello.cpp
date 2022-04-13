@@ -22,396 +22,130 @@ void CheakOthello::Init()
 
 void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData)
 {
-	int lastX, lastY;				//最後の座標を保存する変数
-	int combo = 0;					//コンボ保存用
-	bool side;						//表か裏か
-	bool cheakRight = true;			//右が探索中か
-	bool cheakLeft = true;			//左が探索中か
-	bool cheakUp = true;			//上が探索中か
-	bool cheakDown = true;			//下が探索中か
-	bool cheakTopLeft = true;		//左斜め上が探索中か
-	bool cheakBottomLeft = true;	//左斜め下が探索中か
-	bool cheakTopRight = true;		//右斜め上が探索中か
-	bool cheakBottomRight = true;	//右斜め下が探索中か
-	bool checkCombo = false;		//コンボが加算されたか
+	//最後に動いた駒を判定、保存
+	CheckLastMove(othelloData);
 
-
-	if (Input::KeyTrigger(DIK_1))
+	while (1)
 	{
-		int hoge = 0;
-	}
-	//memcpy(othelloDatas, othelloData, sizeof(othelloData));
-	othelloDatas = othelloData;
-	//その場にオセロが存在するかつ、最後に動かしてたかを判定（←ちょっと効率悪そう）
-	for (int i = 0; i < MAX_SIZE_Y; i++)
-	{
-		for (int j = 0; j < MAX_SIZE_X; j++)
-		{
-			if (othelloDatas[i][j].type == NONE) { continue; }
-			// 最後に動かしてるやつ
-			if (!othelloDatas[i][j].isMove) { continue; }
-			lastX = j;
-			lastY = i;
-			side = othelloDatas[i][j].isFront;
-			comboOthelloDataPos.push_back(std::make_pair(i, j));
-			break;
-		}
-	}
+		//判定を取る駒をセット
+		bool IsSet = SetCheckOthello();
+		if (!IsSet) { break; }
 
-	//最後のを基準に左右と斜め判定(jのfor文の範囲、i+1する必要あるか??)
-	while (!comboOthelloDataPos.empty() || !saveOthelloDataPos.empty())
-	{
-		//初期化
-		cheakRight = true;
-		cheakLeft = true;
-		cheakUp = true;
-		cheakDown = true;
-		cheakTopLeft = true;
-		cheakBottomLeft = true;
-		cheakTopRight = true;
-		cheakBottomRight = true;
-		checkCombo = false;
-
+		//全方位チェック
 		/*-----左-----*/
-		int maxLeft = lastX + 1;
-		if (maxLeft > 2 && lastX >= 2)
-		{
-			for (int i = 1; i < maxLeft; i++)
-			{
-
-				//左確認
-				if (cheakLeft)
-				{
-					//何もなかったら
-					if (othelloDatas[lastY][lastX - i].type == NONE)
-					{
-						cheakLeft = false;
-					}
-					//隣接かつ同じ色だったら
-					else if (othelloDatas[lastY][lastX - i].isFront == side && i == 1)
-					{
-						cheakLeft = false;
-					}
-					//同じだったら
-					else if (othelloDatas[lastY][lastX - i].isFront == side && i != 1)
-					{
-						for (int j = 1; j < i; j++)
-						{
-							if (!checkCombo) { combo++; checkCombo = true; }
-							othelloDatas[lastY][lastX - j].comboCount = combo;
-							othelloDatas[lastY][lastX - j].isFront = side;
-							saveOthelloDataPos.push_back(make_pair(lastY, lastX - j));
-							cheakLeft = false;
-						}
-					}
-				}
-			}
-		}
-
+		OthelloCheck(Direction_X::WEST, NONE_DIRECTION);
 		/*-----右-----*/
-		int maxRight = MAX_SIZE_X - lastX;
-		if (maxRight > 2 && lastX <= MAX_SIZE_X - 3)
-		{
-			for (int i = 1; i < maxRight; i++)
-			{
-				//右確認
-				if (cheakRight)
-				{
-					//何もなかったら
-					if (othelloDatas[lastY][lastX + i].type == NONE)
-					{
-						cheakRight = false;
-					}
-					//隣接かつ同じ色だったら
-					else if (othelloDatas[lastY][lastX + i].isFront == side && i == 1)
-					{
-						cheakRight = false;
-					}
-					//同じだったら
-					else if (othelloDatas[lastY][lastX + i].isFront == side && i != 1)
-					{
-						for (int j = 1; j < i; j++)
-						{
-							if (!checkCombo) { combo++; checkCombo = true; }
-							othelloDatas[lastY][lastX + j].comboCount = combo;
-							othelloDatas[lastY][lastX + j].isFront = side;
-							saveOthelloDataPos.push_back(make_pair(lastY, lastX + j));
-							cheakRight = false;
-						}
-					}
-				}
-			}
-		}
-
+		OthelloCheck(Direction_X::EAST, NONE_DIRECTION);
 		/*-----上-----*/
-		int maxUp = lastY + 1;
-		if (maxUp > 2 && lastY >= 2)
-		{
-			for (int i = 1; i < maxUp; i++)
-			{
-				//上確認
-				if (cheakUp)
-				{
-					//何もなかったら
-					if (othelloDatas[lastY - i][lastX].type == NONE)
-					{
-						cheakUp = false;
-					}
-					//隣接かつ同じ色だったら
-					else if (othelloDatas[lastY - i][lastX].isFront == side && i == 1)
-					{
-						cheakUp = false;
-					}
-					//同じだったら
-					else if (othelloDatas[lastY - i][lastX].isFront == side && i != 1)
-					{
-						for (int j = 1; j < i; j++)
-						{
-							if (!checkCombo) { combo++; checkCombo = true; }
-							othelloDatas[lastY - j][lastX].comboCount = combo;
-							othelloDatas[lastY - j][lastX].isFront = side;
-							saveOthelloDataPos.push_back(make_pair(lastY - j, lastX));
-							cheakUp = false;
-						}
-					}
-				}
-			}
-		}
-
+		OthelloCheck(NONE_DIRECTION, Direction_Y::SOUTH);
 		/*-----下-----*/
-		int maxDown = MAX_SIZE_Y - lastY;
-		if (maxDown > 2 && lastY <= MAX_SIZE_Y - 3)
-		{
-			for (int i = 1; i < maxDown; i++)
-			{
-				//下確認
-				if (cheakDown)
-				{
-					//何もなかったら
-					if (othelloDatas[lastY + i][lastX].type == NONE)
-					{
-						cheakDown = false;
-					}
-					//隣接かつ同じ色だったら
-					else if (othelloDatas[lastY + i][lastX].isFront == side && i == 1)
-					{
-						cheakDown = false;
-					}
-					//同じだったら
-					else if (othelloDatas[lastY + i][lastX].isFront == side && i != 1)
-					{
-						for (int j = 1; j < i; j++)
-						{
-							if (!checkCombo) { combo++; checkCombo = true; }
-							othelloDatas[lastY + j][lastX].comboCount = combo;
-							othelloDatas[lastY + j][lastX].isFront = side;
-							saveOthelloDataPos.push_back(make_pair(lastY + j, lastX));
-							cheakDown = false;
-						}
-					}
-				}
-			}
-		}
-
-		int maxTopLeft;
-		if (lastX <= lastY) { maxTopLeft = lastX + 1; }
-		else { maxTopLeft = lastY + 1; }
+		OthelloCheck(NONE_DIRECTION, Direction_Y::NOUTH);
 
 		/*-----左斜め上-----*/
-		if (maxTopLeft > 2 && lastX >= 2 && lastY >= 2)
-		{
-			for (int i = 1; i < maxTopLeft; i++)
-			{
-				//左斜め上確認
-				if (cheakTopLeft)
-				{
-					//範囲外の参照を防ぐ
-					if (lastY - i < 0 || lastX - i < 0) { cheakTopLeft = false; }
-					//何もなかったら
-					else if (othelloDatas[lastY - i][lastX - i].type == NONE)
-					{
-						cheakTopLeft = false;
-					}
-					//隣接かつ同じ色だったら
-					else if (othelloDatas[lastY - i][lastX - i].isFront == side && i == 1)
-					{
-						cheakTopLeft = false;
-					}
-					//同じだったら
-					else if (othelloDatas[lastY - i][lastX - i].isFront == side && i != 1)
-					{
-						for (int j = 1; j < i; j++)
-						{
-							if (!checkCombo) { combo++; checkCombo = true; }
-							othelloDatas[lastY - j][lastX - j].comboCount = combo;
-							othelloDatas[lastY - j][lastX - j].isFront = side;
-							saveOthelloDataPos.push_back(make_pair(lastY - j, lastX - j));
-							cheakTopLeft = false;
-						}
-					}
-				}
-			}
-		}
-
-		int maxBottomLeft;
-		if (lastX <= lastY) { maxBottomLeft = lastY + 1; }
-		else { maxBottomLeft = lastX + 1; }
-
+		OthelloCheck(Direction_X::WEST, Direction_Y::NOUTH);
 		/*-----左斜め下-----*/
-		if (maxBottomLeft > 2 && lastX >= 2 && lastY <= MAX_SIZE_Y - 3)
-		{
-			for (int i = 1; i < maxBottomLeft; i++)
-			{
-				//左斜め下確認
-				if (cheakBottomLeft)
-				{
-					//範囲外の参照を防ぐ
-					if (lastY + i > MAX_SIZE_Y - 1 || lastX - i < 0) { cheakBottomLeft = false; }
-					//何もなかったら
-					else if (othelloDatas[lastY + i][lastX - i].type == NONE)
-					{
-						cheakBottomLeft = false;
-					}
-					//隣接かつ同じ色だったら
-					else if (othelloDatas[lastY + i][lastX - i].isFront == side && i == 1)
-					{
-						cheakBottomLeft = false;
-					}
-					//同じだったら
-					else if (othelloDatas[lastY + i][lastX - i].isFront == side && i != 1)
-					{
-						for (int j = 1; j < i; j++)
-						{
-							if (!checkCombo) { combo++; checkCombo = true; }
-							othelloDatas[lastY + j][lastX - j].comboCount = combo;
-							othelloDatas[lastY + j][lastX - j].isFront = side;
-							saveOthelloDataPos.push_back(make_pair(lastY + j, lastX - j));
-							cheakBottomLeft = false;
-						}
-					}
-				}
-			}
-		}
-
-		int maxTopRight;
-		if (lastX <= lastY) { maxTopRight = lastY + 1; }
-		else { maxTopRight = lastX + 1; }
-
+		OthelloCheck(Direction_X::WEST, Direction_Y::SOUTH);
 		/*-----右斜め上-----*/
-		if (maxTopRight > 2 && lastX <= MAX_SIZE_X - 3 && lastY >= 2)
-		{
-			for (int i = 1; i < maxTopRight; i++)
-			{
-				//右斜め上確認
-				if (cheakTopRight)
-				{
-					//範囲外の参照を防ぐ
-					if (lastY - i < 0 || lastX + i > MAX_SIZE_X - 1) { cheakTopRight = false; }
-					//何もなかったら
-					else if (othelloDatas[lastY - i][lastX + i].type == NONE)
-					{
-						cheakTopRight = false;
-					}
-					//隣接かつ同じ色だったら
-					else if (othelloDatas[lastY - i][lastX + i].isFront == side && i == 1)
-					{
-						cheakTopRight = false;
-					}
-					//同じだったら
-					else if (othelloDatas[lastY - i][lastX + i].isFront == side && i != 1)
-					{
-						for (int j = 1; j < i; j++)
-						{
-							if (!checkCombo) { combo++; checkCombo = true; }
-							othelloDatas[lastY - j][lastX + j].comboCount = combo;
-							othelloDatas[lastY - j][lastX + j].isFront = side;
-							saveOthelloDataPos.push_back(make_pair(lastY - j, lastX + j));
-							cheakTopRight = false;
-						}
-					}
-				}
-			}
-		}
-
-		int maxBottomRight;
-		if (lastX <= lastY) { maxBottomRight = MAX_SIZE_Y - lastY; }
-		else { maxBottomRight = MAX_SIZE_X - lastX; }
-
+		OthelloCheck(Direction_X::EAST, Direction_Y::NOUTH);
 		/*-----右斜め下-----*/
-		if (maxBottomRight > 2 && lastX <= MAX_SIZE_X - 3 && lastY <= MAX_SIZE_Y - 3)
-		{
-			for (int i = 1; i < maxBottomRight; i++)
-			{
-				//右斜め上確認
-				if (cheakBottomRight)
-				{
-					//範囲外の参照を防ぐ
-					if (lastY + i > MAX_SIZE_Y - 1 || lastX + i > MAX_SIZE_X - 1) { cheakBottomRight = false; }
-					//何もなかったら
-					else if (othelloDatas[lastY + i][lastX + i].type == NONE)
-					{
-						cheakBottomRight = false;
-					}
-					//隣接かつ同じ色だったら
-					else if (othelloDatas[lastY + i][lastX + i].isFront == side && i == 1)
-					{
-						cheakBottomRight = false;
-					}
-					//同じだったら
-					else if (othelloDatas[lastY + i][lastX + i].isFront == side && i != 1)
-					{
-						for (int j = 1; j < i; j++)
-						{
-							if (!checkCombo) { combo++; checkCombo = true; }
-							othelloDatas[lastY + j][lastX + j].comboCount = combo;
-							othelloDatas[lastY + j][lastX + j].isFront = side;
-							saveOthelloDataPos.push_back(make_pair(lastY + j, lastX + j));
-							cheakBottomRight = false;
-						}
-					}
-				}
-			}
-		}
-
-		if (!comboOthelloDataPos.empty())
-		{
-			comboOthelloDataPos.erase(comboOthelloDataPos.begin());
-			if (comboOthelloDataPos.empty())
-			{
-				if (!saveOthelloDataPos.empty()) {
-					std::copy(
-						saveOthelloDataPos.begin(),
-						saveOthelloDataPos.end(),
-						std::back_inserter(comboOthelloDataPos));
-					//combo++;
-					saveOthelloDataPos.clear();
-					lastY = comboOthelloDataPos.front().first;
-					lastX = comboOthelloDataPos.front().second;
-				}
-			}
-			else
-			{
-				lastY = comboOthelloDataPos.front().first;
-				lastX = comboOthelloDataPos.front().second;
-			}
-		}
-		//↓そもそも通らないかも
-		else  if (!saveOthelloDataPos.empty()) {
-			std::copy(
-				saveOthelloDataPos.begin(),
-				saveOthelloDataPos.end(),
-				std::back_inserter(comboOthelloDataPos));
-			//combo++;
-			saveOthelloDataPos.clear();
-			lastY = comboOthelloDataPos.front().first;
-			lastX = comboOthelloDataPos.front().second;
-		}
+		OthelloCheck(Direction_X::EAST, Direction_Y::SOUTH);
 	}
-	//combo = 0;
-	//最後にコンボ後の盤面データを送る
 }
 
 const vector<vector<SendOthelloData>>& CheakOthello::GetOthelloDatas()
 {
 	return othelloDatas;
+}
+
+void CheakOthello::CheckLastMove(const vector<vector<SendOthelloData>>& othelloData)
+{
+	//最新状態を入手
+	othelloDatas = othelloData;
+
+	//その場にオセロが存在するかつ、最後に動かしてたかを判定（←ちょっと効率悪そう）
+	for (int i = 0; i < MAX_SIZE_Y; i++)
+	{
+		for (int j = 0; j < MAX_SIZE_X; j++)
+		{
+			if (!othelloDatas[i][j].isSandwich)
+			{
+				//その場所が空
+				if (othelloDatas[i][j].type == NONE) { continue; }
+				//最後に動かしてるやつ
+				if (!othelloDatas[i][j].isMove) { continue; }
+			}
+			side = othelloDatas[i][j].isFront;
+			comboOthelloDataPos.push_back(std::make_pair(i, j));
+		}
+	}
+}
+
+bool CheakOthello::SetCheckOthello()
+{
+	if (!comboOthelloDataPos.empty())
+	{
+		last_y = comboOthelloDataPos.front().first;
+		last_x = comboOthelloDataPos.front().second;
+		comboOthelloDataPos.erase(comboOthelloDataPos.begin());
+		return true;
+	}
+	else { return false; }
+}
+
+void CheakOthello::OthelloCheck(int direction_x, int direction_y)
+{
+	int loop = 1;
+	int count_x = last_x;
+	int count_y = last_y;
+	int pair_x = last_x;	//loop内
+	int pair_y = last_y;	//loop内
+
+	int max_size;
+	if (MAX_SIZE_X > MAX_SIZE_Y) { max_size = MAX_SIZE_X; }
+	else { max_size = MAX_SIZE_Y; }
+
+	while (1)
+	{
+		//次のマス
+		count_x += direction_x;
+		count_y += direction_y;
+
+		//範囲外
+		if (count_x < 0 || count_x > OthelloConstData::fieldSize - 1) { break; }
+		if (count_y < 0 || count_y > OthelloConstData::fieldSize - 1) { break; }
+
+		//存在しない
+		if (othelloDatas[count_y][count_x].type == NONE) { break; }
+		//同色と隣接
+		else if (othelloDatas[count_y][count_x].isFront == side && loop == 1) { break; }
+		//挟んだ場合
+		else if (othelloDatas[count_y][count_x].isFront == side && loop != 1)
+		{
+			//全部探索リストに入れる（自分と挟んだ駒まで）
+			for (int i = 0; i <= loop; i++)
+			{
+				//comboOthelloDataPos.push_back(std::make_pair(pair_y, pair_x));
+				//othelloDatas[pair_y][pair_x].isMove = true;
+				othelloDatas[pair_y][pair_x].isSandwich = true;
+				pair_x += direction_x;
+				pair_y += direction_y;
+			}
+
+			//初期化
+			pair_x = last_x;
+			pair_y = last_y;
+
+			//ひっくり返す
+			for (int i = 1; i < loop; i++)
+			{
+				pair_x += direction_x;
+				pair_y += direction_y;
+				othelloDatas[pair_y][pair_x].isFront = side;
+			}
+
+			break;
+		}
+		//周回したよ（こいつで何個挟んだか判定できる）
+		loop++;
+	}
 }

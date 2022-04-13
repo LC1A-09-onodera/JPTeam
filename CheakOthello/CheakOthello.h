@@ -1,32 +1,23 @@
 #pragma once
 #include <vector>
 #include "../Oserro/Oserro.h"
-//struct OthelloData
-//{
-//	bool side;
-//	//enum Status
-//	//bool 表裏
-//	//bool 最後に動いたか
-//	//bool どっちかの色を基準とした方向[8]
-//	//OthelloData othelloData[8][8]
-//};
 
 class CheakOthello
 {
 private:
-	enum Status
+	enum Direction_X
 	{
-		NORMAL,
-		HALF
+		EAST = 1,
+		WEST = -1
 	};
 
-	enum Direcion
+	enum Direction_Y
 	{
-		NORTH,
-		SOUTH,
-		EAST,
-		WEST
+		SOUTH = 1,
+		NOUTH = -1,
 	};
+
+	int NONE_DIRECTION = 0;
 
 private:
 	static const int MAX_SIZE_X = 8;
@@ -34,17 +25,27 @@ private:
 
 private:
 	std::vector<std::pair<int, int>> comboOthelloDataPos;
-	std::vector<std::pair<int, int>> saveOthelloDataPos;
-	vector<vector<SendOthelloData>> othelloDatas;
+	std::vector<vector<SendOthelloData>> othelloDatas;
+
+private:
+	int last_x;
+	int last_y;
+	bool side;
 
 public:
 	CheakOthello();
 	~CheakOthello();
 	void Init();
-	void Update(const vector<vector<SendOthelloData>> &othelloData);
+	void Update(const vector<vector<SendOthelloData>>& othelloData);
 
-	const vector<vector<SendOthelloData>> &GetOthelloDatas();
+	const vector<vector<SendOthelloData>>& GetOthelloDatas();
 
 private:
+	//盤面チェック
+	void CheckLastMove(const vector<vector<SendOthelloData>>& othelloData);
+	//自機の設定
+	bool SetCheckOthello();
+	//8回呼ぶ
+	void OthelloCheck(int direction_x, int direction_y);
 
 };

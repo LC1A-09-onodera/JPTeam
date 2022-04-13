@@ -12,11 +12,11 @@ enum OthelloType
 };
 namespace
 {
-	struct panelPos
-	{
-		int x;
-		int y;
-	};
+struct panelPos
+{
+	int x;
+	int y;
+};
 }
 
 struct OthelloData
@@ -52,6 +52,7 @@ struct OthelloData
 
 	int comboCount = 0;
 	bool isReverce = false;
+	bool isSandwich = false;
 
 	int animationTimer = 0;
 	int waitTimer = 0;
@@ -75,6 +76,7 @@ struct SendOthelloData
 	list<bool> FrontActiveAngle;
 	bool isMove = false;
 	int comboCount = 0;
+	bool isSandwich = false;
 };
 
 namespace OthelloConstData
@@ -100,7 +102,7 @@ private:
 	EachInfo each;
 	XMFLOAT3 startPos;
 	XMFLOAT3 endPos;
-	Model *model;
+	Model* model;
 	float startAngle;
 	float endAngle;
 	float time;
@@ -108,25 +110,27 @@ private:
 	OthelloData data;
 	XMVECTOR qRotation;
 public:
-	OthelloData *GetGameData() { return &data; }
+	OthelloData* GetGameData() { return &data; }
 	bool GetIsEase() { return isEase; }
 	XMFLOAT3 GetPosition() { return ConvertXMVECTORtoXMFLOAT3(each.position); }
 	void SetIsEase(bool isEase) { this->isEase = isEase; }
-	void SetPosition(XMFLOAT3 &position) { this->each.position = ConvertXMFLOAT3toXMVECTOR(position); }
+	void SetPosition(XMFLOAT3& position) { this->each.position = ConvertXMFLOAT3toXMVECTOR(position); }
 
 public:
-	void Init(Model *model);
+	void Init(Model* model);
 	void Update();
 	void Draw();
 	void Finalize();
 
 	void Spawn(OthelloType type, int x, int y, bool isFront = true);
 
-	void Controll(const XMFLOAT3 &mousePos , int &moveCount);
+	void Controll(const XMFLOAT3& mousePos, int& moveCount);
 
 	//‚Ð‚Á‚­‚è•Ô‚·
 	void Revers();
 
+	void Sandwich();
+	void SinkWait();
 	void Sink();
 
 	void MakeParticle();
@@ -149,8 +153,8 @@ public:
 	void Controll();
 	void AddPanel();
 
-	const vector<vector<SendOthelloData>> &Send();
-	void Receive(const vector<vector<SendOthelloData>> &data);
+	const vector<vector<SendOthelloData>>& Send();
+	void Receive(const vector<vector<SendOthelloData>>& data);
 
 	void MinSpawn();
 private:

@@ -19,7 +19,7 @@ void ObjectParticle3D::Add(XMFLOAT3& emitter, ParticleType type)
 	}
 	else if (type == ParticleType::TITLE)
 	{
-		InitTitle();
+		InitTitle(emitter);
 		this->type = type;
 	}
 }
@@ -40,7 +40,7 @@ void ObjectParticle3D::Update()
 	}
 }
 
-void ObjectParticle3D::Draw(ObjectParticle &object)
+void ObjectParticle3D::Draw(ObjectParticle& object)
 {
 	object.Update(&each);
 	Draw3DObject(object);
@@ -86,26 +86,28 @@ void ObjectParticle3D::InitConverge(XMFLOAT3& emitter)
 	each.CreateConstBuff0();
 	each.CreateConstBuff1();
 	startPosition = ConvertXMVECTORtoXMFLOAT3(each.position);
-	each.scale = {0.2f, 0.2f, 0.2f};
+	each.scale = { 0.2f, 0.2f, 0.2f };
 	endPosition = emitter;
 	easeTime = 0;
 	time = 1;
 }
 
-void ObjectParticle3D::InitTitle()
+void ObjectParticle3D::InitTitle(XMFLOAT3& emitter)
 {
+	each.position = ConvertXMFLOAT3toXMVECTOR(emitter);
+	each.rotation = GetRandom(90);
 	int xSub = (rand() % 10 + 5.0f);
 	if (rand() % 2 == 0)
 	{
 		xSub = -xSub;
 	}
-	each.position.m128_f32[0] = rand() % 40 - 20;
+	each.position.m128_f32[0] += rand() % 40 - 20;
 	int ySub = (rand() % 5 + 5.0f);
 	if (rand() % 2 == 0)
 	{
 		ySub = -ySub;
 	}
-	each.position.m128_f32[1] = rand() % 20 - 10;
+	each.position.m128_f32[1] += rand() % 20 - 10;
 	int zSub = (rand() % 10 + 5.0f);
 	if (rand() % 2 == 0)
 	{
@@ -135,9 +137,12 @@ void ObjectParticle3D::UpdateExprotion()
 	speed = speed - acc;
 	each.position = ConvertXMFLOAT3toXMVECTOR(nowPosition);
 	each.rotation = each.rotation + addRotation;
-	each.scale.x -= 0.01f;
-	each.scale.y -= 0.01f;
-	each.scale.z -= 0.01f;
+	if (each.scale.x > 0)
+	{
+		each.scale.x -= 0.01f;
+		each.scale.y -= 0.01f;
+		each.scale.z -= 0.01f;
+	}
 	time--;
 }
 
@@ -161,7 +166,7 @@ void ObjectParticle3D::UpdateTitle()
 		each.scale.y += 0.01f;
 		each.scale.z += 0.01f;
 	}
-	else if(!isSize)
+	else if (!isSize)
 	{
 		isSize = true;
 	}
@@ -211,7 +216,7 @@ void ObjectParticleInfo::Update()
 	deleteItr.clear();
 }
 
-void ObjectParticleInfo::Draw(ObjectParticle &object)
+void ObjectParticleInfo::Draw(ObjectParticle& object)
 {
 	for (auto itr = particles.begin(); itr != particles.end(); ++itr)
 	{

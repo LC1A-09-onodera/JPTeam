@@ -161,7 +161,7 @@ void Sprite::Move()
     constBuff->Unmap(0, nullptr);
 }
 
-void Sprite::ChangeSize(Tex tex, float wid, float hei)
+void Sprite::ChangeSize(float wid, float hei)
 {
     VertexPosUv Spritevertices[] = {
         {{  0.0f, 100.0f, 0.0f}, {0.0f, 1.0f}},
@@ -227,6 +227,77 @@ void Sprite::ChangeSize(Tex tex, float wid, float hei)
     //定数マップ
     ConstBufferDataSP *constMap = nullptr;
     BaseDirectX::result = constBuff->Map(0, nullptr, (void **)&constMap);
+    constMap->color = XMFLOAT4(1, 1, 1, 1);
+    constMap->mat = XMMatrixOrthographicOffCenterLH(0.0f, window_width, window_height, 0.0f, 0.0f, 1.0f);
+    constBuff->Unmap(0, nullptr);
+}
+
+void Sprite::ChangeSizeOther(float wid, float hei)
+{
+    VertexPosUv Spritevertices[] = {
+           {{  0.0f, 100.0f, 0.0f}, {0.0f, 1.0f}},
+           {{  0.0f,   0.0f, 0.0f}, {0.0f, 0.0f}},
+           {{100.0f, 100.0f, 0.0f}, {1.0f, 1.0f}},
+           {{100.0f,   0.0f, 0.0f}, {1.0f, 0.0f}},
+    };
+    //頂点シェーダーの読み込みピクセルシェーダーの読み込み頂点レイアウトの読み込み
+    // 頂点シェーダの読み込みとコンパイル
+    //BaseDirectX::result = D3DCompileFromFile(L"spriteVertexShader.hlsl", nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "vs_5_0", D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, 0, &vsBlob, &errorBlob);
+
+    //if (FAILED(BaseDirectX::result)) {
+    //    // errorBlobからエラー内容をstring型にコピー
+    //    std::string errstr;
+    //    errstr.resize(errorBlob->GetBufferSize());
+
+    //    std::copy_n((char *)errorBlob->GetBufferPointer(), errorBlob->GetBufferSize(), errstr.begin());
+    //    errstr += "\n";
+
+    //    // エラー内容を出力ウィンドウに表示
+    //    OutputDebugStringA(errstr.c_str());
+    //    exit(1);
+    //}
+
+    //// ピクセルシェーダの読み込みとコンパイル
+    //BaseDirectX::result = D3DCompileFromFile( L"spritePixelShader.hlsl", nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_5_0", D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, 0, &psBlob, &errorBlob);
+
+    //if (FAILED(BaseDirectX::result)) {
+    //    // errorBlobからエラー内容をstring型にコピー
+    //    std::string errstr;
+    //    errstr.resize(errorBlob->GetBufferSize());
+
+    //    std::copy_n((char *)errorBlob->GetBufferPointer(),
+    //        errorBlob->GetBufferSize(),
+    //        errstr.begin());
+    //    errstr += "\n";
+    //    // エラー内容を出力ウィンドウに表示
+    //    OutputDebugStringA(errstr.c_str());
+    //    exit(1);
+    //}
+
+    int sizevb = sizeof(Spritevertices);
+
+    enum { LB, LT, RB, RT };
+
+    Spritevertices[LB].pos = { -(wid / 2), hei / 2, 0.0f };
+    Spritevertices[LT].pos = { -(wid / 2), -(hei / 2),0.0f };
+    Spritevertices[RB].pos = { wid / 2, hei / 2, 0.0f };
+    Spritevertices[RT].pos = { wid / 2, -(hei / 2),0.0f };
+
+
+    //頂点マップ
+    BaseDirectX::result = BaseDirectX::dev->CreateCommittedResource(&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD), D3D12_HEAP_FLAG_NONE, &CD3DX12_RESOURCE_DESC::Buffer(sizevb), D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&vertBuff));
+    VertexPosUv* vertMap = nullptr;
+    BaseDirectX::result = vertBuff->Map(0, nullptr, (void**)&vertMap);
+    memcpy(vertMap, Spritevertices, sizeof(Spritevertices));
+    vertBuff->Unmap(0, nullptr);
+    vbView.BufferLocation = vertBuff->GetGPUVirtualAddress();
+    vbView.SizeInBytes = sizeof(Spritevertices);
+    vbView.StrideInBytes = sizeof(Spritevertices[0]);
+    BaseDirectX::result = BaseDirectX::dev->CreateCommittedResource(&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD), D3D12_HEAP_FLAG_NONE, &CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferData) + 0xff) & ~0xff), D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&constBuff));
+
+    //定数マップ
+    ConstBufferDataSP* constMap = nullptr;
+    BaseDirectX::result = constBuff->Map(0, nullptr, (void**)&constMap);
     constMap->color = XMFLOAT4(1, 1, 1, 1);
     constMap->mat = XMMatrixOrthographicOffCenterLH(0.0f, window_width, window_height, 0.0f, 0.0f, 1.0f);
     constBuff->Unmap(0, nullptr);

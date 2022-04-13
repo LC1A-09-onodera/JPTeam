@@ -70,8 +70,8 @@ void GameScene::Init()
 	BaseDirectX::GetAdress();
 	//カメラ初期化
 	Camera::Init();
-	Camera::eye = { 0, 0, -20.0 };
-	Camera::target = { 0, 0, 0 };
+	Camera::eye = { 0, -10, -15.0 };
+	Camera::target = { 0, 100, 0 };
 	Camera::Update();
 	//Imguiの初期化
 	Imgui::Init();
@@ -92,11 +92,11 @@ void GameScene::Init()
 	Model::SetLight(light);
 	//プレイヤーの初期化
 	Player::GetPlayer()->Init();
-	
+
 	//ポストエフェクトの初期化
 	postEffect.Initialize();
 
-	
+
 	/*model = FbxLoader::GetInstance()->LoadModelFromFile("boneTest");
 	object = new FBXObject;
 	object->Initialize();
@@ -115,23 +115,38 @@ void GameScene::Init()
 	OthlloPlayer::Init();
 
 	ThunderModels::LoadModels();
-	title.CreateSprite(L"Resource/Img/title.png", XMFLOAT3(0, 0 ,0));
+	title.CreateSprite(L"Resource/Img/titel.png", XMFLOAT3(60, 60, 0));
 	space.CreateSprite(L"Resource/Img/PushSpace.png", XMFLOAT3(600, 600, 0));
+	sceneChage.CreateSprite(L"Resource/Img/SceneChange.png", XMFLOAT3(window_width / 2, window_height / 2, 0));
+	gameTime = gameMaxTime;
 }
 
 void GameScene::TitleUpdate()
 {
 	static int particleTime = 0;
-	particleTime++;
-	if (particleTime % 5 == 4)
+	if (!isSceneChange)
 	{
-		ObjectParticles::othello.Init(XMFLOAT3(0, 0, 0), 1, ParticleType::TITLE);
+		particleTime++;
+		if (particleTime % 5 == 4)
+		{
+			ObjectParticles::othello.Init(XMFLOAT3(0, 0, -15), 1, ParticleType::TITLE);
+		}
 	}
 	ObjectParticles::Update();
 	if (Input::KeyTrigger(DIK_SPACE))
 	{
+		for (auto triangleItr = ObjectParticles::othello.particles.begin(); triangleItr != ObjectParticles::othello.particles.end(); ++triangleItr)
+		{
+			XMFLOAT3 pos = ConvertXMVECTORtoXMFLOAT3(triangleItr->each.position);
+			ObjectParticles::triangle.Init(pos, 10, ParticleType::Exprotion);
+			triangleItr->time = 1;
+		}
+		isSceneChange = true;
+		eyeStart = Camera::target.v;
+		eyeEnd = { 0.0f, 0.0f, 0.0f };
+		eyeEaseTime = 0;
+		gameTime = gameMaxTime;
 		SceneNum = GAME;
-		ObjectParticles::DeleteAllParticles();
 	}
 }
 
@@ -147,16 +162,69 @@ void GameScene::SelectUpdate()
 
 void GameScene::GameUpdate()
 {
-	
-	OthlloPlayer::Update();
-	ThunderModels::Update();
-	othelloManager.Controll();
-	othelloManager.Update();
+	if (!isSceneChange && !isResultSceneChange)
+	{
+		OthlloPlayer::Update();
+		ThunderModels::Update();
+		othelloManager.Controll();
+		othelloManager.Update();
+		checkObject.Update(othelloManager.Send());
+		othelloManager.Receive(checkObject.GetOthelloDatas());
 
-	checkObject.Update(othelloManager.Send());
-	othelloManager.Receive(checkObject.GetOthelloDatas());
-
+		gameTime--;
+	}
 	ObjectParticles::Update();
+	if (isSceneChange)
+	{
+		Camera::target.v = EaseInQuad(eyeStart, eyeEnd, eyeEaseTime);
+		eyeEaseTime += 0.02f;
+		if (eyeEaseTime > 1.0f)
+		{
+			Camera::target.v = EaseInQuad(eyeStart, eyeEnd, 1.0f);
+			//ObjectParticles::triangle.Init(XMFLOAT3(0, 0, 10), 100, ParticleType::Exprotion);
+			isSceneChange = false;
+			gameTime = gameMaxTime;
+		}
+		Camera::Update();
+	}
+	if (gameTime <= 0 && !isResultSceneChange)
+	{
+		for (auto triangleItr = OthelloManager::othellos.begin(); triangleItr != OthelloManager::othellos.end(); ++triangleItr)
+		{
+			XMFLOAT3 pos = triangleItr->GetPosition();
+			ObjectParticles::triangle.Init(pos, 10, ParticleType::Exprotion);
+			triangleItr->GetGameData()->isDead = true;
+
+		}
+		othelloManager.DeadPanel();
+		isResultSceneChange = true;
+		eyeStart = Camera::target.v;
+		eyeEnd = { 0, 100, 0 };
+		eyeEaseTime = 0;
+		resultForTime = 0;
+	}
+	if (isResultSceneChange)
+	{
+		if (resultForTime >= 60)
+		{
+			Camera::target.v = EaseInQuad(eyeStart, eyeEnd, eyeEaseTime);
+			eyeEaseTime += 0.02f;
+			if (eyeEaseTime > 1.0f)
+			{
+				Camera::target.v = EaseInQuad(eyeStart, eyeEnd, 1.0f);
+				//ObjectParticles::triangle.Init(XMFLOAT3(0, 0, 10), 100, ParticleType::Exprotion);
+				//isSceneChange = false;
+				resultForTime = 0;
+				isResultSceneChange = false;
+				SceneNum = RESULT;
+			}
+			Camera::Update();
+		}
+		else
+		{
+			resultForTime++;
+		}
+	}
 }
 
 void GameScene::ResultUpdate()
@@ -192,9 +260,11 @@ void GameScene::TitleDraw()
 	postEffect.Draw();
 
 	//スプライトの描画-------------------------
-	title.SpriteDraw();
-	space.SpriteDraw();
-	Imgui::DrawImGui();
+	if (isSceneChange == false)
+	{
+		title.SpriteDraw();
+		space.SpriteDraw();
+	}Imgui::DrawImGui();
 	//描画コマンドここまで
 	BaseDirectX::UpdateBack();
 }
@@ -236,7 +306,7 @@ void GameScene::GameDraw()
 	OthlloPlayer::Draw();
 	ObjectParticles::Draw();
 	ParticleControl::Draw();
-	
+
 	BaseDirectX::clearColor[0] = 0.0f;
 	BaseDirectX::clearColor[1] = 0.0f;
 	BaseDirectX::clearColor[2] = 0.0f;
@@ -273,6 +343,7 @@ void GameScene::ResultDraw()
 	//スプライトの描画-------------------------
 	//titleSprite.SpriteDraw();
 
+	space.SpriteDraw();
 	Imgui::DrawImGui();
 	//描画コマンドここまで
 	BaseDirectX::UpdateBack();

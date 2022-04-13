@@ -72,7 +72,8 @@ public:
 	//座標変更
 	void Move();
 	//表示サイズの変更
-	void ChangeSize(Tex tex, float wid,float hei);
+	void ChangeSize(float wid,float hei);
+	void ChangeSizeOther(float wid, float hei);
 	
 	//毎フレーム処理
 	private:

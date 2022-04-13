@@ -39,6 +39,10 @@ void Othello::Update()
 	{
 		ReversUpdate();
 	}
+	else if (data.isSandwich)
+	{
+		SinkWait();
+	}
 	else if (data.isVanish)
 	{
 		Sink();
@@ -82,13 +86,26 @@ void Othello::Finalize()
 void Othello::Revers()
 {
 	data.isReverce = true;
+	data.isPlayer = false;
 	data.animationTimer = 0;
 	data.waitTimer = waitTimerMax * (data.comboCount - 1);
 	data.JumpTimer = 0;
 	data.isJumpUp = true;
 	XMFLOAT3 pos = ConvertXMVECTORtoXMFLOAT3(each.position);
 	pos.z = -0.3f;
-	ThunderModels::Init(pos, XMFLOAT3(0, 0 ,0));
+	ThunderModels::Init(pos, XMFLOAT3(0, 0, 0));
+}
+
+
+void Othello::Sandwich()
+{
+	data.isPlayer = false;
+	data.isSandwich = true;
+	data.waitTimer = animationTimerMax;
+	XMFLOAT3 pos = ConvertXMVECTORtoXMFLOAT3(each.position);
+	pos.z = -0.3f;
+	ThunderModels::Init(pos, XMFLOAT3(0, 0, 0));
+
 }
 
 void Othello::ReversUpdate()
@@ -153,7 +170,7 @@ void Othello::ReversUpdate()
 		//回転フラグoff
 		data.isFront = !data.isFront;
 		data.isReverce = false;
-		data.comboCount = 0;
+		//data.comboCount = 0;
 
 		data.isVanish = true;
 
@@ -396,6 +413,17 @@ void Othello::Spawn(OthelloType type, int x, int y, bool isFront)
 	}
 }
 
+void Othello::SinkWait()
+{
+	if (data.waitTimer > 0)
+	{
+		data.waitTimer--;
+		return;
+	}
+	data.isSandwich = false;
+	data.isVanish = true;
+}
+
 void Othello::Sink()
 {
 	data.vanishTimer++;
@@ -606,22 +634,22 @@ void OthelloManager::RemovePlayer()
 
 void OthelloManager::AddPanel()
 {
-	Othello panelA, panelB, panelC, panelD;
-	panelA.Spawn(NORMAL, 0, 1, true);
-	panelA.Init(&oserroModel);
-	othellos.push_back(panelA);
+	//Othello panelA, panelB, panelC, panelD;
+	//panelA.Spawn(NORMAL, 0, 1, true);
+	//panelA.Init(&oserroModel);
+	//othellos.push_back(panelA);
 
-	panelB.Spawn(NORMAL, 1, 1, false);
-	panelB.Init(&oserroModel);
-	othellos.push_back(panelB);
+	//panelB.Spawn(NORMAL, 1, 1, false);
+	//panelB.Init(&oserroModel);
+	//othellos.push_back(panelB);
 
-	panelC.Spawn(NORMAL, 2, 0, true);
-	panelC.Init(&oserroModel);
-	othellos.push_back(panelC);
+	//panelC.Spawn(NORMAL, 2, 0, true);
+	//panelC.Init(&oserroModel);
+	//othellos.push_back(panelC);
 
-	panelD.Spawn(NORMAL, 2, 1, false);
-	panelD.Init(&oserroModel);
-	othellos.push_back(panelD);
+	//panelD.Spawn(NORMAL, 2, 1, false);
+	//panelD.Init(&oserroModel);
+	//othellos.push_back(panelD);
 }
 
 const vector<vector<SendOthelloData>> &OthelloManager::Send()
@@ -661,7 +689,7 @@ const vector<vector<SendOthelloData>> &OthelloManager::Send()
 		data.type = gameDatas.type;
 
 		data.isMove = gameDatas.isMove;
-		data.comboCount = 0;
+		data.comboCount = gameDatas.comboCount;
 
 		sendDatas[gameDatas.heightPos][gameDatas.widthPos] = data;
 	}
@@ -675,19 +703,49 @@ void OthelloManager::Receive(const vector<vector<SendOthelloData>> &data)
 
 	//
 	auto itr = othellos.begin();
+	list<list<Othello>::iterator> sandOthellos;
+
+	//生きているやつを挟んだフラグ
+	bool isSandFlip = false;
 	for (; itr != othellos.end(); itr++)
 	{
 		OthelloData *gameDatas = itr->GetGameData();
 		int x = gameDatas->widthPos;
 		int y = gameDatas->heightPos;
 
-		//gameDatas->isFront = sendDatas[y][x].isFront;
-		if (sendDatas[y][x].comboCount >= 1 && !gameDatas->isVanish)
+		//if (sendDatas[y][x].comboCount >= 1 && !gameDatas->isVanish)
+		//{
+		//	gameDatas->comboCount = sendDatas[y][x].comboCount;
+		//	itr->Revers();
+		//}
+		if (sendDatas[y][x].isFront != gameDatas->isFront && !gameDatas->isVanish && !gameDatas->isSandwich)
 		{
-			gameDatas->comboCount = sendDatas[y][x].comboCount;
+			gameDatas->comboCount = sendDatas[y][x].comboCount + 1;
 			itr->Revers();
+			//生きているやつを挟んだ
+			isSandFlip = true;
 		}
+		else if (sendDatas[y][x].isSandwich && !gameDatas->isVanish && !gameDatas->isSandwich)
+		{
+			gameDatas->comboCount = sendDatas[y][x].comboCount + 1;
+			sandOthellos.push_back(itr);
+		}
+
 		gameDatas->isMove = false;
+	}
+
+	auto SandItr = sandOthellos.begin();
+	for (; SandItr != sandOthellos.end(); SandItr++)
+	{
+		auto SandOthelloDataItr = *SandItr;
+		if(isSandFlip)
+		{
+			SandOthelloDataItr->Sandwich();
+		}
+		else
+		{
+			SandOthelloDataItr->GetGameData()->comboCount = 0;
+		}
 	}
 
 }
@@ -963,6 +1021,7 @@ void OthelloManager::KeySetPlayer()
 		}
 	}
 
+	bool OnPlayer = playerItr != othellos.end();
 	//移動先にパネルがあるか
 	if (nextItr != othellos.end())
 	{
@@ -975,12 +1034,18 @@ void OthelloManager::KeySetPlayer()
 		isPanelMove = false;
 		nextItr->GetGameData()->isMove = false;
 		nextItr->GetGameData()->isPlayer = true;
-		playerItr->GetGameData()->isPlayer = false;
+		if (OnPlayer)
+		{
+			playerItr->GetGameData()->isPlayer = false;
+		}
 		playerPanelPos = { x, y };
 	}
 	else
 	{
-		isPanelMove = true;
+		if (OnPlayer)
+		{
+			isPanelMove = true;
+		}
 		playerPanelPos = { x, y };
 	}
 	isPlayerEnd = false;

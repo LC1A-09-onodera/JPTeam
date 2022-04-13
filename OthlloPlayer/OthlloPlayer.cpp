@@ -14,10 +14,12 @@ float OthlloPlayer::easeTime;
 
 void OthlloPlayer::Init()
 {
-	player.CreateModel("maru", ShaderManager::playerShader);
+	player.CreateModel("player", ShaderManager::playerShader);
 	each.CreateConstBuff0();
 	each.CreateConstBuff1();
-	each.position = {0, 0, 0 ,1};
+	each.rotation = {0, -90, 90};
+	each.scale = {0.5f, 0.5f, 0.5f};
+	each.position = {0, 0, -2 ,1};
 }
 
 void OthlloPlayer::Update()
