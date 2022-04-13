@@ -89,5 +89,5 @@ public://ƒV[ƒ“‚Åg‚¤‚à‚Ì
 	float eyeEaseTime;
 
 	int resultForTime;
-	const int gameMaxTime = 60;
+	const int gameMaxTime = 600;
 };

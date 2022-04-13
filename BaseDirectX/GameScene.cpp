@@ -123,6 +123,7 @@ void GameScene::Init()
 
 void GameScene::TitleUpdate()
 {
+	//オセロのパーティクルを出していく
 	static int particleTime = 0;
 	if (!isSceneChange)
 	{
@@ -135,6 +136,7 @@ void GameScene::TitleUpdate()
 	ObjectParticles::Update();
 	if (Input::KeyTrigger(DIK_SPACE))
 	{
+		//オセロを爆散させてカメラの動きを開始させる
 		for (auto triangleItr = ObjectParticles::othello.particles.begin(); triangleItr != ObjectParticles::othello.particles.end(); ++triangleItr)
 		{
 			XMFLOAT3 pos = ConvertXMVECTORtoXMFLOAT3(triangleItr->each.position);
@@ -162,6 +164,7 @@ void GameScene::SelectUpdate()
 
 void GameScene::GameUpdate()
 {
+	//カメラ変化が行われていない時にゲームを開始する
 	if (!isSceneChange && !isResultSceneChange)
 	{
 		OthlloPlayer::Update();
@@ -174,6 +177,7 @@ void GameScene::GameUpdate()
 		gameTime--;
 	}
 	ObjectParticles::Update();
+	//タイトルからgameシーンへ
 	if (isSceneChange)
 	{
 		Camera::target.v = EaseInQuad(eyeStart, eyeEnd, eyeEaseTime);
@@ -181,12 +185,12 @@ void GameScene::GameUpdate()
 		if (eyeEaseTime > 1.0f)
 		{
 			Camera::target.v = EaseInQuad(eyeStart, eyeEnd, 1.0f);
-			//ObjectParticles::triangle.Init(XMFLOAT3(0, 0, 10), 100, ParticleType::Exprotion);
 			isSceneChange = false;
 			gameTime = gameMaxTime;
 		}
 		Camera::Update();
 	}
+	//ゲームシーンからリザルトへのトリガー
 	if (gameTime <= 0 && !isResultSceneChange)
 	{
 		for (auto triangleItr = OthelloManager::othellos.begin(); triangleItr != OthelloManager::othellos.end(); ++triangleItr)
@@ -203,6 +207,7 @@ void GameScene::GameUpdate()
 		eyeEaseTime = 0;
 		resultForTime = 0;
 	}
+	//カメラの動き
 	if (isResultSceneChange)
 	{
 		if (resultForTime >= 60)
@@ -212,8 +217,6 @@ void GameScene::GameUpdate()
 			if (eyeEaseTime > 1.0f)
 			{
 				Camera::target.v = EaseInQuad(eyeStart, eyeEnd, 1.0f);
-				//ObjectParticles::triangle.Init(XMFLOAT3(0, 0, 10), 100, ParticleType::Exprotion);
-				//isSceneChange = false;
 				resultForTime = 0;
 				isResultSceneChange = false;
 				SceneNum = RESULT;
