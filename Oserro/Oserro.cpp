@@ -689,7 +689,13 @@ const vector<vector<SendOthelloData>> &OthelloManager::Send()
 		data.isFront = gameDatas.isFront;
 		data.type = gameDatas.type;
 
-		data.isMove = gameDatas.isMove;
+		//data.isMove = gameDatas.isMove;
+
+		if (Input::KeyTrigger(DIK_SPACE) && gameDatas.isPlayer)
+		{
+			data.isMove = true;
+		}
+
 		data.comboCount = gameDatas.comboCount;
 		data.SandwichLength = gameDatas.SandwichLength;
 
