@@ -11,6 +11,7 @@ bool Imgui::spotLight1;
 float Imgui::lightColor[3];
 float Imgui::dethLine = 25.0f;
 int Imgui::sample = 0;
+int Imgui::score;
 ComPtr<ID3D12DescriptorHeap> Imgui::CreateDescrriptorHeapForImgui()
 {
     ComPtr<ID3D12DescriptorHeap> ret;
@@ -40,6 +41,7 @@ void Imgui::DrawImGui()
     /*ImGui::Checkbox("spotLight1", &spotLight1);
     ImGui::SliderFloat3("ligthColor", lightColor, 0.0f, 1.0f);*/
     ImGui::SliderFloat("dethLine", &dethLine, 0.0f, 50.0f);
+    ImGui::SliderInt("score", &score, 0, 10000000);
     //------------
 
     ImGui::End();

@@ -25,6 +25,9 @@ public:
     static bool spotLight1;
     static float lightColor[3];
 
+
+    static int score;
+
     static int sample;
     static float dethLine;
 };
