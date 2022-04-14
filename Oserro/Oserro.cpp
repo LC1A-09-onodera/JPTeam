@@ -88,6 +88,7 @@ void Othello::Revers()
 {
 	data.isReverce = true;
 	data.isPlayer = false;
+	data.isSandwich = true;
 	data.animationTimer = 0;
 	data.waitTimer = waitTimerMax * (data.comboCount - 1);
 	data.JumpTimer = 0;
@@ -696,6 +697,7 @@ const vector<vector<SendOthelloData>> &OthelloManager::Send()
 		data.FrontActiveAngle = gameDatas.FrontActiveAngle;
 		data.isFront = gameDatas.isFront;
 		data.type = gameDatas.type;
+		data.isSandwich = gameDatas.isSandwich;
 
 
 			data.isMove = itr->GetIsActive();
