@@ -29,6 +29,7 @@ private:
 private:
 	std::vector<std::pair<int, int>> comboOthelloDataPos;
 	std::vector<vector<SendOthelloData>> othelloDatas;
+	std::vector<std::pair<int, int>> startAndEndArray;		//始点と終点を保存する配列
 
 private:
 	int last_x;				//最後に動かしたオセロのX座標
@@ -44,7 +45,9 @@ public:
 	void Init();
 	void Update(const vector<vector<SendOthelloData>>& othelloData);
 
-	const vector<vector<SendOthelloData>>& GetOthelloDatas();
+	const vector<vector<SendOthelloData>>& GetOthelloDatas() { return othelloDatas; }
+	const vector<pair<int, int>>& GetStartAndEndArrayDatas() { return startAndEndArray; }
+	const void ResetStartAndEndArrayDatas() { startAndEndArray.clear(); }
 
 private:
 	//盤面チェック

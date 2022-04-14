@@ -52,11 +52,6 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData)
 	}
 }
 
-const vector<vector<SendOthelloData>>& CheakOthello::GetOthelloDatas()
-{
-	return othelloDatas;
-}
-
 void CheakOthello::CheckLastMove(const vector<vector<SendOthelloData>>& othelloData)
 {
 	//最新状態を入手
@@ -121,13 +116,26 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y)
 		//挟んだ場合
 		else if (othelloDatas[count_y][count_x].isFront == side && loop != 0)
 		{
+			//baseScoreを計算//スコア計算（沈み終わったらそのオセロのスコアを0にしてもらう）
+
+
 			//全部探索リストに入れる（自分と挟んだ駒まで）←sandwichArrayが同じかも参照する
+			//挟んだやつの最大のconboCountを取得→それ+1したのをコンボしたオセロにセット
+			int maxComboCount = 0;
+
 			for (int i = 0; i <= loop + 1; i++)
 			{
 				othelloDatas[pair_y][pair_x].isSandwich = true;
+				if (i == 0 || i == loop + 1) { startAndEndArray.push_back(std::make_pair(last_y, last_x)); }
+
+				//そのオセロのコンボ数を取得
+				if (maxComboCount < othelloDatas[pair_y][pair_x].comboCount)
+				{
+					maxComboCount = othelloDatas[pair_y][pair_x].comboCount;
+				}
 
 				//オセロ毎にコンボ数保存、違う数で挟んだ場合push_back
-				//オセロ毎のコンボカウントを追加してください
+				//オセロ毎のコンボカウントを追加しろ
 				if (!othelloDatas[pair_y][pair_x].SandwichLength.empty())
 				{
 					//数字が見つからなかったら保存
@@ -147,8 +155,20 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y)
 			pair_x = last_x;
 			pair_y = last_y;
 
-			//スコア計算
+			//maxComboCountを加算
+			maxComboCount++;
 
+			//comboCountをセット
+			for (int i = 0; i <= loop + 1; i++)
+			{
+				othelloDatas[pair_y][pair_x].comboCount = maxComboCount;
+				pair_x += direction_x;
+				pair_y += direction_y;
+			}
+
+			//初期化
+			pair_x = last_x;
+			pair_y = last_y;
 
 			//ひっくり返す
 			for (int i = 1; i <= loop; i++)
@@ -156,6 +176,7 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y)
 				pair_x += direction_x;
 				pair_y += direction_y;
 				othelloDatas[pair_y][pair_x].isFront = side;
+				othelloDatas[pair_y][pair_x].comboCount++;
 			}
 
 			break;
