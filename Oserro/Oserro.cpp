@@ -697,7 +697,11 @@ const vector<vector<SendOthelloData>> &OthelloManager::Send()
 		data.FrontActiveAngle = gameDatas.FrontActiveAngle;
 		data.isFront = gameDatas.isFront;
 		data.type = gameDatas.type;
-		data.isSandwich = gameDatas.isSandwich;
+
+		if (itr->GetIsActive())
+		{
+			data.isSandwich = true;
+		}
 
 
 			data.isMove = itr->GetIsActive();
