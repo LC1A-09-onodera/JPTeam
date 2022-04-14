@@ -75,7 +75,7 @@ void CheakOthello::CheckLastMove(const vector<vector<SendOthelloData>>& othelloD
 				//ç≈å„Ç…ìÆÇ©ÇµÇƒÇÈÇ‚Ç¬
 				if (!othelloDatas[i][j].isMove) { continue; }
 			}
-			side = othelloDatas[i][j].isFront;	//Å©Ç»ÇÒÇ≈ÇøÇ·ÇÒÇ∆ìÆÇ¢ÇƒÇÈÇÒÇæÅHèŒ
+			othelloSide.push_back(othelloDatas[i][j].isFront);
 			comboOthelloDataPos.push_back(std::make_pair(i, j));
 		}
 	}
@@ -88,6 +88,9 @@ bool CheakOthello::SetCheckOthello()
 		last_y = comboOthelloDataPos.front().first;
 		last_x = comboOthelloDataPos.front().second;
 		comboOthelloDataPos.erase(comboOthelloDataPos.begin());
+
+		side = othelloSide.front();
+		othelloSide.erase(othelloSide.begin());
 		return true;
 	}
 	else { return false; }
