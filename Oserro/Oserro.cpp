@@ -691,7 +691,8 @@ const vector<vector<SendOthelloData>> &OthelloManager::Send()
 
 		//data.isMove = gameDatas.isMove;
 
-		if (Input::KeyTrigger(DIK_SPACE) && gameDatas.isPlayer)
+		bool isPlayer = (gameDatas.widthPos == playerPanelPos.x && gameDatas.heightPos == playerPanelPos.y);
+		if (Input::KeyTrigger(DIK_SPACE) && isPlayer)
 		{
 			data.isMove = true;
 		}
@@ -1051,7 +1052,7 @@ void OthelloManager::KeySetPlayer()
 	{
 		TypeC(playerItr, nextItr, x, y);
 	}
-	else if(Imgui::sample == 3)
+	else if (Imgui::sample == 3)
 	{
 		TypeD(playerItr, nextItr, x, y);
 	}
@@ -1170,6 +1171,10 @@ void OthelloManager::TypeA(list<Othello>::iterator playerItr, list<Othello>::ite
 		if (OnPlayer)
 		{
 			isPanelMove = true;
+			if (!playerItr->GetGameData()->isVanish && !playerItr->GetGameData()->isReverce && !playerItr->GetGameData()->isSandwich)
+			{
+				playerItr->GetGameData()->isPlayer = true;
+			}
 		}
 		playerPanelPos = { x, y };
 	}
@@ -1203,6 +1208,10 @@ void OthelloManager::TypeB(list<Othello>::iterator playerItr, list<Othello>::ite
 		if (OnPlayer)
 		{
 			isPanelMove = true;
+			if (!playerItr->GetGameData()->isVanish && !playerItr->GetGameData()->isReverce && !playerItr->GetGameData()->isSandwich)
+			{
+				playerItr->GetGameData()->isPlayer = true;
+			}
 		}
 		playerPanelPos = { x, y };
 	}
@@ -1246,6 +1255,10 @@ void OthelloManager::TypeC(list<Othello>::iterator playerItr, list<Othello>::ite
 		if (OnPlayer)
 		{
 			isPanelMove = true;
+			if (!playerItr->GetGameData()->isVanish && !playerItr->GetGameData()->isReverce && !playerItr->GetGameData()->isSandwich)
+			{
+				playerItr->GetGameData()->isPlayer = true;
+			}
 		}
 		playerPanelPos = { x, y };
 	}
@@ -1275,7 +1288,7 @@ void OthelloManager::TypeXI(list<Othello>::iterator playerItr, list<Othello>::it
 			nowStep = 0.0f;
 		}
 		float stepSize = nextStep - nowStep;
-		bool isStepUp = stepSize <=0.7;
+		bool isStepUp = stepSize <= 0.7;
 		bool isNotMove = (nextItr->GetGameData()->isReverce || !isStepUp);
 		if (isNotMove)
 		{
@@ -1307,6 +1320,10 @@ void OthelloManager::TypeXI(list<Othello>::iterator playerItr, list<Othello>::it
 		if (OnPlayer)
 		{
 			isPanelMove = true;
+			if (!playerItr->GetGameData()->isVanish && !playerItr->GetGameData()->isReverce && !playerItr->GetGameData()->isSandwich)
+			{
+				playerItr->GetGameData()->isPlayer = true;
+			}
 		}
 		playerPanelPos = { x, y };
 	}
