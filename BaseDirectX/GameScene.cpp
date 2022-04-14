@@ -115,9 +115,36 @@ void GameScene::Init()
 	OthlloPlayer::Init();
 
 	ThunderModels::LoadModels();
-	title.CreateSprite(L"Resource/Img/titel.png", XMFLOAT3(60, 60, 0));
-	space.CreateSprite(L"Resource/Img/PushSpace.png", XMFLOAT3(600, 600, 0));
+	title.CreateSprite(L"Resource/Img/titel.png", XMFLOAT3(70, 60 + 50, 0));
+	titleBack.CreateSprite(L"Resource/Img/title_back.png", XMFLOAT3(0, 46 + 50 , 0));
+	space.CreateSprite(L"Resource/Img/PushSpace.png", XMFLOAT3(650, 600, 0));
 	sceneChage.CreateSprite(L"Resource/Img/SceneChange.png", XMFLOAT3(window_width / 2, window_height / 2, 0));
+	numbers[0].CreateSprite(L"Resource/Img/number_0.png", XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+	numbers[1].CreateSprite(L"Resource/Img/number_1.png", XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+	numbers[2].CreateSprite(L"Resource/Img/number_2.png", XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+	numbers[3].CreateSprite(L"Resource/Img/number_3.png", XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+	numbers[4].CreateSprite(L"Resource/Img/number_4.png", XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+	numbers[5].CreateSprite(L"Resource/Img/number_5.png", XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+	numbers[6].CreateSprite(L"Resource/Img/number_6.png", XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+	numbers[7].CreateSprite(L"Resource/Img/number_7.png", XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+	numbers[8].CreateSprite(L"Resource/Img/number_8.png", XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+	numbers[9].CreateSprite(L"Resource/Img/number_9.png", XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+	for (int i = 0; i < 60; i += 10)
+	{
+		scoreNum[i + 0].CreateSprite(L"Resource/Img/number_0.png", XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+		scoreNum[i + 1].CreateSprite(L"Resource/Img/number_1.png", XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+		scoreNum[i + 2].CreateSprite(L"Resource/Img/number_2.png", XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+		scoreNum[i + 3].CreateSprite(L"Resource/Img/number_3.png", XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+		scoreNum[i + 4].CreateSprite(L"Resource/Img/number_4.png", XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+		scoreNum[i + 5].CreateSprite(L"Resource/Img/number_5.png", XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+		scoreNum[i + 6].CreateSprite(L"Resource/Img/number_6.png", XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+		scoreNum[i + 7].CreateSprite(L"Resource/Img/number_7.png", XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+		scoreNum[i + 8].CreateSprite(L"Resource/Img/number_8.png", XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+		scoreNum[i + 9].CreateSprite(L"Resource/Img/number_9.png", XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+	}
+	scoreSprite.CreateSprite(L"Resource/Img/score.png",XMFLOAT3(0, 0, 0));
+	timeUp.CreateSprite(L"Resource/Img/time_up.png", XMFLOAT3(0, 0, 0));
+	startSprite.CreateSprite(L"Resource/Img/START.png", XMFLOAT3(0, 0, 0 ));
 	gameTime = gameMaxTime;
 }
 
@@ -142,6 +169,7 @@ void GameScene::TitleUpdate()
 			XMFLOAT3 pos = ConvertXMVECTORtoXMFLOAT3(triangleItr->each.position);
 			ObjectParticles::triangle.Init(pos, 10, ParticleType::Exprotion);
 			triangleItr->time = 1;
+			countDown = countMax;
 		}
 		isSceneChange = true;
 		eyeStart = Camera::target.v;
@@ -167,14 +195,21 @@ void GameScene::GameUpdate()
 	//カメラ変化が行われていない時にゲームを開始する
 	if (!isSceneChange && !isResultSceneChange)
 	{
-		OthlloPlayer::Update();
-		ThunderModels::Update();
-		othelloManager.Controll();
-		othelloManager.Update();
-		checkObject.Update(othelloManager.Send());
-		othelloManager.Receive(checkObject.GetOthelloDatas());
+		if (countDown <= 0)
+		{
+			OthlloPlayer::Update();
+			ThunderModels::Update();
+			othelloManager.Controll();
+			othelloManager.Update();
+			checkObject.Update(othelloManager.Send());
+			othelloManager.Receive(checkObject.GetOthelloDatas());
 
-		gameTime--;
+			gameTime--;
+		}
+		else
+		{
+			countDown--;
+		}
 	}
 	ObjectParticles::Update();
 	//タイトルからgameシーンへ
@@ -198,7 +233,7 @@ void GameScene::GameUpdate()
 			XMFLOAT3 pos = triangleItr->GetPosition();
 			ObjectParticles::triangle.Init(pos, 10, ParticleType::Exprotion);
 			triangleItr->GetGameData()->isDead = true;
-
+			ThunderModels::DeleteList();
 		}
 		othelloManager.DeadPanel();
 		isResultSceneChange = true;
@@ -251,8 +286,8 @@ void GameScene::EndUpdate()
 void GameScene::TitleDraw()
 {
 	//PostEffectのPreDraw
-	postEffect.PreDraw();
-	ObjectParticles::Draw();
+	//postEffect.PreDraw();
+	
 	//Draw3DObject(sample);
 	BaseDirectX::clearColor[0] = 0.0f;
 	BaseDirectX::clearColor[1] = 0.0f;
@@ -260,14 +295,19 @@ void GameScene::TitleDraw()
 	BaseDirectX::clearColor[3] = 0.0f;
 	BaseDirectX::UpdateFront();
 	//PostEffectのDraw
-	postEffect.Draw();
-
+	//postEffect.Draw();
+	ObjectParticles::Draw();
 	//スプライトの描画-------------------------
 	if (isSceneChange == false)
 	{
+		titleBack.ChangeSize(1280, 125);
+		titleBack.position.m128_f32[0] = Imgui::spritePos1[0];
+		titleBack.position.m128_f32[1] = Imgui::spritePos1[1];
+		titleBack.SpriteDraw();
 		title.SpriteDraw();
 		space.SpriteDraw();
-	}Imgui::DrawImGui();
+	}
+	Imgui::DrawImGui();
 	//描画コマンドここまで
 	BaseDirectX::UpdateBack();
 }
@@ -301,14 +341,8 @@ void GameScene::SelectDraw()
 void GameScene::GameDraw()
 {
 	//PostEffectのPreDraw
-	postEffect.PreDraw();
+	//postEffect.PreDraw();
 	//Draw3DObject(sample);
-	othelloManager.Draw();
-	water.Draw();
-	ThunderModels::Draw();
-	OthlloPlayer::Draw();
-	ObjectParticles::Draw();
-	ParticleControl::Draw();
 
 	BaseDirectX::clearColor[0] = 0.0f;
 	BaseDirectX::clearColor[1] = 0.0f;
@@ -316,10 +350,29 @@ void GameScene::GameDraw()
 	BaseDirectX::clearColor[3] = 0.0f;
 	BaseDirectX::UpdateFront();
 	//PostEffectのDraw
-	postEffect.Draw();
+	//postEffect.Draw();
+	othelloManager.Draw();
+	water.Draw();
+	ThunderModels::Draw();
+	OthlloPlayer::Draw();
+	ObjectParticles::Draw();
+	ParticleControl::Draw();
 
 	//スプライトの描画-------------------------
 	//titleSprite.SpriteDraw();
+	if (countDown > 0 && isSceneChange == false)
+	{
+		//numbers[countDown / 60].position.m128_f32[0] = window_width / 2 - 10;
+		//numbers[countDown / 60].position.m128_f32[1] = window_height / 2 - 10;
+		numbers[countDown / 60].SpriteDraw();
+	}
+	
+	if (gameTime > 0 && countDown <= 0 )
+	{
+		//numbers[gameTime / 60].position.m128_f32[0] = window_width / 2 - 10;
+		//numbers[gameTime / 60].position.m128_f32[1] = 30;
+		numbers[gameTime / 60].SpriteDraw();
+	}
 	Imgui::DrawImGui();
 	//描画コマンドここまで
 	BaseDirectX::UpdateBack();
@@ -345,7 +398,7 @@ void GameScene::ResultDraw()
 
 	//スプライトの描画-------------------------
 	//titleSprite.SpriteDraw();
-
+	scoreSprite.SpriteDraw();
 	space.SpriteDraw();
 	Imgui::DrawImGui();
 	//描画コマンドここまで

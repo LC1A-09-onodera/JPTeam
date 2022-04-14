@@ -25,6 +25,14 @@ public:
     static bool spotLight1;
     static float lightColor[3];
 
+    static int spritePos1[2];
+    static int spritePos2[2];
+    static int spritePos3[2];
+    static int spritePos4[2];
+    static int spritePos5[2];
+    static int spritePos6[2];
+    static int spritePos7[2];
+
     static int sample;
     static float dethLine;
 };

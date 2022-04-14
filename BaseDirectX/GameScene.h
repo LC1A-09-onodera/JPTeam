@@ -69,6 +69,7 @@ public://シーンで使うもの
 	CheakOthello checkObject;
 	Water water;
 	Sprite title;
+	Sprite titleBack;
 	Sprite space;
 	//タイトルからgameシーンへの以降に使う
 	Sprite sceneChage;
