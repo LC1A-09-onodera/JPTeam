@@ -52,11 +52,6 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData)
 	}
 }
 
-const vector<vector<SendOthelloData>>& CheakOthello::GetOthelloDatas()
-{
-	return othelloDatas;
-}
-
 void CheakOthello::CheckLastMove(const vector<vector<SendOthelloData>>& othelloData)
 {
 	//最新状態を入手
@@ -131,6 +126,7 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y)
 			for (int i = 0; i <= loop + 1; i++)
 			{
 				othelloDatas[pair_y][pair_x].isSandwich = true;
+				if (i == 0 || i == loop + 1) { startAndEndArray.push_back(std::make_pair(last_y, last_x)); }
 
 				//そのオセロのコンボ数を取得
 				if (maxComboCount < othelloDatas[pair_y][pair_x].comboCount)
