@@ -10,7 +10,7 @@ ComPtr<ID3D12DescriptorHeap> Imgui::heapForImgui;
 bool Imgui::spotLight1;
 float Imgui::lightColor[3];
 float Imgui::dethLine = 25.0f;
-
+int Imgui::sample = 0;
 ComPtr<ID3D12DescriptorHeap> Imgui::CreateDescrriptorHeapForImgui()
 {
     ComPtr<ID3D12DescriptorHeap> ret;
@@ -35,7 +35,7 @@ void Imgui::DrawImGui()
     ImGui::NewFrame();
     ImGui::Begin("Test");//ウィンドウの名前
     ImGui::SetWindowSize(ImVec2(400, 500), ImGuiCond_::ImGuiCond_FirstUseEver);
-
+    ImGui::SliderInt("sample", &sample, 0, 4);
     //imguiここにいろいろ書く
     /*ImGui::Checkbox("spotLight1", &spotLight1);
     ImGui::SliderFloat3("ligthColor", lightColor, 0.0f, 1.0f);*/

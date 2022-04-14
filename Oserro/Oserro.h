@@ -12,11 +12,11 @@ enum OthelloType
 };
 namespace
 {
-struct panelPos
-{
-	int x;
-	int y;
-};
+	struct panelPos
+	{
+		int x;
+		int y;
+	};
 }
 
 struct OthelloData
@@ -65,9 +65,13 @@ struct OthelloData
 	//Á–Å‚µ‚«‚Á‚½‚©
 	bool isDead = false;
 
+	bool isHarf = false;
 
-	panelPos oldPos = {0, 0};
+	panelPos oldPos = { 0, 0 };
 	int vanishTimer = 0;
+	vector<int> SandwichLength;
+
+	int score = 0;
 };
 struct SendOthelloData
 {
@@ -77,6 +81,8 @@ struct SendOthelloData
 	bool isMove = false;
 	int comboCount = 0;
 	bool isSandwich = false;
+	vector<int> SandwichLength;
+	int score = 0;
 };
 
 namespace OthelloConstData
@@ -84,14 +90,15 @@ namespace OthelloConstData
 	const int fieldSize = 8;
 	const float cellScale = 1.0f;
 	const XMFLOAT3 stageLeftTop{ -cellScale * fieldSize, cellScale * fieldSize, 0 };
+	const int spawnTimerMAx = 60000;
+	const int spawnMoveCount = 100;
+	const int spawnPanelCount = 2;
+	const int minPanelCount = 30;
+	//ƒAƒjƒ[ƒVƒ‡ƒ“
+	const int vanishTimerMax = 600;
 	const int animationTimerMax = 30;
 	const int waitTimerMax = 30;
 	const int JumpTimerMax = waitTimerMax / 2;
-	const int spawnTimerMAx = 20000;
-	const int vanishTimerMax = 600;
-	const int spawnMoveCount = 2000;
-	const int spawnPanelCount = 2;
-	const int minPanelCount = 30;
 }
 
 class Othello
@@ -102,7 +109,7 @@ private:
 	EachInfo each;
 	XMFLOAT3 startPos;
 	XMFLOAT3 endPos;
-	Model* model;
+	Model *model;
 	float startAngle;
 	float endAngle;
 	float time;
@@ -110,21 +117,21 @@ private:
 	OthelloData data;
 	XMVECTOR qRotation;
 public:
-	OthelloData* GetGameData() { return &data; }
+	OthelloData *GetGameData() { return &data; }
 	bool GetIsEase() { return isEase; }
 	XMFLOAT3 GetPosition() { return ConvertXMVECTORtoXMFLOAT3(each.position); }
 	void SetIsEase(bool isEase) { this->isEase = isEase; }
-	void SetPosition(XMFLOAT3& position) { this->each.position = ConvertXMFLOAT3toXMVECTOR(position); }
+	void SetPosition(XMFLOAT3 &position) { this->each.position = ConvertXMFLOAT3toXMVECTOR(position); }
 
 public:
-	void Init(Model* model);
+	void Init(Model *model);
 	void Update();
 	void Draw();
 	void Finalize();
 
 	void Spawn(OthelloType type, int x, int y, bool isFront = true);
 
-	void Controll(const XMFLOAT3& mousePos, int& moveCount);
+	void Controll(const XMFLOAT3 &mousePos, int &moveCount);
 
 	//‚Ğ‚Á‚­‚è•Ô‚·
 	void Revers();
@@ -153,10 +160,12 @@ public:
 	void Controll();
 	void AddPanel();
 
-	const vector<vector<SendOthelloData>>& Send();
-	void Receive(const vector<vector<SendOthelloData>>& data);
+	const vector<vector<SendOthelloData>> &Send();
+	void Receive(const vector<vector<SendOthelloData>> &data);
 
 	void MinSpawn();
+	static list<Othello> othellos;
+	void DeadPanel();
 private:
 	void SetPlayer();
 
@@ -167,7 +176,7 @@ private:
 
 	void RandumSetPanel();
 
-	void DeadPanel();
+	
 
 	void SpawnPanel();
 
@@ -179,13 +188,40 @@ private:
 	void playerMoveEnd();
 
 	void playerNotMove();
+	
+private:
+
+	/// <summary>
+	/// ©—R‚É“®‚«•ú‘è
+	/// </summary>
+	void TypeA(list<Othello>::iterator playerItr, list<Othello>::iterator nextItr, int x, int y);
+
+	/// <summary>
+	/// Á‚¦‚Ä‚é“r’†‚Ì‹î‚É‚Íæ‚ê‚È‚¢
+	/// </summary>
+	void TypeB(list<Othello>::iterator playerItr, list<Othello>::iterator nextItr, int x, int y);
+
+	/// <summary>
+	/// Á‚¦‚Ä‚é“r’†‚Ì‹î‚Ì‘å‚«‚³‚ª¬‚³‚­‚È‚é‚Æ’Ê‚ê‚È‚­‚È‚é
+	/// </summary>
+	void TypeC(list<Othello>::iterator playerItr, list<Othello>::iterator nextItr, int x, int y);
+
+	/// <summary>
+	/// TypeC‚Ì‹t
+	/// </summary>
+	void TypeD(list<Othello>::iterator playerItr, list<Othello>::iterator nextItr, int x, int y);
+
+	/// <summary>
+	/// XI[sai]‚Ì‚æ‚¤‚ÉÁ‚¦‚©‚¯‚Ì‹î‚©‚ç“o‚ê‚é
+	/// </summary>
+	void TypeXI(list<Othello>::iterator playerItr, list<Othello>::iterator nextItr, int x, int y);
 private:
 
 	panelPos playerPanelPos;
 	int spawnTimer = 0;
 	int moveCount = 0;
 	XMFLOAT3 mousePoint;
-	static list<Othello> othellos;
+	
 	static OthelloModel oserroModel;
 	static vector<vector<SendOthelloData>> sendDatas;
 
