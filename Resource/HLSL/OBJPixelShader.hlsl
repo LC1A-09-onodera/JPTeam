@@ -7,7 +7,6 @@ float4 main(VSOutput input) : SV_TARGET
 {
 	//テクスチャマッピング
 	float4 texcolor = tex.Sample(smp, input.uv);
-	
 	//シェーディングによる色
 	float4 shadecolor;
 	//光沢度
@@ -95,6 +94,6 @@ float4 main(VSOutput input) : SV_TARGET
 	float4 result;
 	//texcolor.a = 0.5f;
 	result = shadecolor * texcolor;
-	//result.w = 1.0f;
+	result.a = 1.0f;
 	return result;
 }

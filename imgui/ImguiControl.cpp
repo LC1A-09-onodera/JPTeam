@@ -10,7 +10,14 @@ ComPtr<ID3D12DescriptorHeap> Imgui::heapForImgui;
 bool Imgui::spotLight1;
 float Imgui::lightColor[3];
 float Imgui::dethLine = 25.0f;
-
+int Imgui::sample = 0;
+int Imgui::spritePos1[2];
+int Imgui::spritePos2[2];
+int Imgui::spritePos3[2];
+int Imgui::spritePos4[2];
+int Imgui::spritePos5[2];
+int Imgui::spritePos6[2];
+int Imgui::spritePos7[2];
 ComPtr<ID3D12DescriptorHeap> Imgui::CreateDescrriptorHeapForImgui()
 {
     ComPtr<ID3D12DescriptorHeap> ret;
@@ -35,11 +42,16 @@ void Imgui::DrawImGui()
     ImGui::NewFrame();
     ImGui::Begin("Test");//ウィンドウの名前
     ImGui::SetWindowSize(ImVec2(400, 500), ImGuiCond_::ImGuiCond_FirstUseEver);
-
     //imguiここにいろいろ書く
     /*ImGui::Checkbox("spotLight1", &spotLight1);
     ImGui::SliderFloat3("ligthColor", lightColor, 0.0f, 1.0f);*/
-    ImGui::SliderFloat("dethLine", &dethLine, 0.0f, 50.0f);
+    ImGui::SliderInt2("SpritePosition1", spritePos1, 0, 1280);
+    ImGui::SliderInt2("SpritePosition2", spritePos2, 0, 1280);
+    ImGui::SliderInt2("SpritePosition3", spritePos3, 0, 1280);
+    ImGui::SliderInt2("SpritePosition4", spritePos4, 0, 1280);
+    ImGui::SliderInt2("SpritePosition5", spritePos5, 0, 1280);
+    ImGui::SliderInt2("SpritePosition6", spritePos6, 0, 1280);
+    ImGui::SliderInt2("SpritePosition7", spritePos7, 0, 1280);
     //------------
 
     ImGui::End();
