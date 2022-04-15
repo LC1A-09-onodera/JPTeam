@@ -1352,3 +1352,16 @@ void OthelloManager::TypeXI(list<Othello>::iterator playerItr, list<Othello>::it
 	}
 	isPlayerEnd = false;
 }
+
+void OthelloManager::AllDeadPanel()
+{
+	auto itr = othellos.begin();
+
+	//ƒvƒŒƒCƒ„[‚ð’Tõ
+	for (; itr != othellos.end(); ++itr)
+	{
+		itr->GetGameData()->isDead = true;
+	}
+
+	DeadPanel();
+}

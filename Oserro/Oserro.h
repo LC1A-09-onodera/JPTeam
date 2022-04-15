@@ -169,6 +169,7 @@ public:
 
 	void StartSetPos();
 
+	void AllDeadPanel();
 private:
 	void SetPlayer();
 
