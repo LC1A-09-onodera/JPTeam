@@ -93,7 +93,7 @@ namespace OthelloConstData
 	const int spawnTimerMAx = 300;
 	const int spawnMoveCount = 100;
 	const int spawnPanelCount = 2;
-	const int minPanelCount = 15;
+	const int minPanelCount = 1;
 	//アニメーション
 	const int vanishTimerMax = 600;
 	const int animationTimerMax = 30;
@@ -166,6 +166,9 @@ public:
 	void Receive(const vector<vector<SendOthelloData>> &data);
 
 	void MinSpawn();
+
+	void StartSetPos();
+
 private:
 	void SetPlayer();
 
@@ -183,7 +186,6 @@ private:
 	void MauseControll();
 	void PlayerControll();
 
-	void SartSetPos();
 
 	void playerMoveEnd();
 
