@@ -129,11 +129,12 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y)
 			//挟んだやつの最大のconboCountを取得→それ+1したのをコンボしたオセロにセット
 			int maxComboCount = 0;
 			int baseScore = 0;
+			bool isActiveOthello = false;
 
 			for (int i = 0; i <= loop + 1; i++)
 			{
-				othelloDatas[pair_y][pair_x].isSandwich = true;
-				if (i == 0 || i == loop + 1) { startAndEndArray.push_back(std::make_pair(last_y, last_x)); }
+				//始点と終点を設定
+				if (i == 0 || i == loop + 1) { startAndEndArray.push_back(std::make_pair(pair_y, pair_x)); }
 
 				//そのオセロのコンボ数を取得、そのオセロが何コンボ目かを調べる
 				if (maxComboCount = othelloDatas[pair_y][pair_x].comboCount)
@@ -167,36 +168,72 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y)
 			pair_x = last_x;
 			pair_y = last_y;
 
-			//maxComboCountを加算
-			maxComboCount++;
-
-			//comboCountをセット
-			for (int i = 0; i <= loop + 1; i++)
+			//まだ挟まれてないオセロがあったらコンボを加算できる状態に変更
+			for (int i = 1; i <= loop; i++)
 			{
-				othelloDatas[pair_y][pair_x].comboCount = maxComboCount;
-				othelloDatas[pair_y][pair_x].score += (baseScore + (loop * (loop + 2) * maxComboCount));
-				if (i == 0)
-				{
-					totalScore += othelloDatas[pair_y][pair_x].score * maxComboCount;
-					//baseScore += othelloDatas[pair_y][pair_x].score;
-				}
 				pair_x += direction_x;
 				pair_y += direction_y;
-			}
 
-			Imgui::score = totalScore;
+				//コンボを加算できる状態に変更
+				if (!othelloDatas[pair_y][pair_x].isSandwich) { isActiveOthello = true; }
+			}
 
 			//初期化
 			pair_x = last_x;
 			pair_y = last_y;
 
-			//ひっくり返す
-			for (int i = 1; i <= loop; i++)
+			//isSandwichをチェック
+			for (int i = 0; i <= loop + 1; i++)
 			{
+				//挟む、挟まれるオセロを挟んだ状態に変更
+				othelloDatas[pair_y][pair_x].isSandwich = true;
+
 				pair_x += direction_x;
 				pair_y += direction_y;
-				othelloDatas[pair_y][pair_x].isFront = side;
-				//othelloDatas[pair_y][pair_x].comboCount++;
+			}
+
+			//初期化
+			pair_x = last_x;
+			pair_y = last_y;
+
+			//ひっくり返せる場合
+			if (isActiveOthello)
+			{
+				//maxComboCountを加算
+				maxComboCount++;
+
+				//Score計算
+				for (int i = 0; i <= loop + 1; i++)
+				{
+					othelloDatas[pair_y][pair_x].comboCount = maxComboCount;
+					othelloDatas[pair_y][pair_x].score += (baseScore + (loop * (loop + 2) * maxComboCount));
+					if (i == 0)
+					{
+						totalScore += othelloDatas[pair_y][pair_x].score * maxComboCount;
+						//baseScore += othelloDatas[pair_y][pair_x].score;
+					}
+					pair_x += direction_x;
+					pair_y += direction_y;
+				}
+
+				//初期化
+				pair_x = last_x;
+				pair_y = last_y;
+
+				//ひっくり返す
+				for (int i = 1; i <= loop; i++)
+				{
+					pair_x += direction_x;
+					pair_y += direction_y;
+					othelloDatas[pair_y][pair_x].isFront = side;
+					//othelloDatas[pair_y][pair_x].comboCount++;
+				}
+
+				//初期化
+				pair_x = last_x;
+				pair_y = last_y;
+
+				Imgui::score = totalScore;
 			}
 
 			break;
