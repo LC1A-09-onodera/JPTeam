@@ -134,7 +134,8 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y)
 			for (int i = 0; i <= loop + 1; i++)
 			{
 				//始点と終点を設定
-				if (i == 0 || i == loop + 1) { startAndEndArray.push_back(std::make_pair(pair_y, pair_x)); }
+				if (i == 0) { startArray.push_back(std::make_pair(pair_y, pair_x)); }
+				if (i == loop + 1) { endArray.push_back(std::make_pair(pair_y, pair_x)); }
 
 				//そのオセロのコンボ数を取得、そのオセロが何コンボ目かを調べる
 				if (maxComboCount = othelloDatas[pair_y][pair_x].comboCount)

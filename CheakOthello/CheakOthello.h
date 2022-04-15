@@ -29,7 +29,8 @@ private:
 private:
 	std::vector<std::pair<int, int>> comboOthelloDataPos;
 	std::vector<vector<SendOthelloData>> othelloDatas;
-	std::vector<std::pair<int, int>> startAndEndArray;		//始点と終点を保存する配列
+	std::vector<std::pair<int, int>> startArray;	//始点を保存する配列
+	std::vector<std::pair<int, int>> endArray;		//終点を保存する配列
 	std::vector<bool> othelloSide;
 
 private:
@@ -47,8 +48,9 @@ public:
 	void Update(const vector<vector<SendOthelloData>>& othelloData);
 
 	const vector<vector<SendOthelloData>>& GetOthelloDatas() { return othelloDatas; }
-	const vector<pair<int, int>>& GetStartAndEndArrayDatas() { return startAndEndArray; } //←バカ
-	const void ResetStartAndEndArrayDatas() { startAndEndArray.clear(); }
+	const vector<pair<int, int>>& GetStartArrayDatas() { return startArray; }
+	const vector<pair<int, int>>& GetEndArrayDatas() { return endArray; }
+	const void ResetStartAndEndArrayDatas() { startArray.clear(); endArray.clear(); }
 
 private:
 	//盤面チェック
