@@ -109,7 +109,7 @@ void GameScene::Init()
 	othelloManager.AddPanel();
 
 	checkObject.Init();
-	ObjectParticles::LoadModels();
+	ObjectParticle3D::LoadObject();
 
 	water.CreateWater();
 	OthlloPlayer::Init();
@@ -121,17 +121,9 @@ void GameScene::Init()
 
 void GameScene::TitleUpdate()
 {
-	static int particleTime = 0;
-	particleTime++;
-	if (particleTime % 5 == 4)
-	{
-		ObjectParticles::othello.Init(XMFLOAT3(0, 0, 0), 1, ParticleType::TITLE);
-	}
-	ObjectParticles::Update();
 	if (Input::KeyTrigger(DIK_SPACE))
 	{
 		SceneNum = GAME;
-		ObjectParticles::DeleteAllParticles();
 	}
 }
 
@@ -181,7 +173,6 @@ void GameScene::TitleDraw()
 {
 	//PostEffect‚ÌPreDraw
 	postEffect.PreDraw();
-	ObjectParticles::Draw();
 	//Draw3DObject(sample);
 	BaseDirectX::clearColor[0] = 0.0f;
 	BaseDirectX::clearColor[1] = 0.0f;
