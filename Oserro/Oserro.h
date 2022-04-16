@@ -170,6 +170,8 @@ public:
 	void StartSetPos();
 
 	void AllDeadPanel();
+	static list<Othello> othellos;
+	void DeadPanel();
 private:
 	void SetPlayer();
 
@@ -180,7 +182,7 @@ private:
 
 	void RandumSetPanel();
 
-	void DeadPanel();
+	
 
 	void SpawnPanel();
 
@@ -191,6 +193,7 @@ private:
 	void playerMoveEnd();
 
 	void playerNotMove();
+	
 private:
 
 	/// <summary>
@@ -223,7 +226,7 @@ private:
 	int spawnTimer = 0;
 	int moveCount = 0;
 	XMFLOAT3 mousePoint;
-	static list<Othello> othellos;
+	
 	static OthelloModel oserroModel;
 	static vector<vector<SendOthelloData>> sendDatas;
 

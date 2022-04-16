@@ -331,9 +331,6 @@ public:
 	static ParticleIndi *expEffect;
 	static ParticleIndi *flashEffect;
 	static ParticleIndi *rockOnEffect;
-	static ParticleIndi *thunder1;
-	static ParticleIndi *thunder2;
-	static ParticleIndi *thunder3;
 	static ParticleIndi *numbers[10];
 	static void Update();
 	static void Init();

@@ -33,9 +33,6 @@ ParticleIndi *ParticleControl::attackEffect = nullptr;
 ParticleIndi *ParticleControl::expEffect = nullptr;
 ParticleIndi *ParticleControl::flashEffect = nullptr;
 ParticleIndi * ParticleControl::rockOnEffect = nullptr;
-ParticleIndi* ParticleControl::thunder1;
-ParticleIndi* ParticleControl::thunder2;
-ParticleIndi* ParticleControl::thunder3;
 ParticleIndi* ParticleControl::numbers[10];
 
 bool ParticleManager::StaticInitialize(ID3D12Device *device,  int window_width, int window_height,XMFLOAT3 eye, XMFLOAT3 target, XMFLOAT3 up)
@@ -988,20 +985,11 @@ ParticleControl::~ParticleControl()
 	delete(expEffect);
 	delete(flashEffect);
 	delete(rockOnEffect);
-	delete(thunder1);
-	delete(thunder2);
-	delete(thunder3);
 }
 
 void ParticleControl::Update()
 {
-	attackEffect->Update(Camera::eye.v, Camera::target.v, Camera::up.v);
-	expEffect->Update(Camera::eye.v, Camera::target.v, Camera::up.v);
-	//flashEffect->Update(Camera::eye.v, Camera::target.v, Camera::up.v);
-	rockOnEffect->Update(Camera::eye.v, Camera::target.v, Camera::up.v);
-	thunder1->Update(Camera::eye.v, Camera::target.v, Camera::up.v);
-	thunder2->Update(Camera::eye.v, Camera::target.v, Camera::up.v);
-	thunder3->Update(Camera::eye.v, Camera::target.v, Camera::up.v);
+	
 	for (int i = 0; i < 10; i++)
 	{
 		numbers[i]->Update(Camera::eye.v, Camera::target.v, Camera::up.v);
@@ -1015,23 +1003,17 @@ void ParticleControl::Init()
 	{
 		assert(0);
 	}
-	attackEffect = attackEffect->Create(L"Resource/Img/attackEffect.png");
-	expEffect = expEffect->Create(L"Resource/Img/ExpSample.png");
-	//flashEffect = flashEffect->Create(L"Resource/Img/Flash.png");
-	rockOnEffect = rockOnEffect->Create(L"Resource/Img/rock.png");
-	thunder1 = thunder1->Create(L"Resource/Img/ExpSample.png");
-	thunder2 = thunder2->Create(L"Resource/Img/Thunder4.png");
-	thunder3 = thunder3->Create(L"Resource/Img/Thunder4.png");
-	numbers[0] = numbers[0]->Create(L"Resource/Img/UI_num_0.png");
-	numbers[1] = numbers[0]->Create(L"Resource/Img/UI_num_1.png");
-	numbers[2] = numbers[0]->Create(L"Resource/Img/UI_num_2.png");
-	numbers[3] = numbers[0]->Create(L"Resource/Img/UI_num_3.png");
-	numbers[4] = numbers[0]->Create(L"Resource/Img/UI_num_4.png");
-	numbers[5] = numbers[0]->Create(L"Resource/Img/UI_num_5.png");
-	numbers[6] = numbers[0]->Create(L"Resource/Img/UI_num_6.png");
-	numbers[7] = numbers[0]->Create(L"Resource/Img/UI_num_7.png");
-	numbers[8] = numbers[0]->Create(L"Resource/Img/UI_num_8.png");
-	numbers[9] = numbers[0]->Create(L"Resource/Img/UI_num_9.png");
+	
+	numbers[0] = numbers[0]->Create(L"Resource/Img/number_0.png");
+	numbers[1] = numbers[0]->Create(L"Resource/Img/number_1.png");
+	numbers[2] = numbers[0]->Create(L"Resource/Img/number_2.png");
+	numbers[3] = numbers[0]->Create(L"Resource/Img/number_3.png");
+	numbers[4] = numbers[0]->Create(L"Resource/Img/number_4.png");
+	numbers[5] = numbers[0]->Create(L"Resource/Img/number_5.png");
+	numbers[6] = numbers[0]->Create(L"Resource/Img/number_6.png");
+	numbers[7] = numbers[0]->Create(L"Resource/Img/number_7.png");
+	numbers[8] = numbers[0]->Create(L"Resource/Img/number_8.png");
+	numbers[9] = numbers[0]->Create(L"Resource/Img/number_9.png");
 	for (int i = 0; i < 10; i++)
 	{
 		numbers[i]->alpha = 0.0f;
@@ -1040,13 +1022,6 @@ void ParticleControl::Init()
 
 void ParticleControl::Draw()
 {
-	ParticleDraw(BaseDirectX::cmdList.Get(), attackEffect);
-	ParticleDraw(BaseDirectX::cmdList.Get(), expEffect);
-	//ParticleDraw(BaseDirectX::cmdList.Get(), flashEffect);
-	ParticleDraw(BaseDirectX::cmdList.Get(), rockOnEffect);
-	ParticleDraw(BaseDirectX::cmdList.Get(), thunder1);
-	ParticleDraw(BaseDirectX::cmdList.Get(), thunder2);
-	ParticleDraw(BaseDirectX::cmdList.Get(), thunder3);
 	for (int i = 0; i < 10; i++)
 	{
 		ParticleDraw(BaseDirectX::cmdList.Get(), numbers[i]);

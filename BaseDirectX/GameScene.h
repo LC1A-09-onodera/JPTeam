@@ -69,5 +69,34 @@ public://シーンで使うもの
 	CheakOthello checkObject;
 	Water water;
 	Sprite title;
+	Sprite titleBack;
 	Sprite space;
+	//タイトルからgameシーンへの以降に使う
+	Sprite sceneChage;
+	bool isSceneChange;
+	int SceneWindowSize;
+	//ゲーム開始時にカウントダウンを行う
+	int countDown;
+	bool isCountDownEnd;
+	int countDownFrame;
+	const int countMax = 239;
+	Sprite numbers[10];
+	//gameシーンからリザルトから使う
+	bool isResultSceneChange;
+	int resultSceneWindowSize;
+
+	int gameTime;
+
+	XMFLOAT3 eyeStart;
+	XMFLOAT3 eyeEnd;
+	float eyeEaseTime;
+
+	int resultForTime;
+	const int gameMaxTime = 599;
+
+	//スコア用
+	Sprite scoreNum[60];
+	Sprite scoreSprite;
+	Sprite timeUp;
+	Sprite startSprite;
 };

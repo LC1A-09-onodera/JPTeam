@@ -45,4 +45,5 @@ public:
 	static void Init(XMFLOAT3 &position, XMFLOAT3 &rotation);
 	static void Update();
 	static void Draw();
+	static void DeleteList();
 };

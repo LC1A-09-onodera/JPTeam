@@ -10,7 +10,7 @@ public:
 	static MSG msg;
 	static WNDCLASSEX w;
 	static bool Qite;
-	
+	static int intarval;
 	static void Set();
 	static void Clear();
 	static void CheckMsg();

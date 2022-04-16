@@ -1,19 +1,20 @@
-#include "../Thunder/Thunder.h"
+#include "../LightObject/LightObject.h"
+#include "../Shader/ShaderManager.h"
 #include "../Camera/Camera.h"
-#include "../DX12operator.h"
-ThunderModel ThunderModels::thunder1;
-ThunderModel ThunderModels::thunder2;
-ThunderModel ThunderModels::thunder3;
-list<Thunder> ThunderModels::thunders;
-list<list<Thunder>::iterator> ThunderModels::deleteThunders;
-void ThunderEachInfo::CreateConstBuff0()
+#include "../CheakOthello/CheakOthello.h"
+list<LightObjectModels> Lights::eachs;
+list<list<LightObjectModels>::iterator> Lights::deleteItr;
+LightObjectModel Lights::light1;
+LightObjectModel Lights::light2;
+LightObjectModel Lights::light3;
+void LightObjectEachInfo::CreateConstBuff0()
 {
 	D3D12_HEAP_PROPERTIES heapprop{};
 	heapprop.Type = D3D12_HEAP_TYPE_UPLOAD;
 	//リソース設定
 	D3D12_RESOURCE_DESC resdesc{};
 	resdesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-	resdesc.Width = (sizeof(ThunderConstBuffer) + 0xff) & ~0xff;
+	resdesc.Width = (sizeof(LightObjectConstBuffer) + 0xff) & ~0xff;
 	resdesc.Height = 1;
 	resdesc.DepthOrArraySize = 1;
 	resdesc.MipLevels = 1;
@@ -22,7 +23,137 @@ void ThunderEachInfo::CreateConstBuff0()
 	BaseDirectX::result = BaseDirectX::dev->CreateCommittedResource(&heapprop, D3D12_HEAP_FLAG_NONE, &resdesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&constBuff0));
 }
 
-void ThunderModel::Update(ThunderEachInfo* each)
+void LightObjectModels::Init(const pair<int, int>& start, const pair<int, int>& end)
+{
+	float startY = start.first;
+	float startX = start.second;
+	float endY = end.first;
+	float endX = end.second;
+	bool hol = startY == endY;
+	bool ver = startX == endX;
+	float centerX;
+	float centerY;
+	//斜め処理
+	if (!hol && !ver)
+	{
+		//左上方向
+		if (startX > endX && startY > endY)
+		{
+			each1.rotation.z = 45;
+			each2.rotation.z = 45;
+			each3.rotation.z = 45;
+		}
+		else
+		{
+			each1.rotation.z = -45;
+			each2.rotation.z = -45;
+			each3.rotation.z = -45;
+		}
+		float subX = startX - endX;
+		float subY = startY - endY;
+		if (startX > endX)
+		{
+			centerX = startX - subX / 2.0f;
+		}
+		else
+		{
+			centerX = startX + subX / 2.0f;
+		}
+		if (startY > endY)
+		{
+			centerY = startY - subY / 2.0f;
+		}
+		else
+		{
+			centerY = startY + subY / 2.0f;
+		}
+		centerX = centerX * 2.0f - 8.0f;
+		centerY = centerY * 2.0f - 8.0f;
+		each1.scale.y = subX;
+	}
+	else if (!hol || !ver)
+	{
+		//横方向
+		if (!hol)
+		{
+			//差分
+			float sub = abs(startY - endY);
+			if (startY > endY)
+			{
+				centerY = startY - sub / 2.0f;
+			}
+			else
+			{
+				centerY = startY + sub / 2.0f;
+			}
+			centerX = startX;
+			startScale = {0.1f, 0.1f, 0.1f};
+			endScale = {1.3f, sub, 0.8f};
+			time = 0;
+			
+		}
+		//縦方向
+		else
+		{
+			//差分
+			float sub = abs(startX - endX);
+			if (startX > endX)
+			{
+				centerX = startX - sub / 2.0f;
+			}
+			else
+			{
+				centerX = startX + sub / 2.0f;
+			}
+			centerY = startY;
+			each1.rotation.z = 90;
+			each2.rotation.z = 90;
+			each3.rotation.z = 90;
+			startScale = { 0.1f, 0.1f, 0.1f };
+			endScale = { 0.8f, sub, 0.8f };
+			time = 0;
+		}
+		centerX = centerX * 2.0f - 8.0f;
+		centerY = centerY * 2.0f - 8.0f;
+	}
+	each1.position.m128_f32[0] = centerX;
+	each1.position.m128_f32[1] = -centerY;
+	each1.position.m128_f32[2] = 0;
+	each2.position.m128_f32[0] = centerX;
+	each2.position.m128_f32[1] = -centerY;
+	each2.position.m128_f32[2] = 0;
+	each3.position.m128_f32[0] = centerX;
+	each3.position.m128_f32[1] = -centerY;
+	each3.position.m128_f32[2] = 0;
+	each1.time = alpha1;
+	each2.time = alpha2;
+	each3.time = alpha3;
+	each2.scale = each1.scale * 0.8f;
+	each3.scale = each1.scale * 0.5f;
+	each1.CreateConstBuff0();
+	each1.CreateConstBuff1();
+	each2.CreateConstBuff0();
+	each2.CreateConstBuff1();
+	each3.CreateConstBuff0();
+	each3.CreateConstBuff1();
+}
+
+void LightObjectModels::Update()
+{
+	if (time > 1.0f)
+	{
+		time += 0.02f;
+	}
+	else
+	{
+		each1.scale = EaseOutQuad(startScale, endScale, time);
+		each2.scale = each1.scale * 0.8f;
+		each3.scale = each1.scale * 0.5f;
+		time += 0.02f;
+	}
+}
+
+void LightObjectModel::Update(LightObjectEachInfo* each)
 {
 	if (each != nullptr)
 	{
@@ -59,7 +190,7 @@ void ThunderModel::Update(ThunderEachInfo* each)
 			mesh.vertBuff->Unmap(0, nullptr);    // マップを解除
 		}
 
-		ThunderConstBuffer* constMap0 = nullptr;
+		LightObjectConstBuffer* constMap0 = nullptr;
 		if (SUCCEEDED(this->each.constBuff0->Map(0, nullptr, (void**)&constMap0)))
 		{
 			//constMap0->mat = matWorld * Camera::matView * BaseDirectX::matProjection;
@@ -113,7 +244,7 @@ void ThunderModel::Update(ThunderEachInfo* each)
 			mesh.vertBuff->Unmap(0, nullptr);    // マップを解除
 		}
 
-		ThunderConstBuffer* constMap0 = nullptr;
+		LightObjectConstBuffer* constMap0 = nullptr;
 		if (SUCCEEDED(this->each.constBuff0->Map(0, nullptr, (void**)&constMap0)))
 		{
 			//constMap0->mat = matWorld * Camera::matView * BaseDirectX::matProjection;
@@ -133,111 +264,50 @@ void ThunderModel::Update(ThunderEachInfo* each)
 	}
 }
 
-void Thunder::Init(XMFLOAT3& position)
+void Lights::LoadModels()
 {
-	each.CreateConstBuff0();
-	each.CreateConstBuff1();
-	each.position = ConvertXMFLOAT3toXMVECTOR(position);
-	each.time = ThunderMaxTime;
-	each.scale = { 0.9f, 0.9f, 0.9f };
-	isActive = true;
-	each.rotation.x = 90;
-	number = rand() % 3;
+	light1.CreateModel("LightObj", ShaderManager::thunderShader);
+	light2.CreateModel("LightObj", ShaderManager::thunderShader);
+	light3.CreateModel("LightObj", ShaderManager::thunderShader);
 }
 
-void Thunder::Update()
+void Lights::Add(CheakOthello& othellos)
 {
-	each.time -= 0.0017f;
-	if (each.time <= 0.0f)
+	for (int i = 0; i < othellos.GetStartAndEndArrayDatas().size(); i += 2)
 	{
-		isActive = false;
+		LightObjectModels each;
+		each.Init(othellos.GetStartAndEndArrayDatas()[i], othellos.GetStartAndEndArrayDatas()[i + (int)1]);
+		eachs.push_back(each);
 	}
-	Shake();
+	othellos.ResetStartAndEndArrayDatas();
 }
 
-void Thunder::Shake()
+void Lights::Update()
 {
-	each.position = ConvertXMFLOAT3toXMVECTOR(startPos);
-	float subX, subY;
-	if (rand() % 2)
+	for (auto itr = eachs.begin(); itr != eachs.end(); ++itr)
 	{
-		subX = each.time;
-	}
-	else
-	{
-		subX = -each.time;
-	}
-	if (rand() % 2)
-	{
-		subY = each.time;
-	}
-	else
-	{
-		subY = -each.time;
-	}
-	each.position.m128_f32[0] += subX / 50.0f;
-	each.position.m128_f32[1] += subY / 50.0f;
-}
-
-void ThunderModels::LoadModels()
-{
-	thunder1.CreateModel("Thunder1", ShaderManager::thunderShader);
-	thunder2.CreateModel("Thunder2", ShaderManager::thunderShader);
-	thunder3.CreateModel("Thunder3", ShaderManager::thunderShader);
-}
-
-void ThunderModels::Init(XMFLOAT3& position, XMFLOAT3& rotation)
-{
-	int result = rand() % 3;
-	Thunder thunder;
-	thunder.Init(position);
-	thunder.startPos = position;
-	thunders.push_back(thunder);
-}
-
-void ThunderModels::Update()
-{
-	for (auto itr = thunders.begin(); itr != thunders.end(); ++itr)
-	{
-		if (itr->isActive)
+		itr->Update();
+		if (itr->time > 3.0f)
 		{
-			itr->Update();
-		}
-		else
-		{
-			deleteThunders.push_back(itr);
+			deleteItr.push_back(itr);
 		}
 	}
-	for (auto deleteItr = deleteThunders.begin(); deleteItr != deleteThunders.end(); ++deleteItr)
+	for (auto itr = deleteItr.begin(); itr != deleteItr.end(); ++itr)
 	{
-		thunders.erase(*deleteItr);
+		eachs.erase(*itr);
 	}
-	deleteThunders.clear();
+	deleteItr.clear();
 }
 
-void ThunderModels::Draw()
+void Lights::Draw()
 {
-	for (auto itr = thunders.begin(); itr != thunders.end(); ++itr)
+	for (auto itr = eachs.begin(); itr != eachs.end(); ++itr)
 	{
-		if (itr->number == 0)
-		{
-			thunder1.Update(&itr->each);
-			Draw3DObject(thunder1);
-		}
-		else if (itr->number == 1)
-		{
-			thunder2.Update(&itr->each);
-			Draw3DObject(thunder2);
-		}
-		else
-		{
-			thunder3.Update(&itr->each);
-			Draw3DObject(thunder3);
-		}
+		light3.Update(&itr->each3);
+		Draw3DObject(light3);
+		light2.Update(&itr->each2);
+		Draw3DObject(light2);
+		light1.Update(&itr->each1);
+		Draw3DObject(light1);
 	}
-}
-
-void ThunderModels::DeleteList()
-{
-	thunders.clear();
 }
