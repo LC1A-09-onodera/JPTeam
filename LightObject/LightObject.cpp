@@ -3,6 +3,7 @@
 #include "../Camera/Camera.h"
 #include "../CheakOthello/CheakOthello.h"
 list<LightObjectModels> Lights::eachs;
+list<list<LightObjectModels>::iterator> Lights::deleteItr;
 LightObjectModel Lights::light1;
 LightObjectModel Lights::light2;
 LightObjectModel Lights::light3;
@@ -24,60 +25,111 @@ void LightObjectEachInfo::CreateConstBuff0()
 
 void LightObjectModels::Init(const pair<int, int>& start, const pair<int, int>& end)
 {
-	int startY = start.first;
-	int startX = start.second;
-	int endY = end.first;
-	int endX = end.second;
-	XMFLOAT3 resultStart;
-	resultStart.x = startX * 2.0f - 8.0f;
-	resultStart.y = startY * 2.0f + 8.0f;
-	XMFLOAT3 resultEnd;
-	resultEnd.x = endX * 2.0f - 8.0f;
-	resultEnd.y = endY * 2.0f + 8.0f;
-	if (resultStart.x > resultEnd.x)
+	float startY = start.first;
+	float startX = start.second;
+	float endY = end.first;
+	float endX = end.second;
+	bool hol = startY == endY;
+	bool ver = startX == endX;
+	float centerX;
+	float centerY;
+	//ŽÎ‚ßˆ—
+	if (!hol && !ver)
 	{
-		resultStart.x -= (resultStart.x - resultEnd.x) / 2;
+		//¶ã•ûŒü
+		if (startX > endX && startY > endY)
+		{
+			each1.rotation.z = 45;
+			each2.rotation.z = 45;
+			each3.rotation.z = 45;
+		}
+		else
+		{
+			each1.rotation.z = -45;
+			each2.rotation.z = -45;
+			each3.rotation.z = -45;
+		}
+		float subX = startX - endX;
+		float subY = startY - endY;
+		if (startX > endX)
+		{
+			centerX = startX - subX / 2.0f;
+		}
+		else
+		{
+			centerX = startX + subX / 2.0f;
+		}
+		if (startY > endY)
+		{
+			centerY = startY - subY / 2.0f;
+		}
+		else
+		{
+			centerY = startY + subY / 2.0f;
+		}
+		centerX = centerX * 2.0f - 8.0f;
+		centerY = centerY * 2.0f - 8.0f;
+		each1.scale.y = subX;
 	}
-	else if (resultStart.x < resultEnd.x)
+	else if (!hol || !ver)
 	{
-		resultStart.x += (resultStart.x - resultEnd.x) / 2;
+		//‰¡•ûŒü
+		if (!hol)
+		{
+			//·•ª
+			float sub = abs(startY - endY);
+			if (startY > endY)
+			{
+				centerY = startY - sub / 2.0f;
+			}
+			else
+			{
+				centerY = startY + sub / 2.0f;
+			}
+			centerX = startX;
+			startScale = {0.1f, 0.1f, 0.1f};
+			endScale = {1.3f, sub, 0.8f};
+			time = 0;
+			
+		}
+		//c•ûŒü
+		else
+		{
+			//·•ª
+			float sub = abs(startX - endX);
+			if (startX > endX)
+			{
+				centerX = startX - sub / 2.0f;
+			}
+			else
+			{
+				centerX = startX + sub / 2.0f;
+			}
+			centerY = startY;
+			each1.rotation.z = 90;
+			each2.rotation.z = 90;
+			each3.rotation.z = 90;
+			startScale = { 0.1f, 0.1f, 0.1f };
+			endScale = { 0.8f, sub, 0.8f };
+			time = 0;
+		}
+		centerX = centerX * 2.0f - 8.0f;
+		centerY = centerY * 2.0f - 8.0f;
 	}
-	if (resultStart.y > resultEnd.y)
-	{
-		resultStart.y += (resultStart.y - resultEnd.y) / 2;
-	}
-	else if (resultStart.y < resultEnd.y)
-	{
-		resultStart.y -= (resultStart.y - resultEnd.y) / 2;
-	}
-	resultStart.z = 0;
-	each1.position = ConvertXMFLOAT3toXMVECTOR(resultStart);
+	each1.position.m128_f32[0] = centerX;
+	each1.position.m128_f32[1] = -centerY;
+	each1.position.m128_f32[2] = 0;
+	each2.position.m128_f32[0] = centerX;
+	each2.position.m128_f32[1] = -centerY;
+	each2.position.m128_f32[2] = 0;
+	each3.position.m128_f32[0] = centerX;
+	each3.position.m128_f32[1] = -centerY;
+	each3.position.m128_f32[2] = 0;
 	each1.time = alpha1;
-	if (resultStart.x !=  resultEnd.x)
-	{
-		each1.scale.x = abs(resultStart.x - resultEnd.x) / 2.0f;
-	}
-	else
-	{
-		each1.scale.x = 0.8f;
-	}
-	if (resultStart.y != resultEnd.y)
-	{
-		each1.scale.y = abs(resultStart.y - resultEnd.y) / 2.0f;
-	}
-	else
-	{
-		each1.scale.y = 0.8f;
-	}
-	each1.scale.z = 0.1f;
-	each2.position = ConvertXMFLOAT3toXMVECTOR(resultStart);
-	//each2.position.m128_f32[0] += 2.0f;
 	each2.time = alpha2;
-	each2.scale = {each1.scale.x * 0.8f, each1.scale.y * 0.8f ,each1.scale.z * 0.8f };
-	each3.position = ConvertXMFLOAT3toXMVECTOR(resultStart);
-	//each3.position.m128_f32[0] += 4.0f;
 	each3.time = alpha3;
-	each3.scale = { each1.scale.x * 0.5f, each1.scale.y * 0.5f ,each1.scale.z * 0.5f };
+	each2.scale = each1.scale * 0.8f;
+	each3.scale = each1.scale * 0.5f;
 	each1.CreateConstBuff0();
 	each1.CreateConstBuff1();
 	each2.CreateConstBuff0();
@@ -88,6 +140,17 @@ void LightObjectModels::Init(const pair<int, int>& start, const pair<int, int>& 
 
 void LightObjectModels::Update()
 {
+	if (time > 1.0f)
+	{
+		time += 0.02f;
+	}
+	else
+	{
+		each1.scale = EaseOutQuad(startScale, endScale, time);
+		each2.scale = each1.scale * 0.8f;
+		each3.scale = each1.scale * 0.5f;
+		time += 0.02f;
+	}
 }
 
 void LightObjectModel::Update(LightObjectEachInfo* each)
@@ -203,9 +266,9 @@ void LightObjectModel::Update(LightObjectEachInfo* each)
 
 void Lights::LoadModels()
 {
-	light1.CreateModel("LightBox1", ShaderManager::thunderShader);
-	light2.CreateModel("LightBox1", ShaderManager::thunderShader);
-	light3.CreateModel("LightBox1", ShaderManager::thunderShader);
+	light1.CreateModel("LightObj", ShaderManager::thunderShader);
+	light2.CreateModel("LightObj", ShaderManager::thunderShader);
+	light3.CreateModel("LightObj", ShaderManager::thunderShader);
 }
 
 void Lights::Add(CheakOthello& othellos)
@@ -224,7 +287,16 @@ void Lights::Update()
 	for (auto itr = eachs.begin(); itr != eachs.end(); ++itr)
 	{
 		itr->Update();
+		if (itr->time > 3.0f)
+		{
+			deleteItr.push_back(itr);
+		}
 	}
+	for (auto itr = deleteItr.begin(); itr != deleteItr.end(); ++itr)
+	{
+		eachs.erase(*itr);
+	}
+	deleteItr.clear();
 }
 
 void Lights::Draw()
@@ -237,7 +309,5 @@ void Lights::Draw()
 		Draw3DObject(light2);
 		light1.Update(&itr->each1);
 		Draw3DObject(light1);
-		
-		
 	}
 }

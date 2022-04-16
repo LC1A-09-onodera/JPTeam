@@ -18,6 +18,7 @@ int Imgui::spritePos4[2];
 int Imgui::spritePos5[2];
 int Imgui::spritePos6[2];
 int Imgui::spritePos7[2];
+int Imgui::score;
 ComPtr<ID3D12DescriptorHeap> Imgui::CreateDescrriptorHeapForImgui()
 {
     ComPtr<ID3D12DescriptorHeap> ret;
@@ -52,6 +53,8 @@ void Imgui::DrawImGui()
     ImGui::SliderInt2("SpritePosition5", spritePos5, 0, 1280);
     ImGui::SliderInt2("SpritePosition6", spritePos6, 0, 1280);
     ImGui::SliderInt2("SpritePosition7", spritePos7, 0, 1280);
+    ImGui::SliderFloat("dethLine", &dethLine, 0.0f, 50.0f);
+    ImGui::SliderInt("score", &score, 0, 10000000);
     //------------
 
     ImGui::End();

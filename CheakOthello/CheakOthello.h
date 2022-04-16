@@ -30,13 +30,14 @@ private:
 	std::vector<std::pair<int, int>> comboOthelloDataPos;
 	std::vector<vector<SendOthelloData>> othelloDatas;
 	std::vector<std::pair<int, int>> startAndEndArray;		//始点と終点を保存する配列
+	std::vector<bool> othelloSide;
 
 private:
 	int last_x;				//最後に動かしたオセロのX座標
 	int last_y;				//最後に動かしたオセロのY座標
-	int baseScore;			//基礎点
+	//int baseScore;		//基礎点
 	int totalScore;			//合計点
-	int comboCount;			//現在のコンボ数←そのまま倍率に使用
+	//int comboCount;		//現在のコンボ数←そのまま倍率に使用
 	bool side;				//表裏保存
 
 public:
@@ -46,7 +47,7 @@ public:
 	void Update(const vector<vector<SendOthelloData>>& othelloData);
 
 	const vector<vector<SendOthelloData>>& GetOthelloDatas() { return othelloDatas; }
-	const vector<pair<int, int>>& GetStartAndEndArrayDatas() { return startAndEndArray; }
+	const vector<pair<int, int>>& GetStartAndEndArrayDatas() { return startAndEndArray; } //←バカ
 	const void ResetStartAndEndArrayDatas() { startAndEndArray.clear(); }
 
 private:

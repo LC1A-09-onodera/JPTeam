@@ -33,6 +33,9 @@ public:
     static int spritePos6[2];
     static int spritePos7[2];
 
+
+    static int score;
+
     static int sample;
     static float dethLine;
 };

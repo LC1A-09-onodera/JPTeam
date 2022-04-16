@@ -88,6 +88,7 @@ void Othello::Revers()
 {
 	data.isReverce = true;
 	data.isPlayer = false;
+	data.isSandwich = true;
 	data.animationTimer = 0;
 	data.waitTimer = waitTimerMax * (data.comboCount - 1);
 	data.JumpTimer = 0;
@@ -176,7 +177,7 @@ void Othello::ReversUpdate()
 		data.isVanish = true;
 
 		////ひっくり返ったら起動フラグをオンにする
-		//data.isMove = true;
+		data.isMove = true;
 
 	}
 }
@@ -447,6 +448,11 @@ void Othello::MakeParticle()
 	//ObjectParticles::Init(sample, 10, ParticleType::Exprotion);
 }
 
+bool Othello::GetIsActive()
+{
+	return (data.isVanish ||data.isSandwich);
+}
+
 void OthelloManager::Init()
 {
 	oserroModel.CreateModel("newOserro", ShaderManager::playerShader);
@@ -584,7 +590,7 @@ void OthelloManager::Move(const XMFLOAT3 &MousePos)
 	list<panelPos> tmpPanels;
 	for (; itr != othellos.end(); itr++)
 	{
-		itr->GetGameData()->isMove = false;
+		//itr->GetGameData()->isMove = false;
 		if (itr != playerItr)
 		{
 			int x = itr->GetGameData()->widthPos;
@@ -684,21 +690,31 @@ const vector<vector<SendOthelloData>> &OthelloManager::Send()
 	{
 		OthelloData gameDatas = *itr->GetGameData();
 		SendOthelloData data;
-
+		if (gameDatas.isPlayer || gameDatas.isReverce)
+		{
+			continue;
+		}
 		data.FrontActiveAngle = gameDatas.FrontActiveAngle;
 		data.isFront = gameDatas.isFront;
 		data.type = gameDatas.type;
 
-		//data.isMove = gameDatas.isMove;
+		if (itr->GetIsActive())
+		{
+			data.isSandwich = true;
+		}
 
-		if (Input::KeyTrigger(DIK_SPACE) && gameDatas.isPlayer)
+
+			data.isMove = itr->GetIsActive();
+
+		bool isOnPlayer = (gameDatas.widthPos == playerPanelPos.x && gameDatas.heightPos == playerPanelPos.y);
+		if (Input::KeyTrigger(DIK_SPACE) && isOnPlayer)
 		{
 			data.isMove = true;
 		}
 
 		data.comboCount = gameDatas.comboCount;
 		data.SandwichLength = gameDatas.SandwichLength;
-
+		data.score = gameDatas.score;
 		sendDatas[gameDatas.heightPos][gameDatas.widthPos] = data;
 	}
 
@@ -718,28 +734,36 @@ void OthelloManager::Receive(const vector<vector<SendOthelloData>> &data)
 	for (; itr != othellos.end(); itr++)
 	{
 		OthelloData *gameDatas = itr->GetGameData();
+
 		int x = gameDatas->widthPos;
 		int y = gameDatas->heightPos;
-
+		if (sendDatas[y][x].type == NONE)
+		{
+			continue;
+		}
 		//if (sendDatas[y][x].comboCount >= 1 && !gameDatas->isVanish)
 		//{
 		//	gameDatas->comboCount = sendDatas[y][x].comboCount;
 		//	itr->Revers();
 		//}
-		if (sendDatas[y][x].isFront != gameDatas->isFront && !gameDatas->isVanish && !gameDatas->isSandwich)
+		if (sendDatas[y][x].isFront != gameDatas->isFront && !gameDatas->isVanish && !gameDatas->isSandwich && !gameDatas->isReverce)
 		{
-			gameDatas->comboCount = sendDatas[y][x].comboCount + 1;
+			gameDatas->comboCount = sendDatas[y][x].comboCount;
 			itr->Revers();
 			//生きているやつを挟んだ
 			isSandFlip = true;
+			gameDatas->score = sendDatas[y][x].score;
+
 		}
-		else if (sendDatas[y][x].isSandwich && !gameDatas->isVanish && !gameDatas->isSandwich)
+		else if (sendDatas[y][x].isSandwich && !gameDatas->isVanish && !gameDatas->isSandwich && !gameDatas->isReverce)
 		{
-			gameDatas->comboCount = sendDatas[y][x].comboCount + 1;
+			gameDatas->comboCount = sendDatas[y][x].comboCount;
 			sandOthellos.push_back(itr);
+			gameDatas->isMove = true;
+			gameDatas->score = sendDatas[y][x].score;
 		}
 
-		gameDatas->isMove = false;
+		//gameDatas->isMove = false;
 	}
 
 	auto SandItr = sandOthellos.begin();
@@ -1051,7 +1075,7 @@ void OthelloManager::KeySetPlayer()
 	{
 		TypeC(playerItr, nextItr, x, y);
 	}
-	else if(Imgui::sample == 3)
+	else if (Imgui::sample == 3)
 	{
 		TypeD(playerItr, nextItr, x, y);
 	}
@@ -1079,7 +1103,7 @@ void OthelloManager::SartSetPos()
 	bool randFront = rand() % 2;
 	data.Spawn(NORMAL, x, y, randFront);
 	data.GetGameData()->isMove = false;
-	data.GetGameData()->isPlayer = true;
+	data.GetGameData()->isPlayer = false;
 	data.GetGameData()->isFront = true;
 	othellos.push_back(data);
 
@@ -1107,8 +1131,11 @@ void OthelloManager::playerMoveEnd()
 		if (data->isPlayer)
 		{
 
-			itr->GetGameData()->isMove = isMove;
-
+			//itr->GetGameData()->isMove = isMove;
+			if (OthlloPlayer::GetIsMoveEnd())
+			{
+				itr->GetGameData()->isPlayer = false;
+			}
 
 			return;
 		}
@@ -1170,6 +1197,10 @@ void OthelloManager::TypeA(list<Othello>::iterator playerItr, list<Othello>::ite
 		if (OnPlayer)
 		{
 			isPanelMove = true;
+			if (!playerItr->GetGameData()->isVanish && !playerItr->GetGameData()->isReverce && !playerItr->GetGameData()->isSandwich)
+			{
+				playerItr->GetGameData()->isPlayer = true;
+			}
 		}
 		playerPanelPos = { x, y };
 	}
@@ -1203,6 +1234,10 @@ void OthelloManager::TypeB(list<Othello>::iterator playerItr, list<Othello>::ite
 		if (OnPlayer)
 		{
 			isPanelMove = true;
+			if (!playerItr->GetGameData()->isVanish && !playerItr->GetGameData()->isReverce && !playerItr->GetGameData()->isSandwich)
+			{
+				playerItr->GetGameData()->isPlayer = true;
+			}
 		}
 		playerPanelPos = { x, y };
 	}
@@ -1246,6 +1281,10 @@ void OthelloManager::TypeC(list<Othello>::iterator playerItr, list<Othello>::ite
 		if (OnPlayer)
 		{
 			isPanelMove = true;
+			if (!playerItr->GetGameData()->isVanish && !playerItr->GetGameData()->isReverce && !playerItr->GetGameData()->isSandwich)
+			{
+				playerItr->GetGameData()->isPlayer = true;
+			}
 		}
 		playerPanelPos = { x, y };
 	}
@@ -1275,7 +1314,7 @@ void OthelloManager::TypeXI(list<Othello>::iterator playerItr, list<Othello>::it
 			nowStep = 0.0f;
 		}
 		float stepSize = nextStep - nowStep;
-		bool isStepUp = stepSize <=0.7;
+		bool isStepUp = stepSize <= 0.7;
 		bool isNotMove = (nextItr->GetGameData()->isReverce || !isStepUp);
 		if (isNotMove)
 		{
@@ -1307,6 +1346,10 @@ void OthelloManager::TypeXI(list<Othello>::iterator playerItr, list<Othello>::it
 		if (OnPlayer)
 		{
 			isPanelMove = true;
+			if (!playerItr->GetGameData()->isVanish && !playerItr->GetGameData()->isReverce && !playerItr->GetGameData()->isSandwich)
+			{
+				playerItr->GetGameData()->isPlayer = true;
+			}
 		}
 		playerPanelPos = { x, y };
 	}
