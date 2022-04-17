@@ -72,6 +72,9 @@ struct OthelloData
 	vector<int> SandwichLength;
 
 	int score = 0;
+
+	bool isSpawn = false;
+	int spawnTimer = 0;
 };
 struct SendOthelloData
 {
@@ -93,12 +96,13 @@ namespace OthelloConstData
 	const int spawnTimerMAx = 300;
 	const int spawnMoveCount = 100;
 	const int spawnPanelCount = 2;
-	const int minPanelCount = 1;
+	const int minPanelCount = 15;
 	//アニメーション
 	const int vanishTimerMax = 600;
 	const int animationTimerMax = 30;
 	const int waitTimerMax = 30;
 	const int JumpTimerMax = waitTimerMax / 2;
+	const int SpawnAnimationTimerMax = 120;
 }
 
 class Othello
@@ -115,7 +119,6 @@ private:
 	float time;
 	bool isEase;
 	OthelloData data;
-	XMVECTOR qRotation;
 public:
 	OthelloData *GetGameData() { return &data; }
 	bool GetIsEase() { return isEase; }
@@ -131,6 +134,7 @@ public:
 
 	void Spawn(OthelloType type, int x, int y, bool isFront = true);
 
+	void Borne(OthelloType type, int x, int y, bool isFront = true);
 	void Controll(const XMFLOAT3 &mousePos, int &moveCount);
 
 	//ひっくり返す
@@ -143,6 +147,8 @@ public:
 	void MakeParticle();
 
 	bool GetIsActive();
+
+	void SpawnUpdate();
 private:
 	void ReversUpdate();
 	void LeftRevers();
@@ -182,9 +188,7 @@ private:
 
 	void RandumSetPanel();
 
-	
-
-	void SpawnPanel();
+	void SpawnPanel(bool isInGame);
 
 	void MauseControll();
 	void PlayerControll();

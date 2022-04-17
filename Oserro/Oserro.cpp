@@ -34,35 +34,40 @@ void Othello::Update()
 	float x = (data.widthPos * cellScale * 2);
 	float y = -(data.heightPos * cellScale * 2);
 
-
-
-	if (data.isReverce)
+	if (data.isSpawn)
 	{
-		ReversUpdate();
-	}
-	else if (data.isSandwich)
-	{
-		SinkWait();
-	}
-	else if (data.isVanish)
-	{
-		Sink();
+		SpawnUpdate();
 	}
 	else
 	{
-		if (!data.isPlayer)
+		if (data.isReverce)
 		{
-			each.position = XMVECTOR{ x, y ,0, 0 };
-			each.position += ConvertXMFLOAT3toXMVECTOR(stageLeftTop);
-			if (data.isFront)
+			ReversUpdate();
+		}
+		else if (data.isSandwich)
+		{
+			SinkWait();
+		}
+		else if (data.isVanish)
+		{
+			Sink();
+		}
+		else
+		{
+			if (!data.isPlayer)
 			{
-				each.rotation.y = 0;
-				each.rotation.x = 0;
-			}
-			else
-			{
-				each.rotation.y = 180;
-				each.rotation.x = 0;
+				each.position = XMVECTOR{ x, y ,0, 0 };
+				each.position += ConvertXMFLOAT3toXMVECTOR(stageLeftTop);
+				if (data.isFront)
+				{
+					each.rotation.y = 0;
+					each.rotation.x = 0;
+				}
+				else
+				{
+					each.rotation.y = 180;
+					each.rotation.x = 0;
+				}
 			}
 		}
 	}
@@ -108,6 +113,19 @@ void Othello::Sandwich()
 	pos.z = -0.3f;
 	ThunderModels::Init(pos, XMFLOAT3(0, 0, 0));
 
+}
+
+void Othello::SpawnUpdate()
+{
+	if (data.spawnTimer >= SpawnAnimationTimerMax)
+	{
+		data.isSpawn = false;
+	}
+
+	float nowScale = static_cast<float>(data.spawnTimer) / SpawnAnimationTimerMax;
+	data.isHarf = (nowScale >= 0.5f);
+	each.scale = { nowScale , nowScale , 1 };
+	data.spawnTimer++;
 }
 
 void Othello::ReversUpdate()
@@ -412,9 +430,52 @@ void Othello::Spawn(OthelloType type, int x, int y, bool isFront)
 		data.heightPos = y;
 		data.type = type;
 		data.isFront = isFront;
+
+		float x = (data.widthPos * cellScale * 2);
+		float y = -(data.heightPos * cellScale * 2);
+
+		each.position = XMVECTOR{ x, y ,0, 0 };
+		each.position += ConvertXMFLOAT3toXMVECTOR(stageLeftTop);
+		if (data.isFront)
+		{
+			each.rotation.y = 0;
+			each.rotation.x = 0;
+		}
+		else
+		{
+			each.rotation.y = 180;
+			each.rotation.x = 0;
+		}
 	}
 }
 
+void Othello::Borne(OthelloType type, int x, int y, bool isFront)
+{
+	if (data.type == NONE)
+	{
+		data.widthPos = x;
+		data.heightPos = y;
+		data.type = type;
+		data.isFront = isFront;
+		data.isSpawn = true;
+
+		float x = (data.widthPos * cellScale * 2);
+		float y = -(data.heightPos * cellScale * 2);
+
+		each.position = XMVECTOR{ x, y ,0, 0 };
+		each.position += ConvertXMFLOAT3toXMVECTOR(stageLeftTop);
+		if (data.isFront)
+		{
+			each.rotation.y = 0;
+			each.rotation.x = 0;
+		}
+		else
+		{
+			each.rotation.y = 180;
+			each.rotation.x = 0;
+		}
+	}
+}
 void Othello::SinkWait()
 {
 	if (data.waitTimer > 0)
@@ -435,9 +496,9 @@ void Othello::Sink()
 	}
 	else
 	{
-		float a = static_cast<float>(data.vanishTimer) / vanishTimerMax;
-		data.isHarf = (a >= 0.5f);
-		each.scale = { 1 - a, 1 - a, 1.0f };
+		float nowScale = static_cast<float>(data.vanishTimer) / vanishTimerMax;
+		data.isHarf = (nowScale >= 0.5f);
+		each.scale = { 1 - nowScale, 1 - nowScale, 1.0f };
 	}
 }
 
@@ -450,7 +511,7 @@ void Othello::MakeParticle()
 
 bool Othello::GetIsActive()
 {
-	return (data.isVanish ||data.isSandwich);
+	return (data.isVanish || data.isSandwich);
 }
 
 void OthelloManager::Init()
@@ -685,7 +746,7 @@ const vector<vector<SendOthelloData>> &OthelloManager::Send()
 	{
 		OthelloData gameDatas = *itr->GetGameData();
 		SendOthelloData data;
-		if (gameDatas.isPlayer || gameDatas.isReverce)
+		if (gameDatas.isPlayer || gameDatas.isReverce || gameDatas.isSpawn)
 		{
 			continue;
 		}
@@ -699,7 +760,7 @@ const vector<vector<SendOthelloData>> &OthelloManager::Send()
 		}
 
 
-			data.isMove = itr->GetIsActive();
+		data.isMove = itr->GetIsActive();
 
 		bool isOnPlayer = (gameDatas.widthPos == playerPanelPos.x && gameDatas.heightPos == playerPanelPos.y);
 		if (Input::KeyTrigger(DIK_SPACE) && isOnPlayer)
@@ -849,7 +910,7 @@ void OthelloManager::RandumSetPanel()
 		}
 
 
-		SpawnPanel();
+		SpawnPanel(true);
 	}
 }
 
@@ -878,7 +939,7 @@ void OthelloManager::DeadPanel()
 }
 
 
-void OthelloManager::SpawnPanel()
+void OthelloManager::SpawnPanel(bool isInGame)
 {
 	int x = rand() % 8;
 	int y = rand() % 8;
@@ -920,7 +981,14 @@ void OthelloManager::SpawnPanel()
 	data.Init(&oserroModel);
 
 	bool randFront = rand() % 2;
-	data.Spawn(NORMAL, x, y, randFront);
+	if (isInGame)
+	{
+		data.Borne(NORMAL, x, y, randFront);
+	}
+	else
+	{
+		data.Spawn(NORMAL, x, y, randFront);
+	}
 	data.Update();
 	data.GetGameData()->isMove = false;
 	if (x == playerPanelPos.x && y == playerPanelPos.y)
@@ -938,7 +1006,7 @@ void OthelloManager::MinSpawn()
 
 	for (int i = 0; i < minPanelUnderCount; i++)
 	{
-		SpawnPanel();
+		SpawnPanel(true);
 	}
 }
 
@@ -1060,7 +1128,7 @@ void OthelloManager::KeySetPlayer()
 
 	if (Imgui::sample == 0)
 	{
-		TypeA(playerItr, nextItr, x, y);
+		TypeXI(playerItr, nextItr, x, y);
 	}
 	else if (Imgui::sample == 1)
 	{
@@ -1076,7 +1144,7 @@ void OthelloManager::KeySetPlayer()
 	}
 	else
 	{
-		TypeXI(playerItr, nextItr, x, y);
+		TypeA(playerItr, nextItr, x, y);
 	}
 }
 
@@ -1104,7 +1172,7 @@ void OthelloManager::StartSetPos()
 
 	playerPanelPos = { x, y };
 
-	SpawnPanel();
+	MinSpawn();
 }
 
 
@@ -1194,7 +1262,7 @@ void OthelloManager::TypeA(list<Othello>::iterator playerItr, list<Othello>::ite
 		if (OnPlayer)
 		{
 			isPanelMove = true;
-			if (!playerItr->GetGameData()->isVanish && !playerItr->GetGameData()->isReverce && !playerItr->GetGameData()->isSandwich)
+			if (!playerItr->GetGameData()->isVanish && !playerItr->GetGameData()->isReverce && !playerItr->GetGameData()->isSandwich && !playerItr->GetGameData()->isSpawn)
 			{
 				playerItr->GetGameData()->isPlayer = true;
 			}
@@ -1231,7 +1299,7 @@ void OthelloManager::TypeB(list<Othello>::iterator playerItr, list<Othello>::ite
 		if (OnPlayer)
 		{
 			isPanelMove = true;
-			if (!playerItr->GetGameData()->isVanish && !playerItr->GetGameData()->isReverce && !playerItr->GetGameData()->isSandwich)
+			if (!playerItr->GetGameData()->isVanish && !playerItr->GetGameData()->isReverce && !playerItr->GetGameData()->isSandwich && !playerItr->GetGameData()->isSpawn)
 			{
 				playerItr->GetGameData()->isPlayer = true;
 			}
@@ -1278,7 +1346,7 @@ void OthelloManager::TypeC(list<Othello>::iterator playerItr, list<Othello>::ite
 		if (OnPlayer)
 		{
 			isPanelMove = true;
-			if (!playerItr->GetGameData()->isVanish && !playerItr->GetGameData()->isReverce && !playerItr->GetGameData()->isSandwich)
+			if (!playerItr->GetGameData()->isVanish && !playerItr->GetGameData()->isReverce && !playerItr->GetGameData()->isSandwich && !playerItr->GetGameData()->isSpawn)
 			{
 				playerItr->GetGameData()->isPlayer = true;
 			}
@@ -1300,15 +1368,27 @@ void OthelloManager::TypeXI(list<Othello>::iterator playerItr, list<Othello>::it
 	//à⁄ìÆêÊÇ…ÉpÉlÉãÇ™Ç†ÇÈÇ©
 	if (nextItr != othellos.end())
 	{
-		float nextStep = 1.0f - (static_cast<float>(nextItr->GetGameData()->vanishTimer) / vanishTimerMax);
-		float nowStep = 1.0f;
+		float nextStep = 1.0f;
+		float nowStep = 0.0f;
 		if (OnPlayer)
 		{
-			nowStep = 1.0f - static_cast<float>(playerItr->GetGameData()->vanishTimer) / vanishTimerMax;
+			nowStep = 1.0f;
 		}
-		else
+		if (nextItr->GetGameData()->isSpawn)
 		{
-			nowStep = 0.0f;
+			nextStep = 1.0f - (static_cast<float>(nextItr->GetGameData()->spawnTimer) / SpawnAnimationTimerMax);
+			if (OnPlayer)
+			{
+				nowStep = 1.0f - static_cast<float>(playerItr->GetGameData()->spawnTimer) / SpawnAnimationTimerMax;
+			}
+		}
+		if (nextItr->GetGameData()->isVanish)
+		{
+			nextStep = 1.0f - (static_cast<float>(nextItr->GetGameData()->vanishTimer) / vanishTimerMax);
+			if (OnPlayer)
+			{
+				nowStep = 1.0f - static_cast<float>(playerItr->GetGameData()->vanishTimer) / vanishTimerMax;
+			}
 		}
 		float stepSize = nextStep - nowStep;
 		bool isStepUp = stepSize <= 0.7;
@@ -1343,7 +1423,7 @@ void OthelloManager::TypeXI(list<Othello>::iterator playerItr, list<Othello>::it
 		if (OnPlayer)
 		{
 			isPanelMove = true;
-			if (!playerItr->GetGameData()->isVanish && !playerItr->GetGameData()->isReverce && !playerItr->GetGameData()->isSandwich)
+			if (!playerItr->GetGameData()->isVanish && !playerItr->GetGameData()->isReverce && !playerItr->GetGameData()->isSandwich && !playerItr->GetGameData()->isSpawn)
 			{
 				playerItr->GetGameData()->isPlayer = true;
 			}
