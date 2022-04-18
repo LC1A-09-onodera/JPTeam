@@ -117,48 +117,67 @@ void GameScene::Init()
 
 	ThunderModels::LoadModels();
 	title.CreateSprite(L"Resource/Img/titel.png", XMFLOAT3(70, 60 + 50, 0));
-	titleBack.CreateSprite(L"Resource/Img/title_back.png", XMFLOAT3(0, 46 + 50 , 0));
-	space.CreateSprite(L"Resource/Img/PushSpace.png", XMFLOAT3(650, 600, 0));
+	titleBack.CreateSprite(L"Resource/Img/title_back.png", XMFLOAT3(0, 46 + 50, 0));
+	space.CreateSprite(L"Resource/Img/push_space.png", XMFLOAT3(650, 550, 0));
 	sceneChage.CreateSprite(L"Resource/Img/SceneChange.png", XMFLOAT3(window_width / 2, window_height / 2, 0));
-	numbers[0].CreateSprite(L"Resource/Img/number_0.png", XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-	numbers[1].CreateSprite(L"Resource/Img/number_1.png", XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-	numbers[2].CreateSprite(L"Resource/Img/number_2.png", XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-	numbers[3].CreateSprite(L"Resource/Img/number_3.png", XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-	numbers[4].CreateSprite(L"Resource/Img/number_4.png", XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-	numbers[5].CreateSprite(L"Resource/Img/number_5.png", XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-	numbers[6].CreateSprite(L"Resource/Img/number_6.png", XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-	numbers[7].CreateSprite(L"Resource/Img/number_7.png", XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-	numbers[8].CreateSprite(L"Resource/Img/number_8.png", XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-	numbers[9].CreateSprite(L"Resource/Img/number_9.png", XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+	num[0].LoadGraph(L"Resource/Img/number_0.png");
+	num[1].LoadGraph(L"Resource/Img/number_1.png");
+	num[2].LoadGraph(L"Resource/Img/number_2.png");
+	num[3].LoadGraph(L"Resource/Img/number_3.png");
+	num[4].LoadGraph(L"Resource/Img/number_4.png");
+	num[5].LoadGraph(L"Resource/Img/number_5.png");
+	num[6].LoadGraph(L"Resource/Img/number_6.png");
+	num[7].LoadGraph(L"Resource/Img/number_7.png");
+	num[8].LoadGraph(L"Resource/Img/number_8.png");
+	num[9].LoadGraph(L"Resource/Img/number_9.png");
+	numbers[0].CreateSprite(num[0], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+	numbers[1].CreateSprite(num[1], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+	numbers[2].CreateSprite(num[2], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+	numbers[3].CreateSprite(num[3], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+	numbers[4].CreateSprite(num[4], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+	numbers[5].CreateSprite(num[5], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+	numbers[6].CreateSprite(num[6], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+	numbers[7].CreateSprite(num[7], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+	numbers[8].CreateSprite(num[8], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+	numbers[9].CreateSprite(num[9], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
 	for (int i = 0; i < 60; i += 10)
 	{
-		scoreNum[i + 0].CreateSprite(L"Resource/Img/number_0.png", XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-		scoreNum[i + 1].CreateSprite(L"Resource/Img/number_1.png", XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-		scoreNum[i + 2].CreateSprite(L"Resource/Img/number_2.png", XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-		scoreNum[i + 3].CreateSprite(L"Resource/Img/number_3.png", XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-		scoreNum[i + 4].CreateSprite(L"Resource/Img/number_4.png", XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-		scoreNum[i + 5].CreateSprite(L"Resource/Img/number_5.png", XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-		scoreNum[i + 6].CreateSprite(L"Resource/Img/number_6.png", XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-		scoreNum[i + 7].CreateSprite(L"Resource/Img/number_7.png", XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-		scoreNum[i + 8].CreateSprite(L"Resource/Img/number_8.png", XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-		scoreNum[i + 9].CreateSprite(L"Resource/Img/number_9.png", XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+		scoreNum[i + 0].CreateSprite(num[0], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+		scoreNum[i + 1].CreateSprite(num[1], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+		scoreNum[i + 2].CreateSprite(num[2], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+		scoreNum[i + 3].CreateSprite(num[3], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+		scoreNum[i + 4].CreateSprite(num[4], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+		scoreNum[i + 5].CreateSprite(num[5], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+		scoreNum[i + 6].CreateSprite(num[6], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+		scoreNum[i + 7].CreateSprite(num[7], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+		scoreNum[i + 8].CreateSprite(num[8], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+		scoreNum[i + 9].CreateSprite(num[9], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
 	}
-	scoreSprite.CreateSprite(L"Resource/Img/score.png",XMFLOAT3(0, 0, 0));
+	scoreSprite.CreateSprite(L"Resource/Img/score.png", XMFLOAT3(0, 0, 0));
 	timeUp.CreateSprite(L"Resource/Img/time_up.png", XMFLOAT3(0, 0, 0));
-	startSprite.CreateSprite(L"Resource/Img/START.png", XMFLOAT3(0, 0, 0 ));
+	startSprite.CreateSprite(L"Resource/Img/START.png", XMFLOAT3(0, 0, 0));
 	gameTime = gameMaxTime;
 
-	numbers[0].CreateSprite(L"Resource/Img/number_0.png", XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-	numbers[1].CreateSprite(L"Resource/Img/number_1.png", XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-	numbers[2].CreateSprite(L"Resource/Img/number_2.png", XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-	numbers[3].CreateSprite(L"Resource/Img/number_3.png", XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-	numbers[4].CreateSprite(L"Resource/Img/number_4.png", XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-	numbers[5].CreateSprite(L"Resource/Img/number_5.png", XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-	numbers[6].CreateSprite(L"Resource/Img/number_6.png", XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-	numbers[7].CreateSprite(L"Resource/Img/number_7.png", XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-	numbers[8].CreateSprite(L"Resource/Img/number_8.png", XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-	numbers[9].CreateSprite(L"Resource/Img/number_9.png", XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+	numbers[0].CreateSprite(num[0], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+	numbers[1].CreateSprite(num[1], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+	numbers[2].CreateSprite(num[2], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+	numbers[3].CreateSprite(num[3], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+	numbers[4].CreateSprite(num[4], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+	numbers[5].CreateSprite(num[5], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+	numbers[6].CreateSprite(num[6], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+	numbers[7].CreateSprite(num[7], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+	numbers[8].CreateSprite(num[8], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+	numbers[9].CreateSprite(num[9], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
 	Lights::LoadModels();
+	sky.CreateModel("world", ShaderManager::playerShader, true);
+	sky.each.rotation = { 70, 0.0f, 0 };
+	sky.each.scale = { 100.0f ,100.0f, 100.f };
+	othelloStage.CreateModel("board", ShaderManager::playerShader);
+	othelloStage.each.position.m128_f32[0] = -1.0f;
+	othelloStage.each.position.m128_f32[1] = 1.0f;
+	othelloStage.each.position.m128_f32[2] = 2.5f;
+	othelloStage.each.rotation.x = 90;
+	othelloStage.each.scale = { 2.0f, 1.0f, 2.0f };
 }
 
 void GameScene::TitleUpdate()
@@ -173,7 +192,7 @@ void GameScene::TitleUpdate()
 			ObjectParticles::othello.Init(XMFLOAT3(0, 0, -15), 1, ParticleType::TITLE);
 		}
 	}
-	
+
 	ObjectParticles::Update();
 	if (Input::KeyTrigger(DIK_SPACE))
 	{
@@ -193,6 +212,8 @@ void GameScene::TitleUpdate()
 		SceneNum = GAME;
 		countDown = 239;
 	}
+	sky.Update();
+	othelloStage.Update();
 }
 
 void GameScene::SelectUpdate()
@@ -278,7 +299,8 @@ void GameScene::GameUpdate()
 			resultForTime++;
 		}
 	}
-	
+	sky.Update();
+	othelloStage.Update();
 	Lights::Add(checkObject);
 	Lights::Update();
 }
@@ -305,7 +327,7 @@ void GameScene::TitleDraw()
 {
 	//PostEffectのPreDraw
 	//postEffect.PreDraw();
-	
+
 	//Draw3DObject(sample);
 	BaseDirectX::clearColor[0] = 0.0f;
 	BaseDirectX::clearColor[1] = 0.0f;
@@ -314,6 +336,8 @@ void GameScene::TitleDraw()
 	BaseDirectX::UpdateFront();
 	//PostEffectのDraw
 	//postEffect.Draw();
+	Draw3DObject(sky);
+	Draw3DObject(othelloStage);
 	ObjectParticles::Draw();
 	Lights::Draw();
 	//スプライトの描画-------------------------
@@ -351,7 +375,7 @@ void GameScene::SelectDraw()
 
 	//スプライトの描画-------------------------
 	//titleSprite.SpriteDraw();
-	
+
 	Imgui::DrawImGui();
 	//描画コマンドここまで
 	BaseDirectX::UpdateBack();
@@ -371,7 +395,8 @@ void GameScene::GameDraw()
 	//PostEffectのDraw
 	//postEffect.Draw();
 	othelloManager.Draw();
-	water.Draw();
+	Draw3DObject(sky);
+	Draw3DObject(othelloStage);
 	ThunderModels::Draw();
 	OthlloPlayer::Draw();
 	ObjectParticles::Draw();
@@ -381,15 +406,15 @@ void GameScene::GameDraw()
 	//titleSprite.SpriteDraw();
 	if (countDown > 0 && isSceneChange == false)
 	{
-		//numbers[countDown / 60].position.m128_f32[0] = window_width / 2 - 10;
-		//numbers[countDown / 60].position.m128_f32[1] = window_height / 2 - 10;
+		numbers[countDown / 60].position.m128_f32[0] = window_width / 2 - 10;
+		numbers[countDown / 60].position.m128_f32[1] = window_height / 2 - 10;
 		numbers[countDown / 60].SpriteDraw();
 	}
-	
-	if (gameTime > 0 && countDown <= 0 )
+
+	if (gameTime > 0 && countDown <= 0)
 	{
-		//numbers[gameTime / 60].position.m128_f32[0] = window_width / 2 - 10;
-		//numbers[gameTime / 60].position.m128_f32[1] = 30;
+		numbers[gameTime / 60].position.m128_f32[0] = window_width / 2 - 10;
+		numbers[gameTime / 60].position.m128_f32[1] = 30;
 		numbers[gameTime / 60].SpriteDraw();
 	}
 	Imgui::DrawImGui();
