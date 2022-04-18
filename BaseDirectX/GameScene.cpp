@@ -406,9 +406,18 @@ void GameScene::GameDraw()
 	//titleSprite.SpriteDraw();
 	if (countDown > 0 && isSceneChange == false)
 	{
-		numbers[countDown / 60].position.m128_f32[0] = window_width / 2 - 10;
-		numbers[countDown / 60].position.m128_f32[1] = window_height / 2 - 10;
-		numbers[countDown / 60].SpriteDraw();
+		if (countDown < 59)
+		{
+			startSprite.position.m128_f32[0] = window_width / 2 - 50;
+			startSprite.position.m128_f32[1] = window_height / 2 - 20;
+			startSprite.SpriteDraw();
+		}
+		else
+		{
+			numbers[countDown / 60].position.m128_f32[0] = window_width / 2 - 10;
+			numbers[countDown / 60].position.m128_f32[1] = window_height / 2 - 5;
+			numbers[countDown / 60].SpriteDraw();
+		}
 	}
 
 	if (gameTime > 0 && countDown <= 0)
@@ -416,8 +425,33 @@ void GameScene::GameDraw()
 		numbers[gameTime / 60].position.m128_f32[0] = window_width / 2 - 10;
 		numbers[gameTime / 60].position.m128_f32[1] = 30;
 		numbers[gameTime / 60].SpriteDraw();
+		float wid = 40;
+		float widPuls = 45;
+		int nowScore = checkObject.GetScore();
+		scoreSprite.ChangeSize(150, 60);
+		scoreSprite.SpriteDraw();
+		scoreNum[nowScore % 10].ChangeSize(wid, 60);
+		scoreNum[nowScore % 10].position.m128_f32[0] = widPuls * 8;
+		scoreNum[nowScore % 10].position.m128_f32[1] = 10;
+		scoreNum[nowScore % 10].SpriteDraw();
+		scoreNum[nowScore / 10 % 10 + 10].ChangeSize(wid, 60);
+		scoreNum[nowScore / 10 % 10 + 10].position.m128_f32[0] = widPuls * 7;
+		scoreNum[nowScore / 10 % 10 + 10].position.m128_f32[1] = 10;
+		scoreNum[nowScore / 10 % 10 + 10].SpriteDraw();
+		scoreNum[nowScore / 100 % 10 + 20].ChangeSize(wid, 60);
+		scoreNum[nowScore / 100 % 10 + 20].position.m128_f32[0] = widPuls * 6;
+		scoreNum[nowScore / 100 % 10 + 20].position.m128_f32[1] = 10;
+		scoreNum[nowScore / 100 % 10 + 20].SpriteDraw();
+		scoreNum[nowScore / 1000 % 10 + 30].ChangeSize(wid, 60);
+		scoreNum[nowScore / 1000 % 10 + 30].position.m128_f32[0] = widPuls * 5;
+		scoreNum[nowScore / 1000 % 10 + 30].position.m128_f32[1] = 10;
+		scoreNum[nowScore / 1000 % 10 + 30].SpriteDraw();
+		scoreNum[nowScore / 10000 % 10 + 40].ChangeSize(wid, 60);
+		scoreNum[nowScore / 10000 % 10 + 40].position.m128_f32[0] = widPuls * 4;
+		scoreNum[nowScore / 10000 % 10 + 40].position.m128_f32[1] = 10;
+		scoreNum[nowScore / 10000 % 10 + 40].SpriteDraw();
 	}
-	Imgui::DrawImGui();
+	//Imgui::DrawImGui();
 	//•`‰æƒRƒ}ƒ“ƒh‚±‚±‚Ü‚Å
 	BaseDirectX::UpdateBack();
 }

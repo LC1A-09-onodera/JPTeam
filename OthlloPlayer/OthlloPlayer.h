@@ -1,13 +1,16 @@
 #pragma once
 #include "../3DModel/Model.h"
 #include "../DX12operator.h"
-
+#include "../FBXObject/FBXObject.h"
+#include "../FbxLoader/FbxLoader.h"
 namespace ConstOthlloPlayer
 {
 	static const float MaxMoveAmount = 2.0f;
 }
 class OthlloPlayer
 {
+	static FBXModel* playerFbx;
+	static FBXObject* playerFbxObj;
 	static Model player;
 	static EachInfo each;
 	

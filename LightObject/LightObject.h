@@ -29,9 +29,9 @@ public:
 	XMFLOAT3 startScale;
 	XMFLOAT3 endScale;
 	float time;
-	const float alpha1 = 0.3f;
-	const float alpha2 = 0.4f;
-	const float alpha3 = 0.5f;
+	const float alpha1 = 0.5f;
+	const float alpha2 = 0.6f;
+	const float alpha3 = 0.7f;
 	void Init(const pair<int, int>& start,const pair<int, int>& end);
 	void Update();
 };

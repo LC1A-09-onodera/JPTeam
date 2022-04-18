@@ -64,6 +64,7 @@ public:
 
 	//スプライトの生成
 	void CreateSprite(const wchar_t* graph, XMFLOAT3 position, ComPtr<ID3D12Resource> texBuff = nullptr, bool back = false, bool TexSize = true);
+	void CreateSprite(Tex tex, XMFLOAT3 position, ComPtr<ID3D12Resource> texBuff = nullptr, bool back = false, bool TexSize = true);
 	//スプライト用パイプラインの設定コマンド
 	
 	//スプライト用描画コマンド

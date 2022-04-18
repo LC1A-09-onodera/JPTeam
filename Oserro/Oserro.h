@@ -93,7 +93,7 @@ namespace OthelloConstData
 	const int spawnTimerMAx = 300;
 	const int spawnMoveCount = 100;
 	const int spawnPanelCount = 2;
-	const int minPanelCount = 1;
+	const int minPanelCount = 15;
 	//アニメーション
 	const int vanishTimerMax = 600;
 	const int animationTimerMax = 30;

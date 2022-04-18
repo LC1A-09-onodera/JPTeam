@@ -49,7 +49,7 @@ public:
 	const vector<vector<SendOthelloData>>& GetOthelloDatas() { return othelloDatas; }
 	const vector<pair<int, int>>& GetStartAndEndArrayDatas() { return startAndEndArray; } //←バカ
 	const void ResetStartAndEndArrayDatas() { startAndEndArray.clear(); }
-
+	const int GetScore() { return totalScore; }
 private:
 	//盤面チェック
 	void CheckLastMove(const vector<vector<SendOthelloData>>& othelloData);
