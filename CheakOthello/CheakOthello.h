@@ -50,6 +50,7 @@ public:
 	const vector<pair<int, int>>& GetStartAndEndArrayDatas() { return startAndEndArray; } //←バカ
 	const void ResetStartAndEndArrayDatas() { startAndEndArray.clear(); }
 	const int GetScore() { return totalScore; }
+	void SetScore(int score){ totalScore = score; }
 private:
 	//盤面チェック
 	void CheckLastMove(const vector<vector<SendOthelloData>>& othelloData);

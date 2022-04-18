@@ -102,7 +102,7 @@ namespace OthelloConstData
 	const int animationTimerMax = 30;
 	const int waitTimerMax = 30;
 	const int JumpTimerMax = waitTimerMax / 2;
-	const int SpawnAnimationTimerMax = 120;
+	const int SpawnAnimationTimerMax = 180;
 }
 
 class Othello
@@ -178,10 +178,7 @@ public:
 	void StartSetPos();
 
 	void AllDeadPanel();
-=========
-	static list<Othello> othellos;
-	void DeadPanel();
->>>>>>>>> Temporary merge branch 2
+	
 private:
 	void SetPlayer();
 
