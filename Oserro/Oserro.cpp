@@ -456,16 +456,11 @@ bool Othello::GetIsActive()
 void OthelloManager::Init()
 {
 	oserroModel.CreateModel("newOserro", ShaderManager::playerShader);
-	Othello player;
-	player.Spawn(NORMAL, 2, 2);
-	player.Init(&oserroModel);
-	OthelloData *playerData = player.GetGameData();
-	playerData->isPlayer = false;
-	othellos.push_back(player);
+
 
 	sendDatas.resize(fieldSize);
 
-	SartSetPos();
+	StartSetPos();
 	auto itr = sendDatas.begin();
 	for (; itr != sendDatas.end(); itr++)
 	{
@@ -1085,7 +1080,7 @@ void OthelloManager::KeySetPlayer()
 	}
 }
 
-void OthelloManager::SartSetPos()
+void OthelloManager::StartSetPos()
 {
 
 	XMFLOAT3 startPos = OthlloPlayer::GetPosition();
@@ -1108,6 +1103,8 @@ void OthelloManager::SartSetPos()
 	othellos.push_back(data);
 
 	playerPanelPos = { x, y };
+
+	SpawnPanel();
 }
 
 
@@ -1354,4 +1351,17 @@ void OthelloManager::TypeXI(list<Othello>::iterator playerItr, list<Othello>::it
 		playerPanelPos = { x, y };
 	}
 	isPlayerEnd = false;
+}
+
+void OthelloManager::AllDeadPanel()
+{
+	auto itr = othellos.begin();
+
+	//ƒvƒŒƒCƒ„[‚ð’Tõ
+	for (; itr != othellos.end(); ++itr)
+	{
+		itr->GetGameData()->isDead = true;
+	}
+
+	DeadPanel();
 }
