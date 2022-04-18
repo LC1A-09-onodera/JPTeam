@@ -47,9 +47,12 @@ public:
 	void Update(const vector<vector<SendOthelloData>>& othelloData);
 
 	const vector<vector<SendOthelloData>>& GetOthelloDatas() { return othelloDatas; }
-	const vector<pair<int, int>>& GetStartAndEndArrayDatas() { return startAndEndArray; } //←バカ
+	const vector<pair<int, int>> &GetStartAndEndArrayDatas() {return startAndEndArray;}
+	//const vector<pair<int, int>>& GetStartArrayDatas() { return startArray; }
+	//const vector<pair<int, int>>& GetEndArrayDatas() { return endArray; }
 	const void ResetStartAndEndArrayDatas() { startAndEndArray.clear(); }
 	const int GetScore() { return totalScore; }
+
 private:
 	//盤面チェック
 	void CheckLastMove(const vector<vector<SendOthelloData>>& othelloData);

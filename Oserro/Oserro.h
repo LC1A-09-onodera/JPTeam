@@ -172,11 +172,10 @@ public:
 	void Receive(const vector<vector<SendOthelloData>> &data);
 
 	void MinSpawn();
-	void DeadPanel();
 
 	void StartSetPos();
-
 	void AllDeadPanel();
+	void DeadPanel();
 	static list<Othello> othellos;
 private:
 	void SetPlayer();
