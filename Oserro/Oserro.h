@@ -172,12 +172,16 @@ public:
 	void Receive(const vector<vector<SendOthelloData>> &data);
 
 	void MinSpawn();
+	static list<Othello> othellos;
+	void DeadPanel();
 
 	void StartSetPos();
 
 	void AllDeadPanel();
+=========
 	static list<Othello> othellos;
 	void DeadPanel();
+>>>>>>>>> Temporary merge branch 2
 private:
 	void SetPlayer();
 

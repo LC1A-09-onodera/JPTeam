@@ -88,7 +88,8 @@ void LightObjectModels::Init(const pair<int, int>& start, const pair<int, int>& 
 			}
 			centerX = startX;
 			startScale = {0.1f, 0.1f, 0.1f};
-			endScale = {1.3f, sub, 0.8f};
+			//endScale = {1.9f, sub, 0.8f};
+			endScale = { 1.0f, sub, 0.5f };
 			time = 0;
 			
 		}
@@ -110,7 +111,8 @@ void LightObjectModels::Init(const pair<int, int>& start, const pair<int, int>& 
 			each2.rotation.z = 90;
 			each3.rotation.z = 90;
 			startScale = { 0.1f, 0.1f, 0.1f };
-			endScale = { 0.8f, sub, 0.8f };
+			//endScale = { 1.9f, sub, 0.8f };
+			endScale = { 0.85f, sub, 0.5f };
 			time = 0;
 		}
 		centerX = centerX * 2.0f - 8.0f;
@@ -128,8 +130,10 @@ void LightObjectModels::Init(const pair<int, int>& start, const pair<int, int>& 
 	each1.time = alpha1;
 	each2.time = alpha2;
 	each3.time = alpha3;
-	each2.scale = each1.scale * 0.8f;
-	each3.scale = each1.scale * 0.5f;
+	//each2.scale = each1.scale * 0.8f;
+	//each3.scale = each1.scale * 0.6f;
+	each2.scale = each1.scale * 0.9f;
+	each3.scale = each1.scale * 0.9f;
 	each1.CreateConstBuff0();
 	each1.CreateConstBuff1();
 	each2.CreateConstBuff0();
@@ -142,14 +146,14 @@ void LightObjectModels::Update()
 {
 	if (time > 1.0f)
 	{
-		time += 0.02f;
+		time += 0.05f;
 	}
 	else
 	{
 		each1.scale = EaseOutQuad(startScale, endScale, time);
-		each2.scale = each1.scale * 0.8f;
-		each3.scale = each1.scale * 0.5f;
-		time += 0.02f;
+		each2.scale = each1.scale * 0.9f;
+		each3.scale = each2.scale * 0.85f;
+		time += 0.05f;
 	}
 }
 
@@ -266,9 +270,9 @@ void LightObjectModel::Update(LightObjectEachInfo* each)
 
 void Lights::LoadModels()
 {
-	light1.CreateModel("LightObj", ShaderManager::thunderShader);
-	light2.CreateModel("LightObj", ShaderManager::thunderShader);
-	light3.CreateModel("LightObj", ShaderManager::thunderShader);
+	light1.CreateModel("LightObj3", ShaderManager::thunderShader);
+	light2.CreateModel("LightObj3", ShaderManager::thunderShader);
+	light3.CreateModel("LightObj3", ShaderManager::thunderShader);
 }
 
 void Lights::Add(CheakOthello& othellos)

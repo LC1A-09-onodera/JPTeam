@@ -99,4 +99,8 @@ public://ƒV[ƒ“‚Åg‚¤‚à‚Ì
 	Sprite scoreSprite;
 	Sprite timeUp;
 	Sprite startSprite;
+	Tex num[10];
+
+	Model sky;
+	Model othelloStage;
 };

@@ -11,10 +11,19 @@ XMFLOAT3 OthlloPlayer::endPos;
 bool OthlloPlayer::isEase;
 bool OthlloPlayer::isMoveEnd;
 float OthlloPlayer::easeTime;
-
+FBXModel* OthlloPlayer::playerFbx;
+FBXObject* OthlloPlayer::playerFbxObj;
 void OthlloPlayer::Init()
 {
 	player.CreateModel("player", ShaderManager::playerShader);
+	playerFbx = FbxLoader::GetInstance()->LoadModelFromFile("player");
+	playerFbxObj = new FBXObject;
+	playerFbxObj->Initialize();
+	playerFbxObj->SetModel(playerFbx);
+	playerFbxObj->rotation = {0, 180, -90};
+	playerFbxObj->scale = { 0.5f, 0.5f, 0.5f };
+	playerFbxObj->position = { 0, 0, -2 };
+	//playerFbxObj->PlayAnimation();
 	each.CreateConstBuff0();
 	each.CreateConstBuff1();
 	each.rotation = {0, -90, 90};
@@ -37,8 +46,10 @@ void OthlloPlayer::Update()
 
 void OthlloPlayer::Draw()
 {
-	player.Update(&each);
-	Draw3DObject(player);
+	//player.Update(&each);
+	playerFbxObj->Update();
+	playerFbxObj->Draw(BaseDirectX::cmdList.Get());
+	//Draw3DObject(player);
 }
 
 void OthlloPlayer::Move()
@@ -83,6 +94,7 @@ void OthlloPlayer::EaseUpdate()
 		isMoveEnd = true;
 	}
 	each.position = ConvertXMFLOAT3toXMVECTOR(EaseInQuad(startPos, endPos, easeTime));
+	playerFbxObj->position = EaseInQuad(startPos, endPos, easeTime);
 }
 
 
