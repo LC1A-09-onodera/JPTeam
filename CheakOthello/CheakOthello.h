@@ -39,27 +39,28 @@ private:
 	int totalScore;			//合計点
 	//int comboCount;		//現在のコンボ数←そのまま倍率に使用
 	bool side;				//表裏保存
+	bool checkOthello;
 
 public:
 	CheakOthello();
 	~CheakOthello();
 	void Init();
-	void Update(const vector<vector<SendOthelloData>>& othelloData);
+	void Update(const vector<vector<SendOthelloData>>& othelloData, bool isCheck);
 
 	const vector<vector<SendOthelloData>>& GetOthelloDatas() { return othelloDatas; }
-	const vector<pair<int, int>> &GetStartAndEndArrayDatas() {return startAndEndArray;}
+	const vector<pair<int, int>>& GetStartAndEndArrayDatas() { return startAndEndArray; }
 	//const vector<pair<int, int>>& GetStartArrayDatas() { return startArray; }
 	//const vector<pair<int, int>>& GetEndArrayDatas() { return endArray; }
 	const void ResetStartAndEndArrayDatas() { startAndEndArray.clear(); }
 	const int GetScore() { return totalScore; }
-	void SetScore(int score){ totalScore = score; }
+	void SetScore(int score) { totalScore = score; }
 private:
 	//盤面チェック
 	void CheckLastMove(const vector<vector<SendOthelloData>>& othelloData);
 	//自機の設定
-	bool SetCheckOthello();
+	pair<int, int> SetCheckOthello();
 	//8回呼ぶ
-	void OthelloCheck(int direction_x, int direction_y);
+	void OthelloCheck(int direction_x, int direction_y, int last_x, int last_y, bool isCheck);
 
 private:
 	//Vectorの中身を判定
