@@ -40,6 +40,7 @@ private:
 	//int comboCount;		//現在のコンボ数←そのまま倍率に使用
 	bool side;				//表裏保存
 	bool checkOthello;
+	bool othelloCheckDatas[MAX_SIZE_Y][MAX_SIZE_X] = { false };
 
 public:
 	CheakOthello();
@@ -69,5 +70,17 @@ private:
 		size_t index = std::distance(vec.begin(), itr);
 		if (index != vec.size()) { return true; }
 		else { return false; }
+	}
+	//bool CheckOthelloEnd
+	bool CheckOthelloEnd()
+	{
+		for (int i = 0; i < MAX_SIZE_Y; i++)
+		{
+			for (int j = 0; j < MAX_SIZE_X; j++)
+			{
+				if (!othelloCheckDatas[i][j]) { return false; }
+			}
+		}
+		return true;
 	}
 };

@@ -54,6 +54,7 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData, bo
 		/*-----右斜め下-----*/
 		OthelloCheck(Direction_X::EAST, Direction_Y::SOUTH, last.first, last.second, false);
 
+		//効率悪いです
 		if (isCheck)
 		{
 			for (int i = 0; i < MAX_SIZE_Y; i++)
@@ -78,6 +79,9 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData, bo
 					OthelloCheck(Direction_X::EAST, Direction_Y::NOUTH, i, j, isCheck);
 					/*-----右斜め下-----*/
 					OthelloCheck(Direction_X::EAST, Direction_Y::SOUTH, i, j, isCheck);
+
+					//途中確認
+					if (CheckOthelloEnd()) { break; }
 				}
 			}
 		}
@@ -280,7 +284,7 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y, int last_x, in
 
 			//マス判定
 			side = othelloDatas[pair_y][pair_x].isFront;
-			if (othelloDatas[pair_y][pair_x].isCheckEnd) { break; }
+			if (othelloCheckDatas[pair_y][pair_x]) { return; }
 
 			//次のマス
 			pair_x += direction_x;
@@ -296,13 +300,16 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y, int last_x, in
 				if (othelloDatas[pair_y][pair_x].type == NONE) { break; }
 
 				//探索可能な場合
-				if (!othelloDatas[pair_y][pair_x].isCheckEnd)
+				if (!othelloCheckDatas[pair_y][pair_x])
 				{
+					othelloCheckDatas[pair_y][pair_y] = true;
+
 					//挟めるオセロが見つかったら
 					if (othelloDatas[pair_y][pair_x].isFront == side && count != 1)
 					{
 						for (int i = 0; i <= count; i++)
 						{
+							othelloCheckDatas[count_y][count_x] = true;
 							othelloDatas[count_y][count_x].isCheckEnd = true;
 							count_x += direction_x;
 							count_y += direction_y;
