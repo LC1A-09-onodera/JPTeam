@@ -205,7 +205,10 @@ void GameScene::TitleUpdate()
 		countDown = 239;
 		checkObject.SetScore(0);
 		OthlloPlayer::SetPosition(XMFLOAT3(0, 0, -2));
+		OthlloPlayer::isEase = false;
 	}
+	light->SetLightDir(XMFLOAT3(Camera::GetTargetDirection()));
+	LightUpdate();
 	sky.Update();
 	othelloStage.Update();
 }
@@ -222,6 +225,8 @@ void GameScene::SelectUpdate()
 
 void GameScene::GameUpdate()
 {
+	light->SetLightDir(XMFLOAT3(Camera::GetTargetDirection()));
+	LightUpdate();
 	//カメラ変化が行われていない時にゲームを開始する
 	if (!isSceneChange && !isResultSceneChange)
 	{
@@ -297,6 +302,7 @@ void GameScene::GameUpdate()
 	othelloStage.Update();
 	Lights::Add(checkObject);
 	Lights::Update();
+	
 }
 
 void GameScene::ResultUpdate()
@@ -428,6 +434,8 @@ void GameScene::GameDraw()
 		float wid = 40;
 		float widPuls = 45;
 		int nowScore = checkObject.GetScore();
+		scoreSprite.position.m128_f32[0] = 0;
+		scoreSprite.position.m128_f32[1] = 0;
 		scoreSprite.ChangeSize(150, 60);
 		scoreSprite.SpriteDraw();
 		scoreNum[nowScore % 10].ChangeSize(wid, 60);

@@ -105,15 +105,37 @@ namespace OthelloConstData
 	const int SpawnAnimationTimerMax = 180;
 }
 
+class OthelloEachInfo : public EachInfo
+{
+public:
+	float alpha;
+	void CreateConstBuff0();
+};
+
+class OthelloModel : public Model
+{
+public:
+	void Update(OthelloEachInfo* each);
+};
+
+class OthelloConstBuffer
+{
+public:
+	XMMATRIX viewproj;//ビュープロジェクション行列
+	XMMATRIX world;//ワールド行列
+	XMFLOAT3 cameraPos;//カメラ座標
+	float flash;
+};
+
 class Othello
 {
 public:
 
 private:
-	EachInfo each;
+	OthelloEachInfo each;
 	XMFLOAT3 startPos;
 	XMFLOAT3 endPos;
-	Model *model;
+	OthelloModel *model;
 	float startAngle;
 	float endAngle;
 	float time;
@@ -127,7 +149,7 @@ public:
 	void SetPosition(XMFLOAT3 &position) { this->each.position = ConvertXMFLOAT3toXMVECTOR(position); }
 
 public:
-	void Init(Model *model);
+	void Init(OthelloModel *model);
 	void Update();
 	void Draw();
 	void Finalize();
@@ -152,10 +174,6 @@ public:
 private:
 	void ReversUpdate();
 	void LeftRevers();
-};
-
-class OthelloModel : public Model
-{
 };
 
 class OthelloManager
