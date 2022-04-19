@@ -130,16 +130,19 @@ void GameScene::Init()
 	num[7].LoadGraph(L"Resource/Img/number_7.png");
 	num[8].LoadGraph(L"Resource/Img/number_8.png");
 	num[9].LoadGraph(L"Resource/Img/number_9.png");
-	numbers[0].CreateSprite(num[0], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-	numbers[1].CreateSprite(num[1], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-	numbers[2].CreateSprite(num[2], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-	numbers[3].CreateSprite(num[3], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-	numbers[4].CreateSprite(num[4], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-	numbers[5].CreateSprite(num[5], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-	numbers[6].CreateSprite(num[6], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-	numbers[7].CreateSprite(num[7], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-	numbers[8].CreateSprite(num[8], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-	numbers[9].CreateSprite(num[9], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+	for (int i = 0; i < 20; i += 10)
+	{
+		numbers[i + 0].CreateSprite(num[0], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+		numbers[i + 1].CreateSprite(num[1], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+		numbers[i + 2].CreateSprite(num[2], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+		numbers[i + 3].CreateSprite(num[3], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+		numbers[i + 4].CreateSprite(num[4], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+		numbers[i + 5].CreateSprite(num[5], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+		numbers[i + 6].CreateSprite(num[6], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+		numbers[i + 7].CreateSprite(num[7], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+		numbers[i + 8].CreateSprite(num[8], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+		numbers[i + 9].CreateSprite(num[9], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+	}
 	for (int i = 0; i < 60; i += 10)
 	{
 		scoreNum[i + 0].CreateSprite(num[0], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
@@ -157,17 +160,6 @@ void GameScene::Init()
 	timeUp.CreateSprite(L"Resource/Img/time_up.png", XMFLOAT3(0, 0, 0));
 	startSprite.CreateSprite(L"Resource/Img/START.png", XMFLOAT3(0, 0, 0));
 	gameTime = gameMaxTime;
-
-	numbers[0].CreateSprite(num[0], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-	numbers[1].CreateSprite(num[1], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-	numbers[2].CreateSprite(num[2], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-	numbers[3].CreateSprite(num[3], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-	numbers[4].CreateSprite(num[4], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-	numbers[5].CreateSprite(num[5], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-	numbers[6].CreateSprite(num[6], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-	numbers[7].CreateSprite(num[7], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-	numbers[8].CreateSprite(num[8], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-	numbers[9].CreateSprite(num[9], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
 	Lights::LoadModels();
 	sky.CreateModel("world", ShaderManager::playerShader, true);
 	sky.each.rotation = { 70, 0.0f, 0 };
@@ -190,9 +182,9 @@ void GameScene::TitleUpdate()
 		if (particleTime % 5 == 4)
 		{
 			ObjectParticles::othello.Init(XMFLOAT3(0, 0, -15), 1, ParticleType::TITLE);
+			particleTime = 0;
 		}
 	}
-
 	ObjectParticles::Update();
 	if (Input::KeyTrigger(DIK_SPACE))
 	{
@@ -211,7 +203,12 @@ void GameScene::TitleUpdate()
 		gameTime = gameMaxTime;
 		SceneNum = GAME;
 		countDown = 239;
+		checkObject.SetScore(0);
+		OthlloPlayer::SetPosition(XMFLOAT3(0, 0, -2));
+		OthlloPlayer::isEase = false;
 	}
+	light->SetLightDir(XMFLOAT3(Camera::GetTargetDirection()));
+	LightUpdate();
 	sky.Update();
 	othelloStage.Update();
 }
@@ -228,6 +225,8 @@ void GameScene::SelectUpdate()
 
 void GameScene::GameUpdate()
 {
+	light->SetLightDir(XMFLOAT3(Camera::GetTargetDirection()));
+	LightUpdate();
 	//カメラ変化が行われていない時にゲームを開始する
 	if (!isSceneChange && !isResultSceneChange)
 	{
@@ -240,7 +239,7 @@ void GameScene::GameUpdate()
 			checkObject.Update(othelloManager.Send());
 			othelloManager.Receive(checkObject.GetOthelloDatas());
 
-			//gameTime--;
+			gameTime--;
 		}
 		else
 		{
@@ -303,12 +302,15 @@ void GameScene::GameUpdate()
 	othelloStage.Update();
 	Lights::Add(checkObject);
 	Lights::Update();
+	
 }
 
 void GameScene::ResultUpdate()
 {
 	if (Input::KeyTrigger(DIK_SPACE))
 	{
+		OthlloPlayer::SetPosition(XMFLOAT3(0, 0, -2));
+
 		SceneNum = TITLE;
 	}
 }
@@ -338,14 +340,15 @@ void GameScene::TitleDraw()
 	//postEffect.Draw();
 	Draw3DObject(sky);
 	Draw3DObject(othelloStage);
+	OthlloPlayer::Draw();
 	ObjectParticles::Draw();
 	Lights::Draw();
 	//スプライトの描画-------------------------
 	if (isSceneChange == false)
 	{
 		titleBack.ChangeSize(1280, 125);
-		titleBack.position.m128_f32[0] = Imgui::spritePos1[0];
-		titleBack.position.m128_f32[1] = Imgui::spritePos1[1];
+		titleBack.position.m128_f32[0] = 0;//Imgui::spritePos1[0];
+		titleBack.position.m128_f32[1] = 100;//Imgui::spritePos1[1];
 		titleBack.SpriteDraw();
 		title.SpriteDraw();
 		space.SpriteDraw();
@@ -422,12 +425,17 @@ void GameScene::GameDraw()
 
 	if (gameTime > 0 && countDown <= 0)
 	{
-		numbers[gameTime / 60].position.m128_f32[0] = window_width / 2 - 10;
-		numbers[gameTime / 60].position.m128_f32[1] = 30;
-		numbers[gameTime / 60].SpriteDraw();
+		numbers[gameTime / 60 % 10].position.m128_f32[0] = window_width / 2 + 30;
+		numbers[gameTime / 60 % 10].position.m128_f32[1] = 30;
+		numbers[gameTime / 60 % 10].SpriteDraw();
+		numbers[gameTime / 600 % 10 + 10].position.m128_f32[0] = window_width / 2 - 30;
+		numbers[gameTime / 600 % 10 + 10].position.m128_f32[1] = 30;
+		numbers[gameTime / 600 % 10 + 10].SpriteDraw();
 		float wid = 40;
 		float widPuls = 45;
 		int nowScore = checkObject.GetScore();
+		scoreSprite.position.m128_f32[0] = 0;
+		scoreSprite.position.m128_f32[1] = 0;
 		scoreSprite.ChangeSize(150, 60);
 		scoreSprite.SpriteDraw();
 		scoreNum[nowScore % 10].ChangeSize(wid, 60);
@@ -459,12 +467,12 @@ void GameScene::GameDraw()
 void GameScene::ResultDraw()
 {
 	//PostEffectのPreDraw
-	postEffect.PreDraw();
+	//postEffect.PreDraw();
 
-	Player::GetPlayer()->Draw();
+	//Player::GetPlayer()->Draw();
 
 	//PostEffectのPostDraw
-	postEffect.PostDraw();
+	//postEffect.PostDraw();
 
 	BaseDirectX::clearColor[0] = 0.0f;
 	BaseDirectX::clearColor[1] = 0.0f;
@@ -472,11 +480,38 @@ void GameScene::ResultDraw()
 	BaseDirectX::clearColor[3] = 0.0f;
 	BaseDirectX::UpdateFront();
 	//PostEffectのDraw
-	postEffect.Draw();
-
+	//postEffect.Draw();
+	OthlloPlayer::Draw();
+	Draw3DObject(sky);
+	Draw3DObject(othelloStage);
 	//スプライトの描画-------------------------
 	//titleSprite.SpriteDraw();
+	scoreSprite.position.m128_f32[0] = window_width / 2 - 180;
+	scoreSprite.position.m128_f32[1] = window_height / 2 - 60;
 	scoreSprite.SpriteDraw();
+	int nowScore = checkObject.GetScore();
+	float wid = 40;
+	float widPuls = 45;
+	scoreNum[nowScore % 10].ChangeSize(wid, 60);
+	scoreNum[nowScore % 10].position.m128_f32[0] = window_width / 2 - 180 + widPuls * 8;
+	scoreNum[nowScore % 10].position.m128_f32[1] = window_height / 2 - 40;
+	scoreNum[nowScore % 10].SpriteDraw();
+	scoreNum[nowScore / 10 % 10 + 10].ChangeSize(wid, 60);
+	scoreNum[nowScore / 10 % 10 + 10].position.m128_f32[0] = window_width / 2 - 180 + widPuls * 7;
+	scoreNum[nowScore / 10 % 10 + 10].position.m128_f32[1] = window_height / 2 - 40;
+	scoreNum[nowScore / 10 % 10 + 10].SpriteDraw();
+	scoreNum[nowScore / 100 % 10 + 20].ChangeSize(wid, 60);
+	scoreNum[nowScore / 100 % 10 + 20].position.m128_f32[0] = window_width / 2 - 180 + widPuls * 6;
+	scoreNum[nowScore / 100 % 10 + 20].position.m128_f32[1] = window_height / 2 - 40;
+	scoreNum[nowScore / 100 % 10 + 20].SpriteDraw();
+	scoreNum[nowScore / 1000 % 10 + 30].ChangeSize(wid, 60);
+	scoreNum[nowScore / 1000 % 10 + 30].position.m128_f32[0] = window_width / 2 - 180 + widPuls * 5;
+	scoreNum[nowScore / 1000 % 10 + 30].position.m128_f32[1] = window_height / 2 - 40;
+	scoreNum[nowScore / 1000 % 10 + 30].SpriteDraw();
+	scoreNum[nowScore / 10000 % 10 + 40].ChangeSize(wid, 60);
+	scoreNum[nowScore / 10000 % 10 + 40].position.m128_f32[0] = window_width / 2 - 180 + widPuls * 4;
+	scoreNum[nowScore / 10000 % 10 + 40].position.m128_f32[1] = window_height / 2 - 40;
+	scoreNum[nowScore / 10000 % 10 + 40].SpriteDraw();
 	space.SpriteDraw();
 	Imgui::DrawImGui();
 	//描画コマンドここまで
