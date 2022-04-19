@@ -80,7 +80,7 @@ public://シーンで使うもの
 	bool isCountDownEnd;
 	int countDownFrame;
 	const int countMax = 239;
-	Sprite numbers[10];
+	Sprite numbers[20];
 	//gameシーンからリザルトから使う
 	bool isResultSceneChange;
 	int resultSceneWindowSize;
@@ -92,7 +92,7 @@ public://シーンで使うもの
 	float eyeEaseTime;
 
 	int resultForTime;
-	const int gameMaxTime = 599;
+	const int gameMaxTime = 5999;
 
 	//スコア用
 	Sprite scoreNum[60];
