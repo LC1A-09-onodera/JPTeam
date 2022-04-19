@@ -177,6 +177,7 @@ public:
 private:
 	void ReversUpdate();
 	void LeftRevers();
+	void Shake();
 };
 
 class OthelloManager
