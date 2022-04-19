@@ -118,10 +118,13 @@ public:
 	void Update(OthelloEachInfo* each);
 };
 
-class OthelloConstBuffer : public ConstBufferDataB0
+class OthelloConstBuffer
 {
 public:
-	float alpha;
+	XMMATRIX viewproj;//ビュープロジェクション行列
+	XMMATRIX world;//ワールド行列
+	XMFLOAT3 cameraPos;//カメラ座標
+	float flash;
 };
 
 class Othello
