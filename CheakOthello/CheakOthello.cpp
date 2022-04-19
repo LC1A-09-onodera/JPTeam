@@ -291,44 +291,41 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y, int last_x, in
 			pair_x += direction_x;
 			pair_y += direction_y;
 
-			while (1)
+			//範囲外
+			if (pair_x < 0 || pair_x > OthelloConstData::fieldSize - 1) { break; }
+			if (pair_y < 0 || pair_y > OthelloConstData::fieldSize - 1) { break; }
+
+			//存在しない
+			if (othelloDatas[pair_y][pair_x].type == NONE) { break; }
+
+			//探索可能な場合
+			if (!othelloCheckDatas[pair_y][pair_x])
 			{
-				//範囲外
-				if (pair_x < 0 || pair_x > OthelloConstData::fieldSize - 1) { break; }
-				if (pair_y < 0 || pair_y > OthelloConstData::fieldSize - 1) { break; }
+				othelloCheckDatas[pair_y][pair_y] = true;
 
-				//存在しない
-				if (othelloDatas[pair_y][pair_x].type == NONE) { break; }
-
-				//探索可能な場合
-				if (!othelloCheckDatas[pair_y][pair_x])
+				//挟めるオセロが見つかったら
+				if (othelloDatas[pair_y][pair_x].isFront == side && count != 1)
 				{
-					othelloCheckDatas[pair_y][pair_y] = true;
-
-					//挟めるオセロが見つかったら
-					if (othelloDatas[pair_y][pair_x].isFront == side && count != 1)
+					for (int i = 0; i <= count; i++)
 					{
-						for (int i = 0; i <= count; i++)
-						{
-							othelloCheckDatas[count_y][count_x] = true;
-							othelloDatas[count_y][count_x].isCheckEnd = true;
-							count_x += direction_x;
-							count_y += direction_y;
-						}
-						break;
+						othelloCheckDatas[count_y][count_x] = true;
+						othelloDatas[count_y][count_x].isCheckEnd = true;
+						count_x += direction_x;
+						count_y += direction_y;
 					}
-
-					//次のマス
-					pair_x += direction_x;
-					pair_y += direction_y;
-				}
-				else
-				{
 					break;
 				}
 
-				count++;
+				//次のマス
+				//pair_x += direction_x;
+				//pair_y += direction_y;
 			}
+			else
+			{
+				break;
+			}
+
+			count++;
 		}
 	}
 }
