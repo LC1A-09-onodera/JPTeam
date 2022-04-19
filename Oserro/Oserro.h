@@ -80,11 +80,12 @@ struct SendOthelloData
 {
 	OthelloType type = NONE;
 	bool isFront = true;
-	list<bool> FrontActiveAngle;
 	bool isMove = false;
-	int comboCount = 0;
 	bool isSandwich = false;
+	bool isCheckEnd = false;
+	list<bool> FrontActiveAngle;
 	vector<int> SandwichLength;
+	int comboCount = 0;
 	int score = 0;
 };
 
@@ -197,12 +198,6 @@ public:
 
 	void StartSetPos();
 	void AllDeadPanel();
-=========
-	static list<Othello> othellos;
-	void DeadPanel();
->>>>>>>>> Temporary merge branch 2
-	void DeadPanel();
->>>>>>>>> Temporary merge branch 2
 private:
 	void SetPlayer();
 
