@@ -70,7 +70,10 @@ void Othello::Update()
 					each.rotation.y = 180;
 					each.rotation.x = 0;
 				}
-				Shake();
+				if (data.isShake)
+				{
+					Shake();
+				}
 			}
 		}
 	}
@@ -576,6 +579,10 @@ void OthelloManager::Update()
 	{
 		itr->Update();
 	}
+	if (Input::KeyTrigger(DIK_SPACE))
+	{
+		isFieldUpdate = true;
+	}
 }
 
 void OthelloManager::Draw()
@@ -827,6 +834,15 @@ void OthelloManager::Receive(const vector<vector<SendOthelloData>> &data)
 		if (sendDatas[y][x].type == NONE)
 		{
 			continue;
+		}
+
+		if (sendDatas[y][x].isCheckEnd)
+		{
+			gameDatas->isShake = true;
+		}
+		else
+		{
+			gameDatas->isShake = false;
 		}
 		//if (sendDatas[y][x].comboCount >= 1 && !gameDatas->isVanish)
 		//{
