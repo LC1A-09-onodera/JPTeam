@@ -198,9 +198,7 @@ public:
 
 	void StartSetPos();
 	void AllDeadPanel();
-=========
-	
->>>>>>>>> Temporary merge branch 2
+
 private:
 	void SetPlayer();
 
