@@ -236,7 +236,7 @@ void GameScene::GameUpdate()
 			ThunderModels::Update();
 			othelloManager.Controll();
 			othelloManager.Update();
-			checkObject.Update(othelloManager.Send());
+			checkObject.Update(othelloManager.Send(), othelloManager.GetIsSendDataUpdate());
 			othelloManager.Receive(checkObject.GetOthelloDatas());
 
 			gameTime--;

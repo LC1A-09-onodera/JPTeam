@@ -177,6 +177,7 @@ public:
 private:
 	void ReversUpdate();
 	void LeftRevers();
+	void Shake();
 };
 
 class OthelloManager
@@ -198,7 +199,7 @@ public:
 
 	void StartSetPos();
 	void AllDeadPanel();
-
+	bool GetIsSendDataUpdate();
 private:
 	void SetPlayer();
 
@@ -267,4 +268,6 @@ private:
 
 	bool isPanelMove = false;
 	bool isPlayerEnd = true;
+
+	bool isFieldUpdate = false;
 };
