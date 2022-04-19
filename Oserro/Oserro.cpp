@@ -907,7 +907,7 @@ void OthelloManager::RandumSetPanel()
 
 	moveCount = 0;
 	spawnTimer = 0;
-
+	isFieldUpdate = true;
 	for (int i = 0; i < spawnPanelCount; i++)
 	{
 		//フィールドがパネルで満たされているか
@@ -1064,6 +1064,8 @@ void OthelloManager::PlayerControll()
 
 void OthelloManager::KeySetPlayer()
 {
+	isFieldUpdate = false;
+
 	if (othellos.size() <= 0)
 	{
 		return;
@@ -1208,6 +1210,7 @@ void OthelloManager::playerMoveEnd()
 			if (OthlloPlayer::GetIsMoveEnd())
 			{
 				itr->GetGameData()->isPlayer = false;
+				isFieldUpdate = true;
 			}
 
 			return;
@@ -1410,21 +1413,8 @@ void OthelloManager::TypeXI(list<Othello>::iterator playerItr, list<Othello>::it
 
 		bool isOnVanish = nextItr->GetGameData()->isVanish;
 
-		if (isOnVanish)
-		{
-			nextItr->GetGameData()->isPlayer = false;
-		}
-		else
-		{
-			nextItr->GetGameData()->isPlayer = true;
-		}
 		isPanelMove = false;
 		nextItr->GetGameData()->isMove = false;
-
-		if (OnPlayer)
-		{
-			playerItr->GetGameData()->isPlayer = false;
-		}
 
 		DownStepReset();
 		playerPanelPos = { x, y };
@@ -1469,6 +1459,11 @@ void OthelloManager::DownStep(list<Othello>::iterator playerItr)
 {
 	playerNotMove();
 	downStepCount++;
+}
+
+bool OthelloManager::GetIsSendDataUpdate()
+{
+	return isFieldUpdate;
 }
 
 void OthelloEachInfo::CreateConstBuff0()
