@@ -5,6 +5,7 @@
 #include "../PointLight.h"
 #include "../Light/SpotLight.h"
 #include "../Light/CircleShadow.h"
+#include "../DX12operator.h"
 
 using namespace Microsoft::WRL;
 using namespace DirectX;
@@ -51,6 +52,7 @@ public:
 	void SetCircleShadowDistanceCasterLight(int index, float distanceCasterLight);
 	void SetCircleShadowAtten(int index, const XMFLOAT3 lightAtten);
 	void SetCircleShadowFactorAngle(int index, const XMFLOAT2 &lightfactorAngle);
+	void SetLightDir(XMFLOAT3 dir){lightdir = ConvertXMFLOAT3toXMVECTOR(dir);}
 
 private:
 	//定数バッファ
