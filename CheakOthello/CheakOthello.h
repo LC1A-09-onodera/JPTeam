@@ -81,6 +81,18 @@ private:
 				if (!othelloCheckDatas[i][j]) { return false; }
 			}
 		}
+		ResetOthelloEnd();
 		return true;
+	}
+
+	void ResetOthelloEnd()
+	{
+		for (int i = 0; i < MAX_SIZE_Y; i++)
+		{
+			for (int j = 0; j < MAX_SIZE_X; j++)
+			{
+				othelloCheckDatas[i][j] = false;
+			}
+		}
 	}
 };

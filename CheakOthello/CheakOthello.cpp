@@ -84,6 +84,7 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData, bo
 					if (CheckOthelloEnd()) { break; }
 				}
 			}
+			ResetOthelloEnd();
 		}
 	}
 }
