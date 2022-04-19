@@ -80,11 +80,12 @@ struct SendOthelloData
 {
 	OthelloType type = NONE;
 	bool isFront = true;
-	list<bool> FrontActiveAngle;
 	bool isMove = false;
-	int comboCount = 0;
 	bool isSandwich = false;
+	bool isCheckEnd = false;
+	list<bool> FrontActiveAngle;
 	vector<int> SandwichLength;
+	int comboCount = 0;
 	int score = 0;
 };
 
@@ -102,7 +103,9 @@ namespace OthelloConstData
 	const int animationTimerMax = 30;
 	const int waitTimerMax = 30;
 	const int JumpTimerMax = waitTimerMax / 2;
-	const int SpawnAnimationTimerMax = 180;
+	const int SpawnAnimationTimerMax = 120;
+	const int downStepTimerMax = 60;
+	const int downStepCountMax = 3;
 }
 
 class OthelloEachInfo : public EachInfo
@@ -190,12 +193,14 @@ public:
 	void Receive(const vector<vector<SendOthelloData>> &data);
 
 	void MinSpawn();
+	static list<Othello> othellos;
+	void DeadPanel();
 
 	void StartSetPos();
 	void AllDeadPanel();
+=========
 	
-	void DeadPanel();
-	static list<Othello> othellos;
+>>>>>>>>> Temporary merge branch 2
 private:
 	void SetPlayer();
 
@@ -215,7 +220,7 @@ private:
 	void playerMoveEnd();
 
 	void playerNotMove();
-	
+
 private:
 
 	/// <summary>
@@ -242,13 +247,20 @@ private:
 	/// XI[sai]ÇÃÇÊÇ§Ç…è¡Ç¶Ç©ÇØÇÃãÓÇ©ÇÁìoÇÍÇÈ
 	/// </summary>
 	void TypeXI(list<Othello>::iterator playerItr, list<Othello>::iterator nextItr, int x, int y);
+
+	void DownStep(list<Othello>::iterator playerItr);
+
+	void DownStepReset(){downStepCount = 0;downStepTimer = 0;}
 private:
 
 	panelPos playerPanelPos;
 	int spawnTimer = 0;
 	int moveCount = 0;
+
+	int downStepTimer = 0;
+	int downStepCount = 0;
 	XMFLOAT3 mousePoint;
-	
+
 	static OthelloModel oserroModel;
 	static vector<vector<SendOthelloData>> sendDatas;
 
