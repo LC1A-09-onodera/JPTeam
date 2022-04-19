@@ -103,6 +103,8 @@ namespace OthelloConstData
 	const int waitTimerMax = 30;
 	const int JumpTimerMax = waitTimerMax / 2;
 	const int SpawnAnimationTimerMax = 120;
+	const int downStepTimerMax = 60;
+	const int downStepCountMax = 3;
 }
 
 class Othello
@@ -196,7 +198,7 @@ private:
 	void playerMoveEnd();
 
 	void playerNotMove();
-	
+
 private:
 
 	/// <summary>
@@ -223,13 +225,20 @@ private:
 	/// XI[sai]ÇÃÇÊÇ§Ç…è¡Ç¶Ç©ÇØÇÃãÓÇ©ÇÁìoÇÍÇÈ
 	/// </summary>
 	void TypeXI(list<Othello>::iterator playerItr, list<Othello>::iterator nextItr, int x, int y);
+
+	void DownStep(list<Othello>::iterator playerItr);
+
+	void DownStepReset(){downStepCount = 0;downStepTimer = 0;}
 private:
 
 	panelPos playerPanelPos;
 	int spawnTimer = 0;
 	int moveCount = 0;
+
+	int downStepTimer = 0;
+	int downStepCount = 0;
 	XMFLOAT3 mousePoint;
-	
+
 	static OthelloModel oserroModel;
 	static vector<vector<SendOthelloData>> sendDatas;
 

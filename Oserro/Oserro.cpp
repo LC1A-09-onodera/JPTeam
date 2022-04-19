@@ -1261,6 +1261,7 @@ void OthelloManager::TypeA(list<Othello>::iterator playerItr, list<Othello>::ite
 	{
 		if (OnPlayer)
 		{
+
 			isPanelMove = true;
 			if (!playerItr->GetGameData()->isVanish && !playerItr->GetGameData()->isReverce && !playerItr->GetGameData()->isSandwich && !playerItr->GetGameData()->isSpawn)
 			{
@@ -1416,18 +1417,28 @@ void OthelloManager::TypeXI(list<Othello>::iterator playerItr, list<Othello>::it
 		{
 			playerItr->GetGameData()->isPlayer = false;
 		}
+
+		DownStepReset();
 		playerPanelPos = { x, y };
 	}
 	else
 	{
 		if (OnPlayer)
 		{
+			bool isNotMovePanel = (playerItr->GetGameData()->isVanish || playerItr->GetGameData()->isSpawn);
+			bool isNotDown = (downStepCount < downStepCountMax &&isNotMovePanel);
+			if (isNotDown)
+			{
+				DownStep(playerItr);
+				return;
+			}
 			isPanelMove = true;
 			if (!playerItr->GetGameData()->isVanish && !playerItr->GetGameData()->isReverce && !playerItr->GetGameData()->isSandwich && !playerItr->GetGameData()->isSpawn)
 			{
 				playerItr->GetGameData()->isPlayer = true;
 			}
 		}
+		DownStepReset();
 		playerPanelPos = { x, y };
 	}
 	isPlayerEnd = false;
@@ -1444,4 +1455,10 @@ void OthelloManager::AllDeadPanel()
 	}
 
 	DeadPanel();
+}
+
+void OthelloManager::DownStep(list<Othello>::iterator playerItr)
+{
+	playerNotMove();
+	downStepCount++;
 }
