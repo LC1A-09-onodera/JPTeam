@@ -397,10 +397,10 @@ void GameScene::GameDraw()
 	BaseDirectX::UpdateFront();
 	//PostEffect‚ÌDraw
 	//postEffect.Draw();
-	othelloManager.Draw();
+	
 	Draw3DObject(sky);
 	Draw3DObject(othelloStage);
-	ThunderModels::Draw();
+	othelloManager.Draw();
 	OthlloPlayer::Draw();
 	ObjectParticles::Draw();
 	ParticleControl::Draw();
