@@ -31,6 +31,7 @@ private:
 	std::vector<vector<SendOthelloData>> othelloDatas;
 	std::vector<std::pair<int, int>> startAndEndArray;		//始点と終点を保存する配列
 	std::vector<bool> othelloSide;
+	std::pair<int, int> pPos;
 
 private:
 	int last_x;				//最後に動かしたオセロのX座標
