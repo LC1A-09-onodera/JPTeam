@@ -281,11 +281,12 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y, int last_x, in
 		else
 		{
 			//カウント用
-			int count = 1;
+			//int count = 1;
 
 			//マス判定
-			side = othelloDatas[pair_y][pair_x].isFront;
-			if (othelloCheckDatas[pair_y][pair_x]) { return; }
+			side = othelloDatas[last_y][last_x].isFront;
+			othelloCheckDatas[pair_y][pair_y] = true;
+			//if (othelloCheckDatas[pair_y][pair_x]) { return; }
 
 			//次のマス
 			pair_x += direction_x;
@@ -301,12 +302,12 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y, int last_x, in
 			//探索可能な場合
 			if (!othelloCheckDatas[pair_y][pair_x])
 			{
-				othelloCheckDatas[pair_y][pair_y] = true;
+				//othelloCheckDatas[pair_y][pair_y] = true;
 
 				//挟めるオセロが見つかったら
-				if (othelloDatas[pair_y][pair_x].isFront == side && count != 1)
+				if (othelloDatas[pair_y][pair_x].isFront == side && loop != 0)
 				{
-					for (int i = 0; i <= count; i++)
+					for (int i = 0; i <= loop + 1; i++)
 					{
 						othelloCheckDatas[count_y][count_x] = true;
 						othelloDatas[count_y][count_x].isCheckEnd = true;
@@ -325,7 +326,7 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y, int last_x, in
 				break;
 			}
 
-			count++;
+			loop++;
 		}
 	}
 }
