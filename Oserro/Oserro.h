@@ -85,6 +85,7 @@ struct SendOthelloData
 	bool isMove = false;
 	bool isSandwich = false;
 	bool isCheckEnd = false;
+	bool isOnPlayer = false;
 	list<bool> FrontActiveAngle;
 	vector<int> SandwichLength;
 	int comboCount = 0;

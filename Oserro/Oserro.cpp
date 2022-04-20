@@ -801,6 +801,10 @@ const vector<vector<SendOthelloData>> &OthelloManager::Send()
 		data.isMove = false;
 
 		bool isOnPlayer = (gameDatas.widthPos == playerPanelPos.x && gameDatas.heightPos == playerPanelPos.y);
+		if (isOnPlayer)
+		{
+		data.isOnPlayer = true;
+		}
 		if (Input::KeyTrigger(DIK_SPACE) && isOnPlayer)
 		{
 			data.isMove = true;
