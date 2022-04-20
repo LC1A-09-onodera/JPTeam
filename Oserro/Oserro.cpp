@@ -1234,6 +1234,7 @@ void OthelloManager::playerMoveEnd()
 	if (OthlloPlayer::GetIsMoveEnd())
 	{
 		isPlayerEnd = true;
+		isFieldUpdate = true;
 	}
 	bool isMove = isPanelMove && OthlloPlayer::GetIsMoveEnd();
 	if (isMove)
