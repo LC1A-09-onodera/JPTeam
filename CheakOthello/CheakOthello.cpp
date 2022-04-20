@@ -53,38 +53,34 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData, bo
 		OthelloCheck(Direction_X::EAST, Direction_Y::NOUTH, last.first, last.second, false);
 		/*-----右斜め下-----*/
 		OthelloCheck(Direction_X::EAST, Direction_Y::SOUTH, last.first, last.second, false);
+	}
 
-		//効率悪いです
-		if (isCheck)
+	//効率悪いです
+	if (isCheck)
+	{
+		for (int i = 0; i < MAX_SIZE_Y; i++)
 		{
-			for (int i = 0; i < MAX_SIZE_Y; i++)
+			for (int j = 0; j < MAX_SIZE_X; j++)
 			{
-				for (int j = 0; j < MAX_SIZE_X; j++)
-				{
-					//全方位チェック
-					/*-----左-----*/
-					OthelloCheck(Direction_X::WEST, NONE_DIRECTION, i, j, isCheck);
-					/*-----右-----*/
-					OthelloCheck(Direction_X::EAST, NONE_DIRECTION, i, j, isCheck);
-					/*-----上-----*/
-					OthelloCheck(NONE_DIRECTION, Direction_Y::SOUTH, i, j, isCheck);
-					/*-----下-----*/
-					OthelloCheck(NONE_DIRECTION, Direction_Y::NOUTH, i, j, isCheck);
+				//全方位チェック
+				/*-----左-----*/
+				OthelloCheck(Direction_X::WEST, NONE_DIRECTION, i, j, isCheck);
+				/*-----右-----*/
+				OthelloCheck(Direction_X::EAST, NONE_DIRECTION, i, j, isCheck);
+				/*-----上-----*/
+				OthelloCheck(NONE_DIRECTION, Direction_Y::SOUTH, i, j, isCheck);
+				/*-----下-----*/
+				OthelloCheck(NONE_DIRECTION, Direction_Y::NOUTH, i, j, isCheck);
 
-					/*-----左斜め上-----*/
-					OthelloCheck(Direction_X::WEST, Direction_Y::NOUTH, i, j, isCheck);
-					/*-----左斜め下-----*/
-					OthelloCheck(Direction_X::WEST, Direction_Y::SOUTH, i, j, isCheck);
-					/*-----右斜め上-----*/
-					OthelloCheck(Direction_X::EAST, Direction_Y::NOUTH, i, j, isCheck);
-					/*-----右斜め下-----*/
-					OthelloCheck(Direction_X::EAST, Direction_Y::SOUTH, i, j, isCheck);
-
-					//途中確認
-					//if (CheckOthelloEnd()) { break; }
-				}
+				/*-----左斜め上-----*/
+				OthelloCheck(Direction_X::WEST, Direction_Y::NOUTH, i, j, isCheck);
+				/*-----左斜め下-----*/
+				OthelloCheck(Direction_X::WEST, Direction_Y::SOUTH, i, j, isCheck);
+				/*-----右斜め上-----*/
+				OthelloCheck(Direction_X::EAST, Direction_Y::NOUTH, i, j, isCheck);
+				/*-----右斜め下-----*/
+				OthelloCheck(Direction_X::EAST, Direction_Y::SOUTH, i, j, isCheck);
 			}
-			//ResetOthelloEnd();
 		}
 	}
 }
