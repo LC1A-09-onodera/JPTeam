@@ -97,9 +97,9 @@ namespace OthelloConstData
 	const float cellScale = 1.0f;
 	const XMFLOAT3 stageLeftTop{ -cellScale * fieldSize, cellScale * fieldSize, 0 };
 	const int spawnTimerMAx = 30000;
-	const int spawnMoveCount = 100;
+	const int spawnMoveCount = 10000;
 	const int spawnPanelCount = 2;
-	const int minPanelCount = 4;
+	const int minPanelCount = 20;
 	//アニメーション
 	const int vanishTimerMax = 600;
 	const int animationTimerMax = 30;

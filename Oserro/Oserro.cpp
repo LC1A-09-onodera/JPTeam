@@ -129,7 +129,7 @@ void Othello::Revers()
 	data.isPlayer = false;
 	data.isSandwich = true;
 	data.animationTimer = 0;
-	data.waitTimer = waitTimerMax * (data.comboCount - 1);
+	data.waitTimer = 0;
 	data.JumpTimer = 0;
 	data.isJumpUp = true;
 	XMFLOAT3 pos = ConvertXMVECTORtoXMFLOAT3(each.position);
@@ -229,7 +229,7 @@ void Othello::ReversUpdate()
 		data.isVanish = true;
 
 		////ひっくり返ったら起動フラグをオンにする
-		data.isMove = true;
+		//data.isMove = true;
 
 	}
 }
@@ -792,13 +792,13 @@ const vector<vector<SendOthelloData>> &OthelloManager::Send()
 		data.isFront = gameDatas.isFront;
 		data.type = gameDatas.type;
 
-		if (itr->GetIsActive())
-		{
-			data.isSandwich = true;
-		}
+		//if (itr->GetIsActive())
+		//{
+		//	data.isSandwich = true;
+		//}
 
 
-		data.isMove = itr->GetIsActive();
+		data.isMove = false;
 
 		bool isOnPlayer = (gameDatas.widthPos == playerPanelPos.x && gameDatas.heightPos == playerPanelPos.y);
 		if (Input::KeyTrigger(DIK_SPACE) && isOnPlayer)
@@ -862,7 +862,7 @@ void OthelloManager::Receive(const vector<vector<SendOthelloData>> &data)
 		{
 			gameDatas->comboCount = sendDatas[y][x].comboCount;
 			sandOthellos.push_back(itr);
-			gameDatas->isMove = true;
+			//gameDatas->isMove = true;
 			gameDatas->score = sendDatas[y][x].score;
 		}
 
