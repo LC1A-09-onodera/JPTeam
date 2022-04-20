@@ -238,7 +238,6 @@ void GameScene::GameUpdate()
 			othelloManager.Update();
 			checkObject.Update(othelloManager.Send());
 			othelloManager.Receive(checkObject.GetOthelloDatas());
-
 			gameTime--;
 		}
 		else
@@ -250,11 +249,11 @@ void GameScene::GameUpdate()
 	//タイトルからgameシーンへ
 	if (isSceneChange)
 	{
-		Camera::target.v = EaseInQuad(eyeStart, eyeEnd, eyeEaseTime);
+		Camera::target.v = ShlomonMath::EaseInQuad(eyeStart, eyeEnd, eyeEaseTime);
 		eyeEaseTime += 0.02f;
 		if (eyeEaseTime > 1.0f)
 		{
-			Camera::target.v = EaseInQuad(eyeStart, eyeEnd, 1.0f);
+			Camera::target.v = ShlomonMath::EaseInQuad(eyeStart, eyeEnd, 1.0f);
 			isSceneChange = false;
 			gameTime = gameMaxTime;
 		}
@@ -266,7 +265,7 @@ void GameScene::GameUpdate()
 		for (auto triangleItr = OthelloManager::othellos.begin(); triangleItr != OthelloManager::othellos.end(); ++triangleItr)
 		{
 			XMFLOAT3 pos = triangleItr->GetPosition();
-			ObjectParticles::triangle.Init(pos, 10, ParticleType::Exprotion);
+			ObjectParticles::triangle.Init(pos, 4, ParticleType::Exprotion);
 			triangleItr->GetGameData()->isDead = true;
 			ThunderModels::DeleteList();
 		}
@@ -282,11 +281,11 @@ void GameScene::GameUpdate()
 	{
 		if (resultForTime >= 60)
 		{
-			Camera::target.v = EaseInQuad(eyeStart, eyeEnd, eyeEaseTime);
+			Camera::target.v = ShlomonMath::EaseInQuad(eyeStart, eyeEnd, eyeEaseTime);
 			eyeEaseTime += 0.02f;
 			if (eyeEaseTime > 1.0f)
 			{
-				Camera::target.v = EaseInQuad(eyeStart, eyeEnd, 1.0f);
+				Camera::target.v = ShlomonMath::EaseInQuad(eyeStart, eyeEnd, 1.0f);
 				resultForTime = 0;
 				isResultSceneChange = false;
 				SceneNum = RESULT;

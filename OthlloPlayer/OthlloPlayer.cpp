@@ -93,10 +93,9 @@ void OthlloPlayer::EaseUpdate()
 		isEase = false;
 		isMoveEnd = true;
 	}
-	each.position = ConvertXMFLOAT3toXMVECTOR(EaseInQuad(startPos, endPos, easeTime));
-	playerFbxObj->position = EaseInQuad(startPos, endPos, easeTime);
+	each.position = ConvertXMFLOAT3toXMVECTOR(ShlomonMath::EaseInQuad(startPos, endPos, easeTime));
+	playerFbxObj->position = ShlomonMath::EaseInBack(startPos, endPos, easeTime);
 }
-
 
 void OthlloPlayer::MoveCancel()
 {

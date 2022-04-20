@@ -153,7 +153,7 @@ void LightObjectModels::Update()
 	}
 	else
 	{
-		each1.scale = EaseOutQuad(startScale, endScale, time);
+		each1.scale = ShlomonMath::EaseOutQuad(startScale, endScale, time);
 		each2.scale = each1.scale * 0.9f;
 		each3.scale = each2.scale * 0.85f;
 		time += 0.05f;
