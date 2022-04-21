@@ -118,6 +118,7 @@ void GameScene::Init()
 	ThunderModels::LoadModels();
 	title.CreateSprite(L"Resource/Img/titel.png", XMFLOAT3(70, 60 + 50, 0));
 	titleBack.CreateSprite(L"Resource/Img/title_back.png", XMFLOAT3(0, 46 + 50, 0));
+	spaceBack.CreateSprite(L"Resource/Img/title_back.png", XMFLOAT3(0, 0, 0));
 	space.CreateSprite(L"Resource/Img/push_space.png", XMFLOAT3(650, 550, 0));
 	sceneChage.CreateSprite(L"Resource/Img/SceneChange.png", XMFLOAT3(window_width / 2, window_height / 2, 0));
 	num[0].LoadGraph(L"Resource/Img/number_0.png");
@@ -348,11 +349,14 @@ void GameScene::TitleDraw()
 	//スプライトの描画-------------------------
 	if (isSceneChange == false)
 	{
-		titleBack.ChangeSize(1280, 125);
+		titleBack.ChangeSize(1280, 125 * 2);
 		titleBack.position.m128_f32[0] = 0;//Imgui::spritePos1[0];
 		titleBack.position.m128_f32[1] = 100;//Imgui::spritePos1[1];
 		titleBack.SpriteDraw();
 		title.SpriteDraw();
+		spaceBack.position.m128_f32[0] = 0;
+		spaceBack.position.m128_f32[1] = 560;
+		spaceBack.SpriteDraw();
 		space.SpriteDraw();
 	}
 	Imgui::DrawImGui();
@@ -488,6 +492,11 @@ void GameScene::ResultDraw()
 	Draw3DObject(othelloStage);
 	//スプライトの描画-------------------------
 	//titleSprite.SpriteDraw();
+	
+	titleBack.position.m128_f32[0] = 0;
+	titleBack.position.m128_f32[1] = window_height / 2 - 55;
+	titleBack.ChangeSize(1280, 100);
+	titleBack.SpriteDraw();
 	scoreSprite.position.m128_f32[0] = window_width / 2 - 180;
 	scoreSprite.position.m128_f32[1] = window_height / 2 - 60;
 	scoreSprite.SpriteDraw();
@@ -514,6 +523,9 @@ void GameScene::ResultDraw()
 	scoreNum[nowScore / 10000 % 10 + 40].position.m128_f32[0] = window_width / 2 - 180 + widPuls * 4;
 	scoreNum[nowScore / 10000 % 10 + 40].position.m128_f32[1] = window_height / 2 - 40;
 	scoreNum[nowScore / 10000 % 10 + 40].SpriteDraw();
+	spaceBack.position.m128_f32[0] = 0;
+	spaceBack.position.m128_f32[1] = 560;
+	spaceBack.SpriteDraw();
 	space.SpriteDraw();
 	Imgui::DrawImGui();
 	//描画コマンドここまで
