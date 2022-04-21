@@ -583,6 +583,8 @@ void OthelloManager::Update()
 	{
 		isFieldUpdate = true;
 	}
+
+	SaveSpawn();
 }
 
 void OthelloManager::Draw()
@@ -803,7 +805,7 @@ const vector<vector<SendOthelloData>> &OthelloManager::Send()
 		bool isOnPlayer = (gameDatas.widthPos == playerPanelPos.x && gameDatas.heightPos == playerPanelPos.y);
 		if (isOnPlayer)
 		{
-		data.isOnPlayer = true;
+			data.isOnPlayer = true;
 		}
 		if (Input::KeyTrigger(DIK_SPACE) && isOnPlayer)
 		{
@@ -826,7 +828,7 @@ void OthelloManager::Receive(const vector<vector<SendOthelloData>> &data)
 	//
 	auto itr = othellos.begin();
 	list<list<Othello>::iterator> sandOthellos;
-
+	list<list<Othello>::iterator> repairOthellos;
 	//ê∂Ç´ÇƒÇ¢ÇÈÇ‚Ç¬Çã≤ÇÒÇæÉtÉâÉO
 	bool isSandFlip = false;
 	for (; itr != othellos.end(); itr++)
@@ -870,6 +872,11 @@ void OthelloManager::Receive(const vector<vector<SendOthelloData>> &data)
 			gameDatas->score = sendDatas[y][x].score;
 		}
 
+		bool isAddVanish = (sendDatas[y][x].isSandwich && gameDatas->isVanish);
+		if (isAddVanish)
+		{
+			repairOthellos.push_back(itr);
+		}
 		//gameDatas->isMove = false;
 	}
 
@@ -884,6 +891,25 @@ void OthelloManager::Receive(const vector<vector<SendOthelloData>> &data)
 		else
 		{
 			SandOthelloDataItr->GetGameData()->comboCount = 0;
+		}
+	}
+	auto repairItr = repairOthellos.begin();
+	for (; repairItr != repairOthellos.end(); repairItr++)
+	{
+		auto repaierOthelloDataItr = *repairItr;
+		if (isSandFlip)
+		{
+			int timer = repaierOthelloDataItr->GetGameData()->vanishTimer;
+
+			if (timer >= chainRepairTime)
+			{
+				timer -= chainRepairTime;
+			}
+			else
+			{
+				timer = 0;
+			}
+			repaierOthelloDataItr->GetGameData()->vanishTimer = timer;
 		}
 	}
 
@@ -1220,7 +1246,6 @@ void OthelloManager::StartSetPos()
 	data.Spawn(NORMAL, x, y, randFront);
 	data.GetGameData()->isMove = false;
 	data.GetGameData()->isPlayer = false;
-	data.GetGameData()->isFront = true;
 	othellos.push_back(data);
 
 	playerPanelPos = { x, y };
@@ -1508,6 +1533,48 @@ void OthelloManager::DownStep(list<Othello>::iterator playerItr)
 bool OthelloManager::GetIsSendDataUpdate()
 {
 	return isFieldUpdate;
+}
+
+
+void OthelloManager::SaveSpawn()
+{
+	auto itr = othellos.begin();
+	auto playerItr = othellos.end();
+
+	for (; itr != othellos.end(); itr++)
+	{
+		int ax = itr->GetGameData()->widthPos;
+		int ay = itr->GetGameData()->heightPos;
+		if (itr->GetGameData()->widthPos == playerPanelPos.x && itr->GetGameData()->heightPos == playerPanelPos.y)
+		{
+			playerItr = itr;
+		}
+	}
+	bool isNotOnPlayer = (playerItr == othellos.end());
+	if (isNotOnPlayer)
+	{
+		if (saveTimer >= saveTimerLimit)
+		{
+			Othello data;
+			data.Init(&oserroModel);
+			bool randFront = rand() % 2;
+			int x = playerPanelPos.x;
+			int y = playerPanelPos.y;
+			data.Borne(NORMAL, x, y, randFront);
+			data.Update();
+			othellos.push_back(data);
+			saveTimer = 0;
+			isFieldUpdate = true;
+		}
+		else
+		{
+			saveTimer++;
+		}
+	}
+	else
+	{
+		saveTimer = 0;
+	}
 }
 
 void OthelloEachInfo::CreateConstBuff0()
