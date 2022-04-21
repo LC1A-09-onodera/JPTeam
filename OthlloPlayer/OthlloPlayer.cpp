@@ -23,6 +23,7 @@ void OthlloPlayer::Init()
 	playerFbxObj->rotation = {0, 180, -90};
 	playerFbxObj->scale = { 0.5f, 0.5f, 0.5f };
 	playerFbxObj->position = { 0, 0, -2 };
+	startPos = { 0, 0, -2 };
 	//playerFbxObj->PlayAnimation();
 	each.CreateConstBuff0();
 	each.CreateConstBuff1();
@@ -61,7 +62,7 @@ void OthlloPlayer::Move()
 	if ((D || A || S || W) && !isEase)
 	{
 		isMoveEnd = false;
-		startPos = ConvertXMVECTORtoXMFLOAT3(each.position);
+		startPos = playerFbxObj->position;
 		endPos = startPos;
 		if (D && each.position.m128_f32[0] < 6.0f)
 		{
@@ -102,4 +103,5 @@ void OthlloPlayer::MoveCancel()
 {
 	isEase = false;
 	isMoveEnd = false;
+	playerFbxObj->position = startPos;
 }

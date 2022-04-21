@@ -19,7 +19,7 @@ class OthlloPlayer
 	static void Move();
 	static void EaseUpdate();
 public:
-	static XMFLOAT3 GetPosition(){ return ConvertXMVECTORtoXMFLOAT3(each.position); }
+	static XMFLOAT3 GetPosition(){ return playerFbxObj->position; }
 	static void SetPosition(XMFLOAT3 position) { playerFbxObj->position = position; }
 	static FBXModel* playerFbx;
 	static FBXObject* playerFbxObj;
