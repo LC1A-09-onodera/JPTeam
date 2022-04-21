@@ -106,14 +106,16 @@ void GameScene::Init()
 	//sample.CreateModel("newOserro", ShaderManager::playerShader);
 	//sample.each.rotation.x = 0;
 
-	othelloManager.Init();
-	othelloManager.AddPanel();
+
 
 	checkObject.Init();
 	ObjectParticles::LoadModels();
 
 	water.CreateWater();
 	OthlloPlayer::Init();
+
+	othelloManager.Init();
+	othelloManager.AddPanel();
 
 	ThunderModels::LoadModels();
 	title.CreateSprite(L"Resource/Img/titel.png", XMFLOAT3(70, 60 + 50, 0));
@@ -207,6 +209,7 @@ void GameScene::TitleUpdate()
 		checkObject.SetScore(0);
 		OthlloPlayer::SetPosition(XMFLOAT3(0, 0, -2));
 		OthlloPlayer::isEase = false;
+		othelloManager.StartSetPos();
 	}
 	light->SetLightDir(XMFLOAT3(Camera::GetTargetDirection()));
 	LightUpdate();
