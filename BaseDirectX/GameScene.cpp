@@ -133,7 +133,7 @@ void GameScene::Init()
 	num[7].LoadGraph(L"Resource/Img/number_7.png");
 	num[8].LoadGraph(L"Resource/Img/number_8.png");
 	num[9].LoadGraph(L"Resource/Img/number_9.png");
-	for (int i = 0; i < 20; i += 10)
+	for (int i = 0; i < 30; i += 10)
 	{
 		numbers[i + 0].CreateSprite(num[0], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
 		numbers[i + 1].CreateSprite(num[1], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
@@ -216,6 +216,9 @@ void GameScene::TitleUpdate()
 		eyeEaseTime = 0;
 		gameTime = gameMaxTime;
 		SceneNum = GAME;
+		nowScore = 0;
+		displayScore = 0;
+		oldDisplay = 0;
 		countDown = 239;
 		checkObject.SetScore(0);
 		OthlloPlayer::SetPosition(XMFLOAT3(0, 0, -2));
@@ -367,6 +370,7 @@ void GameScene::GameUpdate()
 				else
 				{
 					SceneNum = RESULT;
+					displayScore = checkObject.GetScore();
 				}
 			}
 			Camera::Update();
@@ -642,16 +646,30 @@ void GameScene::GameDraw()
 		if (oldDisplay != nowScore)
 		{
 			scoreChange = true;
+			changeTime = 15 - abs(nowScore - displayScore);
+			if (changeTime < 0)
+			{
+				changeTime = 1;
+			}
+			changeCount = 0;
 		}
 		if (scoreChange)
 		{
-			if (nowScore > displayScore)
+			if (nowScore >= displayScore)
 			{
-				displayScore++;
+				changeCount++;
+				if (changeCount == changeTime)
+				{
+					displayScore++;
+					changeCount = 0;
+				}
 			}
 			else
 			{
+				displayScore = nowScore;
 				scoreChange = false;
+				changeCount = 0;
+				changeTime = 0;
 			}
 		}
 		
@@ -781,33 +799,32 @@ void GameScene::ResultDraw()
 	scoreSprite.position.m128_f32[0] = window_width / 2 - 180;
 	scoreSprite.position.m128_f32[1] = window_height / 2 - 30;
 	scoreSprite.SpriteDraw();
-	int nowScore = checkObject.GetScore();
 	float wid = 40;
 	float widPuls = 45;
-	scoreNum[nowScore % 10].ChangeSize(wid, 60);
-	scoreNum[nowScore % 10].position.m128_f32[0] = window_width / 2 - 180 + widPuls * 9;
-	scoreNum[nowScore % 10].position.m128_f32[1] = window_height / 2 - 40;
-	scoreNum[nowScore % 10].SpriteDraw();
-	scoreNum[nowScore / 10 % 10 + 10].ChangeSize(wid, 60);
-	scoreNum[nowScore / 10 % 10 + 10].position.m128_f32[0] = window_width / 2 - 180 + widPuls * 8;
-	scoreNum[nowScore / 10 % 10 + 10].position.m128_f32[1] = window_height / 2 - 40;
-	scoreNum[nowScore / 10 % 10 + 10].SpriteDraw();
-	scoreNum[nowScore / 100 % 10 + 20].ChangeSize(wid, 60);
-	scoreNum[nowScore / 100 % 10 + 20].position.m128_f32[0] = window_width / 2 - 180 + widPuls * 7;
-	scoreNum[nowScore / 100 % 10 + 20].position.m128_f32[1] = window_height / 2 - 40;
-	scoreNum[nowScore / 100 % 10 + 20].SpriteDraw();
-	scoreNum[nowScore / 1000 % 10 + 30].ChangeSize(wid, 60);
-	scoreNum[nowScore / 1000 % 10 + 30].position.m128_f32[0] = window_width / 2 - 180 + widPuls * 6;
-	scoreNum[nowScore / 1000 % 10 + 30].position.m128_f32[1] = window_height / 2 - 40;
-	scoreNum[nowScore / 1000 % 10 + 30].SpriteDraw();
-	scoreNum[nowScore / 10000 % 10 + 40].ChangeSize(wid, 60);
-	scoreNum[nowScore / 10000 % 10 + 40].position.m128_f32[0] = window_width / 2 - 180 + widPuls * 5;
-	scoreNum[nowScore / 10000 % 10 + 40].position.m128_f32[1] = window_height / 2 - 40;
-	scoreNum[nowScore / 10000 % 10 + 40].SpriteDraw();
-	scoreNum[nowScore / 100000 % 10 + 50].ChangeSize(wid, 60);
-	scoreNum[nowScore / 100000 % 10 + 50].position.m128_f32[0] = window_width / 2 - 180 + widPuls * 4;
-	scoreNum[nowScore / 100000 % 10 + 50].position.m128_f32[1] = window_height / 2 - 40;
-	scoreNum[nowScore / 100000 % 10 + 50].SpriteDraw();
+	scoreNum[displayScore % 10].ChangeSize(wid, 60);
+	scoreNum[displayScore % 10].position.m128_f32[0] = window_width / 2 - 180 + widPuls * 9;
+	scoreNum[displayScore % 10].position.m128_f32[1] = window_height / 2 - 40;
+	scoreNum[displayScore % 10].SpriteDraw();
+	scoreNum[displayScore / 10 % 10 + 10].ChangeSize(wid, 60);
+	scoreNum[displayScore / 10 % 10 + 10].position.m128_f32[0] = window_width / 2 - 180 + widPuls * 8;
+	scoreNum[displayScore / 10 % 10 + 10].position.m128_f32[1] = window_height / 2 - 40;
+	scoreNum[displayScore / 10 % 10 + 10].SpriteDraw();
+	scoreNum[displayScore / 100 % 10 + 20].ChangeSize(wid, 60);
+	scoreNum[displayScore / 100 % 10 + 20].position.m128_f32[0] = window_width / 2 - 180 + widPuls * 7;
+	scoreNum[displayScore / 100 % 10 + 20].position.m128_f32[1] = window_height / 2 - 40;
+	scoreNum[displayScore / 100 % 10 + 20].SpriteDraw();
+	scoreNum[displayScore / 1000 % 10 + 30].ChangeSize(wid, 60);
+	scoreNum[displayScore / 1000 % 10 + 30].position.m128_f32[0] = window_width / 2 - 180 + widPuls * 6;
+	scoreNum[displayScore / 1000 % 10 + 30].position.m128_f32[1] = window_height / 2 - 40;
+	scoreNum[displayScore / 1000 % 10 + 30].SpriteDraw();
+	scoreNum[displayScore / 10000 % 10 + 40].ChangeSize(wid, 60);
+	scoreNum[displayScore / 10000 % 10 + 40].position.m128_f32[0] = window_width / 2 - 180 + widPuls * 5;
+	scoreNum[displayScore / 10000 % 10 + 40].position.m128_f32[1] = window_height / 2 - 40;
+	scoreNum[displayScore / 10000 % 10 + 40].SpriteDraw();
+	scoreNum[displayScore / 100000 % 10 + 50].ChangeSize(wid, 60);
+	scoreNum[displayScore / 100000 % 10 + 50].position.m128_f32[0] = window_width / 2 - 180 + widPuls * 4;
+	scoreNum[displayScore / 100000 % 10 + 50].position.m128_f32[1] = window_height / 2 - 40;
+	scoreNum[displayScore / 100000 % 10 + 50].SpriteDraw();
 	spaceBack.position.m128_f32[0] = 0;
 	spaceBack.position.m128_f32[1] = 560;
 	spaceBack.SpriteDraw();
