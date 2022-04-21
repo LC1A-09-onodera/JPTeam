@@ -5,6 +5,7 @@ using namespace ConstOthlloPlayer;
 
 Model OthlloPlayer::player;
 EachInfo OthlloPlayer::each;
+SoundData OthlloPlayer::moveSound;
 
 XMFLOAT3 OthlloPlayer::startPos;
 XMFLOAT3 OthlloPlayer::endPos;
@@ -20,16 +21,17 @@ void OthlloPlayer::Init()
 	playerFbxObj = new FBXObject;
 	playerFbxObj->Initialize();
 	playerFbxObj->SetModel(playerFbx);
-	playerFbxObj->rotation = {0, 180, -90};
+	playerFbxObj->rotation = { 0, 180, -90 };
 	playerFbxObj->scale = { 0.5f, 0.5f, 0.5f };
 	playerFbxObj->position = { 0, 0, -2 };
 	startPos = { 0, 0, -2 };
 	//playerFbxObj->PlayAnimation();
 	each.CreateConstBuff0();
 	each.CreateConstBuff1();
-	each.rotation = {0, -90, 90};
-	each.scale = {0.5f, 0.5f, 0.5f};
-	each.position = {0, 0, -2 ,1};
+	each.rotation = { 0, -90, 90 };
+	each.scale = { 0.5f, 0.5f, 0.5f };
+	each.position = { 0, 0, -2 ,1 };
+	SoundLoad("Resource/Sound/playerMoveSE_.wav", moveSound);
 }
 
 void OthlloPlayer::Update()
@@ -59,24 +61,30 @@ void OthlloPlayer::Move()
 	bool A = Input::KeyTrigger(DIK_A);
 	bool S = Input::KeyTrigger(DIK_S);
 	bool W = Input::KeyTrigger(DIK_W);
-	if ((D || A || S || W) && !isEase)
+	bool padD = directInput->IsButtonPush(DirectInput::ButtonKind::RightButton);
+	bool padS = directInput->IsButtonPush(DirectInput::ButtonKind::DownButton);
+	bool padA = directInput->IsButtonPush(DirectInput::ButtonKind::LeftButton);
+	bool padW = directInput->IsButtonPush(DirectInput::ButtonKind::UpButton);
+
+	if ((D || A || S || W || padD || padA || padW || padS) && !isEase)
 	{
+		SoundPlayOnce(moveSound);
 		isMoveEnd = false;
 		startPos = playerFbxObj->position;
 		endPos = startPos;
-		if (D && each.position.m128_f32[0] < 6.0f)
+		if ((D || padD) && each.position.m128_f32[0] < 6.0f)
 		{
 			endPos.x += MaxMoveAmount;
 		}
-		else if (A && each.position.m128_f32[0] > -8.0f)
+		else if ((A || padA) && each.position.m128_f32[0] > -8.0f)
 		{
 			endPos.x -= MaxMoveAmount;
 		}
-		else if (S && each.position.m128_f32[1] > -6.0f)
+		else if ((S || padS) && each.position.m128_f32[1] > -6.0f)
 		{
 			endPos.y -= MaxMoveAmount;
 		}
-		else if (W && each.position.m128_f32[1] < 8.0f)
+		else if ((W || padW) && each.position.m128_f32[1] < 8.0f)
 		{
 			endPos.y += MaxMoveAmount;
 		}
@@ -94,10 +102,9 @@ void OthlloPlayer::EaseUpdate()
 		isEase = false;
 		isMoveEnd = true;
 	}
-	each.position = ConvertXMFLOAT3toXMVECTOR(EaseInQuad(startPos, endPos, easeTime));
-	playerFbxObj->position = EaseInQuad(startPos, endPos, easeTime);
+	each.position = ConvertXMFLOAT3toXMVECTOR(ShlomonMath::EaseInQuad(startPos, endPos, easeTime));
+	playerFbxObj->position = ShlomonMath::EaseInQuad(startPos, endPos, easeTime);
 }
-
 
 void OthlloPlayer::MoveCancel()
 {

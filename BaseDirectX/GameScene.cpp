@@ -120,6 +120,7 @@ void GameScene::Init()
 	ThunderModels::LoadModels();
 	title.CreateSprite(L"Resource/Img/titel.png", XMFLOAT3(70, 60 + 50, 0));
 	titleBack.CreateSprite(L"Resource/Img/title_back.png", XMFLOAT3(0, 46 + 50, 0));
+	spaceBack.CreateSprite(L"Resource/Img/title_back.png", XMFLOAT3(0, 0, 0));
 	space.CreateSprite(L"Resource/Img/push_space.png", XMFLOAT3(650, 550, 0));
 	sceneChage.CreateSprite(L"Resource/Img/SceneChange.png", XMFLOAT3(window_width / 2, window_height / 2, 0));
 	num[0].LoadGraph(L"Resource/Img/number_0.png");
@@ -172,6 +173,9 @@ void GameScene::Init()
 	othelloStage.each.position.m128_f32[2] = 2.5f;
 	othelloStage.each.rotation.x = 90;
 	othelloStage.each.scale = { 2.0f, 1.0f, 2.0f };
+	isPouse = false;
+	pouseBack.CreateSprite(L"Resource/Img/title_back_80.png", XMFLOAT3(0, 0, 0));
+	isGameEnd = false;
 }
 
 void GameScene::TitleUpdate()
@@ -188,7 +192,7 @@ void GameScene::TitleUpdate()
 		}
 	}
 	ObjectParticles::Update();
-	if (Input::KeyTrigger(DIK_SPACE))
+	if (Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01))
 	{
 		//オセロを爆散させてカメラの動きを開始させる
 		for (auto triangleItr = ObjectParticles::othello.particles.begin(); triangleItr != ObjectParticles::othello.particles.end(); ++triangleItr)
@@ -231,7 +235,7 @@ void GameScene::GameUpdate()
 	light->SetLightDir(XMFLOAT3(Camera::GetTargetDirection()));
 	LightUpdate();
 	//カメラ変化が行われていない時にゲームを開始する
-	if (!isSceneChange && !isResultSceneChange)
+	if (!isSceneChange && !isResultSceneChange && !isPouse)
 	{
 		if (countDown <= 0)
 		{
@@ -255,11 +259,11 @@ void GameScene::GameUpdate()
 	//タイトルからgameシーンへ
 	if (isSceneChange)
 	{
-		Camera::target.v = EaseInQuad(eyeStart, eyeEnd, eyeEaseTime);
+		Camera::target.v = ShlomonMath::EaseInQuad(eyeStart, eyeEnd, eyeEaseTime);
 		eyeEaseTime += 0.02f;
 		if (eyeEaseTime > 1.0f)
 		{
-			Camera::target.v = EaseInQuad(eyeStart, eyeEnd, 1.0f);
+			Camera::target.v = ShlomonMath::EaseInQuad(eyeStart, eyeEnd, 1.0f);
 			isSceneChange = false;
 			gameTime = gameMaxTime;
 		}
@@ -271,7 +275,7 @@ void GameScene::GameUpdate()
 		for (auto triangleItr = OthelloManager::othellos.begin(); triangleItr != OthelloManager::othellos.end(); ++triangleItr)
 		{
 			XMFLOAT3 pos = triangleItr->GetPosition();
-			ObjectParticles::triangle.Init(pos, 10, ParticleType::Exprotion);
+			ObjectParticles::triangle.Init(pos, 4, ParticleType::Exprotion);
 			triangleItr->GetGameData()->isDead = true;
 			ThunderModels::DeleteList();
 		}
@@ -287,11 +291,11 @@ void GameScene::GameUpdate()
 	{
 		if (resultForTime >= 60)
 		{
-			Camera::target.v = EaseInQuad(eyeStart, eyeEnd, eyeEaseTime);
+			Camera::target.v = ShlomonMath::EaseInQuad(eyeStart, eyeEnd, eyeEaseTime);
 			eyeEaseTime += 0.02f;
 			if (eyeEaseTime > 1.0f)
 			{
-				Camera::target.v = EaseInQuad(eyeStart, eyeEnd, 1.0f);
+				Camera::target.v = ShlomonMath::EaseInQuad(eyeStart, eyeEnd, 1.0f);
 				resultForTime = 0;
 				isResultSceneChange = false;
 				SceneNum = RESULT;
@@ -303,6 +307,60 @@ void GameScene::GameUpdate()
 			resultForTime++;
 		}
 	}
+	if (!isPouse && (Input::KeyTrigger(DIK_ESCAPE) || directInput->IsButtonPush(directInput->ButtonPouse)))
+	{
+		isPouse = true;
+		selectPouse = 0;
+	}
+	//ポーズ中の処理
+	else if (isPouse)
+	{
+		if (Input::KeyTrigger(DIK_W) || directInput->IsButtonPush(directInput->UpButton))
+		{
+			if (selectPouse == 0)
+			{
+				selectPouse = selectMaxPouse;
+			}
+			else
+			{
+				selectPouse--;	
+			}
+		}
+		else if (Input::KeyTrigger(DIK_S) || directInput->IsButtonPush(directInput->DownButton))
+		{
+			if (selectPouse == selectMaxPouse)
+			{
+				selectPouse = 0;
+			}
+			else
+			{
+				selectPouse++;
+			}
+		}
+		if (Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01))
+		{
+			//リザルトに戻る
+			if (selectPouse == 0)
+			{
+				isPouse = false;
+			}
+			else if (selectPouse == 1)
+			{
+				gameTime = 0;
+				isPouse = false;
+			}
+			else if (selectPouse == 2)
+			{
+				isGameEnd = true;
+			}
+		}
+		if (Input::KeyTrigger(DIK_ESCAPE) || directInput->IsButtonPush(directInput->ButtonPouse))
+		{
+			isPouse = false;
+		}
+	}
+	
+
 	sky.Update();
 	othelloStage.Update();
 	Lights::Add(checkObject);
@@ -312,7 +370,7 @@ void GameScene::GameUpdate()
 
 void GameScene::ResultUpdate()
 {
-	if (Input::KeyTrigger(DIK_SPACE))
+	if (Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01))
 	{
 		OthlloPlayer::SetPosition(XMFLOAT3(0, 0, -2));
 
@@ -351,11 +409,14 @@ void GameScene::TitleDraw()
 	//スプライトの描画-------------------------
 	if (isSceneChange == false)
 	{
-		titleBack.ChangeSize(1280, 125);
+		titleBack.ChangeSize(1280, 125 * 2);
 		titleBack.position.m128_f32[0] = 0;//Imgui::spritePos1[0];
 		titleBack.position.m128_f32[1] = 100;//Imgui::spritePos1[1];
 		titleBack.SpriteDraw();
 		title.SpriteDraw();
+		spaceBack.position.m128_f32[0] = 0;
+		spaceBack.position.m128_f32[1] = 560;
+		spaceBack.SpriteDraw();
 		space.SpriteDraw();
 	}
 	Imgui::DrawImGui();
@@ -402,10 +463,10 @@ void GameScene::GameDraw()
 	BaseDirectX::UpdateFront();
 	//PostEffectのDraw
 	//postEffect.Draw();
-	othelloManager.Draw();
+
 	Draw3DObject(sky);
 	Draw3DObject(othelloStage);
-	ThunderModels::Draw();
+	othelloManager.Draw();
 	OthlloPlayer::Draw();
 	ObjectParticles::Draw();
 	ParticleControl::Draw();
@@ -440,29 +501,40 @@ void GameScene::GameDraw()
 		float widPuls = 45;
 		int nowScore = checkObject.GetScore();
 		scoreSprite.position.m128_f32[0] = 0;
-		scoreSprite.position.m128_f32[1] = 0;
-		scoreSprite.ChangeSize(150, 60);
+		scoreSprite.position.m128_f32[1] = 15;
+		scoreSprite.ChangeSize(150, 50);
 		scoreSprite.SpriteDraw();
 		scoreNum[nowScore % 10].ChangeSize(wid, 60);
-		scoreNum[nowScore % 10].position.m128_f32[0] = widPuls * 8;
+		scoreNum[nowScore % 10].position.m128_f32[0] = widPuls * 9;
 		scoreNum[nowScore % 10].position.m128_f32[1] = 10;
 		scoreNum[nowScore % 10].SpriteDraw();
 		scoreNum[nowScore / 10 % 10 + 10].ChangeSize(wid, 60);
-		scoreNum[nowScore / 10 % 10 + 10].position.m128_f32[0] = widPuls * 7;
+		scoreNum[nowScore / 10 % 10 + 10].position.m128_f32[0] = widPuls * 8;
 		scoreNum[nowScore / 10 % 10 + 10].position.m128_f32[1] = 10;
 		scoreNum[nowScore / 10 % 10 + 10].SpriteDraw();
 		scoreNum[nowScore / 100 % 10 + 20].ChangeSize(wid, 60);
-		scoreNum[nowScore / 100 % 10 + 20].position.m128_f32[0] = widPuls * 6;
+		scoreNum[nowScore / 100 % 10 + 20].position.m128_f32[0] = widPuls * 7;
 		scoreNum[nowScore / 100 % 10 + 20].position.m128_f32[1] = 10;
 		scoreNum[nowScore / 100 % 10 + 20].SpriteDraw();
 		scoreNum[nowScore / 1000 % 10 + 30].ChangeSize(wid, 60);
-		scoreNum[nowScore / 1000 % 10 + 30].position.m128_f32[0] = widPuls * 5;
+		scoreNum[nowScore / 1000 % 10 + 30].position.m128_f32[0] = widPuls * 6;
 		scoreNum[nowScore / 1000 % 10 + 30].position.m128_f32[1] = 10;
 		scoreNum[nowScore / 1000 % 10 + 30].SpriteDraw();
 		scoreNum[nowScore / 10000 % 10 + 40].ChangeSize(wid, 60);
-		scoreNum[nowScore / 10000 % 10 + 40].position.m128_f32[0] = widPuls * 4;
+		scoreNum[nowScore / 10000 % 10 + 40].position.m128_f32[0] = widPuls * 5;
 		scoreNum[nowScore / 10000 % 10 + 40].position.m128_f32[1] = 10;
 		scoreNum[nowScore / 10000 % 10 + 40].SpriteDraw();
+		scoreNum[nowScore / 100000 % 10 + 50].ChangeSize(wid, 60);
+		scoreNum[nowScore / 100000 % 10 + 50].position.m128_f32[0] = widPuls * 4;
+		scoreNum[nowScore / 100000 % 10 + 50].position.m128_f32[1] = 10;
+		scoreNum[nowScore / 100000 % 10 + 50].SpriteDraw();
+	}
+	if (isPouse)
+	{
+		pouseBack.ChangeSize(1280, 720);
+		pouseBack.position.m128_f32[0] = 0;
+		pouseBack.position.m128_f32[1] = 0;
+		pouseBack.SpriteDraw();
 	}
 	//Imgui::DrawImGui();
 	//描画コマンドここまで
@@ -491,32 +563,44 @@ void GameScene::ResultDraw()
 	Draw3DObject(othelloStage);
 	//スプライトの描画-------------------------
 	//titleSprite.SpriteDraw();
+
+	titleBack.position.m128_f32[0] = 0;
+	titleBack.position.m128_f32[1] = window_height / 2 - 55;
+	titleBack.ChangeSize(1280, 100);
+	titleBack.SpriteDraw();
 	scoreSprite.position.m128_f32[0] = window_width / 2 - 180;
-	scoreSprite.position.m128_f32[1] = window_height / 2 - 60;
+	scoreSprite.position.m128_f32[1] = window_height / 2 - 30;
 	scoreSprite.SpriteDraw();
 	int nowScore = checkObject.GetScore();
 	float wid = 40;
 	float widPuls = 45;
 	scoreNum[nowScore % 10].ChangeSize(wid, 60);
-	scoreNum[nowScore % 10].position.m128_f32[0] = window_width / 2 - 180 + widPuls * 8;
+	scoreNum[nowScore % 10].position.m128_f32[0] = window_width / 2 - 180 + widPuls * 9;
 	scoreNum[nowScore % 10].position.m128_f32[1] = window_height / 2 - 40;
 	scoreNum[nowScore % 10].SpriteDraw();
 	scoreNum[nowScore / 10 % 10 + 10].ChangeSize(wid, 60);
-	scoreNum[nowScore / 10 % 10 + 10].position.m128_f32[0] = window_width / 2 - 180 + widPuls * 7;
+	scoreNum[nowScore / 10 % 10 + 10].position.m128_f32[0] = window_width / 2 - 180 + widPuls * 8;
 	scoreNum[nowScore / 10 % 10 + 10].position.m128_f32[1] = window_height / 2 - 40;
 	scoreNum[nowScore / 10 % 10 + 10].SpriteDraw();
 	scoreNum[nowScore / 100 % 10 + 20].ChangeSize(wid, 60);
-	scoreNum[nowScore / 100 % 10 + 20].position.m128_f32[0] = window_width / 2 - 180 + widPuls * 6;
+	scoreNum[nowScore / 100 % 10 + 20].position.m128_f32[0] = window_width / 2 - 180 + widPuls * 7;
 	scoreNum[nowScore / 100 % 10 + 20].position.m128_f32[1] = window_height / 2 - 40;
 	scoreNum[nowScore / 100 % 10 + 20].SpriteDraw();
 	scoreNum[nowScore / 1000 % 10 + 30].ChangeSize(wid, 60);
-	scoreNum[nowScore / 1000 % 10 + 30].position.m128_f32[0] = window_width / 2 - 180 + widPuls * 5;
+	scoreNum[nowScore / 1000 % 10 + 30].position.m128_f32[0] = window_width / 2 - 180 + widPuls * 6;
 	scoreNum[nowScore / 1000 % 10 + 30].position.m128_f32[1] = window_height / 2 - 40;
 	scoreNum[nowScore / 1000 % 10 + 30].SpriteDraw();
 	scoreNum[nowScore / 10000 % 10 + 40].ChangeSize(wid, 60);
-	scoreNum[nowScore / 10000 % 10 + 40].position.m128_f32[0] = window_width / 2 - 180 + widPuls * 4;
+	scoreNum[nowScore / 10000 % 10 + 40].position.m128_f32[0] = window_width / 2 - 180 + widPuls * 5;
 	scoreNum[nowScore / 10000 % 10 + 40].position.m128_f32[1] = window_height / 2 - 40;
 	scoreNum[nowScore / 10000 % 10 + 40].SpriteDraw();
+	scoreNum[nowScore / 100000 % 10 + 50].ChangeSize(wid, 60);
+	scoreNum[nowScore / 100000 % 10 + 50].position.m128_f32[0] = window_width / 2 - 180 + widPuls * 4;
+	scoreNum[nowScore / 100000 % 10 + 50].position.m128_f32[1] = window_height / 2 - 40;
+	scoreNum[nowScore / 100000 % 10 + 50].SpriteDraw();
+	spaceBack.position.m128_f32[0] = 0;
+	spaceBack.position.m128_f32[1] = 560;
+	spaceBack.SpriteDraw();
 	space.SpriteDraw();
 	Imgui::DrawImGui();
 	//描画コマンドここまで

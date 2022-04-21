@@ -21,7 +21,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		scene.SceneManageUpdateAndDraw();
 
 		// DirectX–ˆƒtƒŒ[ƒ€ˆ—@‚±‚±‚Ü‚Å
-		if (Input::Key(DIK_ESCAPE))
+		/*if (Input::Key(DIK_ESCAPE))
+		{
+			break;
+		}*/
+		if (scene.isGameEnd)
 		{
 			break;
 		}

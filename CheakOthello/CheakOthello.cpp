@@ -4,12 +4,15 @@
 #include "../BaseDirectX/Input.h"
 #include "../imgui/ImguiControl.h"
 
+SoundData CheakOthello::comboSound;
+
 CheakOthello::CheakOthello()
 {
-	//lastX = 0;
-	//lastY = 0;
-	//cheakSize = 0;
-	//combo = 0;
+	last_x = 0;				//最後に動かしたオセロのX座標
+	last_y = 0;				//最後に動かしたオセロのY座標
+	totalScore = 0;			//合計点
+	side = 0;				//表裏保存
+	checkOthello = 0;
 }
 
 CheakOthello::~CheakOthello()
@@ -18,7 +21,12 @@ CheakOthello::~CheakOthello()
 
 void CheakOthello::Init()
 {
-	//combo = 0;
+	last_x = 0;				//最後に動かしたオセロのX座標
+	last_y = 0;				//最後に動かしたオセロのY座標
+	totalScore = 0;			//合計点
+	side = 0;				//表裏保存
+	checkOthello = 0;
+	SoundLoad("Resource/Sound/goalSE_.wav", comboSound);
 }
 
 void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData, bool isCheck)
@@ -152,6 +160,7 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y, int last_x, in
 			//挟んだ場合
 			else if (othelloDatas[count_y][count_x].isFront == side && loop != 0)
 			{
+				SoundPlayOnce(comboSound);
 				//全部探索リストに入れる（自分と挟んだ駒まで）←sandwichArrayが同じかも参照する
 				//挟んだやつの最大のconboCountを取得→それ+1したのをコンボしたオセロにセット
 				int maxComboCount = 0;
@@ -294,12 +303,12 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y, int last_x, in
 
 			//探索可能
 			bool isActiveOthello = false;
-			for (int i = 0; i < loop; i++)
+			for (int i = 0; i <= loop; i++)
 			{
 				count_x += direction_x;
 				count_y += direction_y;
 				if (!othelloDatas[count_y][count_x].isSandwich) {
- 					isActiveOthello = true;
+					isActiveOthello = true;
 				}
 				//if (i == loop) { isActiveOthello = true; }
 			}

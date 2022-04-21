@@ -6,6 +6,9 @@ enum class ParticleType
 	Exprotion,
 	Converge,
 	TITLE,
+	Swell,
+	Target,
+
 };
 
 class ObjectParticle : public Model
@@ -34,9 +37,13 @@ public:
 	void InitExprotion(XMFLOAT3& emitter);
 	void InitConverge(XMFLOAT3& emitter);
 	void InitTitle(XMFLOAT3& emitter);
+	void InitSwell(XMFLOAT3& emitter);
+	void InitTarget(XMFLOAT3 &emitter);
 	void UpdateExprotion();
 	void UpdateConverge();
 	void UpdateTitle();
+	void UpdateSwell();
+	void UpdateTarget();
 	int time;
 };
 

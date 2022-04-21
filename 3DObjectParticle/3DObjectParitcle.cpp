@@ -22,6 +22,16 @@ void ObjectParticle3D::Add(XMFLOAT3& emitter, ParticleType type)
 		InitTitle(emitter);
 		this->type = type;
 	}
+	else if (type == ParticleType::Swell)
+	{
+		InitSwell(emitter);
+		this->type = type;
+	}
+	else if (type == ParticleType::Target)
+	{
+		InitTarget(emitter);
+		this->type = type;
+	}
 }
 
 void ObjectParticle3D::Update()
@@ -37,6 +47,14 @@ void ObjectParticle3D::Update()
 	else if (this->type == ParticleType::TITLE)
 	{
 		UpdateTitle();
+	}
+	else if (type == ParticleType::Swell)
+	{
+		UpdateSwell();
+	}
+	else if (type == ParticleType::Target)
+	{
+		UpdateTarget();
 	}
 }
 
@@ -130,6 +148,35 @@ void ObjectParticle3D::InitTitle(XMFLOAT3& emitter)
 	time = 600;
 }
 
+void ObjectParticle3D::InitSwell(XMFLOAT3& emitter)
+{
+	time = Life * 2.0f;
+	each.position = ConvertXMFLOAT3toXMVECTOR(emitter);
+	each.position.m128_f32[2] = 30.0f;
+	each.position.m128_f32[0] = rand() % 50 - 24;
+	each.position.m128_f32[1] = rand() % 50 - 24;
+	each.CreateConstBuff0();
+	each.CreateConstBuff1();
+	speed.z = -rand() % 5 + 1;
+	acc.z = -rand() % 5 + 1;
+	speed.z = speed.z / 10.0f;
+	acc.z = acc.z / 400.0f;
+	addRotation = GetRandom(2.0f);
+}
+
+void ObjectParticle3D::InitTarget(XMFLOAT3& emitter)
+{
+	time = 1;
+	each.position = ConvertXMFLOAT3toXMVECTOR(emitter);
+	each.CreateConstBuff0();
+	each.CreateConstBuff1();
+	endPosition = XMFLOAT3(-5, -5, 3);
+	speed.x = (rand() % 3 + 1) / 10.0f;
+	speed.y = (rand() % 3 + 1) / 10.0f;
+	speed.z = (rand() % 3 + 1) / 10.0f;
+	easeTime = 1.0f;
+}
+
 void ObjectParticle3D::UpdateExprotion()
 {
 	XMFLOAT3 nowPosition = ConvertXMVECTORtoXMFLOAT3(each.position);
@@ -148,7 +195,7 @@ void ObjectParticle3D::UpdateExprotion()
 
 void ObjectParticle3D::UpdateConverge()
 {
-	each.position = ConvertXMFLOAT3toXMVECTOR(EaseOutQuad(startPosition, endPosition, easeTime));
+	each.position = ConvertXMFLOAT3toXMVECTOR(ShlomonMath::EaseOutQuad(startPosition, endPosition, easeTime));
 	each.rotation.x += 3.0f;
 	each.rotation.z += 2.0f;
 	easeTime += addTime;
@@ -187,6 +234,35 @@ void ObjectParticle3D::UpdateTitle()
 	each.rotation.y += 1.0f;
 	each.position = ConvertXMFLOAT3toXMVECTOR(nowPosition);
 	time--;
+}
+
+void ObjectParticle3D::UpdateSwell()
+{
+	XMFLOAT3 nowPosition = ConvertXMVECTORtoXMFLOAT3(each.position);
+	nowPosition = nowPosition + speed;
+	speed = speed + acc;
+	each.position = ConvertXMFLOAT3toXMVECTOR(nowPosition);
+	each.rotation = each.rotation + addRotation;
+	time--;
+	if (each.scale.x > 0)
+	{
+		each.scale.x -= 0.002f;
+		each.scale.y -= 0.002f;
+		each.scale.z -= 0.002f;
+	}
+}
+
+void ObjectParticle3D::UpdateTarget()
+{
+	easeTime -= 0.01f;
+	XMFLOAT3 homing = ShlomonMath::Homing(ConvertXMVECTORtoXMFLOAT3(each.position), endPosition, speed);
+	speed = homing / 1.0f;
+	each.position = ConvertXMFLOAT3toXMVECTOR(ConvertXMVECTORtoXMFLOAT3(each.position) + speed);
+	
+	if (easeTime <= 0.0f)
+	{
+		time = 0;
+	}
 }
 
 void ObjectParticleInfo::Init(XMFLOAT3& emitter, int count, ParticleType type)

@@ -37,7 +37,7 @@ void LightObjectModels::Init(const pair<int, int>& start, const pair<int, int>& 
 	if (!hol && !ver)
 	{
 		//¶ã•ûŒü
-		if (startX > endX && startY > endY)
+		if ((startX > endX && startY > endY) || (startX < endX && startY < endY))
 		{
 			each1.rotation.z = 45;
 			each2.rotation.z = 45;
@@ -49,8 +49,8 @@ void LightObjectModels::Init(const pair<int, int>& start, const pair<int, int>& 
 			each2.rotation.z = -45;
 			each3.rotation.z = -45;
 		}
-		float subX = startX - endX;
-		float subY = startY - endY;
+		float subX = abs(startX - endX);
+		float subY = abs(startY - endY);
 		if (startX > endX)
 		{
 			centerX = startX - subX / 2.0f;
@@ -69,7 +69,10 @@ void LightObjectModels::Init(const pair<int, int>& start, const pair<int, int>& 
 		}
 		centerX = centerX * 2.0f - 8.0f;
 		centerY = centerY * 2.0f - 8.0f;
-		each1.scale.y = subX;
+		//each1.scale.y = subX;
+		startScale = { 0.1f, 0.1f, 0.1f };
+		endScale = { 0.85f, subX, 0.5f };
+		time = 0;
 	}
 	else if (!hol || !ver)
 	{
@@ -150,7 +153,7 @@ void LightObjectModels::Update()
 	}
 	else
 	{
-		each1.scale = EaseOutQuad(startScale, endScale, time);
+		each1.scale = ShlomonMath::EaseOutQuad(startScale, endScale, time);
 		each2.scale = each1.scale * 0.9f;
 		each3.scale = each2.scale * 0.85f;
 		time += 0.05f;

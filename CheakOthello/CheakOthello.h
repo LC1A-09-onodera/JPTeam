@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include "../Oserro/Oserro.h"
+#include "../Sound/Sound.h"
 
 class CheakOthello
 {
@@ -24,7 +25,7 @@ private:
 	static const int MAX_SIZE_Y = 8;
 
 private:
-
+	static SoundData comboSound;
 
 private:
 	std::vector<std::pair<int, int>> comboOthelloDataPos;
@@ -36,12 +37,9 @@ private:
 private:
 	int last_x;				//最後に動かしたオセロのX座標
 	int last_y;				//最後に動かしたオセロのY座標
-	//int baseScore;		//基礎点
 	int totalScore;			//合計点
-	//int comboCount;		//現在のコンボ数←そのまま倍率に使用
 	bool side;				//表裏保存
 	bool checkOthello;
-	//bool othelloCheckDatas[MAX_SIZE_Y][MAX_SIZE_X] = { false };
 
 public:
 	CheakOthello();
