@@ -610,43 +610,49 @@ void GameScene::GameDraw()
 
 	if (gameTime > 0 && countDown <= 0)
 	{
-		numbers[gameTime / 60 % 10].position.m128_f32[0] = window_width / 2 + 30;
+		numbers[gameTime / 60 % 10].position.m128_f32[0] = window_width / 2 + 0;
 		numbers[gameTime / 60 % 10].position.m128_f32[1] = 30;
 		numbers[gameTime / 60 % 10].SpriteDraw();
-		numbers[gameTime / 600 % 10 + 10].position.m128_f32[0] = window_width / 2 - 30;
+		numbers[gameTime / 600 % 10 + 10].position.m128_f32[0] = window_width / 2 - 60;
 		numbers[gameTime / 600 % 10 + 10].position.m128_f32[1] = 30;
 		numbers[gameTime / 600 % 10 + 10].SpriteDraw();
 		float wid = 40;
 		float widPuls = 45;
 		int nowScore = checkObject.GetScore();
 		scoreSprite.position.m128_f32[0] = 0;
-		scoreSprite.position.m128_f32[1] = 15;
+		scoreSprite.position.m128_f32[1] = 35;
 		scoreSprite.ChangeSize(150, 50);
 		scoreSprite.SpriteDraw();
 		scoreNum[nowScore % 10].ChangeSize(wid, 60);
 		scoreNum[nowScore % 10].position.m128_f32[0] = widPuls * 9;
-		scoreNum[nowScore % 10].position.m128_f32[1] = 10;
+		scoreNum[nowScore % 10].position.m128_f32[1] = 30;
 		scoreNum[nowScore % 10].SpriteDraw();
 		scoreNum[nowScore / 10 % 10 + 10].ChangeSize(wid, 60);
 		scoreNum[nowScore / 10 % 10 + 10].position.m128_f32[0] = widPuls * 8;
-		scoreNum[nowScore / 10 % 10 + 10].position.m128_f32[1] = 10;
+		scoreNum[nowScore / 10 % 10 + 10].position.m128_f32[1] = 30;
 		scoreNum[nowScore / 10 % 10 + 10].SpriteDraw();
 		scoreNum[nowScore / 100 % 10 + 20].ChangeSize(wid, 60);
 		scoreNum[nowScore / 100 % 10 + 20].position.m128_f32[0] = widPuls * 7;
-		scoreNum[nowScore / 100 % 10 + 20].position.m128_f32[1] = 10;
+		scoreNum[nowScore / 100 % 10 + 20].position.m128_f32[1] = 30;
 		scoreNum[nowScore / 100 % 10 + 20].SpriteDraw();
 		scoreNum[nowScore / 1000 % 10 + 30].ChangeSize(wid, 60);
 		scoreNum[nowScore / 1000 % 10 + 30].position.m128_f32[0] = widPuls * 6;
-		scoreNum[nowScore / 1000 % 10 + 30].position.m128_f32[1] = 10;
+		scoreNum[nowScore / 1000 % 10 + 30].position.m128_f32[1] = 30;
 		scoreNum[nowScore / 1000 % 10 + 30].SpriteDraw();
 		scoreNum[nowScore / 10000 % 10 + 40].ChangeSize(wid, 60);
 		scoreNum[nowScore / 10000 % 10 + 40].position.m128_f32[0] = widPuls * 5;
-		scoreNum[nowScore / 10000 % 10 + 40].position.m128_f32[1] = 10;
+		scoreNum[nowScore / 10000 % 10 + 40].position.m128_f32[1] = 30;
 		scoreNum[nowScore / 10000 % 10 + 40].SpriteDraw();
 		scoreNum[nowScore / 100000 % 10 + 50].ChangeSize(wid, 60);
 		scoreNum[nowScore / 100000 % 10 + 50].position.m128_f32[0] = widPuls * 4;
-		scoreNum[nowScore / 100000 % 10 + 50].position.m128_f32[1] = 10;
+		scoreNum[nowScore / 100000 % 10 + 50].position.m128_f32[1] = 30;
 		scoreNum[nowScore / 100000 % 10 + 50].SpriteDraw();
+		moveSprite.position.m128_f32[0] = 0;
+		moveSprite.position.m128_f32[1] = 650;
+		moveSprite.SpriteDraw();
+		reverseSprtie.position.m128_f32[0] = 600;
+		reverseSprtie.position.m128_f32[1] = 650;
+		reverseSprtie.SpriteDraw(); 
 	}
 	if (isPouse)
 	{
