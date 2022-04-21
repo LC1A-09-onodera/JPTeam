@@ -541,7 +541,7 @@ void Othello::MakeParticle()
 {
 	XMFLOAT3 sample;
 	sample = ConvertXMVECTORtoXMFLOAT3(each.position);
-	ObjectParticles::triangle.Init(sample, 10, ParticleType::Target);
+	ObjectParticles::triangle.Init(sample, 10, ParticleType::Exprotion);
 	//ObjectParticles::triangle.Init(XMFLOAT3(0, 0, 0), 60, ParticleType::Swell);
 }
 

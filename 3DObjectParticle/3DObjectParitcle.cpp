@@ -170,7 +170,10 @@ void ObjectParticle3D::InitTarget(XMFLOAT3& emitter)
 	each.position = ConvertXMFLOAT3toXMVECTOR(emitter);
 	each.CreateConstBuff0();
 	each.CreateConstBuff1();
-	endPosition = XMFLOAT3(5, 0, 5);
+	endPosition = XMFLOAT3(-5, -5, 3);
+	speed.x = (rand() % 3 + 1) / 10.0f;
+	speed.y = (rand() % 3 + 1) / 10.0f;
+	speed.z = (rand() % 3 + 1) / 10.0f;
 	easeTime = 1.0f;
 }
 
@@ -252,7 +255,9 @@ void ObjectParticle3D::UpdateSwell()
 void ObjectParticle3D::UpdateTarget()
 {
 	easeTime -= 0.01f;
-	each.position = ConvertXMFLOAT3toXMVECTOR(ShlomonMath::Homing(ConvertXMVECTORtoXMFLOAT3(each.position), XMFLOAT3(1, 1, 1), endPosition, easeTime));
+	XMFLOAT3 homing = ShlomonMath::Homing(ConvertXMVECTORtoXMFLOAT3(each.position), endPosition, speed);
+	speed = homing / 1.0f;
+	each.position = ConvertXMFLOAT3toXMVECTOR(ConvertXMVECTORtoXMFLOAT3(each.position) + speed);
 	
 	if (easeTime <= 0.0f)
 	{

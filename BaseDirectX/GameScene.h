@@ -14,7 +14,7 @@
 #include "../Oserro/Oserro.h"
 #include "../CheakOthello/CheakOthello.h"
 #include "../water/water.h"
-enum GameSceneName{TITLE, SELECT, GAME, END, RESULT};
+enum GameSceneName { TITLE, SELECT, GAME, END, RESULT };
 
 class GameScene
 {
@@ -40,25 +40,25 @@ public:
 	void SceneManageUpdateAndDraw();
 	//初期化
 	void Init();
-	
+
 	void LightUpdate();
 
 public://シーンで使うもの
-	Light *light = nullptr;
+	Light* light = nullptr;
 	PostEffect post;
-	float pointLightPos[3] = {0, 1, 0};
-	float pointLightColor[3] = {1, 1, 1};
-	float pointLightAtten[3] = {0.3f, 0.1f, 0.1f};
+	float pointLightPos[3] = { 0, 1, 0 };
+	float pointLightColor[3] = { 1, 1, 1 };
+	float pointLightAtten[3] = { 0.3f, 0.1f, 0.1f };
 
-	float spotLightDir[3] = {0, -1, 0};
-	float spotLightPos[3] = {0, 1, -100};
-	float spotLightColor[3] = {0.9f, 0.9f, 0.9f};
-	float spotLightAtten[3] = {0.0f, 0.0f, 0.0f};
-	float spotLightAngle[2] = {1.0f, 500.0f};
+	float spotLightDir[3] = { 0, -1, 0 };
+	float spotLightPos[3] = { 0, 1, -100 };
+	float spotLightColor[3] = { 0.9f, 0.9f, 0.9f };
+	float spotLightAtten[3] = { 0.0f, 0.0f, 0.0f };
+	float spotLightAngle[2] = { 1.0f, 500.0f };
 
-	float circleShadowDir[3] = {0, -1, 0};
-	float circleShadowAtten[3] = {0.5f, 0.6f, 0.0f};
-	float circleShadowFactorAngle[2] = {0.0f, 0.0f};
+	float circleShadowDir[3] = { 0, -1, 0 };
+	float circleShadowAtten[3] = { 0.5f, 0.6f, 0.0f };
+	float circleShadowFactorAngle[2] = { 0.0f, 0.0f };
 
 	Tex stageFrameTex;
 	Sprite stageFrameSp;
@@ -72,6 +72,7 @@ public://シーンで使うもの
 	Sprite titleBack;
 	Sprite spaceBack;
 	Sprite space;
+	Sprite pouseBack;
 	//タイトルからgameシーンへの以降に使う
 	Sprite sceneChage;
 	bool isSceneChange;
@@ -106,4 +107,8 @@ public://シーンで使うもの
 	Model othelloStage;
 
 	SoundData selectSound;
+	bool isPouse;
+	int selectPouse = 0;
+	const int selectMaxPouse = 2;
+	bool isGameEnd;
 };
