@@ -121,4 +121,6 @@ public://ƒV[ƒ“‚Åg‚¤‚à‚Ì
 	Sprite titleSprite;
 	Sprite kagikakkoStartSprite;
 	Sprite kagikakkoEndSprite;
+	
+	int tornadoTime;
 };

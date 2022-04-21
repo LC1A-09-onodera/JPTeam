@@ -32,6 +32,11 @@ void ObjectParticle3D::Add(XMFLOAT3& emitter, ParticleType type)
 		InitTarget(emitter);
 		this->type = type;
 	}
+	else if (type == ParticleType::Tornado)
+	{
+		InitTornado(emitter);
+		this->type = type;
+	}
 }
 
 void ObjectParticle3D::Update()
@@ -55,6 +60,10 @@ void ObjectParticle3D::Update()
 	else if (type == ParticleType::Target)
 	{
 		UpdateTarget();
+	}
+	else if (type == ParticleType::Tornado)
+	{
+		UpdateTornado();
 	}
 }
 
@@ -177,6 +186,20 @@ void ObjectParticle3D::InitTarget(XMFLOAT3& emitter)
 	easeTime = 1.0f;
 }
 
+void ObjectParticle3D::InitTornado(XMFLOAT3& emitter)
+{
+	time = 1;
+	//each.position = ConvertXMFLOAT3toXMVECTOR(emitter);
+	startPosition = {0, 0, 10};
+	each.CreateConstBuff0();
+	each.CreateConstBuff1();
+	each.position.m128_f32[2] = 10;
+	speed.z = rand() % 10;
+	speed.z = -speed.z / 100.0f;
+	angle = rand() % 360;
+	easeTime = 1.0f;
+}
+
 void ObjectParticle3D::UpdateExprotion()
 {
 	XMFLOAT3 nowPosition = ConvertXMVECTORtoXMFLOAT3(each.position);
@@ -260,6 +283,26 @@ void ObjectParticle3D::UpdateTarget()
 	each.position = ConvertXMFLOAT3toXMVECTOR(ConvertXMVECTORtoXMFLOAT3(each.position) + speed);
 	
 	if (easeTime <= 0.0f)
+	{
+		time = 0;
+	}
+}
+
+void ObjectParticle3D::UpdateTornado()
+{
+	startPosition.z += speed.z;
+	if (angle >= 360)
+	{
+		angle = 0;
+	}
+	angle++;
+	float R  = 20.0f;
+	each.position.m128_f32[0] = ShlomonMath::Cos(angle) * R;
+	each.position.m128_f32[1] = ShlomonMath::Sin(angle) * R;
+	each.position.m128_f32[2] = startPosition.z;
+	each.rotation.x += 2.0f;
+	each.rotation.z += 2.0f;
+	if (each.position.m128_f32[2] < -10.0f)
 	{
 		time = 0;
 	}
