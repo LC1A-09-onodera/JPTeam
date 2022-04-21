@@ -5,6 +5,7 @@
 
 ObjectParticleInfo ObjectParticles::triangle;
 ObjectParticleInfo ObjectParticles::othello;
+ObjectParticleInfo ObjectParticles::frame;
 void ObjectParticle3D::Add(XMFLOAT3& emitter, ParticleType type)
 {
 	if (type == ParticleType::Exprotion)
@@ -37,6 +38,11 @@ void ObjectParticle3D::Add(XMFLOAT3& emitter, ParticleType type)
 		InitTornado(emitter);
 		this->type = type;
 	}
+	else if (type == ParticleType::Born)
+	{
+		InitBorn(emitter);
+		this->type = type;
+	}
 }
 
 void ObjectParticle3D::Update()
@@ -64,6 +70,10 @@ void ObjectParticle3D::Update()
 	else if (type == ParticleType::Tornado)
 	{
 		UpdateTornado();
+	}
+	else if (type == ParticleType::Born)
+	{
+		UpdateBorn();
 	}
 }
 
@@ -200,6 +210,15 @@ void ObjectParticle3D::InitTornado(XMFLOAT3& emitter)
 	easeTime = 1.0f;
 }
 
+void ObjectParticle3D::InitBorn(XMFLOAT3& emitter)
+{
+	time = 1;
+	each.CreateConstBuff0();
+	each.CreateConstBuff1();
+	each.position = ConvertXMFLOAT3toXMVECTOR(emitter);
+	each.scale = {0.1f, 0.1f, 0.1f};
+}
+
 void ObjectParticle3D::UpdateExprotion()
 {
 	XMFLOAT3 nowPosition = ConvertXMVECTORtoXMFLOAT3(each.position);
@@ -308,6 +327,16 @@ void ObjectParticle3D::UpdateTornado()
 	}
 }
 
+void ObjectParticle3D::UpdateBorn()
+{
+	each.rotation.z += 0.01f;
+	each.scale = each.scale + 0.01f;
+	if (each.scale.x >= 1.0f)
+	{
+		time = 0;
+	}
+}
+
 void ObjectParticleInfo::Init(XMFLOAT3& emitter, int count, ParticleType type)
 {
 	for (int i = 0; i < count; i++)
@@ -353,23 +382,26 @@ void ObjectParticles::LoadModels()
 {
 	triangle.object.CreateModel("Triangle", ShaderManager::playerShader);
 	othello.object.CreateModel("newOserro", ShaderManager::playerShader);
+	frame.object.CreateModel("Frame", ShaderManager::playerShader);
 }
 
 void ObjectParticles::Update()
 {
 	triangle.Update();
 	othello.Update();
-
+	frame.Update();
 }
 
 void ObjectParticles::Draw()
 {
 	triangle.Draw(triangle.object);
 	othello.Draw(othello.object);
+	frame.Draw(frame.object);
 }
 
 void ObjectParticles::DeleteAllParticles()
 {
 	triangle.DeleteAllParticle();
 	othello.DeleteAllParticle();
+	frame.DeleteAllParticle();
 }
