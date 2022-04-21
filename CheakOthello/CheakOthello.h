@@ -28,11 +28,15 @@ private:
 	static SoundData comboSound;
 
 private:
+	const float OTHELLO_BONUS = 1.2f;
+
+private:
 	std::vector<std::pair<int, int>> comboOthelloDataPos;
 	std::vector<vector<SendOthelloData>> othelloDatas;
 	std::vector<std::pair<int, int>> startAndEndArray;		//始点と終点を保存する配列
 	std::vector<bool> othelloSide;
 	std::pair<int, int> pPos;
+	std::vector<pair<int, int>> checkScoreData;				//同時消しを考慮
 
 private:
 	int last_x;				//最後に動かしたオセロのX座標
@@ -41,6 +45,9 @@ private:
 	int totalDeleteOthello;	//挟んだ個数の合計
 	bool side;				//表裏保存
 	bool checkOthello;
+
+	bool isCombos;
+	bool isCombosCheck;
 
 public:
 	CheakOthello();
@@ -64,6 +71,8 @@ private:
 	void OthelloCheck(int direction_x, int direction_y, int last_x, int last_y, bool isCheck);
 	//個数の倍率も計算
 	void AddScore();
+	//複数挟んだ時のスコアとコンボカウントを変更
+	void ChangeScoreAndCombo();
 
 private:
 	//Vectorの中身を判定
