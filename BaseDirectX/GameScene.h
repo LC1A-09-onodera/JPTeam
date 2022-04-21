@@ -70,6 +70,7 @@ public://シーンで使うもの
 	Water water;
 	Sprite title;
 	Sprite titleBack;
+	Sprite spaceBack;
 	Sprite space;
 	//タイトルからgameシーンへの以降に使う
 	Sprite sceneChage;
@@ -103,4 +104,6 @@ public://シーンで使うもの
 
 	Model sky;
 	Model othelloStage;
+
+	SoundData selectSound;
 };

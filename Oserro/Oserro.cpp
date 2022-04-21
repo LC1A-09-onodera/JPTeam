@@ -176,7 +176,7 @@ void Othello::ReversUpdate()
 	}
 	data.animationTimer++;
 	float rate = static_cast<float>(data.animationTimer) / animationTimerMax;
-	float easeRate = EaseInOutQuad(XMFLOAT3{}, XMFLOAT3{ 1, 0, 0 }, rate).x;
+	float easeRate = ShlomonMath::EaseInOutQuad(XMFLOAT3{}, XMFLOAT3{ 1, 0, 0 }, rate).x;
 	if (data.isFront)
 	{
 		each.rotation.y = 180.0f * easeRate;
@@ -202,7 +202,7 @@ void Othello::ReversUpdate()
 	float jumpEaseRate = 0.0f;
 	if (data.isJumpUp)
 	{
-		jumpEaseRate = EaseOutQuad(XMFLOAT3{}, XMFLOAT3{ 1, 0, 0 }, jumpRate).x;
+		jumpEaseRate = ShlomonMath::EaseOutQuad(XMFLOAT3{}, XMFLOAT3{ 1, 0, 0 }, jumpRate).x;
 
 		float hight = pow(jumpEaseRate, count);
 		each.position.m128_f32[2] = -jumpMax * hight;
@@ -214,7 +214,7 @@ void Othello::ReversUpdate()
 	}
 	else
 	{
-		jumpEaseRate = EaseInQuad(XMFLOAT3{}, XMFLOAT3{ 1, 0, 0 }, jumpRate).x;
+		jumpEaseRate = ShlomonMath::EaseInQuad(XMFLOAT3{}, XMFLOAT3{ 1, 0, 0 }, jumpRate).x;
 		float hight = 1 - (pow(jumpEaseRate, count));
 		each.position.m128_f32[2] = -jumpMax * hight;
 	}
@@ -237,7 +237,7 @@ void Othello::ReversUpdate()
 void Othello::LeftRevers()
 {
 	float rate = 0;
-	float easeRate = EaseInOutQuad(XMFLOAT3{}, XMFLOAT3{ 1, 0, 0 }, rate).x;
+	float easeRate = ShlomonMath::EaseInOutQuad(XMFLOAT3{}, XMFLOAT3{ 1, 0, 0 }, rate).x;
 	if (data.isFront)
 	{
 		each.rotation.y = -180.0f * easeRate;
@@ -541,7 +541,8 @@ void Othello::MakeParticle()
 {
 	XMFLOAT3 sample;
 	sample = ConvertXMVECTORtoXMFLOAT3(each.position);
-	//ObjectParticles::Init(sample, 10, ParticleType::Exprotion);
+	ObjectParticles::triangle.Init(sample, 10, ParticleType::Target);
+	//ObjectParticles::triangle.Init(XMFLOAT3(0, 0, 0), 60, ParticleType::Swell);
 }
 
 bool Othello::GetIsActive()
