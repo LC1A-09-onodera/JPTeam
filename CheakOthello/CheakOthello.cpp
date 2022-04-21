@@ -14,6 +14,9 @@ CheakOthello::CheakOthello()
 	totalDeleteOthello = 0;
 	side = 0;				//表裏保存
 	checkOthello = 0;
+
+	isCombos = false;
+	isCombosCheck = false;
 }
 
 CheakOthello::~CheakOthello()
@@ -28,6 +31,9 @@ void CheakOthello::Init()
 	side = 0;				//表裏保存
 	checkOthello = 0;
 	SoundLoad("Resource/Sound/goalSE_.wav", comboSound);
+
+	isCombos = false;
+	isCombosCheck = false;
 }
 
 void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData, bool isCheck)
@@ -64,6 +70,7 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData, bo
 		OthelloCheck(Direction_X::EAST, Direction_Y::SOUTH, last.first, last.second, false);
 
 		if (totalDeleteOthello > 1) { AddScore(); }
+		if (isCombosCheck) { ChangeScoreAndCombo(); }
 	}
 
 	//効率悪いです
@@ -163,6 +170,8 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y, int last_x, in
 			//挟んだ場合
 			else if (othelloDatas[count_y][count_x].isFront == side && loop != 0)
 			{
+				if (isCombos) { isCombosCheck = true; }
+				isCombos = true;
 				SoundPlayOnce(comboSound);
 				totalDeleteOthello += loop;
 				//全部探索リストに入れる（自分と挟んだ駒まで）←sandwichArrayが同じかも参照する
@@ -174,7 +183,7 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y, int last_x, in
 				for (int i = 0; i <= loop + 1; i++)
 				{
 					//そのオセロのコンボ数を取得、そのオセロが何コンボ目かを調べる
-					if (maxComboCount = othelloDatas[pair_y][pair_x].comboCount)
+					if (maxComboCount <= othelloDatas[pair_y][pair_x].comboCount)
 					{
 						maxComboCount = othelloDatas[pair_y][pair_x].comboCount;
 					}
@@ -244,8 +253,9 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y, int last_x, in
 					{
 						//始点と終点を設定
 						if (i == 0 || i == loop + 1) { startAndEndArray.push_back(std::make_pair(pair_y, pair_x)); }
+						checkScoreData.push_back(make_pair(pair_y, pair_x));
 						othelloDatas[pair_y][pair_x].comboCount = maxComboCount;
-						othelloDatas[pair_y][pair_x].score += (baseScore + (loop * (loop + 2) * maxComboCount));
+						othelloDatas[pair_y][pair_x].score = (baseScore + (loop * (loop + 2) * maxComboCount));
 						if (i == 0)
 						{
 							totalScore += othelloDatas[pair_y][pair_x].score * maxComboCount;
@@ -347,6 +357,32 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y, int last_x, in
 
 void CheakOthello::AddScore()
 {
-	//totalScore = (int)(totalScore * powf(1.2f, totalDeleteOthello - 1));
+	totalScore = (int)(totalScore * powf(OTHELLO_BONUS, totalDeleteOthello - 1));
 	totalDeleteOthello = 0;
+}
+
+void CheakOthello::ChangeScoreAndCombo()
+{
+	isCombos = false;
+	isCombosCheck = false;
+
+	//xがfront,yがsecond
+	int maxScore = 0;
+	int maxConboCount = 0;
+	for (auto itr = checkScoreData.begin(); itr != checkScoreData.end(); ++itr)
+	{
+		if (othelloDatas[itr->first][itr->second].score > maxScore)
+		{
+			maxScore = othelloDatas[itr->first][itr->second].score;
+			maxConboCount = othelloDatas[itr->first][itr->second].comboCount;
+		}
+	}
+
+	for (auto itr = checkScoreData.begin(); itr != checkScoreData.end(); ++itr)
+	{
+		othelloDatas[itr->first][itr->second].score = maxScore;
+		othelloDatas[itr->first][itr->second].comboCount = maxConboCount;
+	}
+
+	checkScoreData.clear();
 }
