@@ -3,6 +3,7 @@
 #include "../DX12operator.h"
 #include "../FBXObject/FBXObject.h"
 #include "../FbxLoader/FbxLoader.h"
+#include "../Sound/Sound.h"
 namespace ConstOthlloPlayer
 {
 	static const float MaxMoveAmount = 2.0f;
@@ -12,8 +13,7 @@ class OthlloPlayer
 	
 	static Model player;
 	static EachInfo each;
-	
-	
+	static SoundData moveSound;
 	
 	static bool isMoveEnd;
 	static void Move();
