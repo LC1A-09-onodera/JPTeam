@@ -112,9 +112,11 @@ public://ÉVÅ[ÉìÇ≈égÇ§Ç‡ÇÃ
 	const int selectMaxPouse = 2;
 	bool isGameEnd;
 
+	bool isPouseToTitle;
+
 	Sprite moveSprite;
 	Sprite reverseSprtie;
-	Sprite retrySprite;
+	Sprite backSprite;
 	Sprite endSprite;
 	Sprite titleSprite;
 	Sprite kagikakkoStartSprite;

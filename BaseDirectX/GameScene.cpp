@@ -178,7 +178,7 @@ void GameScene::Init()
 	isGameEnd = false;
 	moveSprite.CreateSprite(L"Resource/Img/move.png", XMFLOAT3(0, 0, 0));
 	reverseSprtie.CreateSprite(L"Resource/Img/reverse.png", XMFLOAT3(0, 0, 0));
-	retrySprite.CreateSprite(L"Resource/Img/retry.png", XMFLOAT3(0, 0, 0));
+	backSprite.CreateSprite(L"Resource/Img/back.png", XMFLOAT3(0, 0, 0));
 	endSprite.CreateSprite(L"Resource/Img/end.png", XMFLOAT3(0, 0, 0));
 	titleSprite.CreateSprite(L"Resource/Img/go_title.png", XMFLOAT3(0, 0, 0));
 	kagikakkoStartSprite.CreateSprite(L"Resource/Img/kagikakko_start.png", XMFLOAT3(0, 0, 0));
@@ -199,7 +199,7 @@ void GameScene::TitleUpdate()
 		}
 	}
 	ObjectParticles::Update();
-	if (Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01))
+	if ((Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01)) && !isPouse)
 	{
 		//オセロを爆散させてカメラの動きを開始させる
 		for (auto triangleItr = ObjectParticles::othello.particles.begin(); triangleItr != ObjectParticles::othello.particles.end(); ++triangleItr)
@@ -210,6 +210,7 @@ void GameScene::TitleUpdate()
 			countDown = countMax;
 		}
 		isSceneChange = true;
+		isPouse = false;
 		eyeStart = Camera::target.v;
 		eyeEnd = { 0.0f, 0.0f, 0.0f };
 		eyeEaseTime = 0;
@@ -220,6 +221,58 @@ void GameScene::TitleUpdate()
 		OthlloPlayer::SetPosition(XMFLOAT3(0, 0, -2));
 		OthlloPlayer::isEase = false;
 		othelloManager.StartSetPos();
+	}
+	if (!isPouse && (Input::KeyTrigger(DIK_ESCAPE) || directInput->IsButtonPush(directInput->ButtonPouse)))
+	{
+		isPouse = true;
+		selectPouse = 0;
+	}
+	//ポーズ中の処理
+	else if (isPouse)
+	{
+		if (Input::KeyTrigger(DIK_W) || directInput->IsButtonPush(directInput->UpButton))
+		{
+			if (selectPouse == 0)
+			{
+				selectPouse = selectMaxPouse;
+			}
+			else
+			{
+				selectPouse--;
+			}
+		}
+		else if (Input::KeyTrigger(DIK_S) || directInput->IsButtonPush(directInput->DownButton))
+		{
+			if (selectPouse == selectMaxPouse)
+			{
+				selectPouse = 0;
+			}
+			else
+			{
+				selectPouse++;
+			}
+		}
+		if (Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01))
+		{
+			//リザルトに戻る
+			if (selectPouse == 0)
+			{
+				isPouse = false;
+			}
+			else if (selectPouse == 1)
+			{
+				gameTime = 0;
+				isPouse = false;
+			}
+			else if (selectPouse == 2)
+			{
+				isGameEnd = true;
+			}
+		}
+		if (Input::KeyTrigger(DIK_ESCAPE) || directInput->IsButtonPush(directInput->ButtonPouse))
+		{
+			isPouse = false;
+		}
 	}
 	light->SetLightDir(XMFLOAT3(Camera::GetTargetDirection()));
 	LightUpdate();
@@ -296,6 +349,7 @@ void GameScene::GameUpdate()
 	//カメラの動き
 	if (isResultSceneChange)
 	{
+		isPouse = false;
 		if (resultForTime >= 60)
 		{
 			Camera::target.v = ShlomonMath::EaseInQuad(eyeStart, eyeEnd, eyeEaseTime);
@@ -305,7 +359,15 @@ void GameScene::GameUpdate()
 				Camera::target.v = ShlomonMath::EaseInQuad(eyeStart, eyeEnd, 1.0f);
 				resultForTime = 0;
 				isResultSceneChange = false;
-				SceneNum = RESULT;
+				if (isPouseToTitle == true)
+				{
+					SceneNum = TITLE;
+					isPouseToTitle = false;
+				}
+				else
+				{
+					SceneNum = RESULT;
+				}
 			}
 			Camera::Update();
 		}
@@ -314,7 +376,7 @@ void GameScene::GameUpdate()
 			resultForTime++;
 		}
 	}
-	if (!isPouse && (Input::KeyTrigger(DIK_ESCAPE) || directInput->IsButtonPush(directInput->ButtonPouse)))
+	if (!isPouse && (Input::KeyTrigger(DIK_ESCAPE) || directInput->IsButtonPush(directInput->ButtonPouse)) && countDown <= 0)
 	{
 		isPouse = true;
 		selectPouse = 0;
@@ -346,7 +408,7 @@ void GameScene::GameUpdate()
 		}
 		if (Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01))
 		{
-			//リザルトに戻る
+			//
 			if (selectPouse == 0)
 			{
 				isPouse = false;
@@ -354,6 +416,7 @@ void GameScene::GameUpdate()
 			else if (selectPouse == 1)
 			{
 				gameTime = 0;
+				isPouseToTitle = true;
 				isPouse = false;
 			}
 			else if (selectPouse == 2)
@@ -425,6 +488,55 @@ void GameScene::TitleDraw()
 		spaceBack.position.m128_f32[1] = 560;
 		spaceBack.SpriteDraw();
 		space.SpriteDraw();
+	}
+	if (isPouse)
+	{
+		pouseBack.ChangeSize(1280, 720);
+		pouseBack.position.m128_f32[0] = 0;
+		pouseBack.position.m128_f32[1] = 0;
+		pouseBack.SpriteDraw();
+		backSprite.position.m128_f32[0] = window_width / 2 - 100;
+		backSprite.position.m128_f32[1] = window_height / 2;
+		backSprite.SpriteDraw();
+		titleSprite.position.m128_f32[0] = window_width / 2 - 100;
+		titleSprite.position.m128_f32[1] = window_height / 2 + 80;
+		titleSprite.SpriteDraw();
+		endSprite.position.m128_f32[0] = window_width / 2 - 100;
+		endSprite.position.m128_f32[1] = window_height / 2 + 170;
+		endSprite.SpriteDraw();
+		if (selectPouse == 0)
+		{
+			kagikakkoStartSprite.ChangeSize(30, 70);
+			kagikakkoStartSprite.position.m128_f32[0] = window_width / 2 - 120;
+			kagikakkoStartSprite.position.m128_f32[1] = window_height / 2 - 10;
+			kagikakkoStartSprite.SpriteDraw();
+			kagikakkoEndSprite.ChangeSize(30, 70);
+			kagikakkoEndSprite.position.m128_f32[0] = window_width / 2 + 110;
+			kagikakkoEndSprite.position.m128_f32[1] = window_height / 2 + 15;
+			kagikakkoEndSprite.SpriteDraw();
+		}
+		else if (selectPouse == 1)
+		{
+			kagikakkoStartSprite.ChangeSize(30, 70);
+			kagikakkoStartSprite.position.m128_f32[0] = window_width / 2 - 120;
+			kagikakkoStartSprite.position.m128_f32[1] = window_height / 2 + 70;
+			kagikakkoStartSprite.SpriteDraw();
+			kagikakkoEndSprite.ChangeSize(30, 70);
+			kagikakkoEndSprite.position.m128_f32[0] = window_width / 2 + 110;
+			kagikakkoEndSprite.position.m128_f32[1] = window_height / 2 + 95;
+			kagikakkoEndSprite.SpriteDraw();
+		}
+		else if (selectPouse == 2)
+		{
+			kagikakkoStartSprite.ChangeSize(30, 70);
+			kagikakkoStartSprite.position.m128_f32[0] = window_width / 2 - 120;
+			kagikakkoStartSprite.position.m128_f32[1] = window_height / 2 + 160;
+			kagikakkoStartSprite.SpriteDraw();
+			kagikakkoEndSprite.ChangeSize(30, 70);
+			kagikakkoEndSprite.position.m128_f32[0] = window_width / 2 + 70;
+			kagikakkoEndSprite.position.m128_f32[1] = window_height / 2 + 175;
+			kagikakkoEndSprite.SpriteDraw();
+		}
 	}
 	Imgui::DrawImGui();
 	//描画コマンドここまで
@@ -542,12 +654,12 @@ void GameScene::GameDraw()
 		pouseBack.position.m128_f32[0] = 0;
 		pouseBack.position.m128_f32[1] = 0;
 		pouseBack.SpriteDraw();
+		backSprite.position.m128_f32[0] = window_width / 2 - 100;
+		backSprite.position.m128_f32[1] = window_height / 2;
+		backSprite.SpriteDraw();
 		titleSprite.position.m128_f32[0] = window_width / 2 - 100;
-		titleSprite.position.m128_f32[1] = window_height / 2;
+		titleSprite.position.m128_f32[1] = window_height / 2 + 80;
 		titleSprite.SpriteDraw();
-		retrySprite.position.m128_f32[0] = window_width / 2 - 100;
-		retrySprite.position.m128_f32[1] = window_height / 2 + 80;
-		retrySprite.SpriteDraw();
 		endSprite.position.m128_f32[0] = window_width / 2 - 100;
 		endSprite.position.m128_f32[1] = window_height / 2 + 170;
 		endSprite.SpriteDraw();
@@ -569,7 +681,7 @@ void GameScene::GameDraw()
 			kagikakkoStartSprite.position.m128_f32[1] = window_height / 2 + 70;
 			kagikakkoStartSprite.SpriteDraw();
 			kagikakkoEndSprite.ChangeSize(30, 70);
-			kagikakkoEndSprite.position.m128_f32[0] = window_width / 2 + 140;
+			kagikakkoEndSprite.position.m128_f32[0] = window_width / 2 + 110;
 			kagikakkoEndSprite.position.m128_f32[1] = window_height / 2 + 95;
 			kagikakkoEndSprite.SpriteDraw();
 		}

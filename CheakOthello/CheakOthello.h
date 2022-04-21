@@ -38,6 +38,7 @@ private:
 	int last_x;				//最後に動かしたオセロのX座標
 	int last_y;				//最後に動かしたオセロのY座標
 	int totalScore;			//合計点
+	int totalDeleteOthello;	//挟んだ個数の合計
 	bool side;				//表裏保存
 	bool checkOthello;
 
@@ -61,6 +62,8 @@ private:
 	pair<int, int> SetCheckOthello();
 	//8回呼ぶ
 	void OthelloCheck(int direction_x, int direction_y, int last_x, int last_y, bool isCheck);
+	//個数の倍率も計算
+	void AddScore();
 
 private:
 	//Vectorの中身を判定

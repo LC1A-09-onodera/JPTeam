@@ -11,6 +11,7 @@ CheakOthello::CheakOthello()
 	last_x = 0;				//最後に動かしたオセロのX座標
 	last_y = 0;				//最後に動かしたオセロのY座標
 	totalScore = 0;			//合計点
+	totalDeleteOthello = 0;
 	side = 0;				//表裏保存
 	checkOthello = 0;
 }
@@ -61,6 +62,8 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData, bo
 		OthelloCheck(Direction_X::EAST, Direction_Y::NOUTH, last.first, last.second, false);
 		/*-----右斜め下-----*/
 		OthelloCheck(Direction_X::EAST, Direction_Y::SOUTH, last.first, last.second, false);
+
+		if (totalDeleteOthello > 1) { AddScore(); }
 	}
 
 	//効率悪いです
@@ -161,6 +164,7 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y, int last_x, in
 			else if (othelloDatas[count_y][count_x].isFront == side && loop != 0)
 			{
 				SoundPlayOnce(comboSound);
+				totalDeleteOthello += loop;
 				//全部探索リストに入れる（自分と挟んだ駒まで）←sandwichArrayが同じかも参照する
 				//挟んだやつの最大のconboCountを取得→それ+1したのをコンボしたオセロにセット
 				int maxComboCount = 0;
@@ -303,7 +307,7 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y, int last_x, in
 
 			//探索可能
 			bool isActiveOthello = false;
-			for (int i = 0; i <= loop; i++)
+			for (int i = 0; i < loop; i++)
 			{
 				count_x += direction_x;
 				count_y += direction_y;
@@ -339,4 +343,10 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y, int last_x, in
 			loop++;
 		}
 	}
+}
+
+void CheakOthello::AddScore()
+{
+	//totalScore = (int)(totalScore * powf(1.2f, totalDeleteOthello - 1));
+	totalDeleteOthello = 0;
 }
