@@ -90,13 +90,11 @@ void CheakOthello::CheckLastMove(const vector<vector<SendOthelloData>>& othelloD
 		for (int j = 0; j < MAX_SIZE_X; j++)
 		{
 			if (othelloDatas[i][j].isOnPlayer) { pPos = make_pair(j, i); }
-			if (!othelloDatas[i][j].isSandwich)
-			{
+
 				//‚»‚ÌêŠ‚ª‹ó
 				if (othelloDatas[i][j].type == NONE) { continue; }
 				//ÅŒã‚É“®‚©‚µ‚Ä‚é‚â‚Â
 				if (!othelloDatas[i][j].isMove) { continue; }
-			}
 			othelloSide.push_back(othelloDatas[i][j].isFront);
 			comboOthelloDataPos.push_back(std::make_pair(i, j));
 			break;

@@ -792,10 +792,10 @@ const vector<vector<SendOthelloData>> &OthelloManager::Send()
 		data.isFront = gameDatas.isFront;
 		data.type = gameDatas.type;
 
-		//if (itr->GetIsActive())
-		//{
-		//	data.isSandwich = true;
-		//}
+		if (itr->GetIsActive())
+		{
+			data.isSandwich = true;
+		}
 
 
 		data.isMove = false;
