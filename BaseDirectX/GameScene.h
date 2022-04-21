@@ -114,4 +114,9 @@ public://ƒV[ƒ“‚Åg‚¤‚à‚Ì
 
 	Sprite moveSprite;
 	Sprite reverseSprtie;
+	Sprite retrySprite;
+	Sprite endSprite;
+	Sprite titleSprite;
+	Sprite kagikakkoStartSprite;
+	Sprite kagikakkoEndSprite;
 };
