@@ -214,13 +214,22 @@ void GameScene::TitleUpdate()
 		eyeStart = Camera::target.v;
 		eyeEnd = { 0.0f, 0.0f, 0.0f };
 		eyeEaseTime = 0;
-		gameTime = gameMaxTime;
 		SceneNum = GAME;
 		countDown = 239;
 		checkObject.SetScore(0);
 		OthlloPlayer::SetPosition(XMFLOAT3(0, 0, -2));
 		OthlloPlayer::isEase = false;
-		othelloManager.StartSetPos();
+		isTutorial = false;
+		if (isTutorial)
+		{
+			othelloManager.whySandwichSpawn();
+			gameTime = 60;
+		}
+		else
+		{
+			othelloManager.StartSetPos();
+			gameTime = gameMaxTime;
+		}
 	}
 	if (!isPouse && (Input::KeyTrigger(DIK_ESCAPE) || directInput->IsButtonPush(directInput->ButtonPouse)))
 	{
@@ -302,13 +311,27 @@ void GameScene::GameUpdate()
 			OthlloPlayer::Update();
 			ThunderModels::Update();
 			othelloManager.Controll();
-			othelloManager.Update();
+			if (isTutorial)
+			{
+				othelloManager.TutorialUpdate();
+			}
+			else
+			{
+				othelloManager.Update();
+			}
 			if (othelloManager.GetIsSendDataUpdate())
 			{
 				checkObject.Update(othelloManager.Send(), othelloManager.GetIsSendDataUpdate());
 				othelloManager.Receive(checkObject.GetOthelloDatas());
 			}
-			gameTime--;
+			if (!isTutorial)
+			{
+				gameTime--;
+			}
+			else if(othelloManager.IsTutorialEnd())
+			{
+				gameTime--;
+			}
 		}
 		else
 		{
@@ -325,7 +348,14 @@ void GameScene::GameUpdate()
 		{
 			Camera::target.v = ShlomonMath::EaseInQuad(eyeStart, eyeEnd, 1.0f);
 			isSceneChange = false;
-			gameTime = gameMaxTime;
+			if (isTutorial)
+			{
+				gameTime = 60;
+			}
+			else
+			{
+				gameTime = gameMaxTime;
+			}
 		}
 		Camera::Update();
 	}

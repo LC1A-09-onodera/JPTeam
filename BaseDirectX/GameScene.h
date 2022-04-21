@@ -123,4 +123,6 @@ public://ƒV[ƒ“‚Åg‚¤‚à‚Ì
 	Sprite kagikakkoEndSprite;
 	
 	int tornadoTime;
+
+	bool isTutorial = false;
 };

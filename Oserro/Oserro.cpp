@@ -591,6 +591,126 @@ void OthelloManager::Update()
 	}
 }
 
+void OthelloManager::TutorialUpdate()
+{
+	//死ぬ
+	DeadPanel();
+
+
+	//更新
+	auto itr = othellos.begin();
+	int panelCount = 0;
+	int comboMax = 0;
+	bool isOnPlayer;
+	for (; itr != othellos.end(); ++itr)
+	{
+		itr->Update();
+		if (!itr->GetIsActive())
+		{
+			panelCount++;
+		}
+		if (itr->GetGameData()->comboCount > comboMax)
+		{
+			comboMax = itr->GetGameData()->comboCount;
+		}
+
+		isOnPanel = (itr->GetGameData()->widthPos == playerPanelPos.x && itr->GetGameData()->heightPos == playerPanelPos.y);
+	}
+	if (Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01))
+	{
+		isFieldUpdate = true;
+	}
+	bool r = Input::KeyTrigger(DIK_R);
+
+
+	switch (scenes)
+	{
+	case TutorialSceneFlow::SandwichSpawn:
+		break;
+
+	case TutorialSceneFlow::SandwichUpdate:
+		//全部消したら次に行く
+		if (panelCount <= 0)
+		{
+			scenes = TutorialSceneFlow::ChainSpawn;
+		}
+
+		if (r)
+		{
+			whySandwichSpawn();
+		}
+		break;
+
+
+	case TutorialSceneFlow::ChainSpawn:
+		whyChainSpawn();
+		break;
+
+	case TutorialSceneFlow::ChainUpdate:
+		if (comboMax >= 2)
+		{
+			scenes = TutorialSceneFlow::StepSpawn;
+
+		}
+		if (r)
+		{
+			whyChainSpawn();
+		}
+		break;
+
+	case TutorialSceneFlow::StepSpawn:
+		whyStepSpawn();
+		break;
+
+	case TutorialSceneFlow::StepUpdate:
+		RandumSetPanel();
+		SaveSpawn();
+		if (isOnPanel)
+		{
+			scenes = TutorialSceneFlow::TutorialEnd;
+		}
+		if (r)
+		{
+			whyStepSpawn();
+		}
+		break;
+	case TutorialSceneFlow::TutorialEnd:
+		break;
+	default:
+		break;
+	}
+}
+
+void OthelloManager::TutorialTextDraw()
+{
+
+	//やり直しテキスト描画
+
+
+	switch (scenes)
+	{
+	case TutorialSceneFlow::SandwichSpawn:
+		break;
+	case TutorialSceneFlow::SandwichUpdate:
+		//テキストの描画
+		break;
+	case TutorialSceneFlow::ChainSpawn:
+		break;
+	case TutorialSceneFlow::ChainUpdate:
+		//テキストの描画
+		break;
+	case TutorialSceneFlow::StepSpawn:
+		break;
+	case TutorialSceneFlow::StepUpdate:
+		//テキストの描画
+		break;
+	case TutorialSceneFlow::TutorialEnd:
+		break;
+	default:
+		break;
+	}
+}
+
 void OthelloManager::Draw()
 {
 	if (othellos.size() == 0) return;
@@ -1431,7 +1551,7 @@ void OthelloManager::TypeC(list<Othello>::iterator playerItr, list<Othello>::ite
 		}
 		playerPanelPos = { x, y };
 	}
-	else
+
 	{
 		if (OnPlayer)
 		{
@@ -1713,18 +1833,39 @@ void OthelloModel::Update(OthelloEachInfo *each)
 	}
 }
 
-void OthelloManager::whySandwich()
+void OthelloManager::whySandwichSpawn()
 {
+	AllDeadPanel();
 
+	SetPlayerAndPanel(2, 4, false);
+	SetSpawnPanel(4, 4, false);
+	SetSpawnPanel(5, 4, true);
+
+	scenes = TutorialSceneFlow::SandwichUpdate;
 }
 
-void OthelloManager::whyChain()
+void OthelloManager::whyChainSpawn()
 {
+	AllDeadPanel();
 
+	SetSpawnPanel(4, 2, true);
+	SetSpawnPanel(4, 3, false);
+	SetPlayerAndPanel(3, 4, true);
+	SetSpawnPanel(4, 4, false);
+	SetSpawnPanel(5, 4, true);
+
+	scenes = TutorialSceneFlow::ChainUpdate;
 }
 
-void OthelloManager::whyStep()
+void OthelloManager::whyStepSpawn()
 {
+	AllDeadPanel();
+
+	SetSpawnPlayer(4, 5);
+	SetSpawnPanel(3, 4, true);
+	SetSpawnPanel(4, 4, false);
+	SetSpawnPanel(5, 4, true);
+	scenes = TutorialSceneFlow::StepUpdate;
 
 }
 
@@ -1750,7 +1891,7 @@ void OthelloManager::SetSpawnPlayer(int x, int y)
 	tmpPlayerPos.y = tmpy;
 	tmpPlayerPos = tmpPlayerPos + stageLeftTop;
 
-	playerPanelPos = {x, y};
+	playerPanelPos = { x, y };
 	OthlloPlayer::SetPosition(tmpPlayerPos);
 }
 
@@ -1758,4 +1899,9 @@ void OthelloManager::SetPlayerAndPanel(int x, int y, bool Front)
 {
 	SetSpawnPanel(x, y, Front);
 	SetSpawnPlayer(x, y);
+}
+
+bool OthelloManager::IsTutorialEnd()
+{
+	return (scenes == TutorialSceneFlow::TutorialEnd);
 }
