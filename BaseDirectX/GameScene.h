@@ -111,4 +111,7 @@ public://ƒV[ƒ“‚Åg‚¤‚à‚Ì
 	int selectPouse = 0;
 	const int selectMaxPouse = 2;
 	bool isGameEnd;
+
+	Sprite moveSprite;
+	Sprite reverseSprtie;
 };

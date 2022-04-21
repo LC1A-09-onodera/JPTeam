@@ -192,7 +192,7 @@ void GameScene::TitleUpdate()
 		}
 	}
 	ObjectParticles::Update();
-	if (Input::KeyTrigger(DIK_SPACE))
+	if (Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01))
 	{
 		//オセロを爆散させてカメラの動きを開始させる
 		for (auto triangleItr = ObjectParticles::othello.particles.begin(); triangleItr != ObjectParticles::othello.particles.end(); ++triangleItr)
@@ -307,7 +307,7 @@ void GameScene::GameUpdate()
 			resultForTime++;
 		}
 	}
-	if (!isPouse && Input::KeyTrigger(DIK_ESCAPE))
+	if (!isPouse && (Input::KeyTrigger(DIK_ESCAPE) || directInput->IsButtonPush(directInput->ButtonPouse)))
 	{
 		isPouse = true;
 		selectPouse = 0;
@@ -315,7 +315,7 @@ void GameScene::GameUpdate()
 	//ポーズ中の処理
 	else if (isPouse)
 	{
-		if (Input::KeyTrigger(DIK_W))
+		if (Input::KeyTrigger(DIK_W) || directInput->IsButtonPush(directInput->UpButton))
 		{
 			if (selectPouse == 0)
 			{
@@ -326,7 +326,7 @@ void GameScene::GameUpdate()
 				selectPouse--;	
 			}
 		}
-		else if (Input::KeyTrigger(DIK_S))
+		else if (Input::KeyTrigger(DIK_S) || directInput->IsButtonPush(directInput->DownButton))
 		{
 			if (selectPouse == selectMaxPouse)
 			{
@@ -337,7 +337,7 @@ void GameScene::GameUpdate()
 				selectPouse++;
 			}
 		}
-		if (Input::KeyTrigger(DIK_SPACE))
+		if (Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01))
 		{
 			//リザルトに戻る
 			if (selectPouse == 0)
@@ -354,7 +354,7 @@ void GameScene::GameUpdate()
 				isGameEnd = true;
 			}
 		}
-		if (Input::KeyTrigger(DIK_ESCAPE))
+		if (Input::KeyTrigger(DIK_ESCAPE) || directInput->IsButtonPush(directInput->ButtonPouse))
 		{
 			isPouse = false;
 		}
@@ -370,7 +370,7 @@ void GameScene::GameUpdate()
 
 void GameScene::ResultUpdate()
 {
-	if (Input::KeyTrigger(DIK_SPACE))
+	if (Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01))
 	{
 		OthlloPlayer::SetPosition(XMFLOAT3(0, 0, -2));
 

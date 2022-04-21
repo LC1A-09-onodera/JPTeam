@@ -21,7 +21,7 @@ OthelloData::OthelloData()
 	}
 }
 
-void Othello::Init(OthelloModel *model)
+void Othello::Init(OthelloModel* model)
 {
 	this->model = model;
 	each.CreateConstBuff0();
@@ -266,7 +266,7 @@ void Othello::LeftRevers()
 
 }
 
-void Othello::Controll(const XMFLOAT3 &mousePos, int &moveCount)
+void Othello::Controll(const XMFLOAT3& mousePos, int& moveCount)
 {
 	XMVECTOR playerPos = { data.widthPos * cellScale,data.heightPos * -cellScale , 0, 0 };
 
@@ -553,8 +553,6 @@ bool Othello::GetIsActive()
 void OthelloManager::Init()
 {
 	oserroModel.CreateModel("newOserro", ShaderManager::othelloShader);
-
-
 	sendDatas.resize(fieldSize);
 
 	auto itr = sendDatas.begin();
@@ -580,7 +578,7 @@ void OthelloManager::Update()
 	{
 		itr->Update();
 	}
-	if (Input::KeyTrigger(DIK_SPACE))
+	if (Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01))
 	{
 		isFieldUpdate = true;
 	}
@@ -657,7 +655,7 @@ void OthelloManager::SetPlayer()
 	playerItr->GetGameData()->panels = tmpPanels;
 }
 
-void OthelloManager::Move(const XMFLOAT3 &MousePos)
+void OthelloManager::Move(const XMFLOAT3& MousePos)
 {
 	XMFLOAT3 stagePos = MousePos - stageLeftTop;
 	//どのマスにマウスがあるのかを確認
@@ -669,7 +667,7 @@ void OthelloManager::Move(const XMFLOAT3 &MousePos)
 	//プレイヤーを探索
 	for (; playerItr != othellos.end(); ++playerItr)
 	{
-		OthelloData *data = playerItr->GetGameData();
+		OthelloData* data = playerItr->GetGameData();
 		if (data->isPlayer)
 		{
 			break;
@@ -710,7 +708,7 @@ void OthelloManager::RemovePlayer()
 	//プレイヤーを探索
 	for (; itr != othellos.end(); ++itr)
 	{
-		OthelloData *data = itr->GetGameData();
+		OthelloData* data = itr->GetGameData();
 		if (data->isPlayer)
 		{
 			break;
@@ -754,7 +752,7 @@ void OthelloManager::AddPanel()
 	//othellos.push_back(panelD);
 }
 
-const vector<vector<SendOthelloData>> &OthelloManager::Send()
+const vector<vector<SendOthelloData>>& OthelloManager::Send()
 {
 	if (Input::KeyTrigger(DIK_1))
 	{
@@ -804,9 +802,10 @@ const vector<vector<SendOthelloData>> &OthelloManager::Send()
 		bool isOnPlayer = (gameDatas.widthPos == playerPanelPos.x && gameDatas.heightPos == playerPanelPos.y);
 		if (isOnPlayer)
 		{
-		data.isOnPlayer = true;
+			data.isOnPlayer = true;
 		}
-		if (Input::KeyTrigger(DIK_SPACE) && isOnPlayer)
+
+		if ((Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01)) && isOnPlayer)
 		{
 			data.isMove = true;
 		}
@@ -820,7 +819,7 @@ const vector<vector<SendOthelloData>> &OthelloManager::Send()
 	return sendDatas;
 }
 
-void OthelloManager::Receive(const vector<vector<SendOthelloData>> &data)
+void OthelloManager::Receive(const vector<vector<SendOthelloData>>& data)
 {
 	sendDatas = data;
 
@@ -832,7 +831,7 @@ void OthelloManager::Receive(const vector<vector<SendOthelloData>> &data)
 	bool isSandFlip = false;
 	for (; itr != othellos.end(); itr++)
 	{
-		OthelloData *gameDatas = itr->GetGameData();
+		OthelloData* gameDatas = itr->GetGameData();
 
 		int x = gameDatas->widthPos;
 		int y = gameDatas->heightPos;
@@ -943,7 +942,7 @@ void OthelloManager::RandumSetPanel()
 {
 	spawnTimer++;
 
-	bool notSpawn = (spawnTimer < spawnTimerMAx &&moveCount < spawnMoveCount);
+	bool notSpawn = (spawnTimer < spawnTimerMAx&& moveCount < spawnMoveCount);
 	if (notSpawn)
 	{
 		return;
@@ -1123,8 +1122,12 @@ void OthelloManager::KeySetPlayer()
 	bool A = Input::KeyTrigger(DIK_A);
 	bool S = Input::KeyTrigger(DIK_S);
 	bool W = Input::KeyTrigger(DIK_W);
+	bool padD = directInput->IsButtonPush(DirectInput::ButtonKind::RightButton);
+	bool padS = directInput->IsButtonPush(DirectInput::ButtonKind::DownButton);
+	bool padA = directInput->IsButtonPush(DirectInput::ButtonKind::LeftButton);
+	bool padW = directInput->IsButtonPush(DirectInput::ButtonKind::UpButton);
 
-	if (D)
+	if (D || padD)
 	{
 		x++;
 		if (x >= fieldSize)
@@ -1132,7 +1135,7 @@ void OthelloManager::KeySetPlayer()
 			x = fieldSize - 1;
 		}
 	}
-	else if (A)
+	else if (A || padA)
 	{
 		x--;
 		if (x < 0)
@@ -1140,7 +1143,7 @@ void OthelloManager::KeySetPlayer()
 			x = 0;
 		}
 	}
-	else if (S)
+	else if (S || padS)
 	{
 		y++;
 		if (y >= fieldSize)
@@ -1148,7 +1151,7 @@ void OthelloManager::KeySetPlayer()
 			y = fieldSize - 1;
 		}
 	}
-	else if (W)
+	else if (W || padW)
 	{
 		y--;
 		if (y < 0)
@@ -1247,7 +1250,7 @@ void OthelloManager::playerMoveEnd()
 	//プレイヤーを探索
 	for (; itr != othellos.end(); ++itr)
 	{
-		OthelloData *data = itr->GetGameData();
+		OthelloData* data = itr->GetGameData();
 		if (data->isPlayer)
 		{
 
@@ -1469,7 +1472,7 @@ void OthelloManager::TypeXI(list<Othello>::iterator playerItr, list<Othello>::it
 		if (OnPlayer)
 		{
 			bool isNotMovePanel = (playerItr->GetGameData()->isVanish || playerItr->GetGameData()->isSpawn);
-			bool isNotDown = (downStepCount < downStepCountMax &&isNotMovePanel);
+			bool isNotDown = (downStepCount < downStepCountMax&& isNotMovePanel);
 			if (isNotDown)
 			{
 				DownStep(playerItr);
@@ -1527,13 +1530,13 @@ void OthelloEachInfo::CreateConstBuff0()
 	BaseDirectX::result = BaseDirectX::dev->CreateCommittedResource(&heapprop, D3D12_HEAP_FLAG_NONE, &resdesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&constBuff0));
 }
 
-void OthelloModel::Update(OthelloEachInfo *each)
+void OthelloModel::Update(OthelloEachInfo* each)
 {
 	if (each != nullptr)
 	{
 		this->each = *each;
 		XMMATRIX matScale, matRot, matTrans;
-		const XMFLOAT3 &cameraPos = Camera::eye.v;
+		const XMFLOAT3& cameraPos = Camera::eye.v;
 		matScale = XMMatrixScaling(this->each.scale.x, this->each.scale.y, this->each.scale.z);
 		matRot = XMMatrixIdentity();
 		matRot *= XMMatrixRotationZ(XMConvertToRadians(this->each.rotation.z));
@@ -1556,16 +1559,16 @@ void OthelloModel::Update(OthelloEachInfo *each)
 		matWorld *= matRot;
 		matWorld *= matTrans;
 
-		Vertex *vertMap = nullptr;
-		BaseDirectX::result = mesh.vertBuff->Map(0, nullptr, (void **)&vertMap);
+		Vertex* vertMap = nullptr;
+		BaseDirectX::result = mesh.vertBuff->Map(0, nullptr, (void**)&vertMap);
 		if (SUCCEEDED(BaseDirectX::result))
 		{
 			copy(mesh.vertices.begin(), mesh.vertices.end(), vertMap);
 			mesh.vertBuff->Unmap(0, nullptr);    // マップを解除
 		}
 
-		OthelloConstBuffer *constMap0 = nullptr;
-		if (SUCCEEDED(this->each.constBuff0->Map(0, nullptr, (void **)&constMap0)))
+		OthelloConstBuffer* constMap0 = nullptr;
+		if (SUCCEEDED(this->each.constBuff0->Map(0, nullptr, (void**)&constMap0)))
 		{
 			//constMap0->mat = matWorld * Camera::matView * BaseDirectX::matProjection;
 			constMap0->viewproj = Camera::matView * BaseDirectX::matProjection;
@@ -1575,8 +1578,8 @@ void OthelloModel::Update(OthelloEachInfo *each)
 			this->each.constBuff0->Unmap(0, nullptr);
 		}
 
-		ConstBufferDataB1 *constMap1 = nullptr;
-		BaseDirectX::result = this->each.constBuff1->Map(0, nullptr, (void **)&constMap1);
+		ConstBufferDataB1* constMap1 = nullptr;
+		BaseDirectX::result = this->each.constBuff1->Map(0, nullptr, (void**)&constMap1);
 		constMap1->ambient = material.ambient;
 		constMap1->diffuse = material.diffuse;
 		constMap1->specular = material.specular;
@@ -1587,7 +1590,7 @@ void OthelloModel::Update(OthelloEachInfo *each)
 	else
 	{
 		XMMATRIX matScale, matRot, matTrans;
-		const XMFLOAT3 &cameraPos = Camera::eye.v;
+		const XMFLOAT3& cameraPos = Camera::eye.v;
 		matScale = XMMatrixScaling(this->each.scale.x, this->each.scale.y, this->each.scale.z);
 		matRot = XMMatrixIdentity();
 		matRot *= XMMatrixRotationZ(XMConvertToRadians(this->each.rotation.z));
@@ -1610,16 +1613,16 @@ void OthelloModel::Update(OthelloEachInfo *each)
 		matWorld *= matRot;
 		matWorld *= matTrans;
 
-		Vertex *vertMap = nullptr;
-		BaseDirectX::result = mesh.vertBuff->Map(0, nullptr, (void **)&vertMap);
+		Vertex* vertMap = nullptr;
+		BaseDirectX::result = mesh.vertBuff->Map(0, nullptr, (void**)&vertMap);
 		if (SUCCEEDED(BaseDirectX::result))
 		{
 			copy(mesh.vertices.begin(), mesh.vertices.end(), vertMap);
 			mesh.vertBuff->Unmap(0, nullptr);    // マップを解除
 		}
 
-		OthelloConstBuffer *constMap0 = nullptr;
-		if (SUCCEEDED(this->each.constBuff0->Map(0, nullptr, (void **)&constMap0)))
+		OthelloConstBuffer* constMap0 = nullptr;
+		if (SUCCEEDED(this->each.constBuff0->Map(0, nullptr, (void**)&constMap0)))
 		{
 			//constMap0->mat = matWorld * Camera::matView * BaseDirectX::matProjection;
 			constMap0->viewproj = Camera::matView * BaseDirectX::matProjection;
@@ -1628,8 +1631,8 @@ void OthelloModel::Update(OthelloEachInfo *each)
 			this->each.constBuff0->Unmap(0, nullptr);
 		}
 
-		ConstBufferDataB1 *constMap1 = nullptr;
-		BaseDirectX::result = this->each.constBuff1->Map(0, nullptr, (void **)&constMap1);
+		ConstBufferDataB1* constMap1 = nullptr;
+		BaseDirectX::result = this->each.constBuff1->Map(0, nullptr, (void**)&constMap1);
 		constMap1->ambient = material.ambient;
 		constMap1->diffuse = material.diffuse;
 		constMap1->specular = material.specular;
