@@ -294,12 +294,14 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y, int last_x, in
 
 			//’Tõ‰Â”\
 			bool isActiveOthello = false;
-			for (int i = 0; i <= loop; i++)
+			for (int i = 0; i < loop; i++)
 			{
 				count_x += direction_x;
 				count_y += direction_y;
-				if (othelloDatas[count_y][count_x].isSandwich) { break; }
-				if (i == loop) { isActiveOthello = true; }
+				if (!othelloDatas[count_y][count_x].isSandwich) {
+ 					isActiveOthello = true;
+				}
+				//if (i == loop) { isActiveOthello = true; }
 			}
 
 			//‰Šú‰»
