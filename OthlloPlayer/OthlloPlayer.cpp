@@ -61,25 +61,30 @@ void OthlloPlayer::Move()
 	bool A = Input::KeyTrigger(DIK_A);
 	bool S = Input::KeyTrigger(DIK_S);
 	bool W = Input::KeyTrigger(DIK_W);
-	if ((D || A || S || W) && !isEase)
+	bool padD = directInput->IsButtonPush(DirectInput::ButtonKind::RightButton);
+	bool padS = directInput->IsButtonPush(DirectInput::ButtonKind::DownButton);
+	bool padA = directInput->IsButtonPush(DirectInput::ButtonKind::LeftButton);
+	bool padW = directInput->IsButtonPush(DirectInput::ButtonKind::UpButton);
+
+	if ((D || A || S || W || padD || padA || padW || padS) && !isEase)
 	{
 		SoundPlayOnce(moveSound);
 		isMoveEnd = false;
 		startPos = playerFbxObj->position;
 		endPos = startPos;
-		if (D && each.position.m128_f32[0] < 6.0f)
+		if ((D || padD) && each.position.m128_f32[0] < 6.0f)
 		{
 			endPos.x += MaxMoveAmount;
 		}
-		else if (A && each.position.m128_f32[0] > -8.0f)
+		else if ((A || padA) && each.position.m128_f32[0] > -8.0f)
 		{
 			endPos.x -= MaxMoveAmount;
 		}
-		else if (S && each.position.m128_f32[1] > -6.0f)
+		else if ((S || padS) && each.position.m128_f32[1] > -6.0f)
 		{
 			endPos.y -= MaxMoveAmount;
 		}
-		else if (W && each.position.m128_f32[1] < 8.0f)
+		else if ((W || padW) && each.position.m128_f32[1] < 8.0f)
 		{
 			endPos.y += MaxMoveAmount;
 		}
