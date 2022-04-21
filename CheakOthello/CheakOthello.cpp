@@ -336,7 +336,7 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y, int last_x, in
 			{
 				if (othelloDatas[pair_y][pair_x].isFront == side && loop != 0)
 				{
-					for (int i = 0; i <= loop + 1; i++)
+					for (int i = 0; i < loop + 1; i++)
 					{
 						othelloDatas[count_y][count_x].isCheckEnd = true;
 						count_x += direction_x;
