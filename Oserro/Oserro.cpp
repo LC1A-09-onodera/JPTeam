@@ -191,12 +191,13 @@ void Othello::ReversUpdate()
 	data.JumpTimer++;
 
 	int count = data.comboCount;
+	if (count >= 4)
+	{
+		count = 4;
+	}
 	const float jumpMax = 3.0f + (1 * count);
 
-	if (count >= 5)
-	{
-		count = 5;
-	}
+
 	float jumpRate = static_cast<float>(data.JumpTimer) / JumpTimerMax;
 	float jumpEaseRate = 0.0f;
 	if (data.isJumpUp)
@@ -555,7 +556,6 @@ void OthelloManager::Init()
 
 	sendDatas.resize(fieldSize);
 
-	StartSetPos();
 	auto itr = sendDatas.begin();
 	for (; itr != sendDatas.end(); itr++)
 	{

@@ -208,6 +208,7 @@ void GameScene::TitleUpdate()
 		checkObject.SetScore(0);
 		OthlloPlayer::SetPosition(XMFLOAT3(0, 0, -2));
 		OthlloPlayer::isEase = false;
+		othelloManager.StartSetPos();
 	}
 	light->SetLightDir(XMFLOAT3(Camera::GetTargetDirection()));
 	LightUpdate();
