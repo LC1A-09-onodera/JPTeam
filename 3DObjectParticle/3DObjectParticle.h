@@ -8,7 +8,7 @@ enum class ParticleType
 	TITLE,
 	Swell,
 	Target,
-
+	Tornado
 };
 
 class ObjectParticle : public Model
@@ -29,6 +29,7 @@ class ObjectParticle3D
 	float easeTime;
 	bool isSize;
 	ParticleType type;
+	float angle;
 public:
 	EachInfo each;
 	void Add(XMFLOAT3& emitter, ParticleType type);
@@ -39,11 +40,13 @@ public:
 	void InitTitle(XMFLOAT3& emitter);
 	void InitSwell(XMFLOAT3& emitter);
 	void InitTarget(XMFLOAT3 &emitter);
+	void InitTornado(XMFLOAT3 &emitter);
 	void UpdateExprotion();
 	void UpdateConverge();
 	void UpdateTitle();
 	void UpdateSwell();
 	void UpdateTarget();
+	void UpdateTornado();
 	int time;
 };
 
