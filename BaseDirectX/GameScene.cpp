@@ -392,7 +392,7 @@ void GameScene::GameUpdate()
 			}
 			else
 			{
-				selectPouse--;	
+				selectPouse--;
 			}
 		}
 		else if (Input::KeyTrigger(DIK_S) || directInput->IsButtonPush(directInput->DownButton))
@@ -429,7 +429,27 @@ void GameScene::GameUpdate()
 			isPouse = false;
 		}
 	}
-	
+	int nowMaxConbo = 0;
+	for (auto itr = othelloManager.othellos.begin(); itr != othelloManager.othellos.end(); ++itr)
+	{
+		if (nowMaxConbo < itr->GetGameData()->comboCount)
+		{
+			nowMaxConbo = itr->GetGameData()->comboCount;
+		}
+	}
+	if (nowMaxConbo >= 1)
+	{
+		tornadoTime++;
+		if (tornadoTime > 20)
+		{
+			ObjectParticles::triangle.Init(XMFLOAT3(0, 0, 0), nowMaxConbo, ParticleType::Tornado);
+			tornadoTime = 0;
+		}
+	}
+	else
+	{
+		tornadoTime = 0;
+	}
 
 	sky.Update();
 	othelloStage.Update();
@@ -652,7 +672,7 @@ void GameScene::GameDraw()
 		moveSprite.SpriteDraw();
 		reverseSprtie.position.m128_f32[0] = 600;
 		reverseSprtie.position.m128_f32[1] = 650;
-		reverseSprtie.SpriteDraw(); 
+		reverseSprtie.SpriteDraw();
 	}
 	if (isPouse)
 	{
