@@ -257,8 +257,29 @@ private:
 	void DownStepReset(){downStepCount = 0;downStepTimer = 0;}
 
 	void SaveSpawn();
+
+private:
+	void Tutorial();
+
+	//挟むチュートリアルでーす
+	void whySandwich();
+
+	//連鎖のチュートリアルだよ～ん
+	void whyChain();
+
+	//落ちてしまった場合の復帰方法だよ
+	void whyStep();
+
 private:
 
+	//プレイヤーとパネルを特定のマスに配置する処理
+	void SetPlayerAndPanel(int x,int y, bool Front);
+
+	void SetSpawnPlayer(int x, int y);
+
+	//特定のマスにパネルを配置する
+	void SetSpawnPanel(int x, int y, bool Front);
+private:
 	panelPos playerPanelPos;
 	int spawnTimer = 0;
 	int moveCount = 0;
