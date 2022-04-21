@@ -94,7 +94,7 @@ void OthlloPlayer::EaseUpdate()
 		isMoveEnd = true;
 	}
 	each.position = ConvertXMFLOAT3toXMVECTOR(ShlomonMath::EaseInQuad(startPos, endPos, easeTime));
-	playerFbxObj->position = ShlomonMath::EaseInBack(startPos, endPos, easeTime);
+	playerFbxObj->position = ShlomonMath::EaseInQuad(startPos, endPos, easeTime);
 }
 
 void OthlloPlayer::MoveCancel()

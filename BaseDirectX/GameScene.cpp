@@ -236,8 +236,11 @@ void GameScene::GameUpdate()
 			ThunderModels::Update();
 			othelloManager.Controll();
 			othelloManager.Update();
-			checkObject.Update(othelloManager.Send());
-			othelloManager.Receive(checkObject.GetOthelloDatas());
+			if (othelloManager.GetIsSendDataUpdate())
+			{
+				checkObject.Update(othelloManager.Send(), othelloManager.GetIsSendDataUpdate());
+				othelloManager.Receive(checkObject.GetOthelloDatas());
+			}
 			gameTime--;
 		}
 		else
@@ -301,7 +304,7 @@ void GameScene::GameUpdate()
 	othelloStage.Update();
 	Lights::Add(checkObject);
 	Lights::Update();
-	
+
 }
 
 void GameScene::ResultUpdate()

@@ -63,6 +63,15 @@ static const XMFLOAT3 operator /(const XMFLOAT3 v1, const XMFLOAT3 v2)
 	return result;
 }
 
+static const XMFLOAT3 operator /(const XMFLOAT3 v1, float s)
+{
+	XMFLOAT3 result;
+	result.x = v1.x / s;
+	result.y = v1.y / s;
+	result.z = v1.z / s;
+	return result;
+}
+
 static const XMFLOAT3 operator +(const XMFLOAT3 v1, const XMVECTOR v2)
 {
 	XMFLOAT3 result;
@@ -209,6 +218,15 @@ static XMFLOAT3 Lerp(const XMFLOAT3& start, XMFLOAT3& end, const float t)
 	result.z = result.z + result2.z;
 	return result;
 }
+
+static XMFLOAT3 Cross(const XMFLOAT3& v1, const XMFLOAT3& v2)
+{
+	XMFLOAT3 result;
+	result.x = v1.y * v2.z - v1.z * v2.y;
+	result.y = v1.z * v2.x - v1.x * v2.z;
+	result.z = v1.x * v2.y - v1.y * v2.x;
+	return result;
+}
 namespace ShlomonMath
 {
 	static XMFLOAT3 EaseInQuad(const XMFLOAT3& start, XMFLOAT3& end, const float t)
@@ -262,18 +280,12 @@ namespace ShlomonMath
 		return result;
 	}
 
-	static XMFLOAT3 Homing(const XMFLOAT3 &nowPosition,const XMFLOAT3 &v, const XMFLOAT3 &target, const float t)
+	static XMFLOAT3 Homing(const XMFLOAT3 &nowPosition, const XMFLOAT3 &target, const XMFLOAT3 speed)
 	{
-		XMFLOAT3 pos;
-		XMFLOAT3 acc{};
-		XMFLOAT3 sub;
-		if (t < 0.0f) return XMFLOAT3(0, 0, 0);
-		sub = target - nowPosition;
-		acc.x = acc.x + (sub.x * t) * 2.0f / pow(t, 2);
-		acc.y = acc.y + (sub.y * t) * 2.0f / pow(t, 2);
-		acc.z = acc.z + (sub.z * t) * 2.0f / pow(t, 2);
-		
-		return nowPosition + XMFLOAT3(acc.x, acc.y, acc.z);
+		XMFLOAT3 toTarget;
+		toTarget = target - nowPosition;
+		XMFLOAT3 cross = Cross(toTarget, speed);
+		return cross;
 	}
 }
 
@@ -329,6 +341,17 @@ static XMFLOAT2 Dot(const float v1, const float v2)
 	XMFLOAT2 result;
 
 	return result;
+}
+
+static float Magnitude(const XMFLOAT3& v)
+{
+	float res = v.x * v.x + v.y * v.y + v.z * v.z;
+	return sqrtf(res);
+}
+
+static float Dot(const XMFLOAT3& v1, const XMFLOAT3& v2)
+{
+	return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
 }
 
 static XMFLOAT3 GetRandom(int length)

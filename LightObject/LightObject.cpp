@@ -37,7 +37,7 @@ void LightObjectModels::Init(const pair<int, int>& start, const pair<int, int>& 
 	if (!hol && !ver)
 	{
 		//¶ã•ûŒü
-		if (startX > endX && startY > endY)
+		if ((startX > endX && startY > endY) || (startX < endX && startY < endY))
 		{
 			each1.rotation.z = 45;
 			each2.rotation.z = 45;

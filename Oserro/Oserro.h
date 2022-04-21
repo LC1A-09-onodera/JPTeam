@@ -75,16 +75,20 @@ struct OthelloData
 
 	bool isSpawn = false;
 	int spawnTimer = 0;
+
+	bool isShake = false;
 };
 struct SendOthelloData
 {
 	OthelloType type = NONE;
 	bool isFront = true;
-	list<bool> FrontActiveAngle;
 	bool isMove = false;
-	int comboCount = 0;
 	bool isSandwich = false;
+	bool isCheckEnd = false;
+	bool isOnPlayer = false;
+	list<bool> FrontActiveAngle;
 	vector<int> SandwichLength;
+	int comboCount = 0;
 	int score = 0;
 };
 
@@ -93,16 +97,18 @@ namespace OthelloConstData
 	const int fieldSize = 8;
 	const float cellScale = 1.0f;
 	const XMFLOAT3 stageLeftTop{ -cellScale * fieldSize, cellScale * fieldSize, 0 };
-	const int spawnTimerMAx = 300;
-	const int spawnMoveCount = 100;
+	const int spawnTimerMAx = 30000;
+	const int spawnMoveCount = 10000;
 	const int spawnPanelCount = 2;
-	const int minPanelCount = 15;
+	const int minPanelCount = 20;
 	//アニメーション
 	const int vanishTimerMax = 600;
 	const int animationTimerMax = 30;
 	const int waitTimerMax = 30;
 	const int JumpTimerMax = waitTimerMax / 2;
-	const int SpawnAnimationTimerMax = 180;
+	const int SpawnAnimationTimerMax = 120;
+	const int downStepTimerMax = 60;
+	const int downStepCountMax = 3;
 }
 
 class OthelloEachInfo : public EachInfo
@@ -174,6 +180,7 @@ public:
 private:
 	void ReversUpdate();
 	void LeftRevers();
+	void Shake();
 };
 
 class OthelloManager
@@ -194,9 +201,8 @@ public:
 	void DeadPanel();
 
 	void StartSetPos();
-
 	void AllDeadPanel();
-	
+	bool GetIsSendDataUpdate();
 private:
 	void SetPlayer();
 
@@ -216,7 +222,7 @@ private:
 	void playerMoveEnd();
 
 	void playerNotMove();
-	
+
 private:
 
 	/// <summary>
@@ -243,13 +249,20 @@ private:
 	/// XI[sai]のように消えかけの駒から登れる
 	/// </summary>
 	void TypeXI(list<Othello>::iterator playerItr, list<Othello>::iterator nextItr, int x, int y);
+
+	void DownStep(list<Othello>::iterator playerItr);
+
+	void DownStepReset(){downStepCount = 0;downStepTimer = 0;}
 private:
 
 	panelPos playerPanelPos;
 	int spawnTimer = 0;
 	int moveCount = 0;
+
+	int downStepTimer = 0;
+	int downStepCount = 0;
 	XMFLOAT3 mousePoint;
-	
+
 	static OthelloModel oserroModel;
 	static vector<vector<SendOthelloData>> sendDatas;
 
@@ -258,4 +271,6 @@ private:
 
 	bool isPanelMove = false;
 	bool isPlayerEnd = true;
+
+	bool isFieldUpdate = false;
 };
