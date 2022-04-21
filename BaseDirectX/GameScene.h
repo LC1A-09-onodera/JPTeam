@@ -123,4 +123,9 @@ public://ƒV[ƒ“‚Åg‚¤‚à‚Ì
 	Sprite kagikakkoEndSprite;
 	
 	int tornadoTime;
+
+	int displayScore;
+	int oldDisplay;
+	int nowScore;
+	bool scoreChange;
 };

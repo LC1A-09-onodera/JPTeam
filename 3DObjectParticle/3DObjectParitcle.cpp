@@ -194,7 +194,7 @@ void ObjectParticle3D::InitTornado(XMFLOAT3& emitter)
 	each.CreateConstBuff0();
 	each.CreateConstBuff1();
 	each.position.m128_f32[2] = 10;
-	speed.z = rand() % 10;
+	speed.z = rand() % 10 + 5;
 	speed.z = -speed.z / 100.0f;
 	angle = rand() % 360;
 	easeTime = 1.0f;
