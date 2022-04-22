@@ -134,7 +134,6 @@ void Othello::Revers()
 	data.isJumpUp = true;
 	XMFLOAT3 pos = ConvertXMVECTORtoXMFLOAT3(each.position);
 	pos.z = -0.3f;
-	ThunderModels::Init(pos, XMFLOAT3(0, 0, 0));
 }
 
 
@@ -145,7 +144,6 @@ void Othello::Sandwich()
 	data.waitTimer = animationTimerMax;
 	XMFLOAT3 pos = ConvertXMVECTORtoXMFLOAT3(each.position);
 	pos.z = -0.3f;
-	ThunderModels::Init(pos, XMFLOAT3(0, 0, 0));
 
 }
 
@@ -499,6 +497,8 @@ void Othello::Borne(OthelloType type, int x, int y, bool isFront)
 
 		each.position = XMVECTOR{ x, y ,0, 0 };
 		each.position += ConvertXMFLOAT3toXMVECTOR(stageLeftTop);
+		XMFLOAT3 pos = ConvertXMVECTORtoXMFLOAT3(each.position);
+		ObjectParticles::frame.Init(pos, 1, ParticleType::Born);
 		if (data.isFront)
 		{
 			each.rotation.y = 0;
