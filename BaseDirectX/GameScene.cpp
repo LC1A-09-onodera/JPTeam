@@ -747,6 +747,11 @@ void GameScene::GameDraw()
 		reverseSprtie.position.m128_f32[0] = 600;
 		reverseSprtie.position.m128_f32[1] = 650;
 		reverseSprtie.SpriteDraw();
+
+		if (isTutorial)
+		{
+			othelloManager.TutorialTextDraw();
+		}
 	}
 	if (isPouse)
 	{
