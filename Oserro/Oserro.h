@@ -127,6 +127,7 @@ namespace OthelloConstData
 	const int minPanelCount = 20;
 	const int chainRepairTime = 120;
 	const int saveTimerLimit = 180;
+	const int tutorialTimerLimit = 180;
 	//アニメーション
 	const int vanishTimerMax = 600;
 	const int animationTimerMax = 30;
@@ -327,4 +328,7 @@ private:
 	bool isFieldUpdate = false;
 
 	TutorialSceneFlow::TutorialScene scenes = TutorialSceneFlow::TutorialEnd;
+
+	int TutorialTimer = 0;
+	bool isTutorialClear = true;
 };

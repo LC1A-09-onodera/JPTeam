@@ -276,11 +276,6 @@ void Othello::Controll(const XMFLOAT3 &mousePos, int &moveCount)
 	bool isOver = false;
 	while (true)
 	{
-		if (Input::KeyTrigger(DIK_1))
-		{
-			int hoge = 0;
-		}
-
 
 		playerPos = { data.widthPos * cellScale * 2,data.heightPos * -cellScale * 2, 0, 0 };
 		playerPos += ConvertXMFLOAT3toXMVECTOR(stageLeftTop);
@@ -390,10 +385,6 @@ void Othello::Controll(const XMFLOAT3 &mousePos, int &moveCount)
 	{
 		if (data.isFront)
 		{
-			if (Input::KeyTrigger(DIK_1))
-			{
-				int hoge = 0;
-			}
 			if (fabs(angle.m128_f32[0]) > fabs(angle.m128_f32[1]))
 			{//横のほうが長かったら
 				//左右どちらか
@@ -421,10 +412,6 @@ void Othello::Controll(const XMFLOAT3 &mousePos, int &moveCount)
 		}
 		else
 		{
-			if (Input::KeyTrigger(DIK_1))
-			{
-				int hoge = 0;
-			}
 			if (fabs(angle.m128_f32[0]) > fabs(angle.m128_f32[1]))
 			{//横のほうが長かったら
 				//左右どちらか
@@ -585,10 +572,6 @@ void OthelloManager::Update()
 
 	SaveSpawn();
 
-	if (Input::KeyTrigger(DIK_P))
-	{
-		SetPlayerAndPanel(0, 0, true);
-	}
 }
 
 void OthelloManager::TutorialUpdate()
@@ -596,12 +579,11 @@ void OthelloManager::TutorialUpdate()
 	//死ぬ
 	DeadPanel();
 
-
 	//更新
 	auto itr = othellos.begin();
 	int panelCount = 0;
 	int comboMax = 0;
-	bool isOnPlayer;
+	bool tutorialOnPlayer = false;
 	for (; itr != othellos.end(); ++itr)
 	{
 		itr->Update();
@@ -614,13 +596,16 @@ void OthelloManager::TutorialUpdate()
 			comboMax = itr->GetGameData()->comboCount;
 		}
 
-		isOnPanel = (itr->GetGameData()->widthPos == playerPanelPos.x && itr->GetGameData()->heightPos == playerPanelPos.y);
+		if (!tutorialOnPlayer)
+		{
+			tutorialOnPlayer = (itr->GetGameData()->widthPos == playerPanelPos.x && itr->GetGameData()->heightPos == playerPanelPos.y);
+		}
 	}
 	if (Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01))
 	{
 		isFieldUpdate = true;
 	}
-	bool r = Input::KeyTrigger(DIK_R);
+	bool retry = Input::KeyTrigger(DIK_R);
 
 
 	switch (scenes)
@@ -629,13 +614,24 @@ void OthelloManager::TutorialUpdate()
 		break;
 
 	case TutorialSceneFlow::SandwichUpdate:
-		//全部消したら次に行く
+		//全部消したらチュートリアル１クリア
 		if (panelCount <= 0)
+		{
+			isTutorialClear = true;
+		}
+
+		//チュートリアルクリアしたらタイマースタート
+		if (isTutorialClear)
+		{
+			TutorialTimer++;
+		}
+
+		//タイマー分経過したら
+		if (TutorialTimer >= tutorialTimerLimit)
 		{
 			scenes = TutorialSceneFlow::ChainSpawn;
 		}
-
-		if (r)
+		if (retry)
 		{
 			whySandwichSpawn();
 		}
@@ -649,10 +645,21 @@ void OthelloManager::TutorialUpdate()
 	case TutorialSceneFlow::ChainUpdate:
 		if (comboMax >= 2)
 		{
-			scenes = TutorialSceneFlow::StepSpawn;
-
+			isTutorialClear = true;
 		}
-		if (r)
+
+		//チュートリアルクリアしたらタイマースタート
+		if (isTutorialClear)
+		{
+			TutorialTimer++;
+		}
+
+		//タイマー分経過したら
+		if (TutorialTimer >= tutorialTimerLimit)
+		{
+			scenes = TutorialSceneFlow::StepSpawn;
+		}
+		if (retry)
 		{
 			whyChainSpawn();
 		}
@@ -664,12 +671,23 @@ void OthelloManager::TutorialUpdate()
 
 	case TutorialSceneFlow::StepUpdate:
 		RandumSetPanel();
-		SaveSpawn();
-		if (isOnPanel)
+		//SaveSpawn();
+		if (tutorialOnPlayer)
+		{
+			isTutorialClear = true;
+		}
+
+		if (isTutorialClear)
+		{
+			TutorialTimer++;
+		}
+		//チュートリアルクリアしたらタイマースタート
+		if (TutorialTimer >= tutorialTimerLimit)
 		{
 			scenes = TutorialSceneFlow::TutorialEnd;
 		}
-		if (r)
+
+		if (retry)
 		{
 			whyStepSpawn();
 		}
@@ -881,10 +899,6 @@ void OthelloManager::AddPanel()
 
 const vector<vector<SendOthelloData>> &OthelloManager::Send()
 {
-	if (Input::KeyTrigger(DIK_1))
-	{
-		int hoge = 0;
-	}
 	SendOthelloData empty;
 	//空を作る
 	empty.isFront = false;
@@ -1842,6 +1856,8 @@ void OthelloManager::whySandwichSpawn()
 	SetSpawnPanel(5, 4, true);
 
 	scenes = TutorialSceneFlow::SandwichUpdate;
+	TutorialTimer = 0;
+	isTutorialClear = false;
 }
 
 void OthelloManager::whyChainSpawn()
@@ -1855,6 +1871,9 @@ void OthelloManager::whyChainSpawn()
 	SetSpawnPanel(5, 4, true);
 
 	scenes = TutorialSceneFlow::ChainUpdate;
+	TutorialTimer = 0;
+	isTutorialClear = false;
+
 }
 
 void OthelloManager::whyStepSpawn()
@@ -1865,7 +1884,10 @@ void OthelloManager::whyStepSpawn()
 	SetSpawnPanel(3, 4, true);
 	SetSpawnPanel(4, 4, false);
 	SetSpawnPanel(5, 4, true);
+
 	scenes = TutorialSceneFlow::StepUpdate;
+	TutorialTimer = 0;
+	isTutorialClear = false;
 
 }
 
