@@ -124,6 +124,8 @@ public://ƒV[ƒ“‚Åg‚¤‚à‚Ì
 	
 	int tornadoTime;
 
+	bool isTutorial = false;
+
 	int displayScore;
 	int oldDisplay;
 	int nowScore;

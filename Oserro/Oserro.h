@@ -19,6 +19,30 @@ namespace
 	};
 }
 
+namespace TutorialSceneFlow
+{
+	enum TutorialScene
+	{
+		SandwichSpawn,
+		SandwichUpdate,
+		ChainSpawn,
+		ChainUpdate,
+		StepSpawn,
+		StepUpdate,
+		TutorialEnd
+	};
+
+	enum TutorialFlow
+	{
+		FirstText,
+		FirstPlay,
+		SecondText,
+		SeconDPlay,
+		ThirdText,
+		ThirdPlay,
+		FlowEnd
+	};
+}
 struct OthelloData
 {
 	//配列にぶち込む
@@ -123,7 +147,7 @@ public:
 class OthelloModel : public Model
 {
 public:
-	void Update(OthelloEachInfo* each);
+	void Update(OthelloEachInfo *each);
 };
 
 class OthelloConstBuffer
@@ -190,6 +214,7 @@ class OthelloManager
 public:
 	void Init();
 	void Update();
+	void TutorialUpdate();
 	void Draw();
 	void Finalize();
 	void Controll();
@@ -205,6 +230,19 @@ public:
 	void StartSetPos();
 	void AllDeadPanel();
 	bool GetIsSendDataUpdate();
+public:
+	//挟むチュートリアルでーす
+	void whySandwichSpawn();
+
+	//連鎖のチュートリアルだよ～ん
+	void whyChainSpawn();
+
+	//落ちてしまった場合の復帰方法だよ
+	void whyStepSpawn();
+
+	void TutorialTextDraw();
+
+	bool IsTutorialEnd();
 private:
 	void SetPlayer();
 
@@ -254,11 +292,20 @@ private:
 
 	void DownStep(list<Othello>::iterator playerItr);
 
-	void DownStepReset(){downStepCount = 0;downStepTimer = 0;}
+	void DownStepReset() { downStepCount = 0; downStepTimer = 0; }
 
 	void SaveSpawn();
+
 private:
 
+	//プレイヤーとパネルを特定のマスに配置する処理
+	void SetPlayerAndPanel(int x, int y, bool Front);
+
+	void SetSpawnPlayer(int x, int y);
+
+	//特定のマスにパネルを配置する
+	void SetSpawnPanel(int x, int y, bool Front);
+private:
 	panelPos playerPanelPos;
 	int spawnTimer = 0;
 	int moveCount = 0;
@@ -278,4 +325,6 @@ private:
 	bool isPlayerEnd = true;
 
 	bool isFieldUpdate = false;
+
+	TutorialSceneFlow::TutorialScene scenes = TutorialSceneFlow::TutorialEnd;
 };
