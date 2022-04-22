@@ -110,6 +110,8 @@ public://ƒV[ƒ“‚Åg‚¤‚à‚Ì
 	SoundData timeUpSound;
 	SoundData enterSound;
 	SoundData BGMSound;
+	SoundData countdDownSound;
+	SoundData startSound;
 	bool isPouse;
 	int selectPouse = 0;
 	const int selectMaxPouse = 2;
