@@ -149,6 +149,7 @@ void Othello::Sandwich()
 
 void Othello::SpawnUpdate()
 {
+
 	if (data.spawnTimer >= SpawnAnimationTimerMax)
 	{
 		data.isSpawn = false;
@@ -157,7 +158,14 @@ void Othello::SpawnUpdate()
 	float nowScale = static_cast<float>(data.spawnTimer) / SpawnAnimationTimerMax;
 	data.isHarf = (nowScale >= 0.5f);
 	each.scale = { nowScale , nowScale , 1 };
-	data.spawnTimer++;
+	if (data.spawnDerayTimer <= SpawnDerayTimerMax)
+	{
+		data.spawnDerayTimer++;
+	}
+	else
+	{
+		data.spawnTimer++;
+	}
 }
 
 void Othello::ReversUpdate()
@@ -547,6 +555,33 @@ void OthelloManager::Init()
 	{
 		itr->resize(fieldSize);
 	}
+
+	TutorialText1.CreateSprite(L"Resource/Img/string_0.png", XMFLOAT3(0, 0, 0));
+	TutorialText2.CreateSprite(L"Resource/Img/string_01.png", XMFLOAT3(0, 0, 0));
+	TutorialText3.CreateSprite(L"Resource/Img/string_02.png", XMFLOAT3(0, 0, 0));
+	TutorialText4.CreateSprite(L"Resource/Img/string_03.png", XMFLOAT3(0, 0, 0));
+	TutorialText5.CreateSprite(L"Resource/Img/string_04.png", XMFLOAT3(0, 0, 0));
+	CongraturationText.CreateSprite(L"Resource/Img/excellent.png", XMFLOAT3(0, 0, 0));
+	TutorialRetryText.CreateSprite(L"Resource/Img/reset.png", XMFLOAT3(0, 0, 0));
+
+	float changeScale = 0.5f;
+
+	TutorialText1.ChangeSize(1227 * changeScale, 332 * changeScale);
+	TutorialText2.ChangeSize(1158 * changeScale, 207 * changeScale);
+	TutorialText3.ChangeSize(1158 * changeScale, 207 * changeScale);
+	TutorialText4.ChangeSize(1158 * changeScale, 207 * changeScale);
+	TutorialText5.ChangeSize(1158 * changeScale, 207 * changeScale);
+	CongraturationText.ChangeSize(457 * changeScale, 79 * changeScale);
+	TutorialRetryText.ChangeSize(288 * changeScale, 231 * changeScale);
+
+	TutorialText1.position = XMVECTOR{ 640 - (1227 * changeScale / 2), 720 - (332 * changeScale), 0, 0 };
+	TutorialText2.position = XMVECTOR{ 640 - (1158 * changeScale / 2), 720 - (207 * changeScale * 2), 0, 0 };
+	TutorialText3.position = XMVECTOR{ 640 - (1158 * changeScale / 2) , 720 - (207 * changeScale), 0, 0 };
+	TutorialText4.position = XMVECTOR{ 640 - (1158 * changeScale / 2) , 720 - (207 * changeScale * 2), 0, 0 };
+	TutorialText5.position = XMVECTOR{ 640 - (1158 * changeScale / 2) , 720 - (207 * changeScale), 0, 0 };
+	CongraturationText.position = XMVECTOR{ 640 - (457 * changeScale / 2), 360 - (79 * changeScale / 2), 0, 0 };
+	TutorialRetryText.position = XMVECTOR{ 1280 - (288 * changeScale), 720 - (231 * changeScale), 0, 0 };
+
 }
 
 void OthelloManager::Update()
@@ -605,7 +640,7 @@ void OthelloManager::TutorialUpdate()
 	{
 		isFieldUpdate = true;
 	}
-	bool retry = Input::KeyTrigger(DIK_R);
+	bool retry = (Input::KeyTrigger(DIK_R) || directInput->IsButtonPush(directInput->Button03));
 
 
 	switch (scenes)
@@ -703,23 +738,49 @@ void OthelloManager::TutorialTextDraw()
 {
 
 	//やり直しテキスト描画
-
+	TutorialRetryText.SpriteDraw();
 
 	switch (scenes)
 	{
 	case TutorialSceneFlow::SandwichSpawn:
 		break;
 	case TutorialSceneFlow::SandwichUpdate:
+		if (isTutorialClear)
+		{
+			CongraturationText.SpriteDraw();
+		}
+		else
+		{
+			TutorialText1.SpriteDraw();
+		}
 		//テキストの描画
 		break;
 	case TutorialSceneFlow::ChainSpawn:
 		break;
 	case TutorialSceneFlow::ChainUpdate:
 		//テキストの描画
+		if (isTutorialClear)
+		{
+			CongraturationText.SpriteDraw();
+		}
+		else
+		{
+			TutorialText2.SpriteDraw();
+			TutorialText3.SpriteDraw();
+		}
 		break;
 	case TutorialSceneFlow::StepSpawn:
 		break;
 	case TutorialSceneFlow::StepUpdate:
+		if (isTutorialClear)
+		{
+			CongraturationText.SpriteDraw();
+		}
+		else
+		{
+			TutorialText4.SpriteDraw();
+			TutorialText5.SpriteDraw();
+		}
 		//テキストの描画
 		break;
 	case TutorialSceneFlow::TutorialEnd:
@@ -1392,8 +1453,6 @@ void OthelloManager::StartSetPos()
 	othellos.push_back(data);
 
 	playerPanelPos = { x, y };
-
-	MinSpawn();
 }
 
 

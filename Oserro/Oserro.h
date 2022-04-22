@@ -2,7 +2,7 @@
 #include "../3DModel/Model.h"
 #include "../DX12operator.h"
 #include <list>
-
+#include "../Sprite/Sprite.h"
 
 enum OthelloType
 {
@@ -99,6 +99,7 @@ struct OthelloData
 
 	bool isSpawn = false;
 	int spawnTimer = 0;
+	int spawnDerayTimer = 0;
 
 	bool isShake = false;
 };
@@ -128,6 +129,7 @@ namespace OthelloConstData
 	const int chainRepairTime = 120;
 	const int saveTimerLimit = 180;
 	const int tutorialTimerLimit = 180;
+	const int SpawnDerayTimerMax = 60;
 	//アニメーション
 	const int vanishTimerMax = 600;
 	const int animationTimerMax = 30;
@@ -331,4 +333,15 @@ private:
 
 	int TutorialTimer = 0;
 	bool isTutorialClear = true;
+
+	Sprite TutorialText1;
+	Sprite TutorialText2;
+	Sprite TutorialText3;
+	Sprite TutorialText4;
+	Sprite TutorialText5;
+	Sprite CongraturationText;
+	Sprite TutorialRetryText;
+
+	int textChangeTimer = 0;
+	bool textChange = false;
 };
