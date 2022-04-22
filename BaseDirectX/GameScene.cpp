@@ -184,10 +184,15 @@ void GameScene::Init()
 	kagikakkoEndSprite.CreateSprite(L"Resource/Img/kagikakko_end.png", XMFLOAT3(0, 0, 0));
 	tutorialSprite.CreateSprite(L"Resource/Img/tutorial.png", XMFLOAT3(0, 0, 0));
 	titleSelectNum = 0;
+	SoundLoad("Resource/Sound/select_.wav", selectSound);
+	SoundLoad("Resource/Sound/time_up_.wav", timeUpSound);
+	SoundLoad("Resource/Sound/enter_.wav", enterSound);
+	SoundLoad("Resource/Sound/bgm_.wav", BGMSound);
 }
 
 void GameScene::TitleUpdate()
 {
+	SoundPlayOnce(BGMSound);
 	//オセロのパーティクルを出していく
 	static int particleTime = 0;
 	if (!isSceneChange)
@@ -200,6 +205,8 @@ void GameScene::TitleUpdate()
 		}
 		if (Input::KeyTrigger(DIK_A))
 		{
+			SoundStopWave(selectSound);
+			SoundPlayOnce(selectSound);
 			if (titleSelectNum == 0)
 			{
 				titleSelectNum = 1;
@@ -207,6 +214,8 @@ void GameScene::TitleUpdate()
 		}
 		if (Input::KeyTrigger(DIK_D))
 		{
+			SoundStopWave(selectSound);
+			SoundPlayOnce(selectSound);
 			if (titleSelectNum == 1)
 			{
 				titleSelectNum = 0;
@@ -216,6 +225,8 @@ void GameScene::TitleUpdate()
 	ObjectParticles::Update();
 	if ((Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01)) && !isPouse)
 	{
+		SoundStopWave(enterSound);
+		SoundPlayOnce(enterSound);
 		//オセロを爆散させてカメラの動きを開始させる
 		for (auto triangleItr = ObjectParticles::othello.particles.begin(); triangleItr != ObjectParticles::othello.particles.end(); ++triangleItr)
 		{
@@ -267,6 +278,8 @@ void GameScene::TitleUpdate()
 	{
 		if (Input::KeyTrigger(DIK_W) || directInput->IsButtonPush(directInput->UpButton))
 		{
+			SoundStopWave(selectSound);
+			SoundPlayOnce(selectSound);
 			if (selectPouse == 0)
 			{
 				selectPouse = selectMaxPouse;
@@ -278,6 +291,8 @@ void GameScene::TitleUpdate()
 		}
 		else if (Input::KeyTrigger(DIK_S) || directInput->IsButtonPush(directInput->DownButton))
 		{
+			SoundStopWave(selectSound);
+			SoundPlayOnce(selectSound);
 			if (selectPouse == selectMaxPouse)
 			{
 				selectPouse = 0;
@@ -334,6 +349,7 @@ void GameScene::GameUpdate()
 	{
 		if (countDown <= 0)
 		{
+			SoundPlayOnce(BGMSound);
 			OthlloPlayer::Update();
 			
 			othelloManager.Controll();
@@ -361,6 +377,7 @@ void GameScene::GameUpdate()
 		}
 		else
 		{
+			SoundStopWave(BGMSound);
 			countDown--;
 		}
 	}
@@ -388,6 +405,9 @@ void GameScene::GameUpdate()
 	//ゲームシーンからリザルトへのトリガー
 	if (gameTime <= 0 && !isResultSceneChange)
 	{
+		SoundStopWave(BGMSound);
+		SoundStopWave(timeUpSound);
+		SoundPlayOnce(timeUpSound);
 		for (auto triangleItr = OthelloManager::othellos.begin(); triangleItr != OthelloManager::othellos.end(); ++triangleItr)
 		{
 			XMFLOAT3 pos = triangleItr->GetPosition();
@@ -447,6 +467,8 @@ void GameScene::GameUpdate()
 	{
 		if (Input::KeyTrigger(DIK_W) || directInput->IsButtonPush(directInput->UpButton))
 		{
+			SoundStopWave(selectSound);
+			SoundPlayOnce(selectSound);
 			if (selectPouse == 0)
 			{
 				selectPouse = selectMaxPouse;
@@ -458,6 +480,8 @@ void GameScene::GameUpdate()
 		}
 		else if (Input::KeyTrigger(DIK_S) || directInput->IsButtonPush(directInput->DownButton))
 		{
+			SoundStopWave(selectSound);
+			SoundPlayOnce(selectSound);
 			if (selectPouse == selectMaxPouse)
 			{
 				selectPouse = 0;
@@ -469,6 +493,8 @@ void GameScene::GameUpdate()
 		}
 		if (Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01))
 		{
+			SoundStopWave(enterSound);
+			SoundPlayOnce(enterSound);
 			//
 			if (selectPouse == 0)
 			{
@@ -523,6 +549,8 @@ void GameScene::ResultUpdate()
 {
 	if (Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01))
 	{
+		SoundStopWave(enterSound);
+		SoundPlayOnce(enterSound);
 		OthlloPlayer::SetPosition(XMFLOAT3(0, 0, -2));
 
 		SceneNum = TITLE;
