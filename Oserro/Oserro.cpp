@@ -499,6 +499,8 @@ void Othello::Borne(OthelloType type, int x, int y, bool isFront)
 
 		each.position = XMVECTOR{ x, y ,0, 0 };
 		each.position += ConvertXMFLOAT3toXMVECTOR(stageLeftTop);
+		XMFLOAT3 pos = ConvertXMVECTORtoXMFLOAT3(each.position);
+		ObjectParticles::frame.Init(pos, 1, ParticleType::Born);
 		if (data.isFront)
 		{
 			each.rotation.y = 0;
