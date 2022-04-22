@@ -765,7 +765,7 @@ void GameScene::GameDraw()
 			changeTime = 15 - abs(nowScore - displayScore);
 			if (changeTime < 0)
 			{
-				changeTime = 1;
+				changeTime = 0;
 			}
 			changeCount = 0;
 		}
