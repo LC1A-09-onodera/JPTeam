@@ -71,7 +71,7 @@ void LightObjectModels::Init(const pair<int, int>& start, const pair<int, int>& 
 		centerY = centerY * 2.0f - 8.0f;
 		//each1.scale.y = subX;
 		startScale = { 0.1f, 0.1f, 0.1f };
-		endScale = { 0.85f, subX, 0.5f };
+		endScale = { 0.85f, subX * 1.3f, 0.5f };
 		time = 0;
 	}
 	else if (!hol || !ver)
@@ -149,7 +149,7 @@ void LightObjectModels::Update()
 {
 	if (time > 1.0f)
 	{
-		time += 0.05f;
+		time += 0.1f;
 	}
 	else
 	{

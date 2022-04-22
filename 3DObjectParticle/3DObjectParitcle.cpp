@@ -216,7 +216,9 @@ void ObjectParticle3D::InitBorn(XMFLOAT3& emitter)
 	each.CreateConstBuff0();
 	each.CreateConstBuff1();
 	each.position = ConvertXMFLOAT3toXMVECTOR(emitter);
+	
 	each.scale = {0.1f, 0.1f, 0.1f};
+	easeTime = 1.0f;
 }
 
 void ObjectParticle3D::UpdateExprotion()
@@ -329,11 +331,19 @@ void ObjectParticle3D::UpdateTornado()
 
 void ObjectParticle3D::UpdateBorn()
 {
-	each.rotation.z += 0.01f;
-	each.scale = each.scale + 0.01f;
+	
 	if (each.scale.x >= 1.0f)
 	{
-		time = 0;
+		easeTime -= 0.02f;
+		if (easeTime <= 0.0f)
+		{
+			time = 0;
+		}
+	}
+	else
+	{
+		each.rotation.z += 1.0f;
+		each.scale = each.scale + 0.01f;
 	}
 }
 

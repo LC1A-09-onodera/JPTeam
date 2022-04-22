@@ -117,7 +117,6 @@ void GameScene::Init()
 	othelloManager.Init();
 	othelloManager.AddPanel();
 
-	ThunderModels::LoadModels();
 	title.CreateSprite(L"Resource/Img/titel.png", XMFLOAT3(70, 60 + 50, 0));
 	titleBack.CreateSprite(L"Resource/Img/title_back.png", XMFLOAT3(0, 46 + 50, 0));
 	spaceBack.CreateSprite(L"Resource/Img/title_back.png", XMFLOAT3(0, 0, 0));
@@ -312,7 +311,7 @@ void GameScene::GameUpdate()
 		if (countDown <= 0)
 		{
 			OthlloPlayer::Update();
-			ThunderModels::Update();
+			
 			othelloManager.Controll();
 			if (isTutorial)
 			{
@@ -370,7 +369,6 @@ void GameScene::GameUpdate()
 			XMFLOAT3 pos = triangleItr->GetPosition();
 			ObjectParticles::triangle.Init(pos, 4, ParticleType::Exprotion);
 			triangleItr->GetGameData()->isDead = true;
-			ThunderModels::DeleteList();
 		}
 		othelloManager.DeadPanel();
 		isResultSceneChange = true;
@@ -396,6 +394,11 @@ void GameScene::GameUpdate()
 				{
 					SceneNum = TITLE;
 					isPouseToTitle = false;
+				}
+				else if (isTutorial == true)
+				{
+					SceneNum = TITLE;
+					isTutorial = false;
 				}
 				else
 				{

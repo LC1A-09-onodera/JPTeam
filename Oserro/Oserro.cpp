@@ -134,7 +134,6 @@ void Othello::Revers()
 	data.isJumpUp = true;
 	XMFLOAT3 pos = ConvertXMVECTORtoXMFLOAT3(each.position);
 	pos.z = -0.3f;
-	ThunderModels::Init(pos, XMFLOAT3(0, 0, 0));
 }
 
 
@@ -145,7 +144,6 @@ void Othello::Sandwich()
 	data.waitTimer = animationTimerMax;
 	XMFLOAT3 pos = ConvertXMVECTORtoXMFLOAT3(each.position);
 	pos.z = -0.3f;
-	ThunderModels::Init(pos, XMFLOAT3(0, 0, 0));
 
 }
 
@@ -278,11 +276,6 @@ void Othello::Controll(const XMFLOAT3 &mousePos, int &moveCount)
 	bool isOver = false;
 	while (true)
 	{
-		if (Input::KeyTrigger(DIK_1))
-		{
-			int hoge = 0;
-		}
-
 
 		playerPos = { data.widthPos * cellScale * 2,data.heightPos * -cellScale * 2, 0, 0 };
 		playerPos += ConvertXMFLOAT3toXMVECTOR(stageLeftTop);
@@ -392,10 +385,6 @@ void Othello::Controll(const XMFLOAT3 &mousePos, int &moveCount)
 	{
 		if (data.isFront)
 		{
-			if (Input::KeyTrigger(DIK_1))
-			{
-				int hoge = 0;
-			}
 			if (fabs(angle.m128_f32[0]) > fabs(angle.m128_f32[1]))
 			{//横のほうが長かったら
 				//左右どちらか
@@ -423,10 +412,6 @@ void Othello::Controll(const XMFLOAT3 &mousePos, int &moveCount)
 		}
 		else
 		{
-			if (Input::KeyTrigger(DIK_1))
-			{
-				int hoge = 0;
-			}
 			if (fabs(angle.m128_f32[0]) > fabs(angle.m128_f32[1]))
 			{//横のほうが長かったら
 				//左右どちらか
@@ -499,6 +484,8 @@ void Othello::Borne(OthelloType type, int x, int y, bool isFront)
 
 		each.position = XMVECTOR{ x, y ,0, 0 };
 		each.position += ConvertXMFLOAT3toXMVECTOR(stageLeftTop);
+		XMFLOAT3 pos = ConvertXMVECTORtoXMFLOAT3(each.position);
+		ObjectParticles::frame.Init(pos, 1, ParticleType::Born);
 		if (data.isFront)
 		{
 			each.rotation.y = 0;
@@ -585,20 +572,12 @@ void OthelloManager::Update()
 
 	SaveSpawn();
 
-	if (Input::KeyTrigger(DIK_P))
-	{
-		SetPlayerAndPanel(0, 0, true);
-	}
 }
 
 void OthelloManager::TutorialUpdate()
 {
 	//死ぬ
 	DeadPanel();
-	if (Input::KeyTrigger(DIK_1))
-	{
-		int hoge = 0;
-	}
 
 	//更新
 	auto itr = othellos.begin();
@@ -920,10 +899,6 @@ void OthelloManager::AddPanel()
 
 const vector<vector<SendOthelloData>> &OthelloManager::Send()
 {
-	if (Input::KeyTrigger(DIK_1))
-	{
-		int hoge = 0;
-	}
 	SendOthelloData empty;
 	//空を作る
 	empty.isFront = false;

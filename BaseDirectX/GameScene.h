@@ -124,12 +124,12 @@ public://ƒV[ƒ“‚Åg‚¤‚à‚Ì
 	
 	int tornadoTime;
 
-	bool isTutorial = false;
-
 	int displayScore;
 	int oldDisplay;
 	int nowScore;
 	bool scoreChange;
 	int changeTime;
 	int changeCount;
+
+	bool isTutorial = true;
 };
