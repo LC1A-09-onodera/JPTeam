@@ -107,6 +107,9 @@ public://シーンで使うもの
 	Model othelloStage;
 
 	SoundData selectSound;
+	SoundData timeUpSound;
+	SoundData enterSound;
+	SoundData BGMSound;
 	bool isPouse;
 	int selectPouse = 0;
 	const int selectMaxPouse = 2;
@@ -136,4 +139,5 @@ public://シーンで使うもの
 	bool isTutorial = true;
 
 	int titleSelectNum;
+
 };
