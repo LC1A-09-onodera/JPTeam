@@ -31,7 +31,7 @@ void OthlloPlayer::Init()
 	each.rotation = { 0, -90, 90 };
 	each.scale = { 0.5f, 0.5f, 0.5f };
 	each.position = { 0, 0, -2 ,1 };
-	SoundLoad("Resource/Sound/playerMoveSE_.wav", moveSound);
+	SoundLoad("Resource/Sound/move_.wav", moveSound);
 }
 
 void OthlloPlayer::Update()
@@ -68,6 +68,7 @@ void OthlloPlayer::Move()
 
 	if ((D || A || S || W || padD || padA || padW || padS) && !isEase)
 	{
+		SoundStopWave(moveSound);
 		SoundPlayOnce(moveSound);
 		isMoveEnd = false;
 		startPos = playerFbxObj->position;

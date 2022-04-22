@@ -121,6 +121,8 @@ public://シーンで使うもの
 	Sprite titleSprite;
 	Sprite kagikakkoStartSprite;
 	Sprite kagikakkoEndSprite;
+
+	Sprite tutorialSprite;
 	
 	int tornadoTime;
 
@@ -132,4 +134,6 @@ public://シーンで使うもの
 	int changeCount;
 
 	bool isTutorial = true;
+
+	int titleSelectNum;
 };
