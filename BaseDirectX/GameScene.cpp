@@ -225,7 +225,7 @@ void GameScene::TitleUpdate()
 		isTutorial = true;
 		if (isTutorial)
 		{
-			othelloManager.whyStepSpawn();
+			othelloManager.whySandwichSpawn();
 			gameTime = 60;
 		}
 		else
@@ -353,7 +353,7 @@ void GameScene::GameUpdate()
 			isSceneChange = false;
 			if (isTutorial)
 			{
-				gameTime = 180;
+				gameTime = 1;
 			}
 			else
 			{
