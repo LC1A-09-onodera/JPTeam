@@ -574,13 +574,14 @@ void OthelloManager::Init()
 	CongraturationText.ChangeSize(457 * changeScale, 79 * changeScale);
 	TutorialRetryText.ChangeSize(288 * changeScale, 231 * changeScale);
 
-	TutorialText1.position = XMVECTOR{ 640 - (1227 * changeScale / 2), 720 - (332 * changeScale), 0, 0 };
-	TutorialText2.position = XMVECTOR{ 640 - (1158 * changeScale / 2), 720 - (207 * changeScale * 2), 0, 0 };
-	TutorialText3.position = XMVECTOR{ 640 - (1158 * changeScale / 2) , 720 - (207 * changeScale), 0, 0 };
-	TutorialText4.position = XMVECTOR{ 640 - (1158 * changeScale / 2) , 720 - (207 * changeScale * 2), 0, 0 };
-	TutorialText5.position = XMVECTOR{ 640 - (1158 * changeScale / 2) , 720 - (207 * changeScale), 0, 0 };
+	TutorialText1.position = XMVECTOR{ 640 - (1227 * changeScale / 2), 720 - (332 * changeScale + 30), 0, 0 };
+	TutorialText2.position = XMVECTOR{ 640 - (1158 * changeScale / 2), 720 - (207 * changeScale + 30), 0, 0 };
+	TutorialText3.position = XMVECTOR{ 640 - (1158 * changeScale / 2) , 720 - (207 * changeScale + 30), 0, 0 };
+	TutorialText4.position = XMVECTOR{ 640 - (1158 * changeScale / 2) , 720 - (207 * changeScale + 30), 0, 0 };
+	TutorialText5.position = XMVECTOR{ 640 - (1158 * changeScale / 2) , 720 - (207 * changeScale + 30), 0, 0 };
 	CongraturationText.position = XMVECTOR{ 640 - (457 * changeScale / 2), 360 - (79 * changeScale / 2), 0, 0 };
-	TutorialRetryText.position = XMVECTOR{ 1280 - (288 * changeScale), 720 - (231 * changeScale), 0, 0 };
+
+	TutorialRetryText.position = XMVECTOR{ 990, 300, 0, 0 };
 
 }
 
@@ -737,6 +738,11 @@ void OthelloManager::TutorialUpdate()
 void OthelloManager::TutorialTextDraw()
 {
 
+	if (textChangeTimer >= 300)
+	{
+		textChangeTimer = 0;
+		textChange = !textChange;
+	}
 	//やり直しテキスト描画
 	TutorialRetryText.SpriteDraw();
 
@@ -765,8 +771,15 @@ void OthelloManager::TutorialTextDraw()
 		}
 		else
 		{
-			TutorialText2.SpriteDraw();
-			TutorialText3.SpriteDraw();
+			textChangeTimer++;
+			if (textChange)
+			{
+				TutorialText3.SpriteDraw();
+			}
+			else
+			{
+				TutorialText2.SpriteDraw();
+			}
 		}
 		break;
 	case TutorialSceneFlow::StepSpawn:
@@ -778,8 +791,15 @@ void OthelloManager::TutorialTextDraw()
 		}
 		else
 		{
-			TutorialText4.SpriteDraw();
-			TutorialText5.SpriteDraw();
+			textChangeTimer++;
+			if (textChange)
+			{
+				TutorialText5.SpriteDraw();
+			}
+			else
+			{
+				TutorialText4.SpriteDraw();
+			}
 		}
 		//テキストの描画
 		break;
