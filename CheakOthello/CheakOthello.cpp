@@ -30,7 +30,7 @@ void CheakOthello::Init()
 	totalScore = 0;			//合計点
 	side = 0;				//表裏保存
 	checkOthello = 0;
-	SoundLoad("Resource/Sound/goalSE_.wav", comboSound);
+	SoundLoad("Resource/Sound/reverse_4_.wav", comboSound);
 
 	isCombos = false;
 	isCombosCheck = false;
@@ -172,6 +172,7 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y, int last_x, in
 			{
 				if (isCombos) { isCombosCheck = true; }
 				isCombos = true;
+				SoundStopWave(comboSound);
 				SoundPlayOnce(comboSound);
 				totalDeleteOthello += loop;
 				//全部探索リストに入れる（自分と挟んだ駒まで）←sandwichArrayが同じかも参照する
