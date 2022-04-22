@@ -117,7 +117,6 @@ void GameScene::Init()
 	othelloManager.Init();
 	othelloManager.AddPanel();
 
-	ThunderModels::LoadModels();
 	title.CreateSprite(L"Resource/Img/titel.png", XMFLOAT3(70, 60 + 50, 0));
 	titleBack.CreateSprite(L"Resource/Img/title_back.png", XMFLOAT3(0, 46 + 50, 0));
 	spaceBack.CreateSprite(L"Resource/Img/title_back.png", XMFLOAT3(0, 0, 0));
@@ -214,7 +213,6 @@ void GameScene::TitleUpdate()
 		eyeStart = Camera::target.v;
 		eyeEnd = { 0.0f, 0.0f, 0.0f };
 		eyeEaseTime = 0;
-		gameTime = gameMaxTime;
 		SceneNum = GAME;
 		nowScore = 0;
 		displayScore = 0;
@@ -223,7 +221,17 @@ void GameScene::TitleUpdate()
 		checkObject.SetScore(0);
 		OthlloPlayer::SetPosition(XMFLOAT3(0, 0, -2));
 		OthlloPlayer::isEase = false;
-		othelloManager.StartSetPos();
+		isTutorial = true;
+		if (isTutorial)
+		{
+			othelloManager.whySandwichSpawn();
+			gameTime = 60;
+		}
+		else
+		{
+			othelloManager.StartSetPos();
+			gameTime = gameMaxTime;
+		}
 	}
 	if (!isPouse && (Input::KeyTrigger(DIK_ESCAPE) || directInput->IsButtonPush(directInput->ButtonPouse)))
 	{
@@ -303,15 +311,29 @@ void GameScene::GameUpdate()
 		if (countDown <= 0)
 		{
 			OthlloPlayer::Update();
-			ThunderModels::Update();
+			
 			othelloManager.Controll();
-			othelloManager.Update();
+			if (isTutorial)
+			{
+				othelloManager.TutorialUpdate();
+			}
+			else
+			{
+				othelloManager.Update();
+			}
 			if (othelloManager.GetIsSendDataUpdate())
 			{
 				checkObject.Update(othelloManager.Send(), othelloManager.GetIsSendDataUpdate());
 				othelloManager.Receive(checkObject.GetOthelloDatas());
 			}
-			gameTime--;
+			if (!isTutorial)
+			{
+				gameTime--;
+			}
+			else if(othelloManager.IsTutorialEnd())
+			{
+				gameTime--;
+			}
 		}
 		else
 		{
@@ -328,7 +350,14 @@ void GameScene::GameUpdate()
 		{
 			Camera::target.v = ShlomonMath::EaseInQuad(eyeStart, eyeEnd, 1.0f);
 			isSceneChange = false;
-			gameTime = gameMaxTime;
+			if (isTutorial)
+			{
+				gameTime = 60;
+			}
+			else
+			{
+				gameTime = gameMaxTime;
+			}
 		}
 		Camera::Update();
 	}
@@ -340,7 +369,6 @@ void GameScene::GameUpdate()
 			XMFLOAT3 pos = triangleItr->GetPosition();
 			ObjectParticles::triangle.Init(pos, 4, ParticleType::Exprotion);
 			triangleItr->GetGameData()->isDead = true;
-			ThunderModels::DeleteList();
 		}
 		othelloManager.DeadPanel();
 		isResultSceneChange = true;
@@ -366,6 +394,11 @@ void GameScene::GameUpdate()
 				{
 					SceneNum = TITLE;
 					isPouseToTitle = false;
+				}
+				else if (isTutorial == true)
+				{
+					SceneNum = TITLE;
+					isTutorial = false;
 				}
 				else
 				{

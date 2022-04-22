@@ -130,4 +130,6 @@ public://ƒV[ƒ“‚Åg‚¤‚à‚Ì
 	bool scoreChange;
 	int changeTime;
 	int changeCount;
+
+	bool isTutorial = true;
 };
