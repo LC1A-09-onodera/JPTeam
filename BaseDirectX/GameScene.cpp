@@ -188,11 +188,13 @@ void GameScene::Init()
 	SoundLoad("Resource/Sound/time_up_.wav", timeUpSound);
 	SoundLoad("Resource/Sound/enter_.wav", enterSound);
 	SoundLoad("Resource/Sound/bgm_.wav", BGMSound);
+	SoundLoad("Resource/Sound/start_.wav", startSound);
+	SoundLoad("Resource/Sound/count_down_.wav", countdDownSound);
 }
 
 void GameScene::TitleUpdate()
 {
-	//SoundPlayOnce(BGMSound);
+	SoundPlayOnce(BGMSound);
 	//オセロのパーティクルを出していく
 	static int particleTime = 0;
 	if (!isSceneChange)
@@ -349,7 +351,7 @@ void GameScene::GameUpdate()
 	{
 		if (countDown <= 0)
 		{
-			//SoundPlayOnce(BGMSound);
+			SoundPlayOnce(BGMSound);
 			OthlloPlayer::Update();
 			
 			othelloManager.Controll();
@@ -374,12 +376,19 @@ void GameScene::GameUpdate()
 			{
 				gameTime--;
 			}
+			countDown--;
 		}
 		else
 		{
 			SoundStopWave(BGMSound);
 			countDown--;
 		}
+	}
+	if (countDown == 45)
+	{
+		SoundStopWave(countdDownSound);
+		SoundStopWave(startSound);
+		SoundPlayOnce(startSound);
 	}
 	ObjectParticles::Update();
 	//タイトルからgameシーンへ
@@ -398,6 +407,8 @@ void GameScene::GameUpdate()
 			else
 			{
 				gameTime = gameMaxTime;
+				SoundStopWave(countdDownSound);
+				SoundPlayOnce(countdDownSound);
 			}
 		}
 		Camera::Update();
@@ -677,7 +688,6 @@ void GameScene::TitleDraw()
 			kagikakkoEndSprite.SpriteDraw();
 		}
 	}
-	Imgui::DrawImGui();
 	//描画コマンドここまで
 	BaseDirectX::UpdateBack();
 }
@@ -703,7 +713,6 @@ void GameScene::SelectDraw()
 	//スプライトの描画-------------------------
 	//titleSprite.SpriteDraw();
 
-	Imgui::DrawImGui();
 	//描画コマンドここまで
 	BaseDirectX::UpdateBack();
 }
@@ -765,7 +774,7 @@ void GameScene::GameDraw()
 			changeTime = 15 - abs(nowScore - displayScore);
 			if (changeTime < 0)
 			{
-				changeTime = 0;
+				changeTime = 1;
 			}
 			changeCount = 0;
 		}
@@ -951,7 +960,6 @@ void GameScene::ResultDraw()
 	spaceBack.position.m128_f32[1] = 560;
 	spaceBack.SpriteDraw();
 	space.SpriteDraw();
-	Imgui::DrawImGui();
 	//描画コマンドここまで
 	BaseDirectX::UpdateBack();
 }
@@ -976,8 +984,6 @@ void GameScene::EndDraw()
 
 	//スプライトの描画-------------------------
 	//titleSprite.SpriteDraw();
-
-	Imgui::DrawImGui();
 	//描画コマンドここまで
 	BaseDirectX::UpdateBack();
 }

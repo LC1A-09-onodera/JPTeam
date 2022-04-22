@@ -341,6 +341,7 @@ private:
 	Sprite TutorialText5;
 	Sprite CongraturationText;
 	Sprite TutorialRetryText;
+	Sprite back;
 
 	int textChangeTimer = 0;
 	bool textChange = false;
