@@ -595,13 +595,16 @@ void OthelloManager::TutorialUpdate()
 {
 	//Ž€‚Ê
 	DeadPanel();
-
+	if (Input::KeyTrigger(DIK_1))
+	{
+		int hoge = 0;
+	}
 
 	//XV
 	auto itr = othellos.begin();
 	int panelCount = 0;
 	int comboMax = 0;
-	bool isOnPlayer;
+	bool tutorialOnPlayer = false;
 	for (; itr != othellos.end(); ++itr)
 	{
 		itr->Update();
@@ -614,7 +617,10 @@ void OthelloManager::TutorialUpdate()
 			comboMax = itr->GetGameData()->comboCount;
 		}
 
-		isOnPanel = (itr->GetGameData()->widthPos == playerPanelPos.x && itr->GetGameData()->heightPos == playerPanelPos.y);
+		if (!tutorialOnPlayer)
+		{
+			tutorialOnPlayer = (itr->GetGameData()->widthPos == playerPanelPos.x && itr->GetGameData()->heightPos == playerPanelPos.y);
+		}
 	}
 	if (Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01))
 	{
@@ -664,8 +670,8 @@ void OthelloManager::TutorialUpdate()
 
 	case TutorialSceneFlow::StepUpdate:
 		RandumSetPanel();
-		SaveSpawn();
-		if (isOnPanel)
+		//SaveSpawn();
+		if (tutorialOnPlayer)
 		{
 			scenes = TutorialSceneFlow::TutorialEnd;
 		}

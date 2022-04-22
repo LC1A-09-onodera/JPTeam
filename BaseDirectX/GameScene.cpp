@@ -219,10 +219,10 @@ void GameScene::TitleUpdate()
 		checkObject.SetScore(0);
 		OthlloPlayer::SetPosition(XMFLOAT3(0, 0, -2));
 		OthlloPlayer::isEase = false;
-		isTutorial = false;
+		isTutorial = true;
 		if (isTutorial)
 		{
-			othelloManager.whySandwichSpawn();
+			othelloManager.whyStepSpawn();
 			gameTime = 60;
 		}
 		else
@@ -350,7 +350,7 @@ void GameScene::GameUpdate()
 			isSceneChange = false;
 			if (isTutorial)
 			{
-				gameTime = 60;
+				gameTime = 180;
 			}
 			else
 			{
