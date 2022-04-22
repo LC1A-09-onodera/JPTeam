@@ -82,7 +82,7 @@ public://シーンで使うもの
 	bool isCountDownEnd;
 	int countDownFrame;
 	const int countMax = 239;
-	Sprite numbers[20];
+	Sprite numbers[30];
 	//gameシーンからリザルトから使う
 	bool isResultSceneChange;
 	int resultSceneWindowSize;
@@ -125,4 +125,11 @@ public://シーンで使うもの
 	int tornadoTime;
 
 	bool isTutorial = false;
+
+	int displayScore;
+	int oldDisplay;
+	int nowScore;
+	bool scoreChange;
+	int changeTime;
+	int changeCount;
 };
