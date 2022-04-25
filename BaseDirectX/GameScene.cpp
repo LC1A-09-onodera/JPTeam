@@ -353,7 +353,7 @@ void GameScene::GameUpdate()
 		{
 			SoundPlayOnce(BGMSound);
 			OthlloPlayer::Update();
-			
+
 			othelloManager.Controll();
 			if (isTutorial)
 			{
@@ -372,7 +372,7 @@ void GameScene::GameUpdate()
 			{
 				gameTime--;
 			}
-			else if(othelloManager.IsTutorialEnd())
+			else if (othelloManager.IsTutorialEnd())
 			{
 				gameTime--;
 			}
@@ -765,7 +765,7 @@ void GameScene::GameDraw()
 		numbers[gameTime / 600 % 10 + 10].position.m128_f32[0] = window_width / 2 - 60;
 		numbers[gameTime / 600 % 10 + 10].position.m128_f32[1] = 30;
 		numbers[gameTime / 600 % 10 + 10].SpriteDraw();
-		
+
 		oldDisplay = nowScore;
 		nowScore = checkObject.GetScore();
 		if (oldDisplay != nowScore)
@@ -782,11 +782,24 @@ void GameScene::GameDraw()
 		{
 			if (nowScore >= displayScore)
 			{
-				changeCount++;
-				if (changeCount == changeTime)
+				int sub = abs(nowScore - displayScore);
+				if (sub < 100)
 				{
-					displayScore++;
-					changeCount = 0;
+					changeCount++;
+					if (changeCount == changeTime)
+					{
+						displayScore++;
+						changeCount = 0;
+					}
+				}
+				else
+				{
+					changeCount++;
+					if (changeCount == changeTime)
+					{
+						displayScore += sub / 60;
+						changeCount = 0;
+					}
 				}
 			}
 			else
@@ -797,7 +810,7 @@ void GameScene::GameDraw()
 				changeTime = 0;
 			}
 		}
-		
+
 		float wid = 40;
 		float widPuls = 45;
 		if (scoreChange)
