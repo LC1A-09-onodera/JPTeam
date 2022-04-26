@@ -106,7 +106,8 @@ void Othello::Draw()
 		//each.rotation = {90, 0,0 };
 		//each.scale = {1, 1, 1};
 		//each.rotation.y ++;
-		if (each.scale.x > 0.7)
+		float nowScale = each.scale.z;
+		if (nowScale > PanelSize * 0.7)
 		{
 			each.alpha = 1.0f;
 		}
@@ -157,7 +158,8 @@ void Othello::SpawnUpdate()
 
 	float nowScale = static_cast<float>(data.spawnTimer) / SpawnAnimationTimerMax;
 	data.isHarf = (nowScale >= 0.5f);
-	each.scale = { nowScale , nowScale , 1 };
+	//each.scale = { nowScale , nowScale , 1 };//í èÌägèk
+	each.scale = { 1.0f , 1.0f ,  PanelSize * nowScale};
 	if (data.spawnDerayTimer <= SpawnDerayTimerMax)
 	{
 		data.spawnDerayTimer++;
@@ -463,6 +465,7 @@ void Othello::Spawn(OthelloType type, int x, int y, bool isFront)
 		float y = -(data.heightPos * cellScale * 2);
 
 		each.position = XMVECTOR{ x, y ,0, 0 };
+		each.scale = { 1.0f , 1.0f ,  PanelSize };
 		each.position += ConvertXMFLOAT3toXMVECTOR(stageLeftTop);
 		if (data.isFront)
 		{
@@ -528,7 +531,8 @@ void Othello::Sink()
 	{
 		float nowScale = static_cast<float>(data.vanishTimer) / vanishTimerMax;
 		data.isHarf = (nowScale >= 0.5f);
-		each.scale = { 1 - nowScale, 1 - nowScale, 1.0f };
+		//each.scale = { 1 - nowScale, 1 - nowScale, 1.0f };
+		each.scale = { 1.0f, 1.0f, PanelSize * (1 - nowScale)};
 	}
 }
 

@@ -102,6 +102,7 @@ struct OthelloData
 	int spawnDerayTimer = 0;
 
 	bool isShake = false;
+	int chainName = 0;
 };
 struct SendOthelloData
 {
@@ -115,6 +116,7 @@ struct SendOthelloData
 	vector<int> SandwichLength;
 	int comboCount = 0;
 	int score = 0;
+	int chainName =0;
 };
 
 namespace OthelloConstData
@@ -130,6 +132,8 @@ namespace OthelloConstData
 	const int saveTimerLimit = 180;
 	const int tutorialTimerLimit = 180;
 	const int SpawnDerayTimerMax = 60;
+
+	const float PanelSize = 10.0f;
 	//アニメーション
 	const int vanishTimerMax = 600;
 	const int animationTimerMax = 30;
