@@ -4,6 +4,13 @@
 using namespace Microsoft::WRL;
 using namespace DirectX;
 
+enum ImguiTab
+{
+    Status,
+    PostEffect,
+    Camera,
+};
+
 class Imgui
 {
 private:
@@ -33,6 +40,15 @@ public:
     static int spritePos6[2];
     static int spritePos7[2];
 
+    //System
+    static float fps;
+    static float eyePos[3];
+    static float target[3];
+
+    //imgui‚Ì‘®«
+    static ImguiTab tab;
+
+    static int combo;
 
     static int score;
 
