@@ -1077,8 +1077,6 @@ void OthelloManager::Receive(const vector<vector<SendOthelloData>> &data)
 			continue;
 		}
 
-		gameDatas->comboCount = sendDatas[y][x].comboCount;
-
 		if (sendDatas[y][x].isCheckEnd)
 		{
 			gameDatas->isShake = true;
@@ -1134,6 +1132,8 @@ void OthelloManager::Receive(const vector<vector<SendOthelloData>> &data)
 	for (; repairItr != repairOthellos.end(); repairItr++)
 	{
 		auto repaierOthelloDataItr = *repairItr;
+		int x = repaierOthelloDataItr->GetGameData()->widthPos;
+		int y = repaierOthelloDataItr->GetGameData()->heightPos;
 		if (isSandFlip)
 		{
 			int timer = repaierOthelloDataItr->GetGameData()->vanishTimer;
@@ -1141,6 +1141,7 @@ void OthelloManager::Receive(const vector<vector<SendOthelloData>> &data)
 			if (timer >= chainRepairTime)
 			{
 				timer -= chainRepairTime;
+				repaierOthelloDataItr->GetGameData()->comboCount = sendDatas[y][x].comboCount;
 			}
 			else
 			{
