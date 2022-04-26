@@ -1077,6 +1077,8 @@ void OthelloManager::Receive(const vector<vector<SendOthelloData>> &data)
 			continue;
 		}
 
+		gameDatas->comboCount = sendDatas[y][x].comboCount;
+
 		if (sendDatas[y][x].isCheckEnd)
 		{
 			gameDatas->isShake = true;
@@ -1729,7 +1731,7 @@ void OthelloManager::TypeXI(list<Othello>::iterator playerItr, list<Othello>::it
 	{
 		if (OnPlayer)
 		{
-			bool isNotMovePanel = (playerItr->GetGameData()->isVanish || playerItr->GetGameData()->isSpawn);
+			bool isNotMovePanel = (playerItr->GetGameData()->isVanish || playerItr->GetGameData()->isSpawn || playerItr->GetGameData()->isSandwich);
 			bool isNotDown = (downStepCount < downStepCountMax &&isNotMovePanel);
 			if (isNotDown)
 			{
