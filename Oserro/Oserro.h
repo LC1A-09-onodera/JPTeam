@@ -103,6 +103,7 @@ struct OthelloData
 
 	bool isShake = false;
 	int chainName = 0;
+	int maxComboCount = 0;
 };
 struct SendOthelloData
 {
@@ -129,7 +130,7 @@ namespace OthelloConstData
 	const int spawnTimerMAx = 300;
 	const int spawnMoveCount = 100;
 	const int spawnPanelCount = 2;
-	const int minPanelCount = 20;
+	const int minPanelCount = 1;
 	const int chainRepairTime = 120;
 	const int saveTimerLimit = 180;
 	const int tutorialTimerLimit = 180;
