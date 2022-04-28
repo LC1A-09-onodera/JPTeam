@@ -555,8 +555,8 @@ bool Othello::GetIsActive()
 void OthelloManager::Init()
 {
 	oserroModel.CreateModel("newOserro", ShaderManager::othelloShader);
-	chanceModelBlue  .CreateModel("newOserro", ShaderManager::othelloShader);
-	chanceModelOrange.CreateModel("newOserro", ShaderManager::othelloShader);
+	chanceModelBlue.CreateModel("chance_1", ShaderManager::othelloShader);
+	chanceModelOrange.CreateModel("chance", ShaderManager::othelloShader);
 	sendDatas.resize(fieldSize);
 
 	auto itr = sendDatas.begin();
@@ -833,7 +833,7 @@ void OthelloManager::TutorialTextDraw()
 void OthelloManager::Draw()
 {
 	OthelloDraw();
-	ChanceDraw();
+	//ChanceDraw();
 }
 
 void OthelloManager::OthelloDraw()
@@ -1070,6 +1070,8 @@ const vector<vector<SendOthelloData>> &OthelloManager::Send()
 		data.comboCount = gameDatas.comboCount;
 		data.SandwichLength = gameDatas.SandwichLength;
 		data.score = gameDatas.score;
+		data.chainName = gameDatas.chainName;
+		data.maxComboCount = gameDatas.maxComboCount;
 		sendDatas[gameDatas.heightPos][gameDatas.widthPos] = data;
 	}
 
@@ -1092,6 +1094,9 @@ void OthelloManager::Receive(const vector<vector<SendOthelloData>> &data)
 
 		int x = gameDatas->widthPos;
 		int y = gameDatas->heightPos;
+
+		gameDatas->score = sendDatas[y][x].score;
+		
 		if (sendDatas[y][x].type == NONE)
 		{
 			continue;
@@ -1162,6 +1167,10 @@ void OthelloManager::Receive(const vector<vector<SendOthelloData>> &data)
 			{
 				timer -= chainRepairTime;
 				repaierOthelloDataItr->GetGameData()->comboCount = sendDatas[y][x].comboCount;
+				repaierOthelloDataItr->GetGameData()->score = sendDatas[y][x].score;
+				repaierOthelloDataItr->GetGameData()->maxComboCount = sendDatas[y][x].maxComboCount;
+				repaierOthelloDataItr->GetGameData()->chainName = sendDatas[y][x].chainName;
+
 			}
 			else
 			{
@@ -1512,7 +1521,11 @@ void OthelloManager::StartSetPos()
 
 	playerPanelPos = { x, y };
 
-	SetChanceObject(1, 1, true);
+	for (int i = 0; i < 8; i++)
+	{
+		SetChanceObject(i, i, true);
+		SetChanceObject(i, 7-i, false);
+	}
 }
 
 
@@ -2051,6 +2064,14 @@ void OthelloManager::SetChanceObject(int x, int y, bool Front)
 {
 	ChanceObject data;
 	data.Init(&chanceModelBlue);
+	if (Front)
+	{
+		data.SetModel(&chanceModelBlue);
+	}
+	else
+	{
+		data.SetModel(&chanceModelOrange);
+	}
 	data.Spawn(x, y, Front);
 	chances.push_back(data);
 }
@@ -2067,8 +2088,8 @@ void ChanceObject::Update()
 }
 void ChanceObject::Draw()
 {
-	if(model == nullptr){return;}
-	
+	if (model == nullptr) { return; }
+
 	model->Update(&each);
 	Draw3DObject(*model);
 }
@@ -2083,7 +2104,7 @@ void ChanceObject::Spawn(int x, int y, bool isFront)
 	float posY = -(y * cellScale * 2);
 
 	each.position = XMVECTOR{ posX, posY ,0, 0 };
-	each.scale = { 1.0f , 1.0f ,  20.0f };
+	each.scale = { 1.0f , 1.0f ,  1.5f };
 	each.position += ConvertXMFLOAT3toXMVECTOR(stageLeftTop);
 	each.alpha = 0.4f;
 	if (isFront)
