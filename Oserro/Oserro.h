@@ -130,7 +130,7 @@ namespace OthelloConstData
 	const int spawnTimerMAx = 300;
 	const int spawnMoveCount = 100;
 	const int spawnPanelCount = 2;
-	const int minPanelCount = 1;
+	const int minPanelCount = 20;
 	const int chainRepairTime = 120;
 	const int saveTimerLimit = 180;
 	const int tutorialTimerLimit = 180;
