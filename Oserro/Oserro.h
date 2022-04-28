@@ -116,7 +116,9 @@ struct SendOthelloData
 	vector<int> SandwichLength;
 	int comboCount = 0;
 	int score = 0;
-	int chainName =0;
+	int chainName = 0;
+	int maxComboCount = 0;
+	
 };
 
 namespace OthelloConstData
@@ -216,6 +218,27 @@ private:
 	void Shake();
 };
 
+class ChanceModel : public OthelloModel
+{
+
+};
+class ChanceObject
+{
+public:
+	void Init(ChanceModel *model);
+	void Update();
+	void Draw();
+	void Finalize();
+
+	void Spawn(int x, int y, bool isFront = true);
+	void SetModel(ChanceModel *model) { this->model = model; }
+public:
+	OthelloEachInfo each;
+	bool isFront = false;
+private:
+	ChanceModel *model;
+};
+
 class OthelloManager
 {
 public:
@@ -232,6 +255,7 @@ public:
 
 	void MinSpawn();
 	static list<Othello> othellos;
+	static list<ChanceObject> chances;
 	void DeadPanel();
 
 	void StartSetPos();
@@ -269,6 +293,12 @@ private:
 	void playerMoveEnd();
 
 	void playerNotMove();
+
+	void OthelloDraw();
+private://チャンスオブジェクト
+
+	void SetChanceObject(int x, int y, bool Front);
+	void ChanceDraw();
 
 private:
 
@@ -312,6 +342,7 @@ private:
 
 	//特定のマスにパネルを配置する
 	void SetSpawnPanel(int x, int y, bool Front);
+
 private:
 	panelPos playerPanelPos;
 	int spawnTimer = 0;
@@ -323,6 +354,8 @@ private:
 	XMFLOAT3 mousePoint;
 
 	static OthelloModel oserroModel;
+	static ChanceModel chanceModelBlue;
+	static ChanceModel chanceModelOrange;
 	static vector<vector<SendOthelloData>> sendDatas;
 
 	bool isOnPanel = true;

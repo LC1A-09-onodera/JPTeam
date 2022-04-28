@@ -9,7 +9,10 @@
 #include <random>
 #include <limits>
 list<Othello> OthelloManager::othellos;
+list<ChanceObject> OthelloManager::chances;
 OthelloModel OthelloManager::oserroModel;
+ChanceModel OthelloManager::chanceModelBlue;
+ChanceModel OthelloManager::chanceModelOrange;
 vector<vector<SendOthelloData>> OthelloManager::sendDatas;
 using namespace OthelloConstData;
 
@@ -159,7 +162,7 @@ void Othello::SpawnUpdate()
 	float nowScale = static_cast<float>(data.spawnTimer) / SpawnAnimationTimerMax;
 	data.isHarf = (nowScale >= 0.5f);
 	//each.scale = { nowScale , nowScale , 1 };//通常拡縮
-	each.scale = { 1.0f , 1.0f ,  PanelSize * nowScale};
+	each.scale = { 1.0f , 1.0f ,  PanelSize * nowScale };
 	if (data.spawnDerayTimer <= SpawnDerayTimerMax)
 	{
 		data.spawnDerayTimer++;
@@ -532,7 +535,7 @@ void Othello::Sink()
 		float nowScale = static_cast<float>(data.vanishTimer) / vanishTimerMax;
 		data.isHarf = (nowScale >= 0.5f);
 		//each.scale = { 1 - nowScale, 1 - nowScale, 1.0f };
-		each.scale = { 1.0f, 1.0f, PanelSize * (1 - nowScale)};
+		each.scale = { 1.0f, 1.0f, PanelSize * (1 - nowScale) };
 	}
 }
 
@@ -552,6 +555,8 @@ bool Othello::GetIsActive()
 void OthelloManager::Init()
 {
 	oserroModel.CreateModel("newOserro", ShaderManager::othelloShader);
+	chanceModelBlue  .CreateModel("newOserro", ShaderManager::othelloShader);
+	chanceModelOrange.CreateModel("newOserro", ShaderManager::othelloShader);
 	sendDatas.resize(fieldSize);
 
 	auto itr = sendDatas.begin();
@@ -567,7 +572,7 @@ void OthelloManager::Init()
 	TutorialText5.CreateSprite(L"Resource/Img/string_04.png", XMFLOAT3(0, 0, 0));
 	CongraturationText.CreateSprite(L"Resource/Img/excellent.png", XMFLOAT3(0, 0, 0));
 	TutorialRetryText.CreateSprite(L"Resource/Img/reset.png", XMFLOAT3(0, 0, 0));
-	back.CreateSprite(L"Resource/Img/title_back_80.png", XMFLOAT3(0, 0 ,0));
+	back.CreateSprite(L"Resource/Img/title_back_80.png", XMFLOAT3(0, 0, 0));
 	float changeScale = 0.5f;
 
 	TutorialText1.ChangeSize(1227 * changeScale, 332 * changeScale);
@@ -766,7 +771,7 @@ void OthelloManager::TutorialTextDraw()
 		{
 			TutorialText1.SpriteDraw();
 		}
-		
+
 		//テキストの描画
 		break;
 	case TutorialSceneFlow::ChainSpawn:
@@ -792,7 +797,7 @@ void OthelloManager::TutorialTextDraw()
 				TutorialText2.SpriteDraw();
 			}
 		}
-		
+
 		break;
 	case TutorialSceneFlow::StepSpawn:
 		break;
@@ -815,7 +820,7 @@ void OthelloManager::TutorialTextDraw()
 				TutorialText4.SpriteDraw();
 			}
 		}
-		
+
 		//テキストの描画
 		break;
 	case TutorialSceneFlow::TutorialEnd:
@@ -827,6 +832,12 @@ void OthelloManager::TutorialTextDraw()
 
 void OthelloManager::Draw()
 {
+	OthelloDraw();
+	ChanceDraw();
+}
+
+void OthelloManager::OthelloDraw()
+{
 	if (othellos.size() == 0) return;
 
 	auto itr = othellos.begin();
@@ -834,9 +845,18 @@ void OthelloManager::Draw()
 	{
 		itr->Draw();
 	}
-
 }
 
+void OthelloManager::ChanceDraw()
+{
+	if (chances.size() == 0) return;
+
+	auto itr = chances.begin();
+	for (; itr != chances.end(); ++itr)
+	{
+		itr->Draw();
+	}
+}
 void OthelloManager::Finalize()
 {
 	auto itr = othellos.begin();
@@ -1491,6 +1511,8 @@ void OthelloManager::StartSetPos()
 	othellos.push_back(data);
 
 	playerPanelPos = { x, y };
+
+	SetChanceObject(1, 1, true);
 }
 
 
@@ -2023,4 +2045,55 @@ void OthelloManager::SetPlayerAndPanel(int x, int y, bool Front)
 bool OthelloManager::IsTutorialEnd()
 {
 	return (scenes == TutorialSceneFlow::TutorialEnd);
+}
+
+void OthelloManager::SetChanceObject(int x, int y, bool Front)
+{
+	ChanceObject data;
+	data.Init(&chanceModelBlue);
+	data.Spawn(x, y, Front);
+	chances.push_back(data);
+}
+
+void ChanceObject::Init(ChanceModel *model)
+{
+	SetModel(model);
+	each.CreateConstBuff0();
+	each.CreateConstBuff1();
+}
+void ChanceObject::Update()
+{
+	//アニメーションの内容による何かしらを記述
+}
+void ChanceObject::Draw()
+{
+	if(model == nullptr){return;}
+	
+	model->Update(&each);
+	Draw3DObject(*model);
+}
+void ChanceObject::Finalize()
+{
+
+}
+void ChanceObject::Spawn(int x, int y, bool isFront)
+{
+
+	float posX = (x * cellScale * 2);
+	float posY = -(y * cellScale * 2);
+
+	each.position = XMVECTOR{ posX, posY ,0, 0 };
+	each.scale = { 1.0f , 1.0f ,  20.0f };
+	each.position += ConvertXMFLOAT3toXMVECTOR(stageLeftTop);
+	each.alpha = 0.4f;
+	if (isFront)
+	{
+		each.rotation.y = 0;
+		each.rotation.x = 0;
+	}
+	else
+	{
+		each.rotation.y = 180;
+		each.rotation.x = 0;
+	}
 }
