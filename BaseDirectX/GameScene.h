@@ -33,6 +33,8 @@ private:
 	void ResultDraw();
 	int SceneNum = TITLE;
 
+	void ReStart();
+
 public:
 	GameScene();
 	~GameScene();
@@ -134,6 +136,7 @@ public://シーンで使うもの
 	int displayScore;
 	int oldDisplay;
 	int nowScore;
+	int oldScore;
 	bool scoreChange;
 	int changeTime;
 	int changeCount;
@@ -142,4 +145,5 @@ public://シーンで使うもの
 
 	int titleSelectNum;
 
+	bool isScorePuls;
 };

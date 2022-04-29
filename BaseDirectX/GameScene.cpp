@@ -205,7 +205,7 @@ void GameScene::TitleUpdate()
 			ObjectParticles::othello.Init(XMFLOAT3(0, 0, -15), 1, ParticleType::TITLE);
 			particleTime = 0;
 		}
-		if (Input::KeyTrigger(DIK_A))
+		if (Input::KeyTrigger(DIK_A) || directInput->IsButtonPush(directInput->LeftButton))
 		{
 			SoundStopWave(selectSound);
 			SoundPlayOnce(selectSound);
@@ -214,7 +214,7 @@ void GameScene::TitleUpdate()
 				titleSelectNum = 1;
 			}
 		}
-		if (Input::KeyTrigger(DIK_D))
+		if (Input::KeyTrigger(DIK_D) || directInput->IsButtonPush(directInput->RightButton))
 		{
 			SoundStopWave(selectSound);
 			SoundPlayOnce(selectSound);
@@ -548,12 +548,18 @@ void GameScene::GameUpdate()
 	{
 		tornadoTime = 0;
 	}
-
+	if (!isSceneChange && !isResultSceneChange && !isPouse)
+	{
+		if (Input::KeyTrigger(DIK_U) || directInput->IsButtonPush(directInput->Button03))
+		{
+			ReStart();
+		}
+	}
 	sky.Update();
 	othelloStage.Update();
 	Lights::Add(checkObject);
 	Lights::Update();
-
+	ParticleControl::Update();
 }
 
 void GameScene::ResultUpdate()
@@ -594,6 +600,7 @@ void GameScene::TitleDraw()
 	Draw3DObject(sky);
 	Draw3DObject(othelloStage);
 	OthlloPlayer::Draw();
+	ParticleControl::Draw();
 	ObjectParticles::Draw();
 	Lights::Draw();
 	//スプライトの描画-------------------------
@@ -688,6 +695,7 @@ void GameScene::TitleDraw()
 			kagikakkoEndSprite.SpriteDraw();
 		}
 	}
+	Imgui::DrawImGui();
 	//描画コマンドここまで
 	BaseDirectX::UpdateBack();
 }
@@ -736,7 +744,6 @@ void GameScene::GameDraw()
 	othelloManager.Draw();
 	OthlloPlayer::Draw();
 	ObjectParticles::Draw();
-	ParticleControl::Draw();
 	Lights::Draw();
 	//スプライトの描画-------------------------
 	//titleSprite.SpriteDraw();
@@ -767,7 +774,43 @@ void GameScene::GameDraw()
 		numbers[gameTime / 600 % 10 + 10].SpriteDraw();
 
 		oldDisplay = nowScore;
+		oldScore = nowScore;
 		nowScore = checkObject.GetScore();
+		//playerの頭上にスコアを出す
+		if (nowScore != oldScore && isScorePuls == false)
+		{
+			isScorePuls = true;
+			if (nowScore - oldScore < 10)
+			{
+				
+			}
+			else if (nowScore - oldScore < 100)
+			{
+
+			}
+			else if (nowScore - oldScore < 1000)
+			{
+
+			}
+			else if (nowScore - oldScore < 10000)
+			{
+
+			}
+			else if (nowScore - oldScore < 100000)
+			{
+
+			}
+			else if (nowScore - oldScore < 1000000)
+			{
+
+			}
+			else if (nowScore - oldScore < 10000000)
+			{
+
+			}
+
+			//ObjectParticles::combo.Init(XMFLOAT3(OthlloPlayer::GetPosition().x, OthlloPlayer::GetPosition().y, OthlloPlayer::GetPosition().z), 1, ParticleType::Combo);
+		}
 		if (oldDisplay != nowScore)
 		{
 			scoreChange = true;
@@ -852,7 +895,7 @@ void GameScene::GameDraw()
 		moveSprite.ChangeSize(382 * sizeSp, 433 * sizeSp);
 		moveSprite.SpriteDraw();
 
-
+		othelloManager.TutorialRetryText.SpriteDraw();
 		if (isTutorial)
 		{
 			othelloManager.TutorialTextDraw();
@@ -907,7 +950,7 @@ void GameScene::GameDraw()
 			kagikakkoEndSprite.SpriteDraw();
 		}
 	}
-	//Imgui::DrawImGui();
+	Imgui::DrawImGui();
 	//描画コマンドここまで
 	BaseDirectX::UpdateBack();
 }
@@ -975,6 +1018,32 @@ void GameScene::ResultDraw()
 	space.SpriteDraw();
 	//描画コマンドここまで
 	BaseDirectX::UpdateBack();
+}
+
+void GameScene::ReStart()
+{
+	SoundStopWave(timeUpSound);
+	SoundPlayOnce(timeUpSound);
+	for (auto triangleItr = OthelloManager::othellos.begin(); triangleItr != OthelloManager::othellos.end(); ++triangleItr)
+	{
+		XMFLOAT3 pos = triangleItr->GetPosition();
+		ObjectParticles::triangle.Init(pos, 4, ParticleType::Exprotion);
+		triangleItr->GetGameData()->isDead = true;
+	}
+	othelloManager.DeadPanel();
+	eyeStart = Camera::target.v;
+	eyeEnd = { 0, 100, 0 };
+	nowScore = 0;
+	displayScore = 0;
+	oldDisplay = 0;
+	countDown = 239;
+	checkObject.SetScore(0);
+	OthlloPlayer::SetPosition(XMFLOAT3(0, 0, -2));
+	OthlloPlayer::startPos = { 0, 0, -2 };
+	OthlloPlayer::endPos = { 0, 0, -2 };
+	OthlloPlayer::easeTime = 0.0f;
+	OthlloPlayer::isEase = false;
+	othelloManager.StartSetPos();
 }
 
 void GameScene::EndDraw()

@@ -70,6 +70,10 @@ void Imgui::DrawImGui()
             tab = ImguiTab::Camera;
 
         }
+        if (ImGui::MenuItem("Debug"))
+        {
+            tab = ImguiTab::Debug;
+        }
         ImGui::EndMenuBar();
     }
 
@@ -77,40 +81,24 @@ void Imgui::DrawImGui()
     {
         ImGui::Text("fps:%.2f", fps);
     }
-
     else if (tab == ImguiTab::PostEffect)
     {
 
     }
-
     else if (tab == ImguiTab::Camera)
     {
-        if (eyePos[0] != Camera::eye.v.x)
-        {
-            eyePos[0] = Camera::eye.v.x;
-        }
-        if (eyePos[1] != Camera::eye.v.y)
-        {
-            eyePos[1] = Camera::eye.v.y;
-        }
-        if (eyePos[2] != Camera::eye.v.z)
-        {
-            eyePos[2] = Camera::eye.v.z;
-        }
-        if (target[0] != Camera::target.v.x)
-        {
-            target[0] = Camera::target.v.x;
-        }
-        if (target[1] = Camera::target.v.y)
-        {
-            target[1] = Camera::target.v.y;
-        }
-        if (target[2] = Camera::target.v.z)
-        {
-            target[2] = Camera::target.v.z;
-        }
+        eyePos[0] = Camera::eye.v.x;
+        eyePos[1] = Camera::eye.v.y;
+        eyePos[2] = Camera::eye.v.z;
+        target[0] = Camera::target.v.x;
+        target[1] != Camera::target.v.y;
+        target[2] = Camera::target.v.z;
         ImGui::SliderFloat3("eyePosition", eyePos, -200, 200);
         ImGui::SliderFloat3("Target", target, -200, 200);
+    }
+    else if (tab == ImguiTab::Debug)
+    {
+
     }
     ImGui::End();
     ImGui::Render();

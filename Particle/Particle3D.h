@@ -332,6 +332,7 @@ public:
 	static ParticleIndi *flashEffect;
 	static ParticleIndi *rockOnEffect;
 	static ParticleIndi *numbers[10];
+	static ParticleIndi *reverce;
 	static void Update();
 	static void Init();
 	static void Draw();

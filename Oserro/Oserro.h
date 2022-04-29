@@ -250,6 +250,8 @@ public:
 	void TutorialTextDraw();
 
 	bool IsTutorialEnd();
+
+	Sprite TutorialRetryText;
 private:
 	void SetPlayer();
 
@@ -303,6 +305,7 @@ private:
 
 	void SaveSpawn();
 
+
 private:
 
 	//プレイヤーとパネルを特定のマスに配置する処理
@@ -344,7 +347,6 @@ private:
 	Sprite TutorialText4;
 	Sprite TutorialText5;
 	Sprite CongraturationText;
-	Sprite TutorialRetryText;
 	Sprite back;
 
 	int textChangeTimer = 0;

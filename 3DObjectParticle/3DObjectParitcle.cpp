@@ -6,43 +6,47 @@
 ObjectParticleInfo ObjectParticles::triangle;
 ObjectParticleInfo ObjectParticles::othello;
 ObjectParticleInfo ObjectParticles::frame;
+ObjectParticleInfo ObjectParticles::othelloFrame;
+ObjectParticleInfo ObjectParticles::combo;
 void ObjectParticle3D::Add(XMFLOAT3& emitter, ParticleType type)
 {
 	if (type == ParticleType::Exprotion)
 	{
 		InitExprotion(emitter);
-		this->type = type;
 	}
 	else if (type == ParticleType::Converge)
 	{
 		InitConverge(emitter);
-		this->type = type;
 	}
 	else if (type == ParticleType::TITLE)
 	{
 		InitTitle(emitter);
-		this->type = type;
 	}
 	else if (type == ParticleType::Swell)
 	{
 		InitSwell(emitter);
-		this->type = type;
 	}
 	else if (type == ParticleType::Target)
 	{
 		InitTarget(emitter);
-		this->type = type;
 	}
 	else if (type == ParticleType::Tornado)
 	{
 		InitTornado(emitter);
-		this->type = type;
 	}
 	else if (type == ParticleType::Born)
 	{
 		InitBorn(emitter);
-		this->type = type;
 	}
+	else if (type == ParticleType::BornAndShake)
+	{
+		InitBornAndShake(emitter);
+	}
+	else if (type == ParticleType::Combo)
+	{
+		InitConbo(emitter);
+	}
+	this->type = type;
 }
 
 void ObjectParticle3D::Update()
@@ -74,6 +78,14 @@ void ObjectParticle3D::Update()
 	else if (type == ParticleType::Born)
 	{
 		UpdateBorn();
+	}
+	else if (type == ParticleType::BornAndShake)
+	{
+		UpdateBornAndShake();
+	}
+	else if (type == ParticleType::Combo)
+	{
+		UpdateCombo();
 	}
 }
 
@@ -200,7 +212,7 @@ void ObjectParticle3D::InitTornado(XMFLOAT3& emitter)
 {
 	time = 1;
 	//each.position = ConvertXMFLOAT3toXMVECTOR(emitter);
-	startPosition = {0, 0, 10};
+	startPosition = { 0, 0, 10 };
 	each.CreateConstBuff0();
 	each.CreateConstBuff1();
 	each.position.m128_f32[2] = 10;
@@ -216,9 +228,34 @@ void ObjectParticle3D::InitBorn(XMFLOAT3& emitter)
 	each.CreateConstBuff0();
 	each.CreateConstBuff1();
 	each.position = ConvertXMFLOAT3toXMVECTOR(emitter);
-	
-	each.scale = {0.1f, 0.1f, 0.1f};
+
+	each.scale = { 0.1f, 0.1f, 0.1f };
 	easeTime = 1.0f;
+}
+
+void ObjectParticle3D::InitBornAndShake(XMFLOAT3& emitter)
+{
+	time = 1;
+	each.CreateConstBuff0();
+	each.CreateConstBuff1();
+	each.position = ConvertXMFLOAT3toXMVECTOR(emitter);
+
+	each.scale = { 1.0f, 1.0f, 6.0f };
+	easeTime = 1.0f;
+	startPosition = emitter;
+}
+
+void ObjectParticle3D::InitConbo(XMFLOAT3& emitter)
+{
+	time = 1;
+	each.CreateConstBuff0();
+	each.CreateConstBuff1();
+	each.position = ConvertXMFLOAT3toXMVECTOR(emitter);
+	each.position.m128_f32[3] = 1;
+	each.scale = { 1.0f, 1.0f, 1.0f };
+	each.rotation = { 0, 0, 180 };
+	easeTime = 1.0f;
+	startPosition = emitter;
 }
 
 void ObjectParticle3D::UpdateExprotion()
@@ -263,9 +300,9 @@ void ObjectParticle3D::UpdateTitle()
 	}
 	else if (each.scale.x > 0.0f)
 	{
-		each.scale.x -= 0.01f;
-		each.scale.y -= 0.01f;
-		each.scale.z -= 0.01f;
+		each.scale.x -= 0.001f;
+		each.scale.y -= 0.001f;
+		each.scale.z -= 0.001f;
 	}
 	else
 	{
@@ -302,7 +339,7 @@ void ObjectParticle3D::UpdateTarget()
 	XMFLOAT3 homing = ShlomonMath::Homing(ConvertXMVECTORtoXMFLOAT3(each.position), endPosition, speed);
 	speed = homing / 1.0f;
 	each.position = ConvertXMFLOAT3toXMVECTOR(ConvertXMVECTORtoXMFLOAT3(each.position) + speed);
-	
+
 	if (easeTime <= 0.0f)
 	{
 		time = 0;
@@ -317,7 +354,7 @@ void ObjectParticle3D::UpdateTornado()
 		angle = 0;
 	}
 	angle++;
-	float R  = 20.0f;
+	float R = 20.0f;
 	each.position.m128_f32[0] = ShlomonMath::Cos(angle) * R;
 	each.position.m128_f32[1] = ShlomonMath::Sin(angle) * R;
 	each.position.m128_f32[2] = startPosition.z;
@@ -331,7 +368,7 @@ void ObjectParticle3D::UpdateTornado()
 
 void ObjectParticle3D::UpdateBorn()
 {
-	
+
 	if (each.scale.x >= 1.0f)
 	{
 		easeTime -= 0.02f;
@@ -344,6 +381,28 @@ void ObjectParticle3D::UpdateBorn()
 	{
 		each.rotation.z += 1.0f;
 		each.scale = each.scale + 0.01f;
+	}
+}
+
+void ObjectParticle3D::UpdateBornAndShake()
+{
+	each.position = ConvertXMFLOAT3toXMVECTOR(startPosition);
+	each.position.m128_f32[0] += (rand() % (int)(20.0f * easeTime + 1) - (9 * easeTime)) / 400.0f;
+	each.position.m128_f32[1] += (rand() % (int)(20.0f * easeTime + 1) - (9 * easeTime)) / 400.0f;
+	easeTime -= 0.01f;
+	if (easeTime <= 0.0f)
+	{
+		time = 0;
+	}
+}
+
+void ObjectParticle3D::UpdateCombo()
+{
+	easeTime -= 0.01f;
+	each.scale = {1.0f,	1.0f, 1.0f};
+	if (easeTime <= 0.0f)
+	{
+		time = 0;
 	}
 }
 
@@ -393,13 +452,17 @@ void ObjectParticles::LoadModels()
 	triangle.object.CreateModel("Triangle", ShaderManager::playerShader);
 	othello.object.CreateModel("newOserro", ShaderManager::playerShader);
 	frame.object.CreateModel("Frame", ShaderManager::playerShader);
+	othelloFrame.object.CreateModel("OthelloFrame", ShaderManager::othelloFrame);
+	combo.object.CreateModel("plane", ShaderManager::playerShader);
 }
-
+                             
 void ObjectParticles::Update()
 {
 	triangle.Update();
 	othello.Update();
 	frame.Update();
+	othelloFrame.Update();
+	combo.Update();
 }
 
 void ObjectParticles::Draw()
@@ -407,6 +470,8 @@ void ObjectParticles::Draw()
 	triangle.Draw(triangle.object);
 	othello.Draw(othello.object);
 	frame.Draw(frame.object);
+	othelloFrame.Draw(othelloFrame.object);
+	combo.Draw(combo.object);
 }
 
 void ObjectParticles::DeleteAllParticles()
@@ -414,4 +479,6 @@ void ObjectParticles::DeleteAllParticles()
 	triangle.DeleteAllParticle();
 	othello.DeleteAllParticle();
 	frame.DeleteAllParticle();
+	othelloFrame.DeleteAllParticle();
+	combo.DeleteAllParticle();
 }

@@ -9,6 +9,7 @@ enum ImguiTab
     Status,
     PostEffect,
     Camera,
+    Debug,
 };
 
 class Imgui

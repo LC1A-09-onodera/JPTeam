@@ -180,6 +180,7 @@ void Othello::ReversUpdate()
 
 	if (data.animationTimer == 0)
 	{
+		
 		//MakeParticle();
 	}
 	data.animationTimer++;
@@ -236,7 +237,8 @@ void Othello::ReversUpdate()
 		//data.comboCount = 0;
 
 		data.isVanish = true;
-
+		XMFLOAT3 pos = ConvertXMVECTORtoXMFLOAT3(each.position);
+		ObjectParticles::othelloFrame.Init(pos, 1, ParticleType::BornAndShake);
 		////ひっくり返ったら起動フラグをオンにする
 		//data.isMove = true;
 
@@ -497,6 +499,7 @@ void Othello::Borne(OthelloType type, int x, int y, bool isFront)
 		each.position += ConvertXMFLOAT3toXMVECTOR(stageLeftTop);
 		XMFLOAT3 pos = ConvertXMVECTORtoXMFLOAT3(each.position);
 		ObjectParticles::frame.Init(pos, 1, ParticleType::Born);
+		
 		if (data.isFront)
 		{
 			each.rotation.y = 0;
@@ -518,6 +521,8 @@ void Othello::SinkWait()
 	}
 	data.isSandwich = false;
 	data.isVanish = true;
+	XMFLOAT3 pos = ConvertXMVECTORtoXMFLOAT3(each.position);
+	ObjectParticles::othelloFrame.Init(pos, 1, ParticleType::BornAndShake);
 }
 
 void Othello::Sink()
@@ -566,7 +571,7 @@ void OthelloManager::Init()
 	TutorialText4.CreateSprite(L"Resource/Img/string_03.png", XMFLOAT3(0, 0, 0));
 	TutorialText5.CreateSprite(L"Resource/Img/string_04.png", XMFLOAT3(0, 0, 0));
 	CongraturationText.CreateSprite(L"Resource/Img/excellent.png", XMFLOAT3(0, 0, 0));
-	TutorialRetryText.CreateSprite(L"Resource/Img/reset.png", XMFLOAT3(0, 0, 0));
+	TutorialRetryText.CreateSprite(L"Resource/Img/reset.png", XMFLOAT3(990, 300, 0));
 	back.CreateSprite(L"Resource/Img/title_back_80.png", XMFLOAT3(0, 0 ,0));
 	float changeScale = 0.5f;
 

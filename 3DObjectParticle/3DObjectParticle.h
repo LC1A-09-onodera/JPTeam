@@ -10,7 +10,8 @@ enum class ParticleType
 	Target,
 	Tornado,
 	Born,
-
+	BornAndShake,
+	Combo,
 };
 
 class ObjectParticle : public Model
@@ -44,6 +45,8 @@ public:
 	void InitTarget(XMFLOAT3 &emitter);
 	void InitTornado(XMFLOAT3 &emitter);
 	void InitBorn(XMFLOAT3 &emitter);
+	void InitBornAndShake(XMFLOAT3 &emitter);
+	void InitConbo(XMFLOAT3 &emitter);
 	void UpdateExprotion();
 	void UpdateConverge();
 	void UpdateTitle();
@@ -51,6 +54,8 @@ public:
 	void UpdateTarget();
 	void UpdateTornado();
 	void UpdateBorn();
+	void UpdateBornAndShake();
+	void UpdateCombo();
 	int time;
 };
 
@@ -73,6 +78,8 @@ public:
 	static ObjectParticleInfo triangle;
 	static ObjectParticleInfo othello;
 	static ObjectParticleInfo frame;
+	static ObjectParticleInfo othelloFrame;
+	static ObjectParticleInfo combo;
 	static void LoadModels();
 	static void Update();
 	static void Draw();
