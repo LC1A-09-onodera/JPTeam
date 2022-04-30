@@ -328,6 +328,8 @@ private:
 	/// </summary>
 	void TypeXI(list<Othello>::iterator playerItr, list<Othello>::iterator nextItr, int x, int y);
 
+	void TypeUp(list<Othello>::iterator playerItr, list<Othello>::iterator nextItr, int x, int y);
+
 	void DownStep(list<Othello>::iterator playerItr);
 
 	void DownStepReset() { downStepCount = 0; downStepTimer = 0; }

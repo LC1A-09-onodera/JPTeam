@@ -110,7 +110,7 @@ void Othello::Draw()
 		//each.scale = {1, 1, 1};
 		//each.rotation.y ++;
 		float nowScale = each.scale.z;
-		if (nowScale > PanelSize * 0.7)
+		if (nowScale > PanelSize * 0.7 || !data.isVanish)
 		{
 			each.alpha = 1.0f;
 		}
@@ -136,6 +136,7 @@ void Othello::Revers()
 	data.waitTimer = 0;
 	data.JumpTimer = 0;
 	data.isJumpUp = true;
+	data.isFront = !data.isFront;
 	XMFLOAT3 pos = ConvertXMVECTORtoXMFLOAT3(each.position);
 	pos.z = -0.3f;
 }
@@ -146,6 +147,11 @@ void Othello::Sandwich()
 	data.isPlayer = false;
 	data.isSandwich = true;
 	data.waitTimer = animationTimerMax;
+	//data.isReverce = true;
+	data.animationTimer = 0;
+	//data.waitTimer = 0;
+	//data.JumpTimer = 0;
+	//data.isJumpUp = true;
 	XMFLOAT3 pos = ConvertXMVECTORtoXMFLOAT3(each.position);
 	pos.z = -0.3f;
 
@@ -161,8 +167,8 @@ void Othello::SpawnUpdate()
 
 	float nowScale = static_cast<float>(data.spawnTimer) / SpawnAnimationTimerMax;
 	data.isHarf = (nowScale >= 0.5f);
-	//each.scale = { nowScale , nowScale , 1 };//í èÌägèk
-	each.scale = { 1.0f , 1.0f ,  PanelSize * nowScale };
+	each.scale = { nowScale , nowScale , 1 };//í èÌägèk
+	//each.scale = { 1.0f , 1.0f ,  PanelSize * nowScale };
 	if (data.spawnDerayTimer <= SpawnDerayTimerMax)
 	{
 		data.spawnDerayTimer++;
@@ -185,20 +191,22 @@ void Othello::ReversUpdate()
 	{
 		//MakeParticle();
 	}
+
 	data.animationTimer++;
 	float rate = static_cast<float>(data.animationTimer) / animationTimerMax;
 	float easeRate = ShlomonMath::EaseInOutQuad(XMFLOAT3{}, XMFLOAT3{ 1, 0, 0 }, rate).x;
 	if (data.isFront)
 	{
-		each.rotation.y = 180.0f * easeRate;
+		each.rotation.z = 3600.0f * easeRate;
 		each.rotation.x = 0;
 	}
 	else
 	{
-		each.rotation.y = 180.0f * easeRate + 180.0f;
+		each.rotation.z = 3600.0f * easeRate + 180.0f;
 		each.rotation.x = 0;
 	}
 
+	each.scale.z = easeRate * PanelSize;
 	data.JumpTimer++;
 
 	int count = data.comboCount;
@@ -209,32 +217,41 @@ void Othello::ReversUpdate()
 	const float jumpMax = 3.0f + (1 * count);
 
 
-	float jumpRate = static_cast<float>(data.JumpTimer) / JumpTimerMax;
-	float jumpEaseRate = 0.0f;
-	if (data.isJumpUp)
-	{
-		jumpEaseRate = ShlomonMath::EaseOutQuad(XMFLOAT3{}, XMFLOAT3{ 1, 0, 0 }, jumpRate).x;
+	//float jumpRate = static_cast<float>(data.JumpTimer) / JumpTimerMax;
+	//float jumpEaseRate = 0.0f;
+	//if (data.isJumpUp)
+	//{
+	//	jumpEaseRate = ShlomonMath::EaseOutQuad(XMFLOAT3{}, XMFLOAT3{ 1, 0, 0 }, jumpRate).x;
 
-		float hight = pow(jumpEaseRate, count);
-		each.position.m128_f32[2] = -jumpMax * hight;
-		if (data.JumpTimer >= JumpTimerMax)
-		{
-			data.isJumpUp = false;
-			data.JumpTimer = 0;
-		}
+	//	float hight = pow(jumpEaseRate, count);
+	//	each.position.m128_f32[2] = -jumpMax * hight;
+	//	if (data.JumpTimer >= JumpTimerMax)
+	//	{
+	//		data.isJumpUp = false;
+	//		data.JumpTimer = 0;
+	//	}
+	//}
+	//else
+	//{
+	//	jumpEaseRate = ShlomonMath::EaseInQuad(XMFLOAT3{}, XMFLOAT3{ 1, 0, 0 }, jumpRate).x;
+	//	float hight = 1 - (pow(jumpEaseRate, count));
+	//	each.position.m128_f32[2] = -jumpMax * hight;
+	//}
+
+	if (data.isFront)
+	{
+		each.rotation.y = 0;
+		each.rotation.x = 0;
 	}
 	else
 	{
-		jumpEaseRate = ShlomonMath::EaseInQuad(XMFLOAT3{}, XMFLOAT3{ 1, 0, 0 }, jumpRate).x;
-		float hight = 1 - (pow(jumpEaseRate, count));
-		each.position.m128_f32[2] = -jumpMax * hight;
+		each.rotation.y = 180;
+		each.rotation.x = 0;
 	}
-
-
 	if (rate >= 1.0f)
 	{
 		//âÒì]ÉtÉâÉOoff
-		data.isFront = !data.isFront;
+		//data.isFront = !data.isFront;
 		data.isReverce = false;
 		//data.comboCount = 0;
 
@@ -242,7 +259,6 @@ void Othello::ReversUpdate()
 
 		////Ç–Ç¡Ç≠ÇËï‘Ç¡ÇΩÇÁãNìÆÉtÉâÉOÇÉIÉìÇ…Ç∑ÇÈ
 		//data.isMove = true;
-
 	}
 }
 void Othello::LeftRevers()
@@ -468,7 +484,8 @@ void Othello::Spawn(OthelloType type, int x, int y, bool isFront)
 		float y = -(data.heightPos * cellScale * 2);
 
 		each.position = XMVECTOR{ x, y ,0, 0 };
-		each.scale = { 1.0f , 1.0f ,  PanelSize };
+		//each.scale = { 1.0f , 1.0f ,  PanelSize };
+		each.scale = { 1.0f , 1.0f , 1.0f };
 		each.position += ConvertXMFLOAT3toXMVECTOR(stageLeftTop);
 		if (data.isFront)
 		{
@@ -517,6 +534,21 @@ void Othello::SinkWait()
 	if (data.waitTimer > 0)
 	{
 		data.waitTimer--;
+		data.animationTimer++;
+		float rate = static_cast<float>(data.animationTimer) / animationTimerMax;
+		float easeRate = ShlomonMath::EaseInOutQuad(XMFLOAT3{}, XMFLOAT3{ 1, 0, 0 }, rate).x;
+		if (data.isFront)
+		{
+			each.rotation.z = 3600.0f * easeRate;
+			each.rotation.x = 0;
+		}
+		else
+		{
+			each.rotation.z = 3600.0f * easeRate + 180.0f;
+			each.rotation.x = 0;
+		}
+
+		each.scale.z = easeRate * PanelSize;
 		return;
 	}
 	data.isSandwich = false;
@@ -1478,7 +1510,8 @@ void OthelloManager::KeySetPlayer()
 
 	if (Imgui::sample == 0)
 	{
-		TypeXI(playerItr, nextItr, x, y);
+		//TypeXI(playerItr, nextItr, x, y);
+		TypeUp(playerItr, nextItr, x, y);
 	}
 	else if (Imgui::sample == 1)
 	{
@@ -1784,6 +1817,76 @@ void OthelloManager::TypeXI(list<Othello>::iterator playerItr, list<Othello>::it
 		playerPanelPos = { x, y };
 	}
 	isPlayerEnd = false;
+}
+
+void OthelloManager::TypeUp(list<Othello>::iterator playerItr, list<Othello>::iterator nextItr, int x, int y)
+{
+	bool OnPlayer = playerItr != othellos.end();
+	//à⁄ìÆêÊÇ…ÉpÉlÉãÇ™Ç†ÇÈÇ©
+	if (nextItr != othellos.end())
+	{
+		float nextStep = 0.0f;
+		float nowStep = 0.0f;
+		if (OnPlayer)
+		{
+			nowStep = 0.0f;
+		}
+
+		//if (nextItr->GetGameData()->isSpawn)
+		//{
+		//	nextStep = 1.0f - (static_cast<float>(nextItr->GetGameData()->spawnTimer) / SpawnAnimationTimerMax);
+		//	if (OnPlayer)
+		//	{
+		//		nowStep = 1.0f - static_cast<float>(playerItr->GetGameData()->spawnTimer) / SpawnAnimationTimerMax;
+		//	}
+		//}
+		if (nextItr->GetGameData()->isVanish)
+		{
+			nextStep = 1.0f - (static_cast<float>(nextItr->GetGameData()->vanishTimer) / vanishTimerMax);
+			if (OnPlayer && playerItr->GetIsActive())
+			{
+				nowStep = 1.0f - static_cast<float>(playerItr->GetGameData()->vanishTimer) / vanishTimerMax;
+			}
+		}
+		float stepSize = nextStep - nowStep;
+		bool isStepUp = stepSize <= 0.7;
+		bool isNotMove = (nextItr->GetGameData()->isReverce || !isStepUp);
+		if (isNotMove)
+		{
+			playerNotMove();
+			return;
+		}
+
+		bool isOnVanish = nextItr->GetGameData()->isVanish;
+
+		isPanelMove = false;
+		nextItr->GetGameData()->isMove = false;
+
+		DownStepReset();
+		playerPanelPos = { x, y };
+	}
+	else
+	{
+		if (OnPlayer)
+		{
+			bool isNotMovePanel = (playerItr->GetGameData()->isVanish || playerItr->GetGameData()->isSpawn || playerItr->GetGameData()->isSandwich);
+			bool isNotDown = (downStepCount < downStepCountMax &&isNotMovePanel);
+			if (isNotDown)
+			{
+				DownStep(playerItr);
+				return;
+			}
+			isPanelMove = true;
+			if (!playerItr->GetGameData()->isVanish && !playerItr->GetGameData()->isReverce && !playerItr->GetGameData()->isSandwich && !playerItr->GetGameData()->isSpawn)
+			{
+				playerItr->GetGameData()->isPlayer = true;
+			}
+		}
+		DownStepReset();
+		playerPanelPos = { x, y };
+	}
+	isPlayerEnd = false;
+
 }
 
 void OthelloManager::AllDeadPanel()
@@ -2104,7 +2207,7 @@ void ChanceObject::Spawn(int x, int y, bool isFront)
 	float posY = -(y * cellScale * 2);
 
 	each.position = XMVECTOR{ posX, posY ,0, 0 };
-	each.scale = { 1.0f , 1.0f ,  1.5f };
+	each.scale = { 1.0f , 1.0f ,  1.0f };
 	each.position += ConvertXMFLOAT3toXMVECTOR(stageLeftTop);
 	each.alpha = 0.4f;
 	if (isFront)
