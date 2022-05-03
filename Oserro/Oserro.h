@@ -113,6 +113,7 @@ struct SendOthelloData
 	bool isSandwich = false;
 	bool isCheckEnd = false;
 	bool isOnPlayer = false;
+	bool isChainVanish = false;	//連鎖で再度消えた駒が持つフラグ
 	list<bool> FrontActiveAngle;
 	vector<int> SandwichLength;
 	int comboCount = 0;
@@ -137,6 +138,10 @@ namespace OthelloConstData
 	const int SpawnDerayTimerMax = 60;
 
 	const float PanelSize = 10.0f;
+
+	const float panelWallRate = 0.3f;
+	const int downStepCountMax = 0;
+
 	//アニメーション
 	const int vanishTimerMax = 600;
 	const int animationTimerMax = 30;
@@ -144,7 +149,6 @@ namespace OthelloConstData
 	const int JumpTimerMax = waitTimerMax / 2;
 	const int SpawnAnimationTimerMax = 120;
 	const int downStepTimerMax = 60;
-	const int downStepCountMax = 3;
 }
 
 class OthelloEachInfo : public EachInfo

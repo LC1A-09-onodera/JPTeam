@@ -110,7 +110,7 @@ void Othello::Draw()
 		//each.scale = {1, 1, 1};
 		//each.rotation.y ++;
 		float nowScale = each.scale.z;
-		if (nowScale > PanelSize * 0.7 || !data.isVanish)
+		if (nowScale > PanelSize * panelWallRate || !data.isVanish)
 		{
 			each.alpha = 1.0f;
 		}
@@ -1780,7 +1780,7 @@ void OthelloManager::TypeXI(list<Othello>::iterator playerItr, list<Othello>::it
 			}
 		}
 		float stepSize = nextStep - nowStep;
-		bool isStepUp = stepSize <= 0.7;
+		bool isStepUp = stepSize <= 0.7f;
 		bool isNotMove = (nextItr->GetGameData()->isReverce || !isStepUp);
 		if (isNotMove)
 		{
@@ -1849,7 +1849,7 @@ void OthelloManager::TypeUp(list<Othello>::iterator playerItr, list<Othello>::it
 			}
 		}
 		float stepSize = nextStep - nowStep;
-		bool isStepUp = stepSize <= 0.7;
+		bool isStepUp = stepSize <= panelWallRate;
 		bool isNotMove = (nextItr->GetGameData()->isReverce || !isStepUp);
 		if (isNotMove)
 		{
