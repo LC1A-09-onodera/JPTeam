@@ -3,7 +3,7 @@
 #include "../DX12operator.h"
 #include <list>
 #include "../Sprite/Sprite.h"
-
+#include "../NormaChecker/NormaChecker.h"
 enum OthelloType
 {
 	NORMAL,
@@ -16,6 +16,19 @@ namespace
 	{
 		int x;
 		int y;
+	};
+	struct panelData
+	{
+		panelPos pos;
+		bool isFront;
+	};
+	struct NormaModeFieldData
+	{
+		std::list<panelData> panels;
+		panelPos playerPos;
+		Norma::NormaType type = Norma::Panels;
+		int normaStatus = 0;
+		int normaMoveCount = 0;
 	};
 }
 
@@ -120,7 +133,7 @@ struct SendOthelloData
 	int score = 0;
 	int chainName = 0;
 	int maxComboCount = 0;
-	
+
 };
 
 namespace OthelloConstData
@@ -260,6 +273,8 @@ public:
 
 	void MinSpawn();
 	static list<Othello> othellos;
+	static list<NormaModeFieldData> NormaStartOthellos;
+
 	static list<ChanceObject> chances;
 	void DeadPanel();
 
@@ -279,6 +294,21 @@ public:
 	void TutorialTextDraw();
 
 	bool IsTutorialEnd();
+
+public://ノルマモード用関数
+	void NormaUpdate();
+	void SetNormaMove();
+	void Undo();
+	void StartNormaMode(Norma::NormaType normaType = Norma::Combo, int normaStatus = 0, int normaMoveCount = 0);
+	void EndNormaMode();
+	void RestartNorma();
+	bool GetIsNormaClear();
+	bool GetIsNormaFailed();
+	bool isNormaMode = true;
+
+private://ノルマモード用内部処理関数
+	void StartNormaField();
+	void TestStage();
 private:
 	void SetPlayer();
 
@@ -389,4 +419,7 @@ private:
 
 	int textChangeTimer = 0;
 	bool textChange = false;
+
+	NormaChecker normaChecker;
+
 };

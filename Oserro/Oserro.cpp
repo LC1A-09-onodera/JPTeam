@@ -9,6 +9,7 @@
 #include <random>
 #include <limits>
 list<Othello> OthelloManager::othellos;
+list<NormaModeFieldData> OthelloManager::NormaStartOthellos;
 list<ChanceObject> OthelloManager::chances;
 OthelloModel OthelloManager::oserroModel;
 ChanceModel OthelloManager::chanceModelBlue;
@@ -295,10 +296,10 @@ void Othello::LeftRevers()
 
 void Othello::Controll(const XMFLOAT3 &mousePos, int &moveCount)
 {
-	XMVECTOR playerPos = { data.widthPos * cellScale,data.heightPos * -cellScale , 0, 0 };
+	XMVECTOR PlayerPos = { data.widthPos * cellScale,data.heightPos * -cellScale , 0, 0 };
 
-	playerPos += ConvertXMFLOAT3toXMVECTOR(stageLeftTop);
-	XMVECTOR dist = ConvertXMFLOAT3toXMVECTOR(mousePos - playerPos);
+	PlayerPos += ConvertXMFLOAT3toXMVECTOR(stageLeftTop);
+	XMVECTOR dist = ConvertXMFLOAT3toXMVECTOR(mousePos - PlayerPos);
 	XMVECTOR angle = XMVector3Normalize(dist);
 
 
@@ -306,10 +307,10 @@ void Othello::Controll(const XMFLOAT3 &mousePos, int &moveCount)
 	while (true)
 	{
 
-		playerPos = { data.widthPos * cellScale * 2,data.heightPos * -cellScale * 2, 0, 0 };
-		playerPos += ConvertXMFLOAT3toXMVECTOR(stageLeftTop);
+		PlayerPos = { data.widthPos * cellScale * 2,data.heightPos * -cellScale * 2, 0, 0 };
+		PlayerPos += ConvertXMFLOAT3toXMVECTOR(stageLeftTop);
 
-		dist = ConvertXMFLOAT3toXMVECTOR(mousePos - playerPos);
+		dist = ConvertXMFLOAT3toXMVECTOR(mousePos - PlayerPos);
 		angle = XMVector3Normalize(dist);
 		float length = XMVector3Length(dist).m128_f32[0];
 		//距離がマスの大きさより長かった場合
@@ -422,7 +423,7 @@ void Othello::Controll(const XMFLOAT3 &mousePos, int &moveCount)
 				{
 					length /= fabs(length);
 				}
-				playerPos.m128_f32[0] += length;
+				PlayerPos.m128_f32[0] += length;
 				each.rotation.y = length * -90;
 				each.rotation.x = 0;
 			}
@@ -433,7 +434,7 @@ void Othello::Controll(const XMFLOAT3 &mousePos, int &moveCount)
 				{
 					length /= fabs(length);
 				}
-				playerPos.m128_f32[1] += length;
+				PlayerPos.m128_f32[1] += length;
 				//上下どちらか
 				each.rotation.x = length * 90;
 				each.rotation.y = 0;
@@ -449,7 +450,7 @@ void Othello::Controll(const XMFLOAT3 &mousePos, int &moveCount)
 				{
 					length /= fabs(length);
 				}
-				playerPos.m128_f32[0] += length;
+				PlayerPos.m128_f32[0] += length;
 				each.rotation.y = length * -90 + 180;
 				each.rotation.x = 0;
 			}
@@ -460,7 +461,7 @@ void Othello::Controll(const XMFLOAT3 &mousePos, int &moveCount)
 				{
 					length /= fabs(length);
 				}
-				playerPos.m128_f32[1] += length;
+				PlayerPos.m128_f32[1] += length;
 				//上下どちらか
 				each.rotation.x = length * 90 + 180;
 				each.rotation.y = 0;
@@ -468,7 +469,7 @@ void Othello::Controll(const XMFLOAT3 &mousePos, int &moveCount)
 
 		}
 	}
-	each.position = playerPos;
+	each.position = PlayerPos;
 }
 
 void Othello::Spawn(OthelloType type, int x, int y, bool isFront)
@@ -623,7 +624,8 @@ void OthelloManager::Init()
 	CongraturationText.position = XMVECTOR{ 640 - (457 * changeScale / 2), 360 - (79 * changeScale / 2), 0, 0 };
 
 	TutorialRetryText.position = XMVECTOR{ 990, 300, 0, 0 };
-
+	normaChecker.Init();
+	TestStage();
 }
 
 void OthelloManager::Update()
@@ -646,6 +648,7 @@ void OthelloManager::Update()
 	{
 		isFieldUpdate = true;
 	}
+
 
 	SaveSpawn();
 
@@ -862,6 +865,29 @@ void OthelloManager::TutorialTextDraw()
 	}
 }
 
+void OthelloManager::NormaUpdate()
+{
+	//死ぬ
+	DeadPanel();
+
+	//MinSpawn();
+	////生成
+	//RandumSetPanel();
+
+	//更新
+	auto itr = othellos.begin();
+
+	for (; itr != othellos.end(); ++itr)
+	{
+		itr->Update();
+	}
+	if (Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01))
+	{
+		isFieldUpdate = true;
+	}
+	Undo();
+	normaChecker.Update(othellos);
+}
 void OthelloManager::Draw()
 {
 	OthelloDraw();
@@ -1097,6 +1123,7 @@ const vector<vector<SendOthelloData>> &OthelloManager::Send()
 		if ((Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01)) && isOnPlayer)
 		{
 			data.isMove = true;
+			SetNormaMove();
 		}
 
 		data.comboCount = gameDatas.comboCount;
@@ -1128,7 +1155,7 @@ void OthelloManager::Receive(const vector<vector<SendOthelloData>> &data)
 		int y = gameDatas->heightPos;
 
 		gameDatas->score = sendDatas[y][x].score;
-		
+
 		if (sendDatas[y][x].type == NONE)
 		{
 			continue;
@@ -1557,7 +1584,7 @@ void OthelloManager::StartSetPos()
 	for (int i = 0; i < 8; i++)
 	{
 		SetChanceObject(i, i, true);
-		SetChanceObject(i, 7-i, false);
+		SetChanceObject(i, 7 - i, false);
 	}
 }
 
@@ -1880,6 +1907,7 @@ void OthelloManager::TypeUp(list<Othello>::iterator playerItr, list<Othello>::it
 			if (!playerItr->GetGameData()->isVanish && !playerItr->GetGameData()->isReverce && !playerItr->GetGameData()->isSandwich && !playerItr->GetGameData()->isSpawn)
 			{
 				playerItr->GetGameData()->isPlayer = true;
+				SetNormaMove();
 			}
 		}
 		DownStepReset();
@@ -2220,4 +2248,113 @@ void ChanceObject::Spawn(int x, int y, bool isFront)
 		each.rotation.y = 180;
 		each.rotation.x = 0;
 	}
+}
+
+void OthelloManager::Undo()
+{
+	if (Input::KeyTrigger(DIK_Z) || directInput->IsButtonPush(directInput->Button01))
+	{
+		Norma::FieldStatus data = normaChecker.Undo();
+
+		//送られてきた情報がこれ以上戻ることができない場合盤面をいじらず戻る
+		if (data.isFirst)
+		{
+			return;
+		}
+		//パネルを全て消去してから
+		othellos.clear();
+		auto panelItr = data.othellos.begin();
+		for (; panelItr != data.othellos.end(); panelItr++)
+		{
+			SetSpawnPanel(panelItr->x, panelItr->y, panelItr->isFront);
+		}
+
+		SetSpawnPlayer(data.playerPos.x, data.playerPos.y);
+		//Update();
+	}
+}
+
+void OthelloManager::SetNormaMove()
+{
+	if (!isNormaMode) return;
+	normaChecker.SetMove(othellos, playerPanelPos.x, playerPanelPos.y);
+}
+
+void OthelloManager::StartNormaMode(Norma::NormaType normaType, int normaStatus, int normaMoveCount)
+{
+
+	normaChecker.Reset();
+	StartNormaField();
+	isNormaMode = true;
+}
+
+void OthelloManager::StartNormaField()
+{
+	if (NormaStartOthellos.size() <= 0)return;
+
+	//ノルマ番号orステージ番号を決定してその盤面を呼び出す処理(Todo)
+	{}
+
+	//ステージ番号に応じたイテレーターを呼び出す
+	auto stageItr = NormaStartOthellos.begin();
+
+	//パネルが一つもなかったら早期リターン
+	if (stageItr->panels.size() <= 0)
+	{
+		//とりあえず速攻終了する条件ノルマモードを終わらせる
+		normaChecker.SetNorma(Norma::Panels, 0);
+		SetSpawnPlayer(4, 4);
+		return;
+	}
+	auto panelItr = stageItr->panels.begin();
+	for (; panelItr != stageItr->panels.end(); panelItr++)
+	{
+		SetSpawnPanel(panelItr->pos.x, panelItr->pos.y, panelItr->isFront);
+	}
+	SetSpawnPlayer(stageItr->playerPos.x, stageItr->playerPos.y);
+	normaChecker.SetNorma(stageItr->type, stageItr->normaStatus, stageItr->normaMoveCount);
+
+}
+
+void OthelloManager::TestStage()
+{
+	panelData a, b, c;
+	NormaModeFieldData testStage;
+
+	a.isFront = true;
+	a.pos = {0, 0};
+
+	testStage.panels.push_back(a);
+	b.isFront = false;
+	b.pos = { 1, 1 };
+	testStage.panels.push_back(b);
+
+	c.isFront = true;
+	c.pos = { 2, 2 };
+	testStage.panels.push_back(c);
+
+	testStage.playerPos = {0, 0};
+	testStage.normaMoveCount = 0;
+	NormaStartOthellos.push_back(testStage);
+}
+
+void OthelloManager::EndNormaMode()
+{
+	isNormaMode = false;
+	normaChecker.Reset();
+}
+
+void OthelloManager::RestartNorma()
+{
+	normaChecker.Reset();
+}
+
+bool OthelloManager::GetIsNormaClear()
+{
+	return normaChecker.GetClear();
+}
+
+bool OthelloManager::GetIsNormaFailed()
+{
+	return normaChecker.GetFailed();
 }
