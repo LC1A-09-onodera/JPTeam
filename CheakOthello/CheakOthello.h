@@ -28,6 +28,7 @@ private:
 	static SoundData comboSound;
 
 private:
+	const int CHAIN_NAME = 100;
 	const float OTHELLO_BONUS = 1.2f;
 
 private:
@@ -37,12 +38,18 @@ private:
 	std::vector<bool> othelloSide;
 	std::pair<int, int> pPos;
 	std::vector<pair<int, int>> checkScoreData;				//同時消しを考慮
+	std::vector<pair<int, int>> sandwichData;
+	std::vector<bool> sandwichSide;
+	std::vector<pair<int, int>> reachData;
+	std::vector<bool> reachSide;
 
 private:
 	int last_x;				//最後に動かしたオセロのX座標
 	int last_y;				//最後に動かしたオセロのY座標
 	int totalScore;			//合計点
 	int totalDeleteOthello;	//挟んだ個数の合計
+	int collectiveCount;	//まとまりの数
+	int addScore;			//加算されるスコア
 	bool side;				//表裏保存
 	bool checkOthello;
 
@@ -62,6 +69,11 @@ public:
 	const void ResetStartAndEndArrayDatas() { startAndEndArray.clear(); }
 	const int GetScore() { return totalScore; }
 	void SetScore(int score) { totalScore = score; }
+
+	int GetAddScore() { return addScore; }
+	const vector<pair<int, int>>& GetReachDatas() { return reachData; }
+	const vector<bool>& GetReachSides() { return reachSide; }
+
 private:
 	//盤面チェック
 	void CheckLastMove(const vector<vector<SendOthelloData>>& othelloData);
@@ -73,6 +85,8 @@ private:
 	void AddScore();
 	//複数挟んだ時のスコアとコンボカウントを変更
 	void ChangeScoreAndCombo();
+	//リーチの目を検索
+	void CheckReachOthello(int direction_x, int direction_y);
 
 private:
 	//Vectorの中身を判定
@@ -82,5 +96,6 @@ private:
 		if (index != vec.size()) { return true; }
 		else { return false; }
 	}
-	//bool CheckOthelloEnd
+
+	void ResetAddScore() { addScore = 0; }
 };
