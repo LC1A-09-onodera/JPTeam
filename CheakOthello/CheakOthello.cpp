@@ -12,6 +12,9 @@ CheakOthello::CheakOthello()
 	last_y = 0;				//最後に動かしたオセロのY座標
 	totalScore = 0;			//合計点
 	totalDeleteOthello = 0;
+	collectiveCount = 0;
+	addScore = 0;
+
 	side = 0;				//表裏保存
 	checkOthello = 0;
 
@@ -38,13 +41,13 @@ void CheakOthello::Init()
 
 void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData, bool isCheck)
 {
-	//スコアリセット
+	//スコアリセット(debug用)
 	if (Input::KeyTrigger(DIK_R)) { totalScore = 0; }
 
 	//最後に動いた駒を判定、保存
 	CheckLastMove(othelloData);
 
-	while (1)
+	while (1) //多分whileじゃなくても動く
 	{
 		//判定を取る駒をセット
 		pair<int, int> last = SetCheckOthello();
@@ -71,6 +74,8 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData, bo
 
 		if (totalDeleteOthello > 1) { AddScore(); }
 		if (isCombosCheck) { ChangeScoreAndCombo(); }
+
+		ResetAddScore();
 	}
 
 	//効率悪いです
@@ -95,6 +100,21 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData, bo
 		/*-----右斜め下-----*/
 		OthelloCheck(Direction_X::EAST, Direction_Y::SOUTH, pPos.first, pPos.second, isCheck);
 	}
+
+	while (!sandwichData.empty())
+	{
+		CheckReachOthello(Direction_X::WEST, NONE_DIRECTION);
+		CheckReachOthello(Direction_X::EAST, NONE_DIRECTION);
+		CheckReachOthello(NONE_DIRECTION, Direction_Y::SOUTH);
+		CheckReachOthello(NONE_DIRECTION, Direction_Y::NOUTH);
+		CheckReachOthello(Direction_X::WEST, Direction_Y::NOUTH);
+		CheckReachOthello(Direction_X::WEST, Direction_Y::SOUTH);
+		CheckReachOthello(Direction_X::EAST, Direction_Y::NOUTH);
+		CheckReachOthello(Direction_X::EAST, Direction_Y::SOUTH);
+
+		sandwichData.erase(sandwichData.begin());
+		sandwichSide.erase(sandwichSide.begin());
+	}
 }
 
 void CheakOthello::CheckLastMove(const vector<vector<SendOthelloData>>& othelloData)
@@ -102,22 +122,53 @@ void CheakOthello::CheckLastMove(const vector<vector<SendOthelloData>>& othelloD
 	//最新状態を入手
 	othelloDatas = othelloData;
 
+	//ChainName保存用配列
+	vector<int> chainName;
+
 	//その場にオセロが存在するかつ、最後に動かしてたかを判定（←ちょっと効率悪そう）
 	for (int i = 0; i < MAX_SIZE_Y; i++)
 	{
 		for (int j = 0; j < MAX_SIZE_X; j++)
 		{
+			//ChainName保存用変数
+			int chainNameCount = 0;
+
+			if (othelloDatas[i][j].isSandwich)
+			{
+				sandwichData.push_back(make_pair(i, j));
+				sandwichSide.push_back(othelloDatas[i][j].isFront);
+			}
+
 			if (othelloDatas[i][j].isOnPlayer) { pPos = make_pair(j, i); }
 
 			//その場所が空
 			if (othelloDatas[i][j].type == NONE) { continue; }
+
+			//ChainNameチェック
+			if (othelloDatas[i][j].chainName != 0)
+			{
+				if (chainName.empty())
+				{
+					chainName.push_back(othelloDatas[i][j].chainName);
+					chainNameCount = othelloDatas[i][j].chainName;
+				}
+				else
+				{
+					if (!VectorFinder(chainName, chainNameCount)) { chainName.push_back(chainNameCount); }
+				}
+			}
+
 			//最後に動かしてるやつ
 			if (!othelloDatas[i][j].isMove) { continue; }
+
 			othelloSide.push_back(othelloDatas[i][j].isFront);
 			comboOthelloDataPos.push_back(std::make_pair(i, j));
-			break;
+			//break;
 		}
 	}
+
+	//纏まりのカウントを計算
+	collectiveCount = chainName.size();
 }
 
 pair<int, int> CheakOthello::SetCheckOthello()
@@ -179,6 +230,8 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y, int last_x, in
 				//挟んだやつの最大のconboCountを取得→それ+1したのをコンボしたオセロにセット
 				int maxComboCount = 0;
 				int baseScore = 0;
+				int maxChainNameCount = 0;
+				vector<int> maxChainName;
 				bool isActiveOthello = false;
 
 				for (int i = 0; i <= loop + 1; i++)
@@ -186,7 +239,7 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y, int last_x, in
 					//そのオセロのコンボ数を取得、そのオセロが何コンボ目かを調べる
 					if (maxComboCount <= othelloDatas[pair_y][pair_x].comboCount)
 					{
-						maxComboCount = othelloDatas[pair_y][pair_x].comboCount;
+						maxComboCount = othelloDatas[pair_y][pair_x].maxComboCount;
 					}
 
 					//そのオセロのスコアを取得、そのオセロのスコアを調べる
@@ -249,21 +302,124 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y, int last_x, in
 					//maxComboCountを加算
 					maxComboCount++;
 
+					//使用する乱数を定義
+					int random = (int)ShlomonMath::xor64;
+					int maxScore = 0;
+
 					//Score計算
 					for (int i = 0; i <= loop + 1; i++)
 					{
+						//そのオセロの纏まりを判別
+						if (othelloDatas[pair_y][pair_x].chainName != 0)
+						{
+							if (!VectorFinder(maxChainName, othelloDatas[pair_y][pair_x].chainName))
+							{
+								maxChainName.push_back(othelloDatas[pair_y][pair_x].chainName);
+								maxChainNameCount = othelloDatas[pair_y][pair_x].chainName;
+							}
+						}
+						else
+						{
+							othelloDatas[pair_y][pair_x].chainName = random;
+						}
+
 						//始点と終点を設定
 						if (i == 0 || i == loop + 1) { startAndEndArray.push_back(std::make_pair(pair_y, pair_x)); }
 						checkScoreData.push_back(make_pair(pair_y, pair_x));
 						othelloDatas[pair_y][pair_x].comboCount = maxComboCount;
+						othelloDatas[pair_y][pair_x].maxComboCount = maxComboCount;
 						othelloDatas[pair_y][pair_x].score = (baseScore + (loop * (loop + 2) * maxComboCount));
+						if (maxScore < othelloDatas[pair_y][pair_x].score)
+						{
+							maxScore = othelloDatas[pair_y][pair_x].score;
+						}
 						if (i == 0)
 						{
+							if (addScore < othelloDatas[pair_y][pair_x].score)
+							{
+								addScore = othelloDatas[pair_y][pair_x].score;
+							}
 							totalScore += othelloDatas[pair_y][pair_x].score * maxComboCount;
 							//baseScore += othelloDatas[pair_y][pair_x].score;
 						}
 						pair_x += direction_x;
 						pair_y += direction_y;
+					}
+
+					//全部空だった場合（1コンボ目）
+					//if (maxChainName.empty())
+					//{
+					//	//初期化
+					//	pair_x = last_x;
+					//	pair_y = last_y;
+
+					//	for (int i = 0; i <= loop + 1; i++)
+					//	{
+					//		othelloDatas[pair_y][pair_x].chainName = random;
+					//		pair_x += direction_x;
+					//		pair_y += direction_y;
+					//	}
+					//}
+
+					//コンボを繋げた場合
+					if (maxChainName.size() == 1)
+					{
+						int chainName = maxChainName.front();
+
+						for (int i = 0; i < OthelloConstData::fieldSize; i++)
+						{
+							for (int j = 0; j < OthelloConstData::fieldSize; j++)
+							{
+								if (othelloDatas[i][j].chainName != chainName) { continue; }
+								othelloDatas[i][j].chainName = random;
+							}
+						}
+					}
+
+					//複数挟んだ場合
+					else if (maxChainName.size() > 1)
+					{
+						//コンボが繋がった場合
+						for (auto itr = maxChainName.begin(); itr != maxChainName.end(); ++itr)
+						{
+							int chainName = *itr;
+
+							for (int i = 0; i < OthelloConstData::fieldSize; i++)
+							{
+								for (int j = 0; j < OthelloConstData::fieldSize; j++)
+								{
+									if (othelloDatas[i][j].chainName != chainName) { continue; }
+									othelloDatas[i][j].chainName = random;
+								}
+							}
+						}
+					}
+
+					//ComboCountとScore修正
+					if (maxChainName.empty())
+					{
+						for (auto itr = maxChainName.begin(); itr != maxChainName.end(); ++itr)
+						{
+							int chainName = *itr;
+
+							for (int i = 0; i < OthelloConstData::fieldSize; i++)
+							{
+								for (int j = 0; j < OthelloConstData::fieldSize; j++)
+								{
+									if (othelloDatas[i][j].chainName == chainName)
+									{
+										if (othelloDatas[i][j].maxComboCount != maxComboCount)
+										{
+											othelloDatas[i][j].maxComboCount == maxComboCount;
+										}
+										if (othelloDatas[i][j].score < maxScore)
+										{
+											othelloDatas[i][j].score = maxScore;
+										}
+									}
+								}
+							}
+						}
 					}
 
 					//初期化
@@ -370,20 +526,70 @@ void CheakOthello::ChangeScoreAndCombo()
 	//xがfront,yがsecond
 	int maxScore = 0;
 	int maxConboCount = 0;
+	//int maxChainName = 0;
+	bool isChangeScore = false;
+	//bool isChangeChainName = false;
+
 	for (auto itr = checkScoreData.begin(); itr != checkScoreData.end(); ++itr)
 	{
 		if (othelloDatas[itr->first][itr->second].score > maxScore)
 		{
 			maxScore = othelloDatas[itr->first][itr->second].score;
 			maxConboCount = othelloDatas[itr->first][itr->second].comboCount;
+			isChangeScore = true;
 		}
+		/*if (othelloDatas[itr->first][itr->second].chainName > maxChainName)
+		{
+			maxChainName = othelloDatas[itr->first][itr->second].chainName;
+			isChangeChainName = true;
+		}*/
 	}
 
 	for (auto itr = checkScoreData.begin(); itr != checkScoreData.end(); ++itr)
 	{
-		othelloDatas[itr->first][itr->second].score = maxScore;
-		othelloDatas[itr->first][itr->second].comboCount = maxConboCount;
+		if (isChangeScore)
+		{
+			othelloDatas[itr->first][itr->second].score = maxScore;
+			othelloDatas[itr->first][itr->second].comboCount = maxConboCount;
+		}
+		/*if (isChangeChainName)
+		{
+			othelloDatas[itr->first][itr->second].chainName = maxChainName;
+		}*/
 	}
 
 	checkScoreData.clear();
+}
+
+void CheakOthello::CheckReachOthello(int direction_x, int direction_y)
+{
+	if (sandwichData.empty()) { return; }
+
+	int lastX = sandwichData.front().second;
+	int lastY = sandwichData.front().first;
+	bool side = sandwichSide.front();
+	bool isReach = false;
+
+	while (1)
+	{
+		lastX += direction_x;
+		lastY += direction_y;
+
+		if (isReach)
+		{
+			if (othelloDatas[lastY][lastX].isFront == side) { continue; }
+			else
+			{
+				reachData.push_back(make_pair(lastY, lastX));
+				reachSide.push_back(side);
+				break;
+			}
+		}
+
+		else if (!isReach)
+		{
+			if (othelloDatas[lastY][lastX].isFront == side) { break; }
+			else { isReach = true; }
+		}
+	}
 }
