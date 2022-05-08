@@ -741,9 +741,10 @@ void GameScene::GameDraw()
 
 	Draw3DObject(sky);
 	Draw3DObject(othelloStage);
-	othelloManager.Draw();
 	OthlloPlayer::Draw();
 	ObjectParticles::Draw();
+	ParticleControl::Draw();
+	othelloManager.Draw();
 	Lights::Draw();
 	//スプライトの描画-------------------------
 	//titleSprite.SpriteDraw();

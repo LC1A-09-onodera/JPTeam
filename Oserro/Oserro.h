@@ -3,7 +3,7 @@
 #include "../DX12operator.h"
 #include <list>
 #include "../Sprite/Sprite.h"
-
+#include "../NormaChecker/NormaChecker.h"
 enum OthelloType
 {
 	NORMAL,
@@ -16,6 +16,19 @@ namespace
 	{
 		int x;
 		int y;
+	};
+	struct panelData
+	{
+		panelPos pos;
+		bool isFront;
+	};
+	struct NormaModeFieldData
+	{
+		std::list<panelData> panels;
+		panelPos playerPos;
+		Norma::NormaType type = Norma::Panels;
+		int normaStatus = 0;
+		int normaMoveCount = 0;
 	};
 }
 
@@ -103,6 +116,7 @@ struct OthelloData
 
 	bool isShake = false;
 	int chainName = 0;
+	int maxComboCount = 0;
 };
 struct SendOthelloData
 {
@@ -112,11 +126,14 @@ struct SendOthelloData
 	bool isSandwich = false;
 	bool isCheckEnd = false;
 	bool isOnPlayer = false;
+	bool isChainVanish = false;	//連鎖で再度消えた駒が持つフラグ
 	list<bool> FrontActiveAngle;
 	vector<int> SandwichLength;
 	int comboCount = 0;
 	int score = 0;
-	int chainName =0;
+	int chainName = 0;
+	int maxComboCount = 0;
+
 };
 
 namespace OthelloConstData
@@ -134,6 +151,10 @@ namespace OthelloConstData
 	const int SpawnDerayTimerMax = 60;
 
 	const float PanelSize = 10.0f;
+
+	const float panelWallRate = 0.3f;
+	const int downStepCountMax = 0;
+
 	//アニメーション
 	const int vanishTimerMax = 600;
 	const int animationTimerMax = 30;
@@ -141,7 +162,6 @@ namespace OthelloConstData
 	const int JumpTimerMax = waitTimerMax / 2;
 	const int SpawnAnimationTimerMax = 120;
 	const int downStepTimerMax = 60;
-	const int downStepCountMax = 3;
 }
 
 class OthelloEachInfo : public EachInfo
@@ -216,6 +236,27 @@ private:
 	void Shake();
 };
 
+class ChanceModel : public OthelloModel
+{
+
+};
+class ChanceObject
+{
+public:
+	void Init(ChanceModel *model);
+	void Update();
+	void Draw();
+	void Finalize();
+
+	void Spawn(int x, int y, bool isFront = true);
+	void SetModel(ChanceModel *model) { this->model = model; }
+public:
+	OthelloEachInfo each;
+	bool isFront = false;
+private:
+	ChanceModel *model;
+};
+
 class OthelloManager
 {
 public:
@@ -232,6 +273,9 @@ public:
 
 	void MinSpawn();
 	static list<Othello> othellos;
+	static list<NormaModeFieldData> NormaStartOthellos;
+
+	static list<ChanceObject> chances;
 	void DeadPanel();
 
 	void StartSetPos();
@@ -251,7 +295,20 @@ public:
 
 	bool IsTutorialEnd();
 
-	Sprite TutorialRetryText;
+public://ノルマモード用関数
+	void NormaUpdate();
+	void SetNormaMove();
+	void Undo();
+	void StartNormaMode(Norma::NormaType normaType = Norma::Combo, int normaStatus = 0, int normaMoveCount = 0);
+	void EndNormaMode();
+	void RestartNorma();
+	bool GetIsNormaClear();
+	bool GetIsNormaFailed();
+	bool isNormaMode = true;
+
+private://ノルマモード用内部処理関数
+	void StartNormaField();
+	void TestStage();
 private:
 	void SetPlayer();
 
@@ -271,6 +328,12 @@ private:
 	void playerMoveEnd();
 
 	void playerNotMove();
+
+	void OthelloDraw();
+private://チャンスオブジェクト
+
+	void SetChanceObject(int x, int y, bool Front);
+	void ChanceDraw();
 
 private:
 
@@ -299,6 +362,8 @@ private:
 	/// </summary>
 	void TypeXI(list<Othello>::iterator playerItr, list<Othello>::iterator nextItr, int x, int y);
 
+	void TypeUp(list<Othello>::iterator playerItr, list<Othello>::iterator nextItr, int x, int y);
+
 	void DownStep(list<Othello>::iterator playerItr);
 
 	void DownStepReset() { downStepCount = 0; downStepTimer = 0; }
@@ -315,6 +380,7 @@ private:
 
 	//特定のマスにパネルを配置する
 	void SetSpawnPanel(int x, int y, bool Front);
+
 private:
 	panelPos playerPanelPos;
 	int spawnTimer = 0;
@@ -326,6 +392,8 @@ private:
 	XMFLOAT3 mousePoint;
 
 	static OthelloModel oserroModel;
+	static ChanceModel chanceModelBlue;
+	static ChanceModel chanceModelOrange;
 	static vector<vector<SendOthelloData>> sendDatas;
 
 	bool isOnPanel = true;
@@ -351,4 +419,7 @@ private:
 
 	int textChangeTimer = 0;
 	bool textChange = false;
+
+	NormaChecker normaChecker;
+
 };
