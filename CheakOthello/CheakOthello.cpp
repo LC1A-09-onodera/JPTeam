@@ -575,6 +575,9 @@ void CheakOthello::CheckReachOthello(int direction_x, int direction_y)
 		lastX += direction_x;
 		lastY += direction_y;
 
+		if (lastX < 0 || lastX > OthelloConstData::fieldSize - 1) { break; }
+		if (lastY < 0 || lastY > OthelloConstData::fieldSize - 1) { break; }
+
 		if (isReach)
 		{
 			if (othelloDatas[lastY][lastX].isFront == side) { continue; }
