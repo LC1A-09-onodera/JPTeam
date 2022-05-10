@@ -810,7 +810,7 @@ void GameScene::GameDraw()
 		nowScore = checkObject.GetScore();
 		
 		//playerの頭上にスコアを出す
-		/*if (checkObject.IsAddScore())
+		if (checkObject.IsAddScore())
 		{
 			int addComboint = checkObject.GetCombo();
 			if (addComboint < 10)
@@ -824,9 +824,42 @@ void GameScene::GameDraw()
 				addReverse.ChangeSize(192, 32);
 				addReverse.SpriteDraw();
 			}
-			
+			else if (addComboint < 100)
+			{
+				addScoreNum[addComboint % 10].position.m128_f32[0] = window_width / 2 - 64;
+				addScoreNum[addComboint % 10].position.m128_f32[1] = 74;
+				addScoreNum[addComboint % 10].ChangeSize(48, 64);
+				addScoreNum[addComboint % 10].SpriteDraw();
 
-		}*/
+				addScoreNum[addComboint / 10 % 10 + 10].position.m128_f32[0] = window_width / 2 - 112;
+				addScoreNum[addComboint / 10 % 10 + 10].position.m128_f32[1] = 74;
+				addScoreNum[addComboint / 10 % 10 + 10].ChangeSize(48, 64);
+				addScoreNum[addComboint / 10 % 10 + 10].SpriteDraw();
+
+				addReverse.position.m128_f32[0] = window_width / 2;
+				addReverse.position.m128_f32[1] = 74 + 32;
+				addReverse.ChangeSize(192, 32);
+				addReverse.SpriteDraw();
+			}
+			else if (addComboint < 1000)
+			{
+				addScoreNum[addComboint % 10].position.m128_f32[0] = window_width / 2 - 64;
+				addScoreNum[addComboint % 10].position.m128_f32[1] = 74;
+				addScoreNum[addComboint % 10].ChangeSize(48, 64);
+				addScoreNum[addComboint % 10].SpriteDraw();
+
+				addScoreNum[addComboint / 10 % 10 + 10].position.m128_f32[0] = window_width / 2 - 112;
+				addScoreNum[addComboint / 10 % 10 + 10].position.m128_f32[1] = 74;
+				addScoreNum[addComboint / 10 % 10 + 10].ChangeSize(48, 64);
+				addScoreNum[addComboint / 10 % 10 + 10].SpriteDraw();
+
+				addReverse.position.m128_f32[0] = window_width / 2;
+				addReverse.position.m128_f32[1] = 74 + 32;
+				addReverse.ChangeSize(192, 32);
+				addReverse.SpriteDraw();
+			}
+
+		}
 
 		if (oldDisplay != nowScore)
 		{
