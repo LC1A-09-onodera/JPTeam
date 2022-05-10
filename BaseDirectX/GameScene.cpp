@@ -184,6 +184,7 @@ void GameScene::Init()
 		addConbo[i + 8].CreateSprite(num[8], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
 		addConbo[i + 9].CreateSprite(num[9], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
 	}
+	addReverse.CreateSprite(L"Resource/Img/combo.png", XMFLOAT3(0, 0, 0));
 	scoreSprite.CreateSprite(L"Resource/Img/score.png", XMFLOAT3(0, 0, 0));
 	timeUp.CreateSprite(L"Resource/Img/time_up.png", XMFLOAT3(0, 0, 0));
 	startSprite.CreateSprite(L"Resource/Img/START.png", XMFLOAT3(0, 0, 0));
@@ -795,11 +796,13 @@ void GameScene::GameDraw()
 
 	if (gameTime > 0 && countDown <= 0)
 	{
+		numbers[gameTime / 60 % 10].ChangeSize(48, 64);
+		numbers[gameTime / 600 % 10 + 10].ChangeSize(48, 64);
 		numbers[gameTime / 60 % 10].position.m128_f32[0] = window_width / 2 + 0;
-		numbers[gameTime / 60 % 10].position.m128_f32[1] = 30;
+		numbers[gameTime / 60 % 10].position.m128_f32[1] = 10;
 		numbers[gameTime / 60 % 10].SpriteDraw();
-		numbers[gameTime / 600 % 10 + 10].position.m128_f32[0] = window_width / 2 - 60;
-		numbers[gameTime / 600 % 10 + 10].position.m128_f32[1] = 30;
+		numbers[gameTime / 600 % 10 + 10].position.m128_f32[0] = window_width / 2 - 50;
+		numbers[gameTime / 600 % 10 + 10].position.m128_f32[1] = 10;
 		numbers[gameTime / 600 % 10 + 10].SpriteDraw();
 
 		oldDisplay = nowScore;
@@ -809,12 +812,17 @@ void GameScene::GameDraw()
 		//playerの頭上にスコアを出す
 		if (checkObject.IsAddScore())
 		{
-			int addScoreint = checkObject.GetAddScore();
-			if (addScoreint < 10)
+			int addComboint = checkObject.GetCombo();
+			if (addComboint < 10)
 			{
-				addScoreNum[addScoreint % 10].position = {1280 / 2, 20,0};
-				addScoreNum[addScoreint % 10].ChangeSize(20, 35);
-				addScoreNum[addScoreint % 10].SpriteDraw();
+				addScoreNum[addComboint % 10].position.m128_f32[0] = window_width / 2 - 64;
+				addScoreNum[addComboint % 10].position.m128_f32[1] = 74;
+				addScoreNum[addComboint % 10].ChangeSize(48, 64);
+				addScoreNum[addComboint % 10].SpriteDraw();
+				addReverse.position.m128_f32[0] = window_width / 2;
+				addReverse.position.m128_f32[1] = 74 + 32;
+				addReverse.ChangeSize(192, 32);
+				addReverse.SpriteDraw();
 			}
 			
 
@@ -865,41 +873,41 @@ void GameScene::GameDraw()
 
 		float wid = 40;
 		float widPuls = 45;
-		if (scoreChange)
+		/*if (scoreChange)
 		{
 			wid = 45;
 			widPuls = 50;
-		}
+		}*/
 		scoreSprite.position.m128_f32[0] = 0;
-		scoreSprite.position.m128_f32[1] = 35;
+		scoreSprite.position.m128_f32[1] = 15;
 		scoreSprite.ChangeSize(150, 50);
 		scoreSprite.SpriteDraw();
 		scoreNum[displayScore % 10].ChangeSize(wid, 60);
 		scoreNum[displayScore % 10].position.m128_f32[0] = widPuls * 9;
-		scoreNum[displayScore % 10].position.m128_f32[1] = 30;
+		scoreNum[displayScore % 10].position.m128_f32[1] = 10;
 		scoreNum[displayScore % 10].SpriteDraw();
 		scoreNum[displayScore / 10 % 10 + 10].ChangeSize(wid, 60);
 		scoreNum[displayScore / 10 % 10 + 10].position.m128_f32[0] = widPuls * 8;
-		scoreNum[displayScore / 10 % 10 + 10].position.m128_f32[1] = 30;
+		scoreNum[displayScore / 10 % 10 + 10].position.m128_f32[1] = 10;
 		scoreNum[displayScore / 10 % 10 + 10].SpriteDraw();
 		scoreNum[displayScore / 100 % 10 + 20].ChangeSize(wid, 60);
 		scoreNum[displayScore / 100 % 10 + 20].position.m128_f32[0] = widPuls * 7;
-		scoreNum[displayScore / 100 % 10 + 20].position.m128_f32[1] = 30;
+		scoreNum[displayScore / 100 % 10 + 20].position.m128_f32[1] = 10;
 		scoreNum[displayScore / 100 % 10 + 20].SpriteDraw();
 		scoreNum[displayScore / 1000 % 10 + 30].ChangeSize(wid, 60);
 		scoreNum[displayScore / 1000 % 10 + 30].position.m128_f32[0] = widPuls * 6;
-		scoreNum[displayScore / 1000 % 10 + 30].position.m128_f32[1] = 30;
+		scoreNum[displayScore / 1000 % 10 + 30].position.m128_f32[1] = 10;
 		scoreNum[displayScore / 1000 % 10 + 30].SpriteDraw();
 		scoreNum[displayScore / 10000 % 10 + 40].ChangeSize(wid, 60);
 		scoreNum[displayScore / 10000 % 10 + 40].position.m128_f32[0] = widPuls * 5;
-		scoreNum[displayScore / 10000 % 10 + 40].position.m128_f32[1] = 30;
+		scoreNum[displayScore / 10000 % 10 + 40].position.m128_f32[1] = 10;
 		scoreNum[displayScore / 10000 % 10 + 40].SpriteDraw();
 		scoreNum[displayScore / 100000 % 10 + 50].ChangeSize(wid, 60);
 		scoreNum[displayScore / 100000 % 10 + 50].position.m128_f32[0] = widPuls * 4;
-		scoreNum[displayScore / 100000 % 10 + 50].position.m128_f32[1] = 30;
+		scoreNum[displayScore / 100000 % 10 + 50].position.m128_f32[1] = 10;
 		scoreNum[displayScore / 100000 % 10 + 50].SpriteDraw();
 		moveSprite.position.m128_f32[0] = 950;
-		moveSprite.position.m128_f32[1] = 30;
+		moveSprite.position.m128_f32[1] = 10;
 		float sizeSp = 0.6f;
 		moveSprite.ChangeSize(382 * sizeSp, 433 * sizeSp);
 		moveSprite.SpriteDraw();
@@ -959,7 +967,7 @@ void GameScene::GameDraw()
 			kagikakkoEndSprite.SpriteDraw();
 		}
 	}
-	Imgui::DrawImGui();
+	//Imgui::DrawImGui();
 	//描画コマンドここまで
 	BaseDirectX::UpdateBack();
 }

@@ -77,7 +77,7 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData, bo
 		if (totalDeleteOthello > 1) { AddScore(); }
 		if (isCombosCheck) { ChangeScoreAndCombo(); }
 
-		ResetAddScore();
+		//ResetAddScore();
 	}
 
 	//Œø—¦ˆ«‚¢‚Å‚·
