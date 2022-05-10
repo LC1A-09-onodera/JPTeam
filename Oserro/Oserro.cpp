@@ -1115,7 +1115,7 @@ const vector<vector<SendOthelloData>> &OthelloManager::Send()
 		data.FrontActiveAngle = gameDatas.FrontActiveAngle;
 		data.isFront = gameDatas.isFront;
 		data.type = gameDatas.type;
-
+		data.chainName = gameDatas.chainName;
 		if (itr->GetIsActive())
 		{
 			data.isSandwich = true;
@@ -1165,7 +1165,7 @@ void OthelloManager::Receive(const vector<vector<SendOthelloData>> &data)
 		int y = gameDatas->heightPos;
 
 		gameDatas->score = sendDatas[y][x].score;
-
+		gameDatas->chainName = sendDatas[y][x].chainName;
 		if (sendDatas[y][x].type == NONE)
 		{
 			continue;
