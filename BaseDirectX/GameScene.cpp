@@ -256,6 +256,7 @@ void GameScene::TitleUpdate()
 	{
 		SoundStopWave(enterSound);
 		SoundPlayOnce(enterSound);
+		checkObject.Init();
 		//オセロを爆散させてカメラの動きを開始させる
 		for (auto triangleItr = ObjectParticles::othello.particles.begin(); triangleItr != ObjectParticles::othello.particles.end(); ++triangleItr)
 		{
@@ -342,10 +343,12 @@ void GameScene::TitleUpdate()
 			{
 				gameTime = 0;
 				isPouse = false;
+				checkObject.Init();
 			}
 			else if (selectPouse == 2)
 			{
 				isGameEnd = true;
+				checkObject.Init();
 			}
 		}
 		if (Input::KeyTrigger(DIK_ESCAPE) || directInput->IsButtonPush(directInput->ButtonPouse))
