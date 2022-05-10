@@ -53,6 +53,7 @@ private:
 	int combo;
 	bool side;				//表裏保存
 	bool checkOthello;
+	bool isAddScore;
 
 	bool isCombos;
 	bool isCombosCheck;
@@ -75,6 +76,7 @@ public:
 	const vector<pair<int, int>>& GetReachDatas() { return reachData; }	//リーチの場所
 	const vector<bool>& GetReachSides() { return reachSide; }			//リーチの場所の表裏
 	const int GetCombo() { return combo; }
+	const bool IsAddScore() { return isAddScore; }
 
 private:
 	//盤面チェック

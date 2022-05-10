@@ -53,6 +53,8 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData, bo
 		pair<int, int> last = SetCheckOthello();
 		if (!checkOthello) { break; }
 
+		isAddScore = false;
+
 		//全方位チェック
 		/*-----左-----*/
 		OthelloCheck(Direction_X::WEST, NONE_DIRECTION, last.first, last.second, false);
@@ -299,6 +301,9 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y, int last_x, in
 				//ひっくり返せる場合
 				if (isActiveOthello)
 				{
+					//スコア加算されたフラグ
+					isAddScore = true;
+
 					//maxComboCountを加算
 					maxComboCount++;
 
