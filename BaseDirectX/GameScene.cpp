@@ -158,6 +158,32 @@ void GameScene::Init()
 		scoreNum[i + 8].CreateSprite(num[8], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
 		scoreNum[i + 9].CreateSprite(num[9], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
 	}
+	for (int i = 0; i < 60; i += 10)
+	{
+		addScoreNum[i + 0].CreateSprite(num[0], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+		addScoreNum[i + 1].CreateSprite(num[1], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+		addScoreNum[i + 2].CreateSprite(num[2], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+		addScoreNum[i + 3].CreateSprite(num[3], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+		addScoreNum[i + 4].CreateSprite(num[4], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+		addScoreNum[i + 5].CreateSprite(num[5], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+		addScoreNum[i + 6].CreateSprite(num[6], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+		addScoreNum[i + 7].CreateSprite(num[7], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+		addScoreNum[i + 8].CreateSprite(num[8], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+		addScoreNum[i + 9].CreateSprite(num[9], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+	}
+	for (int i = 0; i < 30; i += 10)
+	{
+		addConbo[i + 0].CreateSprite(num[0], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+		addConbo[i + 1].CreateSprite(num[1], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+		addConbo[i + 2].CreateSprite(num[2], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+		addConbo[i + 3].CreateSprite(num[3], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+		addConbo[i + 4].CreateSprite(num[4], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+		addConbo[i + 5].CreateSprite(num[5], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+		addConbo[i + 6].CreateSprite(num[6], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+		addConbo[i + 7].CreateSprite(num[7], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+		addConbo[i + 8].CreateSprite(num[8], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+		addConbo[i + 9].CreateSprite(num[9], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+	}
 	scoreSprite.CreateSprite(L"Resource/Img/score.png", XMFLOAT3(0, 0, 0));
 	timeUp.CreateSprite(L"Resource/Img/time_up.png", XMFLOAT3(0, 0, 0));
 	startSprite.CreateSprite(L"Resource/Img/START.png", XMFLOAT3(0, 0, 0));
@@ -190,6 +216,8 @@ void GameScene::Init()
 	SoundLoad("Resource/Sound/bgm_.wav", BGMSound);
 	SoundLoad("Resource/Sound/start_.wav", startSound);
 	SoundLoad("Resource/Sound/count_down_.wav", countdDownSound);
+	selectGameTypeActive = false;
+	selectGameType = 1;
 }
 
 void GameScene::TitleUpdate()
@@ -777,41 +805,10 @@ void GameScene::GameDraw()
 		oldDisplay = nowScore;
 		oldScore = nowScore;
 		nowScore = checkObject.GetScore();
+		
 		//playerの頭上にスコアを出す
-		if (nowScore != oldScore && isScorePuls == false)
-		{
-			isScorePuls = true;
-			if (nowScore - oldScore < 10)
-			{
-				
-			}
-			else if (nowScore - oldScore < 100)
-			{
+		
 
-			}
-			else if (nowScore - oldScore < 1000)
-			{
-
-			}
-			else if (nowScore - oldScore < 10000)
-			{
-
-			}
-			else if (nowScore - oldScore < 100000)
-			{
-
-			}
-			else if (nowScore - oldScore < 1000000)
-			{
-
-			}
-			else if (nowScore - oldScore < 10000000)
-			{
-
-			}
-
-			//ObjectParticles::combo.Init(XMFLOAT3(OthlloPlayer::GetPosition().x, OthlloPlayer::GetPosition().y, OthlloPlayer::GetPosition().z), 1, ParticleType::Combo);
-		}
 		if (oldDisplay != nowScore)
 		{
 			scoreChange = true;
@@ -896,7 +893,7 @@ void GameScene::GameDraw()
 		moveSprite.ChangeSize(382 * sizeSp, 433 * sizeSp);
 		moveSprite.SpriteDraw();
 
-		othelloManager.TutorialRetryText.SpriteDraw();
+		//othelloManager.TutorialRetryText.SpriteDraw();
 		if (isTutorial)
 		{
 			othelloManager.TutorialTextDraw();

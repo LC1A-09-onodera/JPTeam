@@ -91,6 +91,9 @@ public://シーンで使うもの
 
 	int gameTime;
 
+	int selectGameType;
+	bool selectGameTypeActive;
+
 	XMFLOAT3 eyeStart;
 	XMFLOAT3 eyeEnd;
 	float eyeEaseTime;
@@ -104,6 +107,10 @@ public://シーンで使うもの
 	Sprite timeUp;
 	Sprite startSprite;
 	Tex num[10];
+
+	Sprite addScoreNum[60];
+	Sprite addReverse;
+	Sprite addConbo[30];
 
 	Model sky;
 	Model othelloStage;

@@ -12,11 +12,14 @@ enum class ParticleType
 	Born,
 	BornAndShake,
 	Combo,
+	ComboNum
 };
 
 class ObjectParticle : public Model
 {
-
+public:
+	void CreateModel(const char* name, HLSLShader& shader, bool smoothing = false, bool addAlpha = true);
+	bool InitializeGraphicsPipeline(HLSLShader& shader);
 };
 class ObjectParticle3D
 {
@@ -36,6 +39,7 @@ class ObjectParticle3D
 public:
 	EachInfo each;
 	void Add(XMFLOAT3& emitter, ParticleType type);
+	void Add(XMFLOAT3& emitter, ParticleType type, XMFLOAT3 &size);
 	void Update();
 	void Draw(ObjectParticle& object);
 	void InitExprotion(XMFLOAT3& emitter);
@@ -47,6 +51,7 @@ public:
 	void InitBorn(XMFLOAT3 &emitter);
 	void InitBornAndShake(XMFLOAT3 &emitter);
 	void InitConbo(XMFLOAT3 &emitter);
+	void InitConboNum(XMFLOAT3& emitter, XMFLOAT3 &size);
 	void UpdateExprotion();
 	void UpdateConverge();
 	void UpdateTitle();
@@ -56,6 +61,7 @@ public:
 	void UpdateBorn();
 	void UpdateBornAndShake();
 	void UpdateCombo();
+	void UpdateConboNum();
 	int time;
 };
 
@@ -66,6 +72,7 @@ public:
 	list<list<ObjectParticle3D>::iterator> deleteItr;
 	ObjectParticle object;
 	void Init(XMFLOAT3& emitter, int count, ParticleType type);
+	void Init(XMFLOAT3& emitter, int count, ParticleType type, XMFLOAT3 size);
 	void Update();
 	void Draw(ObjectParticle& object);
 	void DeleteAllParticle();
@@ -79,7 +86,6 @@ public:
 	static ObjectParticleInfo othello;
 	static ObjectParticleInfo frame;
 	static ObjectParticleInfo othelloFrame;
-	static ObjectParticleInfo combo;
 	static void LoadModels();
 	static void Update();
 	static void Draw();
