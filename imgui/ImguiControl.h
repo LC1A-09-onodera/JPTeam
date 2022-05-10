@@ -22,6 +22,14 @@ public:
     static void ChangeInfo(float &floatOriginal, float& imguiInfo);
     static void ChangeInfo(XMFLOAT3 &xmfloat3Original, XMFLOAT3& imguiInfo);
 
+    enum ImguiTab
+    {
+        Status,
+        PostEffect,
+        Camera,
+        Debug,
+    };
+
     static bool spotLight1;
     static float lightColor[3];
 
@@ -33,6 +41,15 @@ public:
     static int spritePos6[2];
     static int spritePos7[2];
 
+    //System
+    static float fps;
+    static float eyePos[3];
+    static float target[3];
+
+    //imgui‚Ì‘®«
+    //static ImguiTab tab;
+
+    static int combo;
 
     static int score;
 

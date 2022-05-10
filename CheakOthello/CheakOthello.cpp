@@ -11,15 +11,16 @@ CheakOthello::CheakOthello()
 	last_x = 0;				//最後に動かしたオセロのX座標
 	last_y = 0;				//最後に動かしたオセロのY座標
 	totalScore = 0;			//合計点
-	totalDeleteOthello = 0;
-	collectiveCount = 0;
-	addScore = 0;
-
+	totalDeleteOthello = 0;	//挟んだ個数の合計
+	collectiveCount = 0;	//まとまりの数
+	addScore = 0;			//加算されるスコア
+	combo = 0;				//コンボ
 	side = 0;				//表裏保存
-	checkOthello = 0;
+	checkOthello = 0;		//
+	isAddScore = 0;			//
 
-	isCombos = false;
-	isCombosCheck = false;
+	isCombos = false;		//
+	isCombosCheck = false;	//
 }
 
 CheakOthello::~CheakOthello()
@@ -28,15 +29,21 @@ CheakOthello::~CheakOthello()
 
 void CheakOthello::Init()
 {
+	SoundLoad("Resource/Sound/reverse_4_.wav", comboSound);
+
 	last_x = 0;				//最後に動かしたオセロのX座標
 	last_y = 0;				//最後に動かしたオセロのY座標
 	totalScore = 0;			//合計点
+	totalDeleteOthello = 0;	//挟んだ個数の合計
+	collectiveCount = 0;	//まとまりの数
+	addScore = 0;			//加算されるスコア
+	combo = 0;				//コンボ
 	side = 0;				//表裏保存
-	checkOthello = 0;
-	SoundLoad("Resource/Sound/reverse_4_.wav", comboSound);
+	checkOthello = 0;		//
+	isAddScore = 0;			//
 
-	isCombos = false;
-	isCombosCheck = false;
+	isCombos = false;		//
+	isCombosCheck = false;	//
 }
 
 void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData, bool isCheck)
@@ -45,7 +52,7 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData, bo
 	//if (Input::KeyTrigger(DIK_R)) { totalScore = 0; }
 
 	//最後に動いた駒を判定、保存
-	CheckLastMove(othelloData);
+ 	CheckLastMove(othelloData);
 
 	while (1) //多分whileじゃなくても動く
 	{
@@ -279,8 +286,9 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y, int last_x, in
 					pair_y += direction_y;
 
 					//コンボを加算できる状態に変更
-  					if (!othelloDatas[pair_y][pair_x].isSandwich) { 
-						isActiveOthello = true; }
+					if (!othelloDatas[pair_y][pair_x].isSandwich) {
+						isActiveOthello = true;
+					}
 				}
 
 				//初期化

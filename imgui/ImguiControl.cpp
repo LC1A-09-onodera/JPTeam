@@ -3,6 +3,7 @@
 #include "../imgui/imgui_impl_dx12.h"
 #include "../imgui/imgui_impl_win32.h"
 #include "../BaseDirectX/BaseDirectX.h"
+#include "../Camera/Camera.h"
 //#include "../BaseDirectX/GameScene.h"
 
 ComPtr<ID3D12DescriptorHeap> Imgui::imguiDescHeap;
@@ -19,6 +20,11 @@ int Imgui::spritePos5[2];
 int Imgui::spritePos6[2];
 int Imgui::spritePos7[2];
 int Imgui::score;
+float Imgui::fps;
+//ImguiTab Imgui::tab;
+float Imgui::eyePos[3];
+float Imgui::target[3];
+
 ComPtr<ID3D12DescriptorHeap> Imgui::CreateDescrriptorHeapForImgui()
 {
     ComPtr<ID3D12DescriptorHeap> ret;
@@ -41,24 +47,60 @@ void Imgui::DrawImGui()
     ImGui_ImplDX12_NewFrame();
     ImGui_ImplWin32_NewFrame();
     ImGui::NewFrame();
-    ImGui::Begin("Test");//ウィンドウの名前
+    ImGui::Begin("Test", nullptr, ImGuiWindowFlags_MenuBar);//ウィンドウの名前
     ImGui::SetWindowSize(ImVec2(400, 500), ImGuiCond_::ImGuiCond_FirstUseEver);
     //imguiここにいろいろ書く
     /*ImGui::Checkbox("spotLight1", &spotLight1);
     ImGui::SliderFloat3("ligthColor", lightColor, 0.0f, 1.0f);*/
-    ImGui::SliderInt2("SpritePosition1", spritePos1, 0, 1280);
-    ImGui::SliderInt2("SpritePosition2", spritePos2, 0, 1280);
-    ImGui::SliderInt2("SpritePosition3", spritePos3, 0, 1280);
-    ImGui::SliderInt2("SpritePosition4", spritePos4, 0, 1280);
-    ImGui::SliderInt2("SpritePosition5", spritePos5, 0, 1280);
-    ImGui::SliderInt2("SpritePosition6", spritePos6, 0, 1280);
-    ImGui::SliderInt2("SpritePosition7", spritePos7, 0, 1280);
-    ImGui::SliderFloat("dethLine", &dethLine, 0.0f, 50.0f);
-    ImGui::SliderInt("score", &score, 0, 10000000);
-    //------------
+    fps = WindowsAPI::rate;
+
+    /*if (ImGui::BeginMenuBar())
+    {
+        if (ImGui::MenuItem("Status"))
+        {
+            tab = ImguiTab::Status;
+        }
+        if (ImGui::MenuItem("PostEffect"))
+        {
+            tab = ImguiTab::PostEffect;
+
+        }
+        if (ImGui::MenuItem("Camera"))
+        {
+            tab = ImguiTab::Camera;
+
+        }
+        if (ImGui::MenuItem("Debug"))
+        {
+            tab = ImguiTab::Debug;
+        }
+        ImGui::EndMenuBar();
+    }
+    if (tab == ImguiTab::Status)
+    {
+        ImGui::Text("fps:%.2f", fps);
+    }
+    else if (tab == ImguiTab::PostEffect)
+    {
+
+    }
+    else if (tab == ImguiTab::Camera)
+    {
+        eyePos[0] = Camera::eye.v.x;
+        eyePos[1] = Camera::eye.v.y;
+        eyePos[2] = Camera::eye.v.z;
+        target[0] = Camera::target.v.x;
+        target[1] != Camera::target.v.y;
+        target[2] = Camera::target.v.z;
+        ImGui::SliderFloat3("eyePosition", eyePos, -200, 200);
+        ImGui::SliderFloat3("Target", target, -200, 200);
+    }
+    else if (tab == ImguiTab::Debug)
+    {
+
+    }*/
 
     ImGui::End();
-
     ImGui::Render();
     BaseDirectX::cmdList->SetDescriptorHeaps(1, GetHeapForImgui().GetAddressOf());
     ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), BaseDirectX::cmdList.Get());
@@ -105,13 +147,13 @@ void Imgui::ChangeInfo(XMFLOAT3& xmfloat3Original, XMFLOAT3& imguiInfo)
     return;
 }
 
-void Imgui::GetAndDrawInfo(const int &intOriginal, int& imguiInfo)
+void Imgui::GetAndDrawInfo(const int& intOriginal, int& imguiInfo)
 {
     imguiInfo = intOriginal;
     return;
 }
 
-void Imgui::GetAndDrawInfo(const float &floatOriginal, float& imguiInfo)
+void Imgui::GetAndDrawInfo(const float& floatOriginal, float& imguiInfo)
 {
     imguiInfo = floatOriginal;
     return;

@@ -190,6 +190,7 @@ void Othello::ReversUpdate()
 
 	if (data.animationTimer == 0)
 	{
+		
 		//MakeParticle();
 	}
 
@@ -257,7 +258,8 @@ void Othello::ReversUpdate()
 		//data.comboCount = 0;
 
 		data.isVanish = true;
-
+		XMFLOAT3 pos = ConvertXMVECTORtoXMFLOAT3(each.position);
+		ObjectParticles::othelloFrame.Init(pos, 1, ParticleType::BornAndShake);
 		////ひっくり返ったら起動フラグをオンにする
 		//data.isMove = true;
 	}
@@ -518,6 +520,7 @@ void Othello::Borne(OthelloType type, int x, int y, bool isFront)
 		each.position += ConvertXMFLOAT3toXMVECTOR(stageLeftTop);
 		XMFLOAT3 pos = ConvertXMVECTORtoXMFLOAT3(each.position);
 		ObjectParticles::frame.Init(pos, 1, ParticleType::Born);
+		
 		if (data.isFront)
 		{
 			each.rotation.y = 0;
@@ -554,6 +557,8 @@ void Othello::SinkWait()
 	}
 	data.isSandwich = false;
 	data.isVanish = true;
+	XMFLOAT3 pos = ConvertXMVECTORtoXMFLOAT3(each.position);
+	ObjectParticles::othelloFrame.Init(pos, 1, ParticleType::BornAndShake);
 }
 
 void Othello::Sink()
@@ -605,7 +610,7 @@ void OthelloManager::Init()
 	TutorialText5.CreateSprite(L"Resource/Img/string_04.png", XMFLOAT3(0, 0, 0));
 	TutorialText6.CreateSprite(L"Resource/Img/string_05.png", XMFLOAT3(0, 0, 0));
 	CongraturationText.CreateSprite(L"Resource/Img/excellent.png", XMFLOAT3(0, 0, 0));
-	TutorialRetryText.CreateSprite(L"Resource/Img/reset.png", XMFLOAT3(0, 0, 0));
+	//TutorialRetryText.CreateSprite(L"Resource/Img/reset.png", XMFLOAT3(0, 0, 0));
 	back.CreateSprite(L"Resource/Img/title_back_80.png", XMFLOAT3(0, 0, 0));
 	float changeScale = 0.5f;
 
@@ -616,7 +621,7 @@ void OthelloManager::Init()
 	TutorialText5.ChangeSize(910 * changeScale, 207 * changeScale);
 	TutorialText6.ChangeSize(1070 * changeScale / 2, 154 * changeScale / 2);
 	CongraturationText.ChangeSize(457 * changeScale, 79 * changeScale);
-	TutorialRetryText.ChangeSize(288 * changeScale, 231 * changeScale);
+	//TutorialRetryText.ChangeSize(288 * changeScale, 231 * changeScale);
 
 	TutorialText1.position = XMVECTOR{ 640 - (1227 * changeScale / 2), 720 - (332 * changeScale + 30), 0, 0 };
 	TutorialText2.position = XMVECTOR{ 640 - (1158 * changeScale / 2), 720 - (207 * changeScale + 30), 0, 0 };
@@ -627,7 +632,7 @@ void OthelloManager::Init()
 
 	CongraturationText.position = XMVECTOR{ 640 - (457 * changeScale / 2), 360 - (79 * changeScale / 2), 0, 0 };
 
-	TutorialRetryText.position = XMVECTOR{ 990, 300, 0, 0 };
+	//TutorialRetryText.position = XMVECTOR{ 990, 300, 0, 0 };
 	normaChecker.Init();
 	TestStage();
 }
@@ -794,7 +799,7 @@ void OthelloManager::TutorialTextDraw()
 		textChange = !textChange;
 	}
 	//やり直しテキスト描画
-	TutorialRetryText.SpriteDraw();
+	//TutorialRetryText.SpriteDraw();
 
 	switch (scenes)
 	{
@@ -2366,5 +2371,6 @@ bool OthelloManager::GetIsNormaClear()
 
 bool OthelloManager::GetIsNormaFailed()
 {
+
 	return normaChecker.GetFailed();
 }

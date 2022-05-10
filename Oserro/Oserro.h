@@ -371,6 +371,7 @@ private:
 
 	void SaveSpawn();
 
+
 private:
 
 	//プレイヤーとパネルを特定のマスに配置する処理
@@ -417,12 +418,10 @@ private:
 	Sprite TutorialText5;
 	Sprite TutorialText6;
 	Sprite CongraturationText;
-	Sprite TutorialRetryText;
 	Sprite back;
 
 	int textChangeTimer = 0;
 	bool textChange = false;
 
 	NormaChecker normaChecker;
-
 };

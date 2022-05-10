@@ -8,7 +8,7 @@ WNDCLASSEX WindowsAPI::w{};
 bool WindowsAPI::Qite;
 int WindowsAPI::intarval;
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND, UINT, WPARAM, LPARAM);
-
+int WindowsAPI::rate;
 LRESULT WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
     // メッセージで分岐
@@ -71,15 +71,15 @@ void WindowsAPI::CheckMsg()
 void WindowsAPI::Update()
 {
     auto hdc = GetDC(hwnd);
-    auto rate = GetDeviceCaps(hdc, VREFRESH);
+    rate = GetDeviceCaps(hdc, VREFRESH);
     intarval = 0;
-    /*if (rate <= 60) intarval = 1;
-    else if (rate <= 120) intarval = 2;*/
     intarval = rate / 60;
     if (msg.message == WM_QUIT)
     {
         Qite = true;
     }
+
+    
 }
 
 void WindowsAPI::Gethwnd()

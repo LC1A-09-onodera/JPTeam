@@ -33,6 +33,8 @@ private:
 	void ResultDraw();
 	int SceneNum = TITLE;
 
+	void ReStart();
+
 public:
 	GameScene();
 	~GameScene();
@@ -89,6 +91,9 @@ public://シーンで使うもの
 
 	int gameTime;
 
+	int selectGameType;
+	bool selectGameTypeActive;
+
 	XMFLOAT3 eyeStart;
 	XMFLOAT3 eyeEnd;
 	float eyeEaseTime;
@@ -102,6 +107,10 @@ public://シーンで使うもの
 	Sprite timeUp;
 	Sprite startSprite;
 	Tex num[10];
+
+	Sprite addScoreNum[60];
+	Sprite addReverse;
+	Sprite addConbo[30];
 
 	Model sky;
 	Model othelloStage;
@@ -134,6 +143,7 @@ public://シーンで使うもの
 	int displayScore;
 	int oldDisplay;
 	int nowScore;
+	int oldScore;
 	bool scoreChange;
 	int changeTime;
 	int changeCount;
@@ -142,4 +152,5 @@ public://シーンで使うもの
 
 	int titleSelectNum;
 
+	bool isScorePuls;
 };
