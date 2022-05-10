@@ -97,7 +97,6 @@ void GameScene::Init()
 	//ポストエフェクトの初期化
 	postEffect.Initialize();
 
-
 	/*model = FbxLoader::GetInstance()->LoadModelFromFile("boneTest");
 	object = new FBXObject;
 	object->Initialize();
@@ -105,7 +104,6 @@ void GameScene::Init()
 	object->PlayAnimation();*/
 	//sample.CreateModel("newOserro", ShaderManager::playerShader);
 	//sample.each.rotation.x = 0;
-
 
 
 	checkObject.Init();
@@ -262,7 +260,7 @@ void GameScene::TitleUpdate()
 		for (auto triangleItr = ObjectParticles::othello.particles.begin(); triangleItr != ObjectParticles::othello.particles.end(); ++triangleItr)
 		{
 			XMFLOAT3 pos = ConvertXMVECTORtoXMFLOAT3(triangleItr->each.position);
-			ObjectParticles::triangle.Init(pos, 4, ParticleType::Exprotion);
+			ObjectParticles::triangle.Init(pos, 3, ParticleType::Exprotion);
 			triangleItr->time = 1;
 			countDown = countMax;
 		}
@@ -451,7 +449,7 @@ void GameScene::GameUpdate()
 		for (auto triangleItr = OthelloManager::othellos.begin(); triangleItr != OthelloManager::othellos.end(); ++triangleItr)
 		{
 			XMFLOAT3 pos = triangleItr->GetPosition();
-			ObjectParticles::triangle.Init(pos, 4, ParticleType::Exprotion);
+			ObjectParticles::triangle.Init(pos, 2, ParticleType::Exprotion);
 			triangleItr->GetGameData()->isDead = true;
 		}
 		othelloManager.DeadPanel();
@@ -556,20 +554,12 @@ void GameScene::GameUpdate()
 			isPouse = false;
 		}
 	}
-	int nowMaxConbo = 0;
-	for (auto itr = othelloManager.othellos.begin(); itr != othelloManager.othellos.end(); ++itr)
-	{
-		if (nowMaxConbo < itr->GetGameData()->comboCount)
-		{
-			nowMaxConbo = itr->GetGameData()->comboCount;
-		}
-	}
-	if (nowMaxConbo >= 3)
+	if (checkObject.GetCombo() >= 3)
 	{
 		tornadoTime++;
 		if (tornadoTime > 20)
 		{
-			ObjectParticles::triangle.Init(XMFLOAT3(0, 0, 0), nowMaxConbo - 2, ParticleType::Tornado);
+			ObjectParticles::triangle.Init(XMFLOAT3(0, 0, 0), checkObject.GetCombo() - 2, ParticleType::Tornado);
 			tornadoTime = 0;
 		}
 	}
@@ -1077,7 +1067,7 @@ void GameScene::ReStart()
 	for (auto triangleItr = OthelloManager::othellos.begin(); triangleItr != OthelloManager::othellos.end(); ++triangleItr)
 	{
 		XMFLOAT3 pos = triangleItr->GetPosition();
-		ObjectParticles::triangle.Init(pos, 4, ParticleType::Exprotion);
+		ObjectParticles::triangle.Init(pos, 2, ParticleType::Exprotion);
 		triangleItr->GetGameData()->isDead = true;
 	}
 	othelloManager.DeadPanel();
@@ -1087,6 +1077,7 @@ void GameScene::ReStart()
 	displayScore = 0;
 	oldDisplay = 0;
 	countDown = 239;
+	gameTime = gameMaxTime;
 	checkObject.SetScore(0);
 	OthlloPlayer::SetPosition(XMFLOAT3(0, 0, -2));
 	OthlloPlayer::startPos = { 0, 0, -2 };
