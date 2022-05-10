@@ -426,6 +426,9 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y, int last_x, in
 					pair_x = last_x;
 					pair_y = last_y;
 
+					//‚»‚Ìê‚ÌƒRƒ“ƒ{”‚ğæ“¾
+					combo = othelloDatas[pair_y][pair_x].maxComboCount;
+
 					//‚Ğ‚Á‚­‚è•Ô‚·
 					for (int i = 1; i <= loop; i++)
 					{

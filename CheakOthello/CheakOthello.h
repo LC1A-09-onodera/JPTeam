@@ -50,6 +50,7 @@ private:
 	int totalDeleteOthello;	//挟んだ個数の合計
 	int collectiveCount;	//まとまりの数
 	int addScore;			//加算されるスコア
+	int combo;
 	bool side;				//表裏保存
 	bool checkOthello;
 
@@ -70,9 +71,10 @@ public:
 	const int GetScore() { return totalScore; }
 	void SetScore(int score) { totalScore = score; }
 
-	int GetAddScore() { return addScore; }
+	const int GetAddScore() { return addScore; }
 	const vector<pair<int, int>>& GetReachDatas() { return reachData; }	//リーチの場所
 	const vector<bool>& GetReachSides() { return reachSide; }			//リーチの場所の表裏
+	const int GetCombo() { return combo; }
 
 private:
 	//盤面チェック
