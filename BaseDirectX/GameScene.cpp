@@ -579,7 +579,7 @@ void GameScene::GameUpdate()
 	}
 	if (!isSceneChange && !isResultSceneChange && !isPouse)
 	{
-		if (Input::KeyTrigger(DIK_U) || directInput->IsButtonPush(directInput->Button03))
+		if (Input::KeyTrigger(DIK_U) || directInput->IsButtonPush(directInput->Button03) && !isTutorial)
 		{
 			ReStart();
 		}
@@ -636,8 +636,8 @@ void GameScene::TitleDraw()
 	if (isSceneChange == false)
 	{
 		titleBack.ChangeSize(1280, 125 * 2);
-		titleBack.position.m128_f32[0] = 0;//Imgui::spritePos1[0];
-		titleBack.position.m128_f32[1] = 100;//Imgui::spritePos1[1];
+		titleBack.position.m128_f32[0] = 0;
+		titleBack.position.m128_f32[1] = 100;
 		titleBack.SpriteDraw();
 		title.SpriteDraw();
 		spaceBack.position.m128_f32[0] = 0;

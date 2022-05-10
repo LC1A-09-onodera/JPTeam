@@ -45,7 +45,7 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData, bo
 	if (Input::KeyTrigger(DIK_R)) { totalScore = 0; }
 
 	//ÅŒã‚É“®‚¢‚½‹î‚ğ”»’èA•Û‘¶
-	CheckLastMove(othelloData);
+ 	CheckLastMove(othelloData);
 
 	while (1) //‘½•ªwhile‚¶‚á‚È‚­‚Ä‚à“®‚­
 	{

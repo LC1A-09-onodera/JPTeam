@@ -27,7 +27,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		}*/
 		if (scene.isGameEnd)
 		{
-			break;
+			//exit(1);
+			    break;
 		}
 		if (WindowsAPI::Qite)
 		{
