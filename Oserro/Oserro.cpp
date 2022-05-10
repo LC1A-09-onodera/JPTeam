@@ -608,6 +608,7 @@ void OthelloManager::Init()
 	TutorialText3.CreateSprite(L"Resource/Img/string_02.png", XMFLOAT3(0, 0, 0));
 	TutorialText4.CreateSprite(L"Resource/Img/string_03.png", XMFLOAT3(0, 0, 0));
 	TutorialText5.CreateSprite(L"Resource/Img/string_04.png", XMFLOAT3(0, 0, 0));
+	TutorialText6.CreateSprite(L"Resource/Img/string_05.png", XMFLOAT3(0, 0, 0));
 	CongraturationText.CreateSprite(L"Resource/Img/excellent.png", XMFLOAT3(0, 0, 0));
 	//TutorialRetryText.CreateSprite(L"Resource/Img/reset.png", XMFLOAT3(0, 0, 0));
 	back.CreateSprite(L"Resource/Img/title_back_80.png", XMFLOAT3(0, 0, 0));
@@ -616,16 +617,19 @@ void OthelloManager::Init()
 	TutorialText1.ChangeSize(1227 * changeScale, 332 * changeScale);
 	TutorialText2.ChangeSize(1158 * changeScale, 207 * changeScale);
 	TutorialText3.ChangeSize(1158 * changeScale, 207 * changeScale);
-	TutorialText4.ChangeSize(1158 * changeScale, 207 * changeScale);
-	TutorialText5.ChangeSize(1158 * changeScale, 207 * changeScale);
+	TutorialText4.ChangeSize(971 * changeScale, 82 * changeScale);
+	TutorialText5.ChangeSize(910 * changeScale, 207 * changeScale);
+	TutorialText6.ChangeSize(1070 * changeScale / 2, 154 * changeScale / 2);
 	CongraturationText.ChangeSize(457 * changeScale, 79 * changeScale);
 	//TutorialRetryText.ChangeSize(288 * changeScale, 231 * changeScale);
 
 	TutorialText1.position = XMVECTOR{ 640 - (1227 * changeScale / 2), 720 - (332 * changeScale + 30), 0, 0 };
 	TutorialText2.position = XMVECTOR{ 640 - (1158 * changeScale / 2), 720 - (207 * changeScale + 30), 0, 0 };
 	TutorialText3.position = XMVECTOR{ 640 - (1158 * changeScale / 2) , 720 - (207 * changeScale + 30), 0, 0 };
-	TutorialText4.position = XMVECTOR{ 640 - (1158 * changeScale / 2) , 720 - (207 * changeScale + 30), 0, 0 };
-	TutorialText5.position = XMVECTOR{ 640 - (1158 * changeScale / 2) , 720 - (207 * changeScale + 30), 0, 0 };
+	TutorialText4.position = XMVECTOR{ 640 - (971 * changeScale / 2) , 720 - (82 * changeScale + 60), 0, 0 };
+	TutorialText5.position = XMVECTOR{ 640 - (910 * changeScale / 2) , 720 - (207 * changeScale + 30), 0, 0 };
+	TutorialText6.position = XMVECTOR{ 1280 - (1070 * changeScale / 2 + 15) , 720 - (77 * changeScale + 15), 0, 0 };
+
 	CongraturationText.position = XMVECTOR{ 640 - (457 * changeScale / 2), 360 - (79 * changeScale / 2), 0, 0 };
 
 	//TutorialRetryText.position = XMVECTOR{ 990, 300, 0, 0 };
@@ -757,9 +761,11 @@ void OthelloManager::TutorialUpdate()
 	case TutorialSceneFlow::StepUpdate:
 		RandumSetPanel();
 		//SaveSpawn();
+
+		TutorialEndTextCount++;
 		if (tutorialOnPlayer)
 		{
-			isTutorialClear = true;
+			//isTutorialClear = true;
 		}
 
 		if (isTutorialClear)
@@ -769,7 +775,7 @@ void OthelloManager::TutorialUpdate()
 		//チュートリアルクリアしたらタイマースタート
 		if (TutorialTimer >= tutorialTimerLimit)
 		{
-			scenes = TutorialSceneFlow::TutorialEnd;
+			//scenes = TutorialSceneFlow::TutorialEnd;
 		}
 
 		if (retry)
@@ -858,6 +864,10 @@ void OthelloManager::TutorialTextDraw()
 			else
 			{
 				TutorialText4.SpriteDraw();
+			}
+			if (TutorialEndTextCount >= TutorialEndTextTimer)
+			{
+				TutorialText6.SpriteDraw();
 			}
 		}
 
@@ -2155,6 +2165,7 @@ void OthelloManager::whyStepSpawn()
 
 	scenes = TutorialSceneFlow::StepUpdate;
 	TutorialTimer = 0;
+	TutorialEndTextCount = 0;
 	isTutorialClear = false;
 
 }
@@ -2287,7 +2298,6 @@ void OthelloManager::SetNormaMove()
 
 void OthelloManager::StartNormaMode(Norma::NormaType normaType, int normaStatus, int normaMoveCount)
 {
-
 	normaChecker.Reset();
 	StartNormaField();
 	isNormaMode = true;
@@ -2327,7 +2337,7 @@ void OthelloManager::TestStage()
 	NormaModeFieldData testStage;
 
 	a.isFront = true;
-	a.pos = {0, 0};
+	a.pos = { 0, 0 };
 
 	testStage.panels.push_back(a);
 	b.isFront = false;
@@ -2338,7 +2348,7 @@ void OthelloManager::TestStage()
 	c.pos = { 2, 2 };
 	testStage.panels.push_back(c);
 
-	testStage.playerPos = {0, 0};
+	testStage.playerPos = { 0, 0 };
 	testStage.normaMoveCount = 0;
 	NormaStartOthellos.push_back(testStage);
 }

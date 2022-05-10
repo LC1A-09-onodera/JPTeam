@@ -810,7 +810,7 @@ void GameScene::GameDraw()
 		nowScore = checkObject.GetScore();
 		
 		//playerの頭上にスコアを出す
-		if (checkObject.IsAddScore())
+		/*if (checkObject.IsAddScore())
 		{
 			int addComboint = checkObject.GetCombo();
 			if (addComboint < 10)
@@ -826,7 +826,7 @@ void GameScene::GameDraw()
 			}
 			
 
-		}
+		}*/
 
 		if (oldDisplay != nowScore)
 		{
