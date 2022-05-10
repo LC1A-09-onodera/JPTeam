@@ -145,7 +145,7 @@ namespace OthelloConstData
 	const int spawnMoveCount = 100;
 	const int spawnPanelCount = 2;
 	const int minPanelCount = 20;
-	const int chainRepairTime = 120;
+	const int chainRepairTime = 0;
 	const int saveTimerLimit = 180;
 	const int tutorialTimerLimit = 180;
 	const int SpawnDerayTimerMax = 60;
@@ -154,6 +154,7 @@ namespace OthelloConstData
 
 	const float panelWallRate = 0.3f;
 	const int downStepCountMax = 0;
+	const int TutorialEndTextTimer = 300;
 
 	//アニメーション
 	const int vanishTimerMax = 600;
@@ -304,7 +305,7 @@ public://ノルマモード用関数
 	void RestartNorma();
 	bool GetIsNormaClear();
 	bool GetIsNormaFailed();
-	bool isNormaMode = true;
+	bool isNormaMode = false;
 
 private://ノルマモード用内部処理関数
 	void StartNormaField();
@@ -388,6 +389,7 @@ private:
 	int downStepTimer = 0;
 	int downStepCount = 0;
 	int saveTimer = 0;
+	int TutorialEndTextCount = 0;
 	XMFLOAT3 mousePoint;
 
 	static OthelloModel oserroModel;
@@ -413,6 +415,7 @@ private:
 	Sprite TutorialText3;
 	Sprite TutorialText4;
 	Sprite TutorialText5;
+	Sprite TutorialText6;
 	Sprite CongraturationText;
 	Sprite TutorialRetryText;
 	Sprite back;
