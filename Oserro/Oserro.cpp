@@ -2371,5 +2371,6 @@ bool OthelloManager::GetIsNormaClear()
 
 bool OthelloManager::GetIsNormaFailed()
 {
+
 	return normaChecker.GetFailed();
 }

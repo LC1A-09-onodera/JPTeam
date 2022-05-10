@@ -750,6 +750,7 @@ void ObjectParticles::Draw()
 
 void ObjectParticles::DeleteAllParticles()
 {
+
 	triangle.DeleteAllParticle();
 	othello.DeleteAllParticle();
 	frame.DeleteAllParticle();

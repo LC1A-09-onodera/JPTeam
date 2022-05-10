@@ -424,5 +424,4 @@ private:
 	bool textChange = false;
 
 	NormaChecker normaChecker;
-
 };
