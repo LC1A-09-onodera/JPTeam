@@ -261,7 +261,7 @@ void GameScene::TitleUpdate()
 		for (auto triangleItr = ObjectParticles::othello.particles.begin(); triangleItr != ObjectParticles::othello.particles.end(); ++triangleItr)
 		{
 			XMFLOAT3 pos = ConvertXMVECTORtoXMFLOAT3(triangleItr->each.position);
-			ObjectParticles::triangle.Init(pos, 10, ParticleType::Exprotion);
+			ObjectParticles::triangle.Init(pos, 4, ParticleType::Exprotion);
 			triangleItr->time = 1;
 			countDown = countMax;
 		}
@@ -807,7 +807,18 @@ void GameScene::GameDraw()
 		nowScore = checkObject.GetScore();
 		
 		//playerの頭上にスコアを出す
-		
+		if (checkObject.IsAddScore())
+		{
+			int addScoreint = checkObject.GetAddScore();
+			if (addScoreint < 10)
+			{
+				addScoreNum[addScoreint % 10].position = {1280 / 2, 20,0};
+				addScoreNum[addScoreint % 10].ChangeSize(20, 35);
+				addScoreNum[addScoreint % 10].SpriteDraw();
+			}
+			
+
+		}
 
 		if (oldDisplay != nowScore)
 		{

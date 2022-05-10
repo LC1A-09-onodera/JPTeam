@@ -21,7 +21,7 @@ int Imgui::spritePos6[2];
 int Imgui::spritePos7[2];
 int Imgui::score;
 float Imgui::fps;
-ImguiTab Imgui::tab;
+//ImguiTab Imgui::tab;
 float Imgui::eyePos[3];
 float Imgui::target[3];
 
@@ -54,7 +54,7 @@ void Imgui::DrawImGui()
     ImGui::SliderFloat3("ligthColor", lightColor, 0.0f, 1.0f);*/
     fps = WindowsAPI::rate;
 
-    if (ImGui::BeginMenuBar())
+    /*if (ImGui::BeginMenuBar())
     {
         if (ImGui::MenuItem("Status"))
         {
@@ -76,7 +76,6 @@ void Imgui::DrawImGui()
         }
         ImGui::EndMenuBar();
     }
-
     if (tab == ImguiTab::Status)
     {
         ImGui::Text("fps:%.2f", fps);
@@ -99,7 +98,8 @@ void Imgui::DrawImGui()
     else if (tab == ImguiTab::Debug)
     {
 
-    }
+    }*/
+
     ImGui::End();
     ImGui::Render();
     BaseDirectX::cmdList->SetDescriptorHeaps(1, GetHeapForImgui().GetAddressOf());

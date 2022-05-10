@@ -4,14 +4,6 @@
 using namespace Microsoft::WRL;
 using namespace DirectX;
 
-enum ImguiTab
-{
-    Status,
-    PostEffect,
-    Camera,
-    Debug,
-};
-
 class Imgui
 {
 private:
@@ -30,6 +22,14 @@ public:
     static void ChangeInfo(float &floatOriginal, float& imguiInfo);
     static void ChangeInfo(XMFLOAT3 &xmfloat3Original, XMFLOAT3& imguiInfo);
 
+    enum ImguiTab
+    {
+        Status,
+        PostEffect,
+        Camera,
+        Debug,
+    };
+
     static bool spotLight1;
     static float lightColor[3];
 
@@ -47,7 +47,7 @@ public:
     static float target[3];
 
     //imgui‚Ì‘®«
-    static ImguiTab tab;
+    //static ImguiTab tab;
 
     static int combo;
 
