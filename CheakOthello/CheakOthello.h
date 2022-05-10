@@ -82,7 +82,7 @@ private:
 	//盤面チェック
 	void CheckLastMove(const vector<vector<SendOthelloData>>& othelloData);
 	//自機の設定
-	pair<int, int> SetCheckOthello();
+	pair<int, int> GetCheckOthello();
 	//8回呼ぶ
 	void OthelloCheck(int direction_x, int direction_y, int last_x, int last_y, bool isCheck);
 	//個数の倍率も計算

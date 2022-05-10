@@ -42,7 +42,7 @@ void CheakOthello::Init()
 void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData, bool isCheck)
 {
 	//スコアリセット(debug用)
-	if (Input::KeyTrigger(DIK_R)) { totalScore = 0; }
+	//if (Input::KeyTrigger(DIK_R)) { totalScore = 0; }
 
 	//最後に動いた駒を判定、保存
  	CheckLastMove(othelloData);
@@ -50,7 +50,7 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData, bo
 	while (1) //多分whileじゃなくても動く
 	{
 		//判定を取る駒をセット
-		pair<int, int> last = SetCheckOthello();
+		pair<int, int> last = GetCheckOthello();
 		if (!checkOthello) { break; }
 
 		isAddScore = false;
@@ -173,7 +173,7 @@ void CheakOthello::CheckLastMove(const vector<vector<SendOthelloData>>& othelloD
 	collectiveCount = chainName.size();
 }
 
-pair<int, int> CheakOthello::SetCheckOthello()
+pair<int, int> CheakOthello::GetCheckOthello()
 {
 	if (!comboOthelloDataPos.empty())
 	{
@@ -208,6 +208,8 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y, int last_x, in
 	{
 		if (!isCheck)
 		{
+			totalDeleteOthello = 0;
+
 			//次のマス
 			count_x += direction_x;
 			count_y += direction_y;
@@ -241,7 +243,7 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y, int last_x, in
 					//そのオセロのコンボ数を取得、そのオセロが何コンボ目かを調べる
 					if (maxComboCount <= othelloDatas[pair_y][pair_x].comboCount)
 					{
-						maxComboCount = othelloDatas[pair_y][pair_x].maxComboCount;
+						maxComboCount = othelloDatas[pair_y][pair_x].comboCount;
 					}
 
 					//そのオセロのスコアを取得、そのオセロのスコアを調べる
@@ -277,7 +279,8 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y, int last_x, in
 					pair_y += direction_y;
 
 					//コンボを加算できる状態に変更
-					if (!othelloDatas[pair_y][pair_x].isSandwich) { isActiveOthello = true; }
+  					if (!othelloDatas[pair_y][pair_x].isSandwich) { 
+						isActiveOthello = true; }
 				}
 
 				//初期化
@@ -401,7 +404,7 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y, int last_x, in
 					}
 
 					//ComboCountとScore修正
-					if (maxChainName.empty())
+					if (!maxChainName.empty())
 					{
 						for (auto itr = maxChainName.begin(); itr != maxChainName.end(); ++itr)
 						{
