@@ -71,8 +71,8 @@ public:
 	void SetScore(int score) { totalScore = score; }
 
 	int GetAddScore() { return addScore; }
-	const vector<pair<int, int>>& GetReachDatas() { return reachData; }
-	const vector<bool>& GetReachSides() { return reachSide; }
+	const vector<pair<int, int>>& GetReachDatas() { return reachData; }	//リーチの場所
+	const vector<bool>& GetReachSides() { return reachSide; }			//リーチの場所の表裏
 
 private:
 	//盤面チェック
