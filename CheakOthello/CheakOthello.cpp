@@ -387,3 +387,39 @@ void CheakOthello::ChangeScoreAndCombo()
 
 	checkScoreData.clear();
 }
+
+void CheakOthello::CheckReachOthello(int direction_x, int direction_y)
+{
+	if (sandwichData.empty()) { return; }
+
+	int lastX = sandwichData.front().second;
+	int lastY = sandwichData.front().first;
+	bool side = sandwichSide.front();
+	bool isReach = false;
+
+	while (1)
+	{
+		lastX += direction_x;
+		lastY += direction_y;
+
+		if (lastX < 0 || lastX > OthelloConstData::fieldSize - 1) { break; }
+		if (lastY < 0 || lastY > OthelloConstData::fieldSize - 1) { break; }
+
+		if (isReach)
+		{
+			if (othelloDatas[lastY][lastX].isFront == side) { continue; }
+			else
+			{
+				reachData.push_back(make_pair(lastY, lastX));
+				reachSide.push_back(side);
+				break;
+			}
+		}
+
+		else if (!isReach)
+		{
+			if (othelloDatas[lastY][lastX].isFront == side) { break; }
+			else { isReach = true; }
+		}
+	}
+}
