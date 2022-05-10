@@ -205,7 +205,7 @@ void GameScene::TitleUpdate()
 			ObjectParticles::othello.Init(XMFLOAT3(0, 0, -15), 1, ParticleType::TITLE);
 			particleTime = 0;
 		}
-		if (Input::KeyTrigger(DIK_A))
+		if (Input::KeyTrigger(DIK_A) || directInput->IsButtonPush(directInput->LeftButton))
 		{
 			SoundStopWave(selectSound);
 			SoundPlayOnce(selectSound);
@@ -214,7 +214,7 @@ void GameScene::TitleUpdate()
 				titleSelectNum = 1;
 			}
 		}
-		if (Input::KeyTrigger(DIK_D))
+		if (Input::KeyTrigger(DIK_D) || directInput->IsButtonPush(directInput->RightButton))
 		{
 			SoundStopWave(selectSound);
 			SoundPlayOnce(selectSound);
@@ -267,6 +267,7 @@ void GameScene::TitleUpdate()
 		else
 		{
 			othelloManager.StartSetPos();
+			//othelloManager.StartNormaMode();
 			gameTime = gameMaxTime;
 		}
 	}
@@ -362,6 +363,11 @@ void GameScene::GameUpdate()
 			else
 			{
 				othelloManager.Update();
+				//othelloManager.NormaUpdate();
+				if (othelloManager.GetIsNormaFailed())
+				{
+					int hoge = 0;
+				}
 			}
 			if (othelloManager.GetIsSendDataUpdate())
 			{
