@@ -9,6 +9,7 @@
 #include <random>
 #include <limits>
 list<Othello> OthelloManager::othellos;
+list<NormaModeFieldData> OthelloManager::NormaStartOthellos;
 list<ChanceObject> OthelloManager::chances;
 OthelloModel OthelloManager::oserroModel;
 ChanceModel OthelloManager::chanceModelBlue;
@@ -110,7 +111,7 @@ void Othello::Draw()
 		//each.scale = {1, 1, 1};
 		//each.rotation.y ++;
 		float nowScale = each.scale.z;
-		if (nowScale > PanelSize * 0.7)
+		if (nowScale > PanelSize * panelWallRate || !data.isVanish)
 		{
 			each.alpha = 1.0f;
 		}
@@ -136,6 +137,7 @@ void Othello::Revers()
 	data.waitTimer = 0;
 	data.JumpTimer = 0;
 	data.isJumpUp = true;
+	data.isFront = !data.isFront;
 	XMFLOAT3 pos = ConvertXMVECTORtoXMFLOAT3(each.position);
 	pos.z = -0.3f;
 }
@@ -146,6 +148,11 @@ void Othello::Sandwich()
 	data.isPlayer = false;
 	data.isSandwich = true;
 	data.waitTimer = animationTimerMax;
+	//data.isReverce = true;
+	data.animationTimer = 0;
+	//data.waitTimer = 0;
+	//data.JumpTimer = 0;
+	//data.isJumpUp = true;
 	XMFLOAT3 pos = ConvertXMVECTORtoXMFLOAT3(each.position);
 	pos.z = -0.3f;
 
@@ -161,8 +168,8 @@ void Othello::SpawnUpdate()
 
 	float nowScale = static_cast<float>(data.spawnTimer) / SpawnAnimationTimerMax;
 	data.isHarf = (nowScale >= 0.5f);
-	//each.scale = { nowScale , nowScale , 1 };//通常拡縮
-	each.scale = { 1.0f , 1.0f ,  PanelSize * nowScale };
+	each.scale = { nowScale , nowScale , 1 };//通常拡縮
+	//each.scale = { 1.0f , 1.0f ,  PanelSize * nowScale };
 	if (data.spawnDerayTimer <= SpawnDerayTimerMax)
 	{
 		data.spawnDerayTimer++;
@@ -185,20 +192,22 @@ void Othello::ReversUpdate()
 	{
 		//MakeParticle();
 	}
+
 	data.animationTimer++;
 	float rate = static_cast<float>(data.animationTimer) / animationTimerMax;
 	float easeRate = ShlomonMath::EaseInOutQuad(XMFLOAT3{}, XMFLOAT3{ 1, 0, 0 }, rate).x;
 	if (data.isFront)
 	{
-		each.rotation.y = 180.0f * easeRate;
+		each.rotation.z = 3600.0f * easeRate;
 		each.rotation.x = 0;
 	}
 	else
 	{
-		each.rotation.y = 180.0f * easeRate + 180.0f;
+		each.rotation.z = 3600.0f * easeRate + 180.0f;
 		each.rotation.x = 0;
 	}
 
+	each.scale.z = easeRate * PanelSize;
 	data.JumpTimer++;
 
 	int count = data.comboCount;
@@ -209,32 +218,41 @@ void Othello::ReversUpdate()
 	const float jumpMax = 3.0f + (1 * count);
 
 
-	float jumpRate = static_cast<float>(data.JumpTimer) / JumpTimerMax;
-	float jumpEaseRate = 0.0f;
-	if (data.isJumpUp)
-	{
-		jumpEaseRate = ShlomonMath::EaseOutQuad(XMFLOAT3{}, XMFLOAT3{ 1, 0, 0 }, jumpRate).x;
+	//float jumpRate = static_cast<float>(data.JumpTimer) / JumpTimerMax;
+	//float jumpEaseRate = 0.0f;
+	//if (data.isJumpUp)
+	//{
+	//	jumpEaseRate = ShlomonMath::EaseOutQuad(XMFLOAT3{}, XMFLOAT3{ 1, 0, 0 }, jumpRate).x;
 
-		float hight = pow(jumpEaseRate, count);
-		each.position.m128_f32[2] = -jumpMax * hight;
-		if (data.JumpTimer >= JumpTimerMax)
-		{
-			data.isJumpUp = false;
-			data.JumpTimer = 0;
-		}
+	//	float hight = pow(jumpEaseRate, count);
+	//	each.position.m128_f32[2] = -jumpMax * hight;
+	//	if (data.JumpTimer >= JumpTimerMax)
+	//	{
+	//		data.isJumpUp = false;
+	//		data.JumpTimer = 0;
+	//	}
+	//}
+	//else
+	//{
+	//	jumpEaseRate = ShlomonMath::EaseInQuad(XMFLOAT3{}, XMFLOAT3{ 1, 0, 0 }, jumpRate).x;
+	//	float hight = 1 - (pow(jumpEaseRate, count));
+	//	each.position.m128_f32[2] = -jumpMax * hight;
+	//}
+
+	if (data.isFront)
+	{
+		each.rotation.y = 0;
+		each.rotation.x = 0;
 	}
 	else
 	{
-		jumpEaseRate = ShlomonMath::EaseInQuad(XMFLOAT3{}, XMFLOAT3{ 1, 0, 0 }, jumpRate).x;
-		float hight = 1 - (pow(jumpEaseRate, count));
-		each.position.m128_f32[2] = -jumpMax * hight;
+		each.rotation.y = 180;
+		each.rotation.x = 0;
 	}
-
-
 	if (rate >= 1.0f)
 	{
 		//回転フラグoff
-		data.isFront = !data.isFront;
+		//data.isFront = !data.isFront;
 		data.isReverce = false;
 		//data.comboCount = 0;
 
@@ -242,7 +260,6 @@ void Othello::ReversUpdate()
 
 		////ひっくり返ったら起動フラグをオンにする
 		//data.isMove = true;
-
 	}
 }
 void Othello::LeftRevers()
@@ -279,10 +296,10 @@ void Othello::LeftRevers()
 
 void Othello::Controll(const XMFLOAT3 &mousePos, int &moveCount)
 {
-	XMVECTOR playerPos = { data.widthPos * cellScale,data.heightPos * -cellScale , 0, 0 };
+	XMVECTOR PlayerPos = { data.widthPos * cellScale,data.heightPos * -cellScale , 0, 0 };
 
-	playerPos += ConvertXMFLOAT3toXMVECTOR(stageLeftTop);
-	XMVECTOR dist = ConvertXMFLOAT3toXMVECTOR(mousePos - playerPos);
+	PlayerPos += ConvertXMFLOAT3toXMVECTOR(stageLeftTop);
+	XMVECTOR dist = ConvertXMFLOAT3toXMVECTOR(mousePos - PlayerPos);
 	XMVECTOR angle = XMVector3Normalize(dist);
 
 
@@ -290,10 +307,10 @@ void Othello::Controll(const XMFLOAT3 &mousePos, int &moveCount)
 	while (true)
 	{
 
-		playerPos = { data.widthPos * cellScale * 2,data.heightPos * -cellScale * 2, 0, 0 };
-		playerPos += ConvertXMFLOAT3toXMVECTOR(stageLeftTop);
+		PlayerPos = { data.widthPos * cellScale * 2,data.heightPos * -cellScale * 2, 0, 0 };
+		PlayerPos += ConvertXMFLOAT3toXMVECTOR(stageLeftTop);
 
-		dist = ConvertXMFLOAT3toXMVECTOR(mousePos - playerPos);
+		dist = ConvertXMFLOAT3toXMVECTOR(mousePos - PlayerPos);
 		angle = XMVector3Normalize(dist);
 		float length = XMVector3Length(dist).m128_f32[0];
 		//距離がマスの大きさより長かった場合
@@ -406,7 +423,7 @@ void Othello::Controll(const XMFLOAT3 &mousePos, int &moveCount)
 				{
 					length /= fabs(length);
 				}
-				playerPos.m128_f32[0] += length;
+				PlayerPos.m128_f32[0] += length;
 				each.rotation.y = length * -90;
 				each.rotation.x = 0;
 			}
@@ -417,7 +434,7 @@ void Othello::Controll(const XMFLOAT3 &mousePos, int &moveCount)
 				{
 					length /= fabs(length);
 				}
-				playerPos.m128_f32[1] += length;
+				PlayerPos.m128_f32[1] += length;
 				//上下どちらか
 				each.rotation.x = length * 90;
 				each.rotation.y = 0;
@@ -433,7 +450,7 @@ void Othello::Controll(const XMFLOAT3 &mousePos, int &moveCount)
 				{
 					length /= fabs(length);
 				}
-				playerPos.m128_f32[0] += length;
+				PlayerPos.m128_f32[0] += length;
 				each.rotation.y = length * -90 + 180;
 				each.rotation.x = 0;
 			}
@@ -444,7 +461,7 @@ void Othello::Controll(const XMFLOAT3 &mousePos, int &moveCount)
 				{
 					length /= fabs(length);
 				}
-				playerPos.m128_f32[1] += length;
+				PlayerPos.m128_f32[1] += length;
 				//上下どちらか
 				each.rotation.x = length * 90 + 180;
 				each.rotation.y = 0;
@@ -452,7 +469,7 @@ void Othello::Controll(const XMFLOAT3 &mousePos, int &moveCount)
 
 		}
 	}
-	each.position = playerPos;
+	each.position = PlayerPos;
 }
 
 void Othello::Spawn(OthelloType type, int x, int y, bool isFront)
@@ -468,7 +485,8 @@ void Othello::Spawn(OthelloType type, int x, int y, bool isFront)
 		float y = -(data.heightPos * cellScale * 2);
 
 		each.position = XMVECTOR{ x, y ,0, 0 };
-		each.scale = { 1.0f , 1.0f ,  PanelSize };
+		//each.scale = { 1.0f , 1.0f ,  PanelSize };
+		each.scale = { 1.0f , 1.0f , 1.0f };
 		each.position += ConvertXMFLOAT3toXMVECTOR(stageLeftTop);
 		if (data.isFront)
 		{
@@ -517,6 +535,21 @@ void Othello::SinkWait()
 	if (data.waitTimer > 0)
 	{
 		data.waitTimer--;
+		data.animationTimer++;
+		float rate = static_cast<float>(data.animationTimer) / animationTimerMax;
+		float easeRate = ShlomonMath::EaseInOutQuad(XMFLOAT3{}, XMFLOAT3{ 1, 0, 0 }, rate).x;
+		if (data.isFront)
+		{
+			each.rotation.z = 3600.0f * easeRate;
+			each.rotation.x = 0;
+		}
+		else
+		{
+			each.rotation.z = 3600.0f * easeRate + 180.0f;
+			each.rotation.x = 0;
+		}
+
+		each.scale.z = easeRate * PanelSize;
 		return;
 	}
 	data.isSandwich = false;
@@ -570,6 +603,7 @@ void OthelloManager::Init()
 	TutorialText3.CreateSprite(L"Resource/Img/string_02.png", XMFLOAT3(0, 0, 0));
 	TutorialText4.CreateSprite(L"Resource/Img/string_03.png", XMFLOAT3(0, 0, 0));
 	TutorialText5.CreateSprite(L"Resource/Img/string_04.png", XMFLOAT3(0, 0, 0));
+	TutorialText6.CreateSprite(L"Resource/Img/string_05.png", XMFLOAT3(0, 0, 0));
 	CongraturationText.CreateSprite(L"Resource/Img/excellent.png", XMFLOAT3(0, 0, 0));
 	TutorialRetryText.CreateSprite(L"Resource/Img/reset.png", XMFLOAT3(0, 0, 0));
 	back.CreateSprite(L"Resource/Img/title_back_80.png", XMFLOAT3(0, 0, 0));
@@ -578,20 +612,24 @@ void OthelloManager::Init()
 	TutorialText1.ChangeSize(1227 * changeScale, 332 * changeScale);
 	TutorialText2.ChangeSize(1158 * changeScale, 207 * changeScale);
 	TutorialText3.ChangeSize(1158 * changeScale, 207 * changeScale);
-	TutorialText4.ChangeSize(1158 * changeScale, 207 * changeScale);
-	TutorialText5.ChangeSize(1158 * changeScale, 207 * changeScale);
+	TutorialText4.ChangeSize(971 * changeScale, 82 * changeScale);
+	TutorialText5.ChangeSize(910 * changeScale, 207 * changeScale);
+	TutorialText6.ChangeSize(1070 * changeScale / 2, 154 * changeScale / 2);
 	CongraturationText.ChangeSize(457 * changeScale, 79 * changeScale);
 	TutorialRetryText.ChangeSize(288 * changeScale, 231 * changeScale);
 
 	TutorialText1.position = XMVECTOR{ 640 - (1227 * changeScale / 2), 720 - (332 * changeScale + 30), 0, 0 };
 	TutorialText2.position = XMVECTOR{ 640 - (1158 * changeScale / 2), 720 - (207 * changeScale + 30), 0, 0 };
 	TutorialText3.position = XMVECTOR{ 640 - (1158 * changeScale / 2) , 720 - (207 * changeScale + 30), 0, 0 };
-	TutorialText4.position = XMVECTOR{ 640 - (1158 * changeScale / 2) , 720 - (207 * changeScale + 30), 0, 0 };
-	TutorialText5.position = XMVECTOR{ 640 - (1158 * changeScale / 2) , 720 - (207 * changeScale + 30), 0, 0 };
+	TutorialText4.position = XMVECTOR{ 640 - (971 * changeScale / 2) , 720 - (82 * changeScale + 60), 0, 0 };
+	TutorialText5.position = XMVECTOR{ 640 - (910 * changeScale / 2) , 720 - (207 * changeScale + 30), 0, 0 };
+	TutorialText6.position = XMVECTOR{ 1280 - (1070 * changeScale / 2 + 15) , 720 - (77 * changeScale + 15), 0, 0 };
+
 	CongraturationText.position = XMVECTOR{ 640 - (457 * changeScale / 2), 360 - (79 * changeScale / 2), 0, 0 };
 
 	TutorialRetryText.position = XMVECTOR{ 990, 300, 0, 0 };
-
+	normaChecker.Init();
+	TestStage();
 }
 
 void OthelloManager::Update()
@@ -614,6 +652,7 @@ void OthelloManager::Update()
 	{
 		isFieldUpdate = true;
 	}
+
 
 	SaveSpawn();
 
@@ -717,9 +756,11 @@ void OthelloManager::TutorialUpdate()
 	case TutorialSceneFlow::StepUpdate:
 		RandumSetPanel();
 		//SaveSpawn();
+
+		TutorialEndTextCount++;
 		if (tutorialOnPlayer)
 		{
-			isTutorialClear = true;
+			//isTutorialClear = true;
 		}
 
 		if (isTutorialClear)
@@ -729,7 +770,7 @@ void OthelloManager::TutorialUpdate()
 		//チュートリアルクリアしたらタイマースタート
 		if (TutorialTimer >= tutorialTimerLimit)
 		{
-			scenes = TutorialSceneFlow::TutorialEnd;
+			//scenes = TutorialSceneFlow::TutorialEnd;
 		}
 
 		if (retry)
@@ -819,6 +860,10 @@ void OthelloManager::TutorialTextDraw()
 			{
 				TutorialText4.SpriteDraw();
 			}
+			if (TutorialEndTextCount >= TutorialEndTextTimer)
+			{
+				TutorialText6.SpriteDraw();
+			}
 		}
 
 		//テキストの描画
@@ -830,6 +875,29 @@ void OthelloManager::TutorialTextDraw()
 	}
 }
 
+void OthelloManager::NormaUpdate()
+{
+	//死ぬ
+	DeadPanel();
+
+	//MinSpawn();
+	////生成
+	//RandumSetPanel();
+
+	//更新
+	auto itr = othellos.begin();
+
+	for (; itr != othellos.end(); ++itr)
+	{
+		itr->Update();
+	}
+	if (Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01))
+	{
+		isFieldUpdate = true;
+	}
+	Undo();
+	normaChecker.Update(othellos);
+}
 void OthelloManager::Draw()
 {
 	OthelloDraw();
@@ -1047,7 +1115,7 @@ const vector<vector<SendOthelloData>> &OthelloManager::Send()
 		data.FrontActiveAngle = gameDatas.FrontActiveAngle;
 		data.isFront = gameDatas.isFront;
 		data.type = gameDatas.type;
-
+		data.chainName = gameDatas.chainName;
 		if (itr->GetIsActive())
 		{
 			data.isSandwich = true;
@@ -1065,6 +1133,7 @@ const vector<vector<SendOthelloData>> &OthelloManager::Send()
 		if ((Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01)) && isOnPlayer)
 		{
 			data.isMove = true;
+			SetNormaMove();
 		}
 
 		data.comboCount = gameDatas.comboCount;
@@ -1096,7 +1165,7 @@ void OthelloManager::Receive(const vector<vector<SendOthelloData>> &data)
 		int y = gameDatas->heightPos;
 
 		gameDatas->score = sendDatas[y][x].score;
-		
+		gameDatas->chainName = sendDatas[y][x].chainName;
 		if (sendDatas[y][x].type == NONE)
 		{
 			continue;
@@ -1478,7 +1547,8 @@ void OthelloManager::KeySetPlayer()
 
 	if (Imgui::sample == 0)
 	{
-		TypeXI(playerItr, nextItr, x, y);
+		//TypeXI(playerItr, nextItr, x, y);
+		TypeUp(playerItr, nextItr, x, y);
 	}
 	else if (Imgui::sample == 1)
 	{
@@ -1524,7 +1594,7 @@ void OthelloManager::StartSetPos()
 	for (int i = 0; i < 8; i++)
 	{
 		SetChanceObject(i, i, true);
-		SetChanceObject(i, 7-i, false);
+		SetChanceObject(i, 7 - i, false);
 	}
 }
 
@@ -1747,7 +1817,7 @@ void OthelloManager::TypeXI(list<Othello>::iterator playerItr, list<Othello>::it
 			}
 		}
 		float stepSize = nextStep - nowStep;
-		bool isStepUp = stepSize <= 0.7;
+		bool isStepUp = stepSize <= 0.7f;
 		bool isNotMove = (nextItr->GetGameData()->isReverce || !isStepUp);
 		if (isNotMove)
 		{
@@ -1784,6 +1854,77 @@ void OthelloManager::TypeXI(list<Othello>::iterator playerItr, list<Othello>::it
 		playerPanelPos = { x, y };
 	}
 	isPlayerEnd = false;
+}
+
+void OthelloManager::TypeUp(list<Othello>::iterator playerItr, list<Othello>::iterator nextItr, int x, int y)
+{
+	bool OnPlayer = playerItr != othellos.end();
+	//移動先にパネルがあるか
+	if (nextItr != othellos.end())
+	{
+		float nextStep = 0.0f;
+		float nowStep = 0.0f;
+		if (OnPlayer)
+		{
+			nowStep = 0.0f;
+		}
+
+		//if (nextItr->GetGameData()->isSpawn)
+		//{
+		//	nextStep = 1.0f - (static_cast<float>(nextItr->GetGameData()->spawnTimer) / SpawnAnimationTimerMax);
+		//	if (OnPlayer)
+		//	{
+		//		nowStep = 1.0f - static_cast<float>(playerItr->GetGameData()->spawnTimer) / SpawnAnimationTimerMax;
+		//	}
+		//}
+		if (nextItr->GetGameData()->isVanish)
+		{
+			nextStep = 1.0f - (static_cast<float>(nextItr->GetGameData()->vanishTimer) / vanishTimerMax);
+			if (OnPlayer && playerItr->GetIsActive())
+			{
+				nowStep = 1.0f - static_cast<float>(playerItr->GetGameData()->vanishTimer) / vanishTimerMax;
+			}
+		}
+		float stepSize = nextStep - nowStep;
+		bool isStepUp = stepSize <= panelWallRate;
+		bool isNotMove = (nextItr->GetGameData()->isReverce || !isStepUp);
+		if (isNotMove)
+		{
+			playerNotMove();
+			return;
+		}
+
+		bool isOnVanish = nextItr->GetGameData()->isVanish;
+
+		isPanelMove = false;
+		nextItr->GetGameData()->isMove = false;
+
+		DownStepReset();
+		playerPanelPos = { x, y };
+	}
+	else
+	{
+		if (OnPlayer)
+		{
+			bool isNotMovePanel = (playerItr->GetGameData()->isVanish || playerItr->GetGameData()->isSpawn || playerItr->GetGameData()->isSandwich);
+			bool isNotDown = (downStepCount < downStepCountMax &&isNotMovePanel);
+			if (isNotDown)
+			{
+				DownStep(playerItr);
+				return;
+			}
+			isPanelMove = true;
+			if (!playerItr->GetGameData()->isVanish && !playerItr->GetGameData()->isReverce && !playerItr->GetGameData()->isSandwich && !playerItr->GetGameData()->isSpawn)
+			{
+				playerItr->GetGameData()->isPlayer = true;
+				SetNormaMove();
+			}
+		}
+		DownStepReset();
+		playerPanelPos = { x, y };
+	}
+	isPlayerEnd = false;
+
 }
 
 void OthelloManager::AllDeadPanel()
@@ -2019,6 +2160,7 @@ void OthelloManager::whyStepSpawn()
 
 	scenes = TutorialSceneFlow::StepUpdate;
 	TutorialTimer = 0;
+	TutorialEndTextCount = 0;
 	isTutorialClear = false;
 
 }
@@ -2104,7 +2246,7 @@ void ChanceObject::Spawn(int x, int y, bool isFront)
 	float posY = -(y * cellScale * 2);
 
 	each.position = XMVECTOR{ posX, posY ,0, 0 };
-	each.scale = { 1.0f , 1.0f ,  1.5f };
+	each.scale = { 1.0f , 1.0f ,  1.0f };
 	each.position += ConvertXMFLOAT3toXMVECTOR(stageLeftTop);
 	each.alpha = 0.4f;
 	if (isFront)
@@ -2117,4 +2259,112 @@ void ChanceObject::Spawn(int x, int y, bool isFront)
 		each.rotation.y = 180;
 		each.rotation.x = 0;
 	}
+}
+
+void OthelloManager::Undo()
+{
+	if (Input::KeyTrigger(DIK_Z) || directInput->IsButtonPush(directInput->Button01))
+	{
+		Norma::FieldStatus data = normaChecker.Undo();
+
+		//送られてきた情報がこれ以上戻ることができない場合盤面をいじらず戻る
+		if (data.isFirst)
+		{
+			return;
+		}
+		//パネルを全て消去してから
+		othellos.clear();
+		auto panelItr = data.othellos.begin();
+		for (; panelItr != data.othellos.end(); panelItr++)
+		{
+			SetSpawnPanel(panelItr->x, panelItr->y, panelItr->isFront);
+		}
+
+		SetSpawnPlayer(data.playerPos.x, data.playerPos.y);
+		//Update();
+	}
+}
+
+void OthelloManager::SetNormaMove()
+{
+	if (!isNormaMode) return;
+	normaChecker.SetMove(othellos, playerPanelPos.x, playerPanelPos.y);
+}
+
+void OthelloManager::StartNormaMode(Norma::NormaType normaType, int normaStatus, int normaMoveCount)
+{
+	normaChecker.Reset();
+	StartNormaField();
+	isNormaMode = true;
+}
+
+void OthelloManager::StartNormaField()
+{
+	if (NormaStartOthellos.size() <= 0)return;
+
+	//ノルマ番号orステージ番号を決定してその盤面を呼び出す処理(Todo)
+	{}
+
+	//ステージ番号に応じたイテレーターを呼び出す
+	auto stageItr = NormaStartOthellos.begin();
+
+	//パネルが一つもなかったら早期リターン
+	if (stageItr->panels.size() <= 0)
+	{
+		//とりあえず速攻終了する条件ノルマモードを終わらせる
+		normaChecker.SetNorma(Norma::Panels, 0);
+		SetSpawnPlayer(4, 4);
+		return;
+	}
+	auto panelItr = stageItr->panels.begin();
+	for (; panelItr != stageItr->panels.end(); panelItr++)
+	{
+		SetSpawnPanel(panelItr->pos.x, panelItr->pos.y, panelItr->isFront);
+	}
+	SetSpawnPlayer(stageItr->playerPos.x, stageItr->playerPos.y);
+	normaChecker.SetNorma(stageItr->type, stageItr->normaStatus, stageItr->normaMoveCount);
+
+}
+
+void OthelloManager::TestStage()
+{
+	panelData a, b, c;
+	NormaModeFieldData testStage;
+
+	a.isFront = true;
+	a.pos = { 0, 0 };
+
+	testStage.panels.push_back(a);
+	b.isFront = false;
+	b.pos = { 1, 1 };
+	testStage.panels.push_back(b);
+
+	c.isFront = true;
+	c.pos = { 2, 2 };
+	testStage.panels.push_back(c);
+
+	testStage.playerPos = { 0, 0 };
+	testStage.normaMoveCount = 0;
+	NormaStartOthellos.push_back(testStage);
+}
+
+void OthelloManager::EndNormaMode()
+{
+	isNormaMode = false;
+	normaChecker.Reset();
+}
+
+void OthelloManager::RestartNorma()
+{
+	normaChecker.Reset();
+}
+
+bool OthelloManager::GetIsNormaClear()
+{
+	return normaChecker.GetClear();
+}
+
+bool OthelloManager::GetIsNormaFailed()
+{
+	return normaChecker.GetFailed();
 }

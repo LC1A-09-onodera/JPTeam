@@ -3,7 +3,7 @@
 #include "../DX12operator.h"
 #include <list>
 #include "../Sprite/Sprite.h"
-
+#include "../NormaChecker/NormaChecker.h"
 enum OthelloType
 {
 	NORMAL,
@@ -16,6 +16,19 @@ namespace
 	{
 		int x;
 		int y;
+	};
+	struct panelData
+	{
+		panelPos pos;
+		bool isFront;
+	};
+	struct NormaModeFieldData
+	{
+		std::list<panelData> panels;
+		panelPos playerPos;
+		Norma::NormaType type = Norma::Panels;
+		int normaStatus = 0;
+		int normaMoveCount = 0;
 	};
 }
 
@@ -113,13 +126,14 @@ struct SendOthelloData
 	bool isSandwich = false;
 	bool isCheckEnd = false;
 	bool isOnPlayer = false;
+	bool isChainVanish = false;	//連鎖で再度消えた駒が持つフラグ
 	list<bool> FrontActiveAngle;
 	vector<int> SandwichLength;
 	int comboCount = 0;
 	int score = 0;
 	int chainName = 0;
 	int maxComboCount = 0;
-	
+
 };
 
 namespace OthelloConstData
@@ -130,13 +144,18 @@ namespace OthelloConstData
 	const int spawnTimerMAx = 300;
 	const int spawnMoveCount = 100;
 	const int spawnPanelCount = 2;
-	const int minPanelCount = 1;
-	const int chainRepairTime = 120;
+	const int minPanelCount = 20;
+	const int chainRepairTime = 0;
 	const int saveTimerLimit = 180;
 	const int tutorialTimerLimit = 180;
 	const int SpawnDerayTimerMax = 60;
 
 	const float PanelSize = 10.0f;
+
+	const float panelWallRate = 0.3f;
+	const int downStepCountMax = 0;
+	const int TutorialEndTextTimer = 300;
+
 	//アニメーション
 	const int vanishTimerMax = 600;
 	const int animationTimerMax = 30;
@@ -144,7 +163,6 @@ namespace OthelloConstData
 	const int JumpTimerMax = waitTimerMax / 2;
 	const int SpawnAnimationTimerMax = 120;
 	const int downStepTimerMax = 60;
-	const int downStepCountMax = 3;
 }
 
 class OthelloEachInfo : public EachInfo
@@ -256,6 +274,8 @@ public:
 
 	void MinSpawn();
 	static list<Othello> othellos;
+	static list<NormaModeFieldData> NormaStartOthellos;
+
 	static list<ChanceObject> chances;
 	void DeadPanel();
 
@@ -275,6 +295,21 @@ public:
 	void TutorialTextDraw();
 
 	bool IsTutorialEnd();
+
+public://ノルマモード用関数
+	void NormaUpdate();
+	void SetNormaMove();
+	void Undo();
+	void StartNormaMode(Norma::NormaType normaType = Norma::Combo, int normaStatus = 0, int normaMoveCount = 0);
+	void EndNormaMode();
+	void RestartNorma();
+	bool GetIsNormaClear();
+	bool GetIsNormaFailed();
+	bool isNormaMode = false;
+
+private://ノルマモード用内部処理関数
+	void StartNormaField();
+	void TestStage();
 private:
 	void SetPlayer();
 
@@ -328,6 +363,8 @@ private:
 	/// </summary>
 	void TypeXI(list<Othello>::iterator playerItr, list<Othello>::iterator nextItr, int x, int y);
 
+	void TypeUp(list<Othello>::iterator playerItr, list<Othello>::iterator nextItr, int x, int y);
+
 	void DownStep(list<Othello>::iterator playerItr);
 
 	void DownStepReset() { downStepCount = 0; downStepTimer = 0; }
@@ -352,6 +389,7 @@ private:
 	int downStepTimer = 0;
 	int downStepCount = 0;
 	int saveTimer = 0;
+	int TutorialEndTextCount = 0;
 	XMFLOAT3 mousePoint;
 
 	static OthelloModel oserroModel;
@@ -377,10 +415,14 @@ private:
 	Sprite TutorialText3;
 	Sprite TutorialText4;
 	Sprite TutorialText5;
+	Sprite TutorialText6;
 	Sprite CongraturationText;
 	Sprite TutorialRetryText;
 	Sprite back;
 
 	int textChangeTimer = 0;
 	bool textChange = false;
+
+	NormaChecker normaChecker;
+
 };
