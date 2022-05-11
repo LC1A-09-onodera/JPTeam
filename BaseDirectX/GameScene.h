@@ -151,6 +151,8 @@ public://ƒV[ƒ“‚Åg‚¤‚à‚Ì
 	bool isTutorial = true;
 
 	int titleSelectNum;
+	bool selectMode = false;
+	bool selectWindow = false;
 
 	bool isScorePuls;
 };

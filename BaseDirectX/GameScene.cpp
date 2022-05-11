@@ -239,6 +239,7 @@ void GameScene::TitleUpdate()
 			if (titleSelectNum == 0)
 			{
 				titleSelectNum = 1;
+				selectWindow = true;
 			}
 		}
 		if (Input::KeyTrigger(DIK_D) || directInput->IsButtonPush(directInput->RightButton))
@@ -248,11 +249,16 @@ void GameScene::TitleUpdate()
 			if (titleSelectNum == 1)
 			{
 				titleSelectNum = 0;
+				selectWindow = false;
 			}
 		}
 	}
 	ObjectParticles::Update();
-	if ((Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01)) && !isPouse)
+	if (selectWindow == false && Input::KeyTrigger(DIK_SPACE))
+	{
+		selectWindow = true;
+	}
+	else if ((Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01)) && !isPouse && selectWindow)
 	{
 		SoundStopWave(enterSound);
 		SoundPlayOnce(enterSound);
@@ -296,6 +302,17 @@ void GameScene::TitleUpdate()
 		{
 			othelloManager.StartSetPos();
 			gameTime = gameMaxTime;
+		}
+	}
+	if (selectWindow)
+	{
+		if (Input::KeyTrigger(DIK_D))
+		{
+			selectMode = false;
+		}
+		if (Input::KeyTrigger(DIK_A))
+		{
+			selectMode = true;
 		}
 	}
 	if (!isPouse && (Input::KeyTrigger(DIK_ESCAPE) || directInput->IsButtonPush(directInput->ButtonPouse)))
