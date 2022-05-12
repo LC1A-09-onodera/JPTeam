@@ -62,6 +62,7 @@ public:
 	CheakOthello();
 	~CheakOthello();
 	void Init();
+	void SoundInit();
 	void Update(const vector<vector<SendOthelloData>>& othelloData, bool isCheck);
 
 	const vector<vector<SendOthelloData>>& GetOthelloDatas() { return othelloDatas; }
