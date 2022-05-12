@@ -29,8 +29,6 @@ CheakOthello::~CheakOthello()
 
 void CheakOthello::Init()
 {
-	SoundLoad("Resource/Sound/reverse_4_.wav", comboSound);
-
 	last_x = 0;				//最後に動かしたオセロのX座標
 	last_y = 0;				//最後に動かしたオセロのY座標
 	totalScore = 0;			//合計点
@@ -44,6 +42,11 @@ void CheakOthello::Init()
 
 	isCombos = false;		//
 	isCombosCheck = false;	//
+}
+
+void CheakOthello::SoundInit()
+{
+	SoundLoad("Resource/Sound/reverse_4_.wav", comboSound);
 }
 
 void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData, bool isCheck)
