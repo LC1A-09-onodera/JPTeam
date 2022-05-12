@@ -635,7 +635,8 @@ void OthelloManager::Init()
 	//TutorialRetryText.position = XMVECTOR{ 990, 300, 0, 0 };
 	normaChecker.Init();
 	//TestStage();
-	LoadNormaStage("test");
+	//LoadNormaStage("test");
+	LoadAllStage();
 }
 
 void OthelloManager::Update()
@@ -2309,22 +2310,28 @@ void OthelloManager::SetNormaMove()
 	normaChecker.SetMove(othellos, playerPanelPos.x, playerPanelPos.y);
 }
 
-void OthelloManager::StartNormaMode(Norma::NormaType normaType, int normaStatus, int normaMoveCount)
+void OthelloManager::StartNormaMode(int stageNum)
 {
 	normaChecker.Reset();
 	StartNormaField();
 	isNormaMode = true;
 }
 
-void OthelloManager::StartNormaField()
+void OthelloManager::StartNormaField(int stageNum)
 {
-	if (NormaStartOthellos.size() <= 0)return;
+	//ステージが存在しない
+	bool isNoneStage = NormaStartOthellos.size() <= 0;
+	//指定されたステージ番号がステージ数を超過している
+	bool isStageOver = NormaStartOthellos.size() <= (stageNum);
 
-	//ノルマ番号orステージ番号を決定してその盤面を呼び出す処理(Todo)
-	{}
+	if (isNoneStage || isStageOver)return;
 
 	//ステージ番号に応じたイテレーターを呼び出す
 	auto stageItr = NormaStartOthellos.begin();
+	for (int i = 0; i < stageNum; i++)
+	{
+		stageItr++;
+	}
 
 	//パネルが一つもなかったら早期リターン
 	if (stageItr->panels.size() <= 0)
@@ -2496,4 +2503,18 @@ void OthelloManager::LoadNormaStage(string stage)
 		}
 	}
 	NormaStartOthellos.push_back(NormaField);
+}
+
+void OthelloManager::LoadAllStage()
+{
+	LoadNormaStage("test");
+
+	string baseName = "stage";
+	for (int i = 0; i < NormaStageCount; i++)
+	{
+		string count = to_string(i + 1);
+		LoadNormaStage(baseName + count);
+	}
+
+	int stageCount = NormaStartOthellos.size();
 }
