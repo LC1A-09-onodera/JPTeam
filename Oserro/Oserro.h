@@ -307,9 +307,13 @@ public://ノルマモード用関数
 	bool GetIsNormaFailed();
 	bool isNormaMode = false;
 
+	void SetScore(const int score){nowScore = score;}
+
+	void NormaTextDraw();
 private://ノルマモード用内部処理関数
 	void StartNormaField();
 	void TestStage();
+	void LoadNormaStage(std::string stage);
 private:
 	void SetPlayer();
 
@@ -391,6 +395,7 @@ private:
 	int downStepCount = 0;
 	int saveTimer = 0;
 	int TutorialEndTextCount = 0;
+	int nowScore = 0;
 	XMFLOAT3 mousePoint;
 
 	static OthelloModel oserroModel;
