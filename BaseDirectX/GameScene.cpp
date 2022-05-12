@@ -217,6 +217,7 @@ void GameScene::Init()
 	SoundLoad("Resource/Sound/bgm_.wav", BGMSound);
 	SoundLoad("Resource/Sound/start_.wav", startSound);
 	SoundLoad("Resource/Sound/count_down_.wav", countdDownSound);
+	checkObject.SoundInit();
 	selectGameTypeActive = false;
 	selectGameType = 1;
 }
@@ -301,7 +302,7 @@ void GameScene::TitleUpdate()
 			}
 			if ((Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01)) && !isPouse)
 			{
-				
+
 				SoundStopWave(enterSound);
 				SoundPlayOnce(enterSound);
 
@@ -479,6 +480,10 @@ void GameScene::GameUpdate()
 				{
 					isSceneChange = true;
 				}
+				else if (othelloManager.GetIsNormaClear())
+				{
+					
+				}
 			}
 			if (othelloManager.GetIsSendDataUpdate())
 			{
@@ -548,6 +553,8 @@ void GameScene::GameUpdate()
 		eyeEnd = { 0, 100, 0 };
 		eyeEaseTime = 0;
 		resultForTime = 0;
+		select = false;
+		ObjectParticles::othelloFrame.DeleteAllParticle();
 	}
 	//ÉJÉÅÉâÇÃìÆÇ´
 	if (isResultSceneChange)
@@ -634,6 +641,7 @@ void GameScene::GameUpdate()
 				isPouseToTitle = true;
 				isPouse = false;
 				select = false;
+				//isSceneChange = true;
 			}
 			else if (selectPouse == 2)
 			{
@@ -710,7 +718,8 @@ void GameScene::TitleDraw()
 	//postEffect.Draw();
 	Draw3DObject(sky);
 	Draw3DObject(othelloStage);
-	OthlloPlayer::Draw();
+	if (!isSceneChange) OthlloPlayer::Draw();
+	
 	ParticleControl::Draw();
 	ObjectParticles::Draw();
 	Lights::Draw();
@@ -762,10 +771,10 @@ void GameScene::TitleDraw()
 		else
 		{
 			gameScoreAttackSprite.ChangeSize(232 * spsize, 63 * spsize);
-			gameScoreAttackSprite.position.m128_f32[0] = window_width / 2 + 100;
+			gameScoreAttackSprite.position.m128_f32[0] = window_width / 2 + 110;
 			gameScoreAttackSprite.position.m128_f32[1] = 400;
 			gameScoreAttackSprite.SpriteDraw();
-
+			gameNormaSprite.ChangeSize(282 * spsize, 63 * spsize);
 			gameNormaSprite.position.m128_f32[0] = window_width / 2 - 400;
 			gameNormaSprite.position.m128_f32[1] = 400;
 			gameNormaSprite.SpriteDraw();
@@ -787,7 +796,7 @@ void GameScene::TitleDraw()
 				kagikakkoStartSprite.position.m128_f32[1] = 400;
 				kagikakkoStartSprite.SpriteDraw();
 				kagikakkoEndSprite.ChangeSize(30, 70);
-				kagikakkoEndSprite.position.m128_f32[0] = window_width / 2 - 10;
+				kagikakkoEndSprite.position.m128_f32[0] = window_width / 2 - 50;
 				kagikakkoEndSprite.position.m128_f32[1] = 410;
 				kagikakkoEndSprite.SpriteDraw();
 			}
@@ -888,7 +897,8 @@ void GameScene::GameDraw()
 
 	Draw3DObject(sky);
 	Draw3DObject(othelloStage);
-	OthlloPlayer::Draw();
+		OthlloPlayer::Draw();
+	
 	ObjectParticles::Draw();
 	ParticleControl::Draw();
 	othelloManager.Draw();
