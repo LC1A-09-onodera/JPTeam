@@ -52,7 +52,7 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData, bo
 	//if (Input::KeyTrigger(DIK_R)) { totalScore = 0; }
 
 	//最後に動いた駒を判定、保存
- 	CheckLastMove(othelloData);
+	CheckLastMove(othelloData);
 
 	while (1) //多分whileじゃなくても動く
 	{
@@ -240,6 +240,7 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y, int last_x, in
 				//全部探索リストに入れる（自分と挟んだ駒まで）←sandwichArrayが同じかも参照する
 				//挟んだやつの最大のconboCountを取得→それ+1したのをコンボしたオセロにセット
 				int maxComboCount = 0;
+				int comboCount = 0;
 				int baseScore = 0;
 				int maxChainNameCount = 0;
 				vector<int> maxChainName;
@@ -248,9 +249,15 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y, int last_x, in
 				for (int i = 0; i <= loop + 1; i++)
 				{
 					//そのオセロのコンボ数を取得、そのオセロが何コンボ目かを調べる
-					if (maxComboCount <= othelloDatas[pair_y][pair_x].comboCount)
+					if (maxComboCount < othelloDatas[pair_y][pair_x].maxComboCount)
 					{
-						maxComboCount = othelloDatas[pair_y][pair_x].comboCount;
+						maxComboCount = othelloDatas[pair_y][pair_x].maxComboCount;
+					}
+
+					//そのオセロのコンボ数を取得、そのオセロが何コンボ目かを調べる
+					if (comboCount <= othelloDatas[pair_y][pair_x].comboCount)
+					{
+						comboCount = othelloDatas[pair_y][pair_x].comboCount;
 					}
 
 					//そのオセロのスコアを取得、そのオセロのスコアを調べる
@@ -317,6 +324,7 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y, int last_x, in
 
 					//maxComboCountを加算
 					maxComboCount++;
+					comboCount++;
 
 					//使用する乱数を定義
 					int random = (int)ShlomonMath::xor64;
@@ -342,9 +350,9 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y, int last_x, in
 						//始点と終点を設定
 						if (i == 0 || i == loop + 1) { startAndEndArray.push_back(std::make_pair(pair_y, pair_x)); }
 						checkScoreData.push_back(make_pair(pair_y, pair_x));
-						othelloDatas[pair_y][pair_x].comboCount = maxComboCount;
+						othelloDatas[pair_y][pair_x].comboCount = comboCount;
 						othelloDatas[pair_y][pair_x].maxComboCount = maxComboCount;
-						othelloDatas[pair_y][pair_x].score = (baseScore + (loop * (loop + 2) * maxComboCount));
+ 						othelloDatas[pair_y][pair_x].score = (baseScore + (loop * (loop + 2) * maxComboCount));
 						if (maxScore < othelloDatas[pair_y][pair_x].score)
 						{
 							maxScore = othelloDatas[pair_y][pair_x].score;
@@ -426,7 +434,7 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y, int last_x, in
 									{
 										if (othelloDatas[i][j].maxComboCount != maxComboCount)
 										{
-											othelloDatas[i][j].maxComboCount == maxComboCount;
+											othelloDatas[i][j].maxComboCount = maxComboCount;
 										}
 										if (othelloDatas[i][j].score < maxScore)
 										{

@@ -1121,6 +1121,7 @@ const vector<vector<SendOthelloData>> &OthelloManager::Send()
 		data.isFront = gameDatas.isFront;
 		data.type = gameDatas.type;
 		data.chainName = gameDatas.chainName;
+		data.maxComboCount = gameDatas.maxComboCount;
 		if (itr->GetIsActive())
 		{
 			data.isSandwich = true;
@@ -1171,6 +1172,7 @@ void OthelloManager::Receive(const vector<vector<SendOthelloData>> &data)
 
 		gameDatas->score = sendDatas[y][x].score;
 		gameDatas->chainName = sendDatas[y][x].chainName;
+		gameDatas->maxComboCount = sendDatas[y][x].maxComboCount;
 		if (sendDatas[y][x].type == NONE)
 		{
 			continue;

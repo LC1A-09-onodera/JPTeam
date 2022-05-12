@@ -34,6 +34,7 @@ private:
 	int SceneNum = TITLE;
 
 	void ReStart();
+	void ToGame();
 
 public:
 	GameScene();
@@ -137,6 +138,9 @@ public://シーンで使うもの
 	Sprite kagikakkoEndSprite;
 
 	Sprite tutorialSprite;
+
+	Sprite gameScoreAttackSprite;
+	Sprite gameNormaSprite;
 	
 	int tornadoTime;
 
@@ -151,8 +155,12 @@ public://シーンで使うもの
 	bool isTutorial = true;
 
 	int titleSelectNum;
+	//セレクトされているモード
+	//falseならスコアアタック
 	bool selectMode = false;
 	bool selectWindow = false;
+	//モードセレクトに入るかどうかをチェック
+	bool select = false;
 
 	bool isScorePuls;
 };
