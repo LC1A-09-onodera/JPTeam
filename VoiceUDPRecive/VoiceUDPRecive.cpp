@@ -33,7 +33,7 @@ void VoiceReciver::ReciveData()
 	memset(buf, 0, 100);
 	int data_size = recv(sock, buf, 100, 0);
 	std::string tex = buf;
-	if (data_size >= 0) {
+	/*if (data_size >= 0) {
 		if (tex == "SystemOpen")
 		{
 			Imgui::SetWindowActive(true);
@@ -46,7 +46,7 @@ void VoiceReciver::ReciveData()
 		{
 			
 		}
-	}
+	}*/
 
 }
 
