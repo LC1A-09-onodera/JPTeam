@@ -6,11 +6,9 @@
 #include "../PostEffect/PostEffect.h"
 #include "../FBXObject/FBXObject.h"
 #include "../FbxLoader/FbxLoader.h"
-#include "../King/King.h"
-#include "../Bomb/BombManager.h"
 #include "../Oserro/Oserro.h"
 #include "../CheakOthello/CheakOthello.h"
-#include "../water/water.h"
+#include "../Sound/Sound.h"
 enum GameSceneName { TITLE, SELECT, GAME, END, RESULT };
 
 class GameScene
@@ -60,15 +58,10 @@ public://シーンで使うもの
 	float circleShadowAtten[3] = { 0.5f, 0.6f, 0.0f };
 	float circleShadowFactorAngle[2] = { 0.0f, 0.0f };
 
-	float circleShadowDir[3] = { 0, -1, 0 };
-	float circleShadowAtten[3] = { 0.5f, 0.6f, 0.0f };
-	float circleShadowFactorAngle[2] = { 0.0f, 0.0f };
-
 	PostEffect postEffect;
 	Model sample;
 	OthelloManager othelloManager;
 	CheakOthello checkObject;
-	Water water;
 	Sprite title;
 	Sprite titleBack;
 	Sprite spaceBack;
@@ -114,12 +107,12 @@ public://シーンで使うもの
 	Model sky;
 	Model othelloStage;
 
-	SoundData selectSound;
+	/*SoundData selectSound;
 	SoundData timeUpSound;
 	SoundData enterSound;
 	SoundData BGMSound;
 	SoundData countdDownSound;
-	SoundData startSound;
+	SoundData startSound;*/
 	bool isPouse;
 	int selectPouse = 0;
 	const int selectMaxPouse = 2;

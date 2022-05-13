@@ -4,7 +4,7 @@
 #include "../BaseDirectX/Input.h"
 #include "../imgui/ImguiControl.h"
 
-SoundData CheakOthello::comboSound;
+//SoundData CheakOthello::comboSound;
 
 CheakOthello::CheakOthello()
 {
@@ -46,7 +46,7 @@ void CheakOthello::Init()
 
 void CheakOthello::SoundInit()
 {
-	SoundLoad("Resource/Sound/reverse_4_.wav", comboSound);
+	//SoundLoad("Resource/Sound/reverse_4_.wav", comboSound);
 }
 
 void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData, bool isCheck)
@@ -237,8 +237,8 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y, int last_x, in
 			{
 				if (isCombos) { isCombosCheck = true; }
 				isCombos = true;
-				SoundStopWave(comboSound);
-				SoundPlayOnce(comboSound);
+				//SoundStopWave(comboSound);
+				//SoundPlayOnce(comboSound);
 				totalDeleteOthello += loop;
 				//全部探索リストに入れる（自分と挟んだ駒まで）←sandwichArrayが同じかも参照する
 				//挟んだやつの最大のconboCountを取得→それ+1したのをコンボしたオセロにセット

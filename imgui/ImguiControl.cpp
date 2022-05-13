@@ -44,7 +44,7 @@ ComPtr<ID3D12DescriptorHeap> Imgui::GetHeapForImgui()
 
 void Imgui::DrawImGui()
 {
-    if (!isActive) return;
+    //if (!isActive) return;
     ImGui_ImplDX12_NewFrame();
     ImGui_ImplWin32_NewFrame();
     ImGui::NewFrame();
@@ -166,89 +166,87 @@ void Imgui::GetAndDrawInfo(const XMFLOAT3& xmfloat3Original, XMFLOAT3& imguiInfo
     return;
 }
 
-void Imgui::CreateMenuBar()
-{
-    if (ImGui::BeginMenuBar())
-    {
-        if (ImGui::MenuItem("Status"))
-        {
-            tab = ImguiType::Status;
-        }
-        if (ImGui::MenuItem("Camera"))
-        {
-            tab = ImguiType::CameraInfo;
-        }
-        if (ImGui::MenuItem("Debug"))
-        {
-            tab = ImguiType::Debug;
-        }
-        if (ImGui::MenuItem("PostEffect"))
-        {
-            tab = ImguiType::PostEffect;
-        }
-        ImGui::EndMenuBar();
-    }
-}
-
-void Imgui::EachInfo()
-{
-    if (tab == ImguiType::Status)
-    {
-        ImGui::Text("FPS:%.2f", WindowsAPI::rate);
-        ImGui::Text(test.c_str());
-        ImGui::Text(ipv4Name.c_str());
-    }
-    else if (tab == ImguiType::CameraInfo)
-    {
-        ImGui::Text("eye:%.2f, %.2f, %.2f", Camera::eye.v.x, Camera::eye.v.y, Camera::eye.v.z);
-        ImGui::Text("target:%.2f, %.2f, %.2f", Camera::target.v.x, Camera::target.v.y, Camera::target.v.z);
-    }
-    else if (tab == ImguiType::Debug)
-    {
-        DebugUpdate();
-    }
-    else if (tab == ImguiType::PostEffect)
-    {
-        ImGui::InputInt("EffectType", &effectType, 1, 10);
-        if (effectType == 0)
-        {
-            ImGui::Text("Normal");
-        }
-        else if (effectType == 1)
-        {
-            ImGui::Text("Water");
-        }
-        else if (effectType == 2)
-        {
-            ImGui::Text("Mosaic");
-        }
-        else if (effectType == 3)
-        {
-            ImGui::Text("Blur");
-        }
-        else if (effectType >= 4)
-        {
-            ImGui::Text("NoSetting");
-        }
-    }
-}
-void Imgui::DebugUpdate()
-{
-    if (debugType == DebugType::Player)
-    {
-        ImGui::Combo("playerCombo", &playerCombo, "aaaa\0bbbb\0cccc\0dddd\0eeee\0\0");
-        //ImGui::Combo("playerCombo", &playerCombo, iEnum.GetNames());
-    }
-    else if (debugType == DebugType::Water)
-    {
-
-    }
-}
-
-void Imgui::SetWindowActive(bool isActive)
-{
-    Imgui::isActive = isActive;
-};
+//void Imgui::CreateMenuBar()
+//{
+//    if (ImGui::BeginMenuBar())
+//    {
+//        if (ImGui::MenuItem("Status"))
+//        {
+//            tab = ImguiType::Status;
+//        }
+//        if (ImGui::MenuItem("Camera"))
+//        {
+//            tab = ImguiType::CameraInfo;
+//        }
+//        if (ImGui::MenuItem("Debug"))
+//        {
+//            tab = ImguiType::Debug;
+//        }
+//        if (ImGui::MenuItem("PostEffect"))
+//        {
+//            tab = ImguiType::PostEffect;
+//        }
+//        ImGui::EndMenuBar();
+//    }
+//}
+//void Imgui::EachInfo()
+//{
+//    if (tab == ImguiType::Status)
+//    {
+//        ImGui::Text("FPS:%.2f", WindowsAPI::rate);
+//        ImGui::Text(test.c_str());
+//        ImGui::Text(ipv4Name.c_str());
+//    }
+//    else if (tab == ImguiType::CameraInfo)
+//    {
+//        ImGui::Text("eye:%.2f, %.2f, %.2f", Camera::eye.v.x, Camera::eye.v.y, Camera::eye.v.z);
+//        ImGui::Text("target:%.2f, %.2f, %.2f", Camera::target.v.x, Camera::target.v.y, Camera::target.v.z);
+//    }
+//    else if (tab == ImguiType::Debug)
+//    {
+//        DebugUpdate();
+//    }
+//    else if (tab == ImguiType::PostEffect)
+//    {
+//        ImGui::InputInt("EffectType", &effectType, 1, 10);
+//        if (effectType == 0)
+//        {
+//            ImGui::Text("Normal");
+//        }
+//        else if (effectType == 1)
+//        {
+//            ImGui::Text("Water");
+//        }
+//        else if (effectType == 2)
+//        {
+//            ImGui::Text("Mosaic");
+//        }
+//        else if (effectType == 3)
+//        {
+//            ImGui::Text("Blur");
+//        }
+//        else if (effectType >= 4)
+//        {
+//            ImGui::Text("NoSetting");
+//        }
+//    }
+//}
+//void Imgui::DebugUpdate()
+//{
+//    if (debugType == DebugType::Player)
+//    {
+//        ImGui::Combo("playerCombo", &playerCombo, "aaaa\0bbbb\0cccc\0dddd\0eeee\0\0");
+//        //ImGui::Combo("playerCombo", &playerCombo, iEnum.GetNames());
+//    }
+//    else if (debugType == DebugType::Water)
+//    {
+//
+//    }
+//}
+//void Imgui::SetWindowActive(bool isActive)
+//{
+//    Imgui::isActive = isActive;
+//};
 
 ImguiEnum::ImguiEnum(int count, ...)
 {

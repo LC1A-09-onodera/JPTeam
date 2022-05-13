@@ -1,18 +1,14 @@
 #include "../VoiceUDPRecive/VoiceUDPRecive.h"
 #include"GameScene.h"
-#include "BaseDirectX.h"
 #include "../WindowsAPI/WinAPI.h"
 #include "Input.h"
 #include "../Sound/Sound.h"
 #include "viewport.h"
 #include "../Particle/Particle3D.h"
 #include "../imgui/ImguiControl.h"
-#include "../Sound/Sound.h"
 #include "vec3.h"
 #include "../FBXObject/FBXObject.h"
 #include "../Shader/ShaderManager.h"
-#include"../Enemy/Enemy.h"
-#include "../Hole/Hole.h"
 #include "../3DObjectParticle/3DObjectParticle.h"
 #include "../OthlloPlayer/OthlloPlayer.h"
 #include "../Thunder/Thunder.h"
@@ -90,8 +86,6 @@ void GameScene::Init()
 	light = Light::Create();
 	//モデルすべてにライトを適用
 	Model::SetLight(light);
-	//プレイヤーの初期化
-	Player::GetPlayer()->Init();
 
 	//ポストエフェクトの初期化
 	PostEffects::Init();
@@ -107,9 +101,6 @@ void GameScene::Init()
 
 	checkObject.Init();
 	ObjectParticles::LoadModels();
-
-	water.CreateWater();
-	OthlloPlayer::Init();
 
 	othelloManager.Init();
 	othelloManager.AddPanel();
@@ -187,6 +178,7 @@ void GameScene::Init()
 	startSprite.CreateSprite(L"Resource/Img/START.png", XMFLOAT3(0, 0, 0));
 	gameTime = gameMaxTime;
 	Lights::LoadModels();
+	OthlloPlayer::Init();
 	sky.CreateModel("world", ShaderManager::playerShader, true);
 	sky.each.rotation = { 70, 0.0f, 0 };
 	sky.each.scale = { 100.0f ,100.0f, 100.f };
@@ -210,12 +202,12 @@ void GameScene::Init()
 	gameScoreAttackSprite.CreateSprite(L"Resource/Img/score_attack.png", XMFLOAT3(0, 0, 0));
 	gameNormaSprite.CreateSprite(L"Resource/Img/quota.png", XMFLOAT3(0, 0, 0));
 	titleSelectNum = 0;
-	SoundLoad("Resource/Sound/select_.wav", selectSound);
+	/*SoundLoad("Resource/Sound/select_.wav", selectSound);
 	SoundLoad("Resource/Sound/time_up_.wav", timeUpSound);
 	SoundLoad("Resource/Sound/enter_.wav", enterSound);
 	SoundLoad("Resource/Sound/bgm_.wav", BGMSound);
 	SoundLoad("Resource/Sound/start_.wav", startSound);
-	SoundLoad("Resource/Sound/count_down_.wav", countdDownSound);
+	SoundLoad("Resource/Sound/count_down_.wav", countdDownSound);*/
 	checkObject.SoundInit();
 	selectGameTypeActive = false;
 	selectGameType = 1;
@@ -223,7 +215,7 @@ void GameScene::Init()
 
 void GameScene::TitleUpdate()
 {
-	SoundPlayOnce(BGMSound);
+	//SoundPlayOnce(BGMSound);
 	//オセロのパーティクルを出していく
 	static int particleTime = 0;
 	//シーンチェンジ開始前
@@ -241,8 +233,8 @@ void GameScene::TitleUpdate()
 			//チュートリアルかどうかを選択する
 			if (Input::KeyTrigger(DIK_A) || directInput->IsButtonPush(directInput->LeftButton))
 			{
-				SoundStopWave(selectSound);
-				SoundPlayOnce(selectSound);
+				/*SoundStopWave(selectSound);
+				SoundPlayOnce(selectSound);*/
 				if (titleSelectNum == 0)
 				{
 					titleSelectNum = 1;
@@ -250,8 +242,8 @@ void GameScene::TitleUpdate()
 			}
 			if (Input::KeyTrigger(DIK_D) || directInput->IsButtonPush(directInput->RightButton))
 			{
-				SoundStopWave(selectSound);
-				SoundPlayOnce(selectSound);
+				/*SoundStopWave(selectSound);
+				SoundPlayOnce(selectSound);*/
 				if (titleSelectNum == 1)
 				{
 					titleSelectNum = 0;
@@ -262,8 +254,8 @@ void GameScene::TitleUpdate()
 			{
 				if (titleSelectNum == 1)
 				{
-					SoundStopWave(enterSound);
-					SoundPlayOnce(enterSound);
+					/*SoundStopWave(enterSound);
+					SoundPlayOnce(enterSound);*/
 
 					ToGame();
 
@@ -283,8 +275,8 @@ void GameScene::TitleUpdate()
 			//スコアアタックかどうかの選択を行う
 			if (Input::KeyTrigger(DIK_A) || directInput->IsButtonPush(directInput->LeftButton))
 			{
-				SoundStopWave(selectSound);
-				SoundPlayOnce(selectSound);
+				/*SoundStopWave(selectSound);
+				SoundPlayOnce(selectSound);*/
 				if (!selectMode)
 				{
 					selectMode = true;
@@ -292,8 +284,8 @@ void GameScene::TitleUpdate()
 			}
 			if (Input::KeyTrigger(DIK_D) || directInput->IsButtonPush(directInput->RightButton))
 			{
-				SoundStopWave(selectSound);
-				SoundPlayOnce(selectSound);
+				/*SoundStopWave(selectSound);
+				SoundPlayOnce(selectSound);*/
 				if (selectMode)
 				{
 					selectMode = false;
@@ -302,8 +294,8 @@ void GameScene::TitleUpdate()
 			if ((Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01)) && !isPouse)
 			{
 
-				SoundStopWave(enterSound);
-				SoundPlayOnce(enterSound);
+				/*SoundStopWave(enterSound);
+				SoundPlayOnce(enterSound);*/
 
 				ToGame();
 				titleSelectNum = 0;
@@ -322,55 +314,6 @@ void GameScene::TitleUpdate()
 			}
 		}
 	}
-	////ゲームに移行する
-	//else if ((Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01)) && !isPouse && selectWindow)
-	//{
-	//	SoundStopWave(enterSound);
-	//	SoundPlayOnce(enterSound);
-	//	ToGame();
-	//	if (titleSelectNum == 1 && select == false)
-	//	{
-	//		isTutorial = true;
-	//		titleSelectNum = 0;
-	//	}
-	//	else
-	//	{
-	//		isTutorial = false;
-	//	}
-	//	if (isTutorial)
-	//	{
-	//		othelloManager.whySandwichSpawn();
-	//		gameTime = 60;
-	//	}
-	//	else
-	//	{
-	//		if (selectMode == false)
-	//		{
-	//			othelloManager.StartSetPos();
-	//			//othelloManager.StartNormaMode();
-	//			gameTime = gameMaxTime;
-	//		}
-	//		else
-	//		{
-	//			othelloManager.StartNormaMode();
-	//			gameTime = gameMaxTime;
-	//		}
-	//	}
-	//}
-	////モードの切り替え
-	//if (selectWindow)
-	//{
-	//	if (Input::KeyTrigger(DIK_D))
-	//	{
-	//		titleSelectNum = 0;
-	//		selectMode = false;
-	//	}
-	//	if (Input::KeyTrigger(DIK_A))
-	//	{
-	//		titleSelectNum = 1;
-	//		selectMode = true;
-	//	}
-	//}
 
 	//ポーズ画面に移行する
 	if (!isPouse && (Input::KeyTrigger(DIK_ESCAPE) || directInput->IsButtonPush(directInput->ButtonPouse)))
@@ -383,8 +326,8 @@ void GameScene::TitleUpdate()
 	{
 		if (Input::KeyTrigger(DIK_W) || directInput->IsButtonPush(directInput->UpButton))
 		{
-			SoundStopWave(selectSound);
-			SoundPlayOnce(selectSound);
+			/*SoundStopWave(selectSound);
+			SoundPlayOnce(selectSound);*/
 			if (selectPouse == 0)
 			{
 				selectPouse = selectMaxPouse;
@@ -396,8 +339,8 @@ void GameScene::TitleUpdate()
 		}
 		else if (Input::KeyTrigger(DIK_S) || directInput->IsButtonPush(directInput->DownButton))
 		{
-			SoundStopWave(selectSound);
-			SoundPlayOnce(selectSound);
+			/*SoundStopWave(selectSound);
+			SoundPlayOnce(selectSound);*/
 			if (selectPouse == selectMaxPouse)
 			{
 				selectPouse = 0;
@@ -455,7 +398,7 @@ void GameScene::GameUpdate()
 	{
 		if (countDown <= 0)
 		{
-			SoundPlayOnce(BGMSound);
+			//SoundPlayOnce(BGMSound);
 			OthlloPlayer::Update();
 
 			othelloManager.Controll();
@@ -499,15 +442,15 @@ void GameScene::GameUpdate()
 		}
 		else
 		{
-			SoundStopWave(BGMSound);
+			//SoundStopWave(BGMSound);
 			countDown--;
 		}
 	}
 	if (countDown == 45)
 	{
-		SoundStopWave(countdDownSound);
+		/*SoundStopWave(countdDownSound);
 		SoundStopWave(startSound);
-		SoundPlayOnce(startSound);
+		SoundPlayOnce(startSound);*/
 	}
 	ObjectParticles::Update();
 	//タイトルからgameシーンへ
@@ -526,8 +469,8 @@ void GameScene::GameUpdate()
 			else
 			{
 				gameTime = gameMaxTime;
-				SoundStopWave(countdDownSound);
-				SoundPlayOnce(countdDownSound);
+				//SoundStopWave(countdDownSound);
+				//SoundPlayOnce(countdDownSound);
 			}
 		}
 		Camera::Update();
@@ -535,9 +478,9 @@ void GameScene::GameUpdate()
 	//ゲームシーンからリザルトへのトリガー
 	if (gameTime <= 0 && !isResultSceneChange)
 	{
-		SoundStopWave(BGMSound);
+		/*SoundStopWave(BGMSound);
 		SoundStopWave(timeUpSound);
-		SoundPlayOnce(timeUpSound);
+		SoundPlayOnce(timeUpSound);*/
 		for (auto triangleItr = OthelloManager::othellos.begin(); triangleItr != OthelloManager::othellos.end(); ++triangleItr)
 		{
 			XMFLOAT3 pos = triangleItr->GetPosition();
@@ -599,8 +542,8 @@ void GameScene::GameUpdate()
 	{
 		if (Input::KeyTrigger(DIK_W) || directInput->IsButtonPush(directInput->UpButton))
 		{
-			SoundStopWave(selectSound);
-			SoundPlayOnce(selectSound);
+			//SoundStopWave(selectSound);
+			//SoundPlayOnce(selectSound);
 			if (selectPouse == 0)
 			{
 				selectPouse = selectMaxPouse;
@@ -612,8 +555,8 @@ void GameScene::GameUpdate()
 		}
 		else if (Input::KeyTrigger(DIK_S) || directInput->IsButtonPush(directInput->DownButton))
 		{
-			SoundStopWave(selectSound);
-			SoundPlayOnce(selectSound);
+			//SoundStopWave(selectSound);
+			//SoundPlayOnce(selectSound);
 			if (selectPouse == selectMaxPouse)
 			{
 				selectPouse = 0;
@@ -625,8 +568,8 @@ void GameScene::GameUpdate()
 		}
 		if (Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01))
 		{
-			SoundStopWave(enterSound);
-			SoundPlayOnce(enterSound);
+			//SoundStopWave(enterSound);
+			//SoundPlayOnce(enterSound);
 			//
 			if (selectPouse == 0)
 			{
@@ -682,8 +625,8 @@ void GameScene::ResultUpdate()
 {
 	if (Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01))
 	{
-		SoundStopWave(enterSound);
-		SoundPlayOnce(enterSound);
+		//SoundStopWave(enterSound);
+		//SoundPlayOnce(enterSound);
 		OthlloPlayer::SetPosition(XMFLOAT3(0, 0, -2));
 
 		SceneNum = TITLE;
@@ -1189,8 +1132,8 @@ void GameScene::ResultDraw()
 
 void GameScene::ReStart()
 {
-	SoundStopWave(timeUpSound);
-	SoundPlayOnce(timeUpSound);
+	//SoundStopWave(timeUpSound);
+	//SoundPlayOnce(timeUpSound);
 	for (auto triangleItr = OthelloManager::othellos.begin(); triangleItr != OthelloManager::othellos.end(); ++triangleItr)
 	{
 		XMFLOAT3 pos = triangleItr->GetPosition();

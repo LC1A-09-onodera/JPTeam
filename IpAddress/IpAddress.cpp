@@ -27,5 +27,5 @@ void IpAddress::GetIpAddress()
 		}
 	}*/
 
-	Imgui::GetIp(ipAddress.c_str());
+	//Imgui::GetIp(ipAddress.c_str());
 }
