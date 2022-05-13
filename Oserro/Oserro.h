@@ -156,6 +156,7 @@ namespace OthelloConstData
 	const int downStepCountMax = 0;
 	const int TutorialEndTextTimer = 300;
 
+	const int NormaStageCount = 10;
 	//アニメーション
 	const int vanishTimerMax = 600;
 	const int animationTimerMax = 30;
@@ -300,16 +301,21 @@ public://ノルマモード用関数
 	void NormaUpdate();
 	void SetNormaMove();
 	void Undo();
-	void StartNormaMode(Norma::NormaType normaType = Norma::Combo, int normaStatus = 0, int normaMoveCount = 0);
+	void StartNormaMode(int stageNum = 0);
 	void EndNormaMode();
 	void RestartNorma();
 	bool GetIsNormaClear();
 	bool GetIsNormaFailed();
 	bool isNormaMode = false;
 
+	void SetScore(const int score){nowScore = score;}
+
+	void NormaTextDraw();
 private://ノルマモード用内部処理関数
-	void StartNormaField();
+	void StartNormaField(int stageNum = 0);
 	void TestStage();
+	void LoadNormaStage(std::string stage);
+	void LoadAllStage();
 private:
 	void SetPlayer();
 
@@ -391,6 +397,7 @@ private:
 	int downStepCount = 0;
 	int saveTimer = 0;
 	int TutorialEndTextCount = 0;
+	int nowScore = 0;
 	XMFLOAT3 mousePoint;
 
 	static OthelloModel oserroModel;

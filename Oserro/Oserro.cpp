@@ -190,7 +190,7 @@ void Othello::ReversUpdate()
 
 	if (data.animationTimer == 0)
 	{
-		
+
 		//MakeParticle();
 	}
 
@@ -520,7 +520,7 @@ void Othello::Borne(OthelloType type, int x, int y, bool isFront)
 		each.position += ConvertXMFLOAT3toXMVECTOR(stageLeftTop);
 		XMFLOAT3 pos = ConvertXMVECTORtoXMFLOAT3(each.position);
 		ObjectParticles::frame.Init(pos, 1, ParticleType::Born);
-		
+
 		if (data.isFront)
 		{
 			each.rotation.y = 0;
@@ -634,7 +634,9 @@ void OthelloManager::Init()
 
 	//TutorialRetryText.position = XMVECTOR{ 990, 300, 0, 0 };
 	normaChecker.Init();
-	TestStage();
+	//TestStage();
+	//LoadNormaStage("test");
+	LoadAllStage();
 }
 
 void OthelloManager::Update()
@@ -891,17 +893,21 @@ void OthelloManager::NormaUpdate()
 
 	//更新
 	auto itr = othellos.begin();
-
+	int nowMaxCombo = 0;
 	for (; itr != othellos.end(); ++itr)
 	{
 		itr->Update();
+		if (itr->GetGameData()->maxComboCount >= nowMaxCombo)
+		{
+			nowMaxCombo = itr->GetGameData()->maxComboCount;
+		}
 	}
 	if (Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01))
 	{
 		isFieldUpdate = true;
 	}
 	Undo();
-	normaChecker.Update(othellos);
+	normaChecker.Update(othellos, nowScore, nowMaxCombo);
 }
 void OthelloManager::Draw()
 {
@@ -930,6 +936,12 @@ void OthelloManager::ChanceDraw()
 		itr->Draw();
 	}
 }
+
+void OthelloManager::NormaTextDraw()
+{
+	normaChecker.Draw();
+}
+
 void OthelloManager::Finalize()
 {
 	auto itr = othellos.begin();
@@ -2298,22 +2310,28 @@ void OthelloManager::SetNormaMove()
 	normaChecker.SetMove(othellos, playerPanelPos.x, playerPanelPos.y);
 }
 
-void OthelloManager::StartNormaMode(Norma::NormaType normaType, int normaStatus, int normaMoveCount)
+void OthelloManager::StartNormaMode(int stageNum)
 {
 	normaChecker.Reset();
 	StartNormaField();
 	isNormaMode = true;
 }
 
-void OthelloManager::StartNormaField()
+void OthelloManager::StartNormaField(int stageNum)
 {
-	if (NormaStartOthellos.size() <= 0)return;
+	//ステージが存在しない
+	bool isNoneStage = NormaStartOthellos.size() <= 0;
+	//指定されたステージ番号がステージ数を超過している
+	bool isStageOver = NormaStartOthellos.size() <= (stageNum);
 
-	//ノルマ番号orステージ番号を決定してその盤面を呼び出す処理(Todo)
-	{}
+	if (isNoneStage || isStageOver)return;
 
 	//ステージ番号に応じたイテレーターを呼び出す
 	auto stageItr = NormaStartOthellos.begin();
+	for (int i = 0; i < stageNum; i++)
+	{
+		stageItr++;
+	}
 
 	//パネルが一つもなかったら早期リターン
 	if (stageItr->panels.size() <= 0)
@@ -2363,7 +2381,10 @@ void OthelloManager::EndNormaMode()
 
 void OthelloManager::RestartNorma()
 {
+	//パネル状況リセット
 	normaChecker.Reset();
+	//スコア状況もリセット
+	nowScore = 0;
 }
 
 bool OthelloManager::GetIsNormaClear()
@@ -2375,4 +2396,125 @@ bool OthelloManager::GetIsNormaFailed()
 {
 
 	return normaChecker.GetFailed();
+}
+
+void OthelloManager::LoadNormaStage(string stage)
+{
+	std::ifstream file;
+	const string stageFileName = "Resource/Stage/" + stage + ".txt";
+
+	file.open(stageFileName);
+
+	if (file.fail())
+	{
+		assert(0);
+	}
+
+	string line;
+	int yPos = 0;
+	NormaModeFieldData NormaField;
+	while (getline(file, line))
+	{
+		//','を' 'に変換
+		replace(line.begin(), line.end(), ',', ' ');
+		istringstream line_Data(line);
+
+		string key;
+		getline(line_Data, key, ' ');
+
+		//情報がノルマだった場合の処理
+		if (key == "n")
+		{
+			string test;
+			line_Data >> test;
+			if (*test.begin() == 'C' || *test.begin() == 'c')
+			{
+				NormaField.type = Norma::Combo;
+			}
+			else if (*test.begin() == 'S' || *test.begin() == 's')
+			{
+				NormaField.type = Norma::Score;
+			}
+			else if (*test.begin() == 'P' || *test.begin() == 'p')
+			{
+				NormaField.type = Norma::Panels;
+			}
+			else
+			{
+				NormaField.type = Norma::Panels;
+			}
+
+			int norma = 0;
+			line_Data >> norma;
+			NormaField.normaStatus = norma;
+
+			int hoge = 0;
+		}
+
+		//情報が歩数だった場合の処理
+		if (key == "w")
+		{
+			int warkCount = 0;
+			line_Data >> warkCount;
+			NormaField.normaMoveCount = warkCount;
+			int hoge = 0;
+
+		}
+		//情報が位置情報だったら
+		if (key == "p")
+		{
+			panelPos playerPos = {};
+			line_Data >> playerPos.x;
+			line_Data >> playerPos.y;
+			NormaField.playerPos = playerPos;
+
+			int hoge = 0;
+		}
+		//情報が盤面に関する情報だった場合
+		if (key == "s")
+		{
+			int panelID = 0;
+			int hoge = 0;
+
+			for (int i = 0; i < 8; i++)
+			{
+				line_Data >> panelID;
+				//一文字ずつ確認
+
+				//表
+				if (panelID == 1)
+				{
+					panelData panel;
+					panel.pos = { i, yPos };
+					panel.isFront = true;
+					NormaField.panels.push_back(panel);
+				}
+				//裏
+				else if (panelID == 2)
+				{
+					panelData panel;
+					panel.pos = { i, yPos };
+					panel.isFront = false;
+					NormaField.panels.push_back(panel);
+				}
+			}
+			yPos++;
+
+		}
+	}
+	NormaStartOthellos.push_back(NormaField);
+}
+
+void OthelloManager::LoadAllStage()
+{
+	LoadNormaStage("test");
+
+	string baseName = "stage";
+	for (int i = 0; i < NormaStageCount; i++)
+	{
+		string count = to_string(i + 1);
+		LoadNormaStage(baseName + count);
+	}
+
+	int stageCount = NormaStartOthellos.size();
 }

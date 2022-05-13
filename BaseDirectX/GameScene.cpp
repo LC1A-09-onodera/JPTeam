@@ -414,6 +414,7 @@ void GameScene::GameUpdate()
 				}
 				else if (selectMode)
 				{
+					othelloManager.SetScore(checkObject.GetScore());
 					othelloManager.NormaUpdate();
 				}
 				if (othelloManager.GetIsNormaFailed())
@@ -422,7 +423,7 @@ void GameScene::GameUpdate()
 				}
 				else if (othelloManager.GetIsNormaClear())
 				{
-					
+					isSceneChange = true;
 				}
 			}
 			if (othelloManager.GetIsSendDataUpdate())
@@ -1006,6 +1007,8 @@ void GameScene::GameDraw()
 		moveSprite.SpriteDraw();
 
 		//othelloManager.TutorialRetryText.SpriteDraw();
+
+		othelloManager.NormaTextDraw();
 		if (isTutorial)
 		{
 			othelloManager.TutorialTextDraw();
