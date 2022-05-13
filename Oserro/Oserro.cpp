@@ -1125,7 +1125,7 @@ const vector<vector<SendOthelloData>> &OthelloManager::Send()
 	{
 		OthelloData gameDatas = *itr->GetGameData();
 		SendOthelloData data;
-		if (gameDatas.isPlayer || gameDatas.isReverce || gameDatas.isSpawn)
+		if (gameDatas.isPlayer || gameDatas.isSpawn)
 		{
 			continue;
 		}
@@ -1171,6 +1171,9 @@ void OthelloManager::Receive(const vector<vector<SendOthelloData>> &data)
 
 	//
 	auto itr = othellos.begin();
+	int chainName = itr->GetGameData()->chainName;
+
+
 	list<list<Othello>::iterator> sandOthellos;
 	list<list<Othello>::iterator> repairOthellos;
 	//¶‚«‚Ä‚¢‚é‚â‚Â‚ğ‹²‚ñ‚¾ƒtƒ‰ƒO
