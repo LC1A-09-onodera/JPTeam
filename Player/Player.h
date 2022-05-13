@@ -34,28 +34,32 @@ private:
 	const int MAX_STAN_COUNT = 30;			//行動不能フレーム
 	const int MAX_INVICIBLE_COUNT = 30;		//無敵フレーム
 
-	const float MAX_ENEMY_FORCE = 4.0f;		//敵と当たった時に吹っ飛ぶ力（10.0->9.0->8.0,,,,）
+	const int MAX_HP = 5;
+
+	const float MAX_ENEMY_FORCE = 0.0f;		//敵と当たった時に吹っ飛ぶ力（10.0->9.0->8.0,,,,）
 
 	const float RESISTANCE_VALUE = 1.0f;	//Forceを減算する定数
 	const float MINIMUM_FORCE = 2.0f;		//数値以下になったら強制的にForceを0にする
 
 	const float MAX_SPEED = 0.5f;			//自機スピード
 
-	XMFLOAT3 pos;			//プレイヤーの座標
-	XMFLOAT3 vec3;			//向いている方向（正規化済）
-	XMFLOAT3 hitEnemypos;	//当たった敵の座標
-	XMFLOAT3 hitBombpos;	//爆風が当たった時の爆弾の座標
-	XMFLOAT3 lastVec3;		//最後に向いていた方向
-	int activeCount;		//行動不能カウント
-	int invincibleCount;	//無敵カウント
-	float bombForce;		//ボムの力保存用
-	float enemyForce;		//敵の力保存用
-	bool isActive;			//行動できるかどうか
-	bool isHitBomb;			//ボムに当たって飛ばされてるかどうか
-	bool isHitEnemy;		//敵に当たって飛ばされてるかどうか
-	bool isInvincible;		//無敵かどうか
-	bool isShoot;			//射撃中かどうか（弾があるか）
-	bool isDetonating;		//起爆したかどうか
+	XMFLOAT3 pos;				//プレイヤーの座標
+	XMFLOAT3 vec3;				//向いている方向（正規化済）
+	XMFLOAT3 hitEnemypos;		//当たった敵の座標
+	XMFLOAT3 hitBombpos;		//爆風が当たった時の爆弾の座標
+	XMFLOAT3 firstButtonVec3;	//ボタン入力保存用
+	XMFLOAT3 secondButtonVec3;	//ボタン入力保存用
+	int activeCount;			//行動不能カウント
+	int invincibleCount;		//無敵カウント
+	int hp;						//playerのHP
+	float bombForce;			//ボムの力保存用
+	float enemyForce;			//敵の力保存用
+	bool isActive;				//行動できるかどうか
+	bool isHitBomb;				//ボムに当たって飛ばされてるかどうか
+	bool isHitEnemy;			//敵に当たって飛ばされてるかどうか
+	bool isInvincible;			//無敵かどうか
+	bool isShoot;				//射撃中かどうか（弾があるか）
+	bool isDetonating;			//起爆したかどうか
 
 private:
 	XMVECTOR oldPlayerPos;
@@ -70,6 +74,8 @@ public:
 	static Player* GetPlayer();
 	//初期化
 	void Init();
+	//Create以外の初期化
+	void Restart();
 	//更新
 	void Update(bool isBombAlive);
 	//描画
@@ -80,7 +86,7 @@ public:
 
 	XMFLOAT3 GetPos() { return pos; }						//プレイヤーの座標					がわかるよ
 	XMFLOAT3 GetVec3() { return vec3; }						//向いている方向（正規化済）			がわかるよ
-	XMFLOAT3 GetLastVec3() { return lastVec3; }				//最後に向いていた方向（正規化済）	がわかるよ
+	//XMFLOAT3 GetLastVec3() { return lastVec3; }				//最後に向いていた方向（正規化済）	がわかるよ
 	bool IsActive() { return isActive; }					//行動できるか						がわかるよ
 	bool IsInvincible() { return isInvincible; }			//無敵かどうか						がわかるよ
 
@@ -119,4 +125,6 @@ private:
 		if (r < diff) { return false; }
 		else { return true; }
 	}
+
+	bool CheakHP() { if (hp <= 0) { return false; } return true; }
 };

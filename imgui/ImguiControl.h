@@ -40,39 +40,37 @@ public:
     static void ChangeInfo(float &floatOriginal, float& imguiInfo);
     static void ChangeInfo(XMFLOAT3 &xmfloat3Original, XMFLOAT3& imguiInfo);
 
-    static void CreateMenuBar();
-    static void EachInfo();
-    static void DebugUpdate();
-
-    static bool isActive;
-    static void SetWindowActive(bool isActive);
-
-    static int effectType;
-    enum ImguiType
+    enum ImguiTab
     {
         Status,
-        CameraInfo,
-        Debug,
         PostEffect,
-
-        ImguiTypeEnd,
+        Camera,
+        Debug,
     };
-    static ImguiType tab;
 
-    enum DebugType
-    {
-        Player,
-        Water,
+    static bool spotLight1;
+    static float lightColor[3];
 
-        DebugTypeEnd,
-    };
-    static DebugType debugType;
+    static int spritePos1[2];
+    static int spritePos2[2];
+    static int spritePos3[2];
+    static int spritePos4[2];
+    static int spritePos5[2];
+    static int spritePos6[2];
+    static int spritePos7[2];
 
-    static int playerCombo;
-    static ImguiEnum iEnum;
+    //System
+    static float fps;
+    static float eyePos[3];
+    static float target[3];
 
-    static std::string test;
-    static std::string ipv4Name;
-    static void GetTest(const char *st) {test = st;}
-    static void GetIp(const char *st) {ipv4Name = st;}
+    //imguiÇÃëÆê´
+    //static ImguiTab tab;
+
+    static int combo;
+
+    static int score;
+
+    static int sample;
+    static float dethLine;
 };

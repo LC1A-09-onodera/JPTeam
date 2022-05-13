@@ -4,18 +4,14 @@
 #include "../Enemy/Enemy.h"
 
 class Hole;
+class Blast;
 struct BombData
 {
 	DirectX::XMVECTOR pos = {};//爆弾の座標
 	DirectX::XMVECTOR bombAngle = { -1, 0, 0 };
-	float bombRadius = 0.0f;//爆弾自体の大きさ
+	float bombRadius = 1.0f;//爆弾自体の大きさ
 	float bombSpeed = 1.0f;//爆弾の速度
-	float blastRadius = 5.0f;//爆発の半径
-	float blastPower = 0;//爆風の強さ
-	int blastTimer = 0;//爆発タイマー(とりあえず使わない)
 	bool isAlive = false;//爆弾が現在生きているかどうか
-	bool isExplosion = false;//爆風が発生しているかどうか
-	int safeTimer = 0;//爆弾がプレイヤー接触しても爆発しない時間(生成時即爆発しないため)
 	int bombAliveTimer = 0;
 };
 class Bomb
@@ -24,7 +20,7 @@ public:
 	Bomb();
 	~Bomb();
 	//初期化
-	void Init();
+	void Init(const Model &model);
 	//更新処理
 	void Update();
 	//終了処理
@@ -44,25 +40,21 @@ public:
 	/// 敵との当たり判定
 	/// </summary>
 	/// <param name="enemyData"></param>
-	void EnemyBombCollision(EnemyBase &enemyData);
+	bool EnemyBombCollision(EnemyBase &enemyData);
 
-	void KingBlastCollision(King *king);
-
-	float PlayerBlastCollision(XMFLOAT3 pos, float radius);
 
 	/// <summary>
-/// 爆発処理
-/// </summary>
+	/// 爆発処理
+	/// </summary>
 	void Explosion();
 public://アクセッサ
 	bool GetIsAlve() {return data.isAlive;}
-	bool GetIsExplosion(){return data.isExplosion;}
 	const XMVECTOR &GetPos(){return data.pos;}
+	float GetRadius() { return data.bombRadius; }
 private:
 	//爆弾が生きている際の更新処理
 	void BombUpdate();
-	//爆発しているときの更新処理
-	void BlastUpdate();
+
 
 	/// <summary>
 	/// 爆弾本体との当たり判定
@@ -72,17 +64,11 @@ private:
 	/// <param name="isHit">当たったか</param>
 	bool BombCollision(const XMVECTOR &pos, const float &radius);
 
-	/// <summary>
-	/// 爆風との判定
-	/// </summary>
-	/// <param name="pos"></param>
-	/// <param name="radius"></param>
-	/// <param name="blastPower"></param>
-	/// <returns></returns>
-	bool BlastCollision(const XMVECTOR &pos, const float &radius, XMFLOAT3 *blastPower = nullptr);
+	void MeshCopy(const Model &model) { this->bombObject = model;}
 
 private:
 	BombData data;
-	SampleObject bombObject;
-	SampleObject blastObject;
+	Model bombObject;
+	EachInfo each;
 };
+

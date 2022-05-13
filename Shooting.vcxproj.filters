@@ -70,6 +70,12 @@
     <Filter Include="Udp">
       <UniqueIdentifier>{b2353c99-8890-443e-8f79-5250e75bba10}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Oserro">
+      <UniqueIdentifier>{b06df7d0-3c72-4549-bc58-7f165c3015ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3DObjectParticle">
+      <UniqueIdentifier>{316fe141-119a-4bd4-b1aa-eb45bc23d102}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="imgui\imconfig.h">
@@ -225,6 +231,18 @@
     <ClInclude Include="IpAddress\IpAddress.h">
       <Filter>Udp</Filter>
     </ClInclude>
+    <ClInclude Include="Bomb\Blast.h">
+      <Filter>Bomb</Filter>
+    </ClInclude>
+    <ClInclude Include="Oserro\Oserro.h">
+      <Filter>Oserro</Filter>
+    </ClInclude>
+    <ClInclude Include="3DObjectParticle\3DObjectParticle.h">
+      <Filter>3DObjectParticle</Filter>
+    </ClInclude>
+    <ClInclude Include="CheakOthello\CheakOthello.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -340,6 +358,18 @@
     </ClCompile>
     <ClCompile Include="IpAddress\IpAddress.cpp">
       <Filter>Udp</Filter>
+    </ClCompile>
+    <ClCompile Include="Bomb\Blast.cpp">
+      <Filter>Bomb</Filter>
+    </ClCompile>
+    <ClCompile Include="Oserro\Oserro.cpp">
+      <Filter>Oserro</Filter>
+    </ClCompile>
+    <ClCompile Include="3DObjectParticle\3DObjectParitcle.cpp">
+      <Filter>3DObjectParticle</Filter>
+    </ClCompile>
+    <ClCompile Include="CheakOthello\CheakOthello.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

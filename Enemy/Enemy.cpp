@@ -15,40 +15,47 @@ EnemyModel EnemyModels::superEnemy;
 list<EnemyBase> Enemys::enemys;
 list<list<EnemyBase>::iterator> Enemys::deleteEnemys;
 
-void EnemyBase::Init()
+void EnemyBase::Init(const EnemyMoveDirection &direction)
 {
 	//ŽG‹›“G‚ÌMesh‚ðƒRƒs[
 	SetMesh(EnemyModels::baseEnemy);
 	each.CreateConstBuff0();
 	each.CreateConstBuff1();
-	SetAlive();
+	SetAlive(direction);
 }
-void EnemyBase::Update(King& king)
+void EnemyBase::Update(XMFLOAT3& hate)
 {
 	//”š•—‚ðŽó‚¯‚Ä‚¢‚È‚¢
 	if (!isWind)
 	{
-		//ƒwƒCƒg‚Ì•ûŒü‚É“®‚¢‚Ä‚¢‚­
-		GoHate(king.GetPosition());
+		if (moveDireciotnEnum != EnemyMoveDirection::HATE)
+		{
+			GoMoveDirection();
+		}
+		else
+		{
+			//ƒwƒCƒg‚Ì•ûŒü‚É“®‚¢‚Ä‚¢‚­
+			GoHate(hate);
+		}
 	}
 	else
 	{
 		//”š•—‚Ì‰e‹¿‚ðŽó‚¯‚Ä‚¢‚é
 		AddWindForce();
 	}
-	CheckHitKing(king);
-	SampleAddForce();
+	//CheckHitKing(king);
+	//SampleAddForce();
 	//ŠO‘¤‚É“–‚½‚Á‚½‚çƒ_ƒ[ƒW‚ðŽó‚¯‚é
-	HitDethLine();
+	//HitDethLine();
 	//ŒŠ‚É“–‚½‚é
-	HolesHit();
+	//HolesHit();
 }
 void EnemyBase::Draw()
 {
 	enemy.Update(&each);
 	Draw3DObject(enemy);
 }
-void EnemyBase::SetAlive()
+void EnemyBase::SetAlive(const EnemyMoveDirection &direction)
 {
 	//ƒ|ƒWƒVƒ‡ƒ“‚ðƒ‰ƒ“ƒ_ƒ€‚É¶¬
 	SetRandomPosition();
@@ -58,7 +65,27 @@ void EnemyBase::SetAlive()
 	this->weight = MaxWeight;
 	isDead = false;
 	isWind = false;
-	kingDirection = { 0.1f, 0, 0 };
+	if (direction == EnemyMoveDirection::LEFT)
+	{
+		moveDirection = { 0.1f, 0, 0 };
+	}
+	else if (direction == EnemyMoveDirection::RIGHT)
+	{
+		moveDirection = {-0.1f, 0, 0 };
+	}
+	else if (direction == EnemyMoveDirection::UP)
+	{
+		moveDirection = {0, 0, 0.1f};
+	}
+	else if (direction == EnemyMoveDirection::BOTTOM)
+	{
+		moveDirection = {0, 0, -0.1f};
+	}
+	else
+	{
+		moveDirection = {0, 0, 0};
+	}
+	moveDireciotnEnum = direction;
 	windDirection = { 0, 0, 0 };
 }
 void EnemyBase::UpdateKingDirection(XMFLOAT3& kingPos)
@@ -66,7 +93,7 @@ void EnemyBase::UpdateKingDirection(XMFLOAT3& kingPos)
 	//ƒLƒ“ƒO•ûŒü‚ðŽæ“¾‚µ‚Ä‚¢‚­
 	XMFLOAT3 result;
 	result = kingPos - GetPosition();
-	kingDirection = Normalize(result);
+	moveDirection = Normalize(result);
 }
 void EnemyBase::HitDethLine()
 {
@@ -116,8 +143,12 @@ void EnemyBase::AddWindForce()
 }
 void EnemyBase::GoHate(XMFLOAT3& hatePosition)
 {
-	kingDirection = hatePosition - GetPosition();
-	each.position += ConvertXMFLOAT3toXMVECTOR(Normalize(kingDirection) * moveSpeed);
+	moveDirection = hatePosition - GetPosition();
+	each.position += ConvertXMFLOAT3toXMVECTOR(Normalize(moveDirection) * moveSpeed);
+}
+void EnemyBase::GoMoveDirection()
+{
+	each.position += ConvertXMFLOAT3toXMVECTOR(Normalize(moveDirection) * moveSpeed);
 }
 void EnemyBase::SampleAddForce()
 {
@@ -204,20 +235,20 @@ void EnemyBase::SetRandomPosition()
 	}
 }
 
-void Enemys::AddEnemy(EnemyType type)
+void Enemys::AddEnemy(EnemyType type, const EnemyMoveDirection &direction)
 {
 	if (type == EnemyType::NONE)
 	{
 		//ŽG‹›“G
 		EnemyBase enemy;
-		enemy.Init();
+		enemy.Init(direction);
 		enemys.push_back(enemy);
 	}
 	else
 	{
 		//ŽG‹›“G
 		SuperEnemy enemy;
-		enemy.Init();
+		enemy.Init(direction);
 		enemys.push_back(enemy);
 	}
 }
@@ -227,15 +258,14 @@ void Enemys::DeathEnemy(EnemyBase& enemy)
 
 }
 
-void Enemys::Update(King& king)
+void Enemys::Update(XMFLOAT3& hate)
 {
 	auto itr = enemys.begin();
 	for (; itr != enemys.end(); ++itr)
 	{
-		itr->Update(king);
+		itr->Update(hate);
 		if (itr->GetHP() <= 0)
 		{
-			ParticleControl::expEffect->UI(itr->GetPosition(), 10.0f, 10.0f, 30);
 			deleteEnemys.push_back(itr);
 		}
 	}
@@ -262,15 +292,15 @@ void EnemyModels::LoadModels()
 	superEnemy.CreateModel("Block", ShaderManager::playerShader);
 }
 
-void SuperEnemy::Init()
+void SuperEnemy::Init(const EnemyMoveDirection &direction)
 {
 	SetMesh(EnemyModels::superEnemy);
 	each.CreateConstBuff0();
 	each.CreateConstBuff1();
-	SetAlive();
+	SetAlive(direction);
 }
 
-void SuperEnemy::SetAlive()
+void SuperEnemy::SetAlive(const EnemyMoveDirection& direction)
 {
 	//
 	SetRandomPosition();
@@ -279,6 +309,26 @@ void SuperEnemy::SetAlive()
 	this->weight = MaxWeight;
 	isDead = false;
 	isWind = false;
-	kingDirection = { 0.1f, 0, 0 };
+	if (direction == EnemyMoveDirection::LEFT)
+	{
+		moveDirection = { 0.1f, 0, 0 };
+	}
+	else if (direction == EnemyMoveDirection::RIGHT)
+	{
+		moveDirection = { -0.1f, 0, 0 };
+	}
+	else if (direction == EnemyMoveDirection::UP)
+	{
+		moveDirection = { 0, 0, 0.1f };
+	}
+	else if (direction == EnemyMoveDirection::BOTTOM)
+	{
+		moveDirection = { 0, 0, -0.1f };
+	}
+	else
+	{
+		moveDirection = { 0, 0, 0 };
+	}
+	moveDireciotnEnum = direction;
 	windDirection = { 0, 0, 0 };
 }

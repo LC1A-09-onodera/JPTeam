@@ -158,6 +158,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="3DModel\Model.h" />
+    <ClInclude Include="3DObjectParticle\3DObjectParticle.h" />
     <ClInclude Include="BaseDirectX\BaseDirectX.h" />
     <ClInclude Include="BaseDirectX\DirectInput.h" />
     <ClInclude Include="BaseDirectX\GameScene.h" />
@@ -168,7 +169,11 @@
     <ClInclude Include="BaseDirectX\vec2.h" />
     <ClInclude Include="BaseDirectX\vec3.h" />
     <ClInclude Include="BaseDirectX\viewport.h" />
+    <ClInclude Include="Bomb\Blast.h" />
+    <ClInclude Include="Bomb\Bomb.h" />
+    <ClInclude Include="Bomb\BombManager.h" />
     <ClInclude Include="Camera\Camera.h" />
+    <ClInclude Include="CheakOthello\CheakOthello.h" />
     <ClInclude Include="Collition\BaseCollision.h" />
     <ClInclude Include="Collition\CollisionAttribute.h" />
     <ClInclude Include="Collition\CollisionInfo.h" />
@@ -195,6 +200,7 @@
     <ClInclude Include="Light\CircleShadow.h" />
     <ClInclude Include="Light\Light.h" />
     <ClInclude Include="Light\SpotLight.h" />
+    <ClInclude Include="Oserro\Oserro.h" />
     <ClInclude Include="Particle\Particle3D.h" />
     <ClInclude Include="PointLight.h" />
     <ClInclude Include="PostEffect\PostEffect.h" />
@@ -211,13 +217,18 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="3DModel\Model.cpp" />
+    <ClCompile Include="3DObjectParticle\3DObjectParitcle.cpp" />
     <ClCompile Include="BaseDirectX\BaseDirectX.cpp" />
     <ClCompile Include="BaseDirectX\DirectInput.cpp" />
     <ClCompile Include="BaseDirectX\GameScene.cpp" />
     <ClCompile Include="BaseDirectX\Input.cpp" />
     <ClCompile Include="BaseDirectX\Matrix4.cpp" />
     <ClCompile Include="BaseDirectX\Quaternion.cpp" />
+    <ClCompile Include="Bomb\Blast.cpp" />
+    <ClCompile Include="Bomb\Bomb.cpp" />
+    <ClCompile Include="Bomb\BombManager.cpp" />
     <ClCompile Include="Camera\Camera.cpp" />
+    <ClCompile Include="CheakOthello\CheakOthello.cpp" />
     <ClCompile Include="Collition\CollisionManager.cpp" />
     <ClCompile Include="Collition\CollisionPrimitive.cpp" />
     <ClCompile Include="Collition\MeshCollider.cpp" />
@@ -236,6 +247,7 @@
     <ClCompile Include="IpAddress\IpAddress.cpp" />
     <ClCompile Include="Light\Light.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Oserro\Oserro.cpp" />
     <ClCompile Include="Particle\Particle3D.cpp" />
     <ClCompile Include="PostEffect\PostEffect.cpp" />
     <ClCompile Include="RenderTarget\RenderTarget.cpp" />

@@ -34,6 +34,7 @@ ParticleIndi *ParticleControl::expEffect = nullptr;
 ParticleIndi *ParticleControl::flashEffect = nullptr;
 ParticleIndi * ParticleControl::rockOnEffect = nullptr;
 ParticleIndi* ParticleControl::numbers[10];
+ParticleIndi *ParticleControl::reverce = nullptr;
 
 bool ParticleManager::StaticInitialize(ID3D12Device *device,  int window_width, int window_height,XMFLOAT3 eye, XMFLOAT3 target, XMFLOAT3 up)
 {
@@ -975,6 +976,30 @@ void ParticleIndi::FlashParticle(const DirectX::XMFLOAT3 emitterPosition, float 
 	Add(life, pos, vel, acc, startSize, endSize);
 }
 
+void ParticleIndi::FlashParticle(const DirectX::XMFLOAT3 emitterPosition, float startSize, float endSize, int life)
+{
+	XMFLOAT3 pos{};
+	XMFLOAT3 vel{};
+	XMFLOAT3 acc{};
+
+	float randam = rand();
+	pos = emitterPosition;
+	vel.x = 1.0f;
+	acc.x = -0.01f;
+	Add(life, pos, vel, acc, startSize, endSize);
+	vel.x = -1.0f;
+	acc.x = 0.01;
+	Add(life, pos, vel, acc, startSize, endSize);
+	vel.x = 0.0f;
+	acc.x = 0.0f;
+	vel.y = -1.0f;
+	acc.y = 0.01;
+	Add(life, pos, vel, acc, startSize, endSize);
+	vel.y = 1.0f;
+	acc.y = -0.01;
+	Add(life, pos, vel, acc, startSize, endSize);
+}
+
 ParticleControl::ParticleControl()
 {
 }
@@ -989,6 +1014,7 @@ ParticleControl::~ParticleControl()
 	{
 		delete(numbers[i]);
 	}
+	delete(reverce);
 }
 
 void ParticleControl::Update()
@@ -998,6 +1024,7 @@ void ParticleControl::Update()
 	{
 		numbers[i]->Update(Camera::eye.v, Camera::target.v, Camera::up.v);
 	}
+	reverce->Update(Camera::eye.v, Camera::target.v, Camera::up.v);
 }
 
 void ParticleControl::Init()
@@ -1009,19 +1036,20 @@ void ParticleControl::Init()
 	}
 	
 	numbers[0] = numbers[0]->Create(L"Resource/Img/number_0.png");
-	numbers[1] = numbers[0]->Create(L"Resource/Img/number_1.png");
-	numbers[2] = numbers[0]->Create(L"Resource/Img/number_2.png");
-	numbers[3] = numbers[0]->Create(L"Resource/Img/number_3.png");
-	numbers[4] = numbers[0]->Create(L"Resource/Img/number_4.png");
-	numbers[5] = numbers[0]->Create(L"Resource/Img/number_5.png");
-	numbers[6] = numbers[0]->Create(L"Resource/Img/number_6.png");
-	numbers[7] = numbers[0]->Create(L"Resource/Img/number_7.png");
-	numbers[8] = numbers[0]->Create(L"Resource/Img/number_8.png");
-	numbers[9] = numbers[0]->Create(L"Resource/Img/number_9.png");
+	numbers[1] = numbers[1]->Create(L"Resource/Img/number_1.png");
+	numbers[2] = numbers[2]->Create(L"Resource/Img/number_2.png");
+	numbers[3] = numbers[3]->Create(L"Resource/Img/number_3.png");
+	numbers[4] = numbers[4]->Create(L"Resource/Img/number_4.png");
+	numbers[5] = numbers[5]->Create(L"Resource/Img/number_5.png");
+	numbers[6] = numbers[6]->Create(L"Resource/Img/number_6.png");
+	numbers[7] = numbers[7]->Create(L"Resource/Img/number_7.png");
+	numbers[8] = numbers[8]->Create(L"Resource/Img/number_8.png");
+	numbers[9] = numbers[9]->Create(L"Resource/Img/number_9.png");
 	for (int i = 0; i < 10; i++)
 	{
 		numbers[i]->alpha = 0.0f;
 	}
+	reverce = reverce->Create(L"Resource/Img/combo.png");
 }
 
 void ParticleControl::Draw()
@@ -1030,4 +1058,5 @@ void ParticleControl::Draw()
 	{
 		ParticleDraw(BaseDirectX::cmdList.Get(), numbers[i]);
 	}
+	ParticleDraw(BaseDirectX::cmdList.Get(), reverce);
 }
