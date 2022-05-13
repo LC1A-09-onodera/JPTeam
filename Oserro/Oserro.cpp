@@ -2313,7 +2313,7 @@ void OthelloManager::SetNormaMove()
 void OthelloManager::StartNormaMode(int stageNum)
 {
 	normaChecker.Reset();
-	StartNormaField();
+	StartNormaField(stageNum);
 	isNormaMode = true;
 }
 
