@@ -231,9 +231,6 @@
     <ClInclude Include="IpAddress\IpAddress.h">
       <Filter>Udp</Filter>
     </ClInclude>
-    <ClInclude Include="Bomb\Blast.h">
-      <Filter>Bomb</Filter>
-    </ClInclude>
     <ClInclude Include="Oserro\Oserro.h">
       <Filter>Oserro</Filter>
     </ClInclude>
@@ -242,6 +239,15 @@
     </ClInclude>
     <ClInclude Include="CheakOthello\CheakOthello.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="OthlloPlayer\OthlloPlayer.h">
+      <Filter>Oserro</Filter>
+    </ClInclude>
+    <ClInclude Include="NormaChecker\NormaChecker.h">
+      <Filter>Oserro</Filter>
+    </ClInclude>
+    <ClInclude Include="LightObject\LightObject.h">
+      <Filter>ソース ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -359,9 +365,6 @@
     <ClCompile Include="IpAddress\IpAddress.cpp">
       <Filter>Udp</Filter>
     </ClCompile>
-    <ClCompile Include="Bomb\Blast.cpp">
-      <Filter>Bomb</Filter>
-    </ClCompile>
     <ClCompile Include="Oserro\Oserro.cpp">
       <Filter>Oserro</Filter>
     </ClCompile>
@@ -369,6 +372,15 @@
       <Filter>3DObjectParticle</Filter>
     </ClCompile>
     <ClCompile Include="CheakOthello\CheakOthello.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="OthlloPlayer\OthlloPlayer.cpp">
+      <Filter>Oserro</Filter>
+    </ClCompile>
+    <ClCompile Include="NormaChecker\NormaChecker.cpp">
+      <Filter>Oserro</Filter>
+    </ClCompile>
+    <ClCompile Include="LightObject\LightObject.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
