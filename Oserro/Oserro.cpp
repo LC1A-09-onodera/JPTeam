@@ -1881,8 +1881,19 @@ void OthelloManager::TypeXI(list<Othello>::iterator playerItr, list<Othello>::it
 void OthelloManager::TypeUp(list<Othello>::iterator playerItr, list<Othello>::iterator nextItr, int x, int y)
 {
 	bool OnPlayer = playerItr != othellos.end();
+	bool isNextPanel = nextItr != othellos.end();
+	bool isSpawnPanel = isNextPanel;
+	if (isNextPanel)
+	{
+		if (nextItr->GetGameData()->isSpawn)
+		{
+		int a = nextItr->GetGameData()->spawnTimer;
+			float nowScale = static_cast<float>(a) / SpawnAnimationTimerMax;
+			isSpawnPanel = nowScale >= 0.6f;
+		}
+	}
 	//ˆÚ“®æ‚Éƒpƒlƒ‹‚ª‚ ‚é‚©
-	if (nextItr != othellos.end())
+	if (isNextPanel && isSpawnPanel)
 	{
 		float nextStep = 0.0f;
 		float nowStep = 0.0f;
@@ -1928,6 +1939,10 @@ void OthelloManager::TypeUp(list<Othello>::iterator playerItr, list<Othello>::it
 	{
 		if (OnPlayer)
 		{
+			if (isNextPanel)
+			{
+				nextItr->GetGameData()->isDead = true;
+			}
 			bool isNotMovePanel = (playerItr->GetGameData()->isVanish || playerItr->GetGameData()->isSpawn || playerItr->GetGameData()->isSandwich);
 			bool isNotDown = (downStepCount < downStepCountMax &&isNotMovePanel);
 			if (isNotDown)
