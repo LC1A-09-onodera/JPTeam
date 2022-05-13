@@ -1125,7 +1125,7 @@ const vector<vector<SendOthelloData>> &OthelloManager::Send()
 	{
 		OthelloData gameDatas = *itr->GetGameData();
 		SendOthelloData data;
-		if (gameDatas.isPlayer || gameDatas.isReverce || gameDatas.isSpawn)
+		if (gameDatas.isPlayer || gameDatas.isSpawn)
 		{
 			continue;
 		}
@@ -1171,6 +1171,9 @@ void OthelloManager::Receive(const vector<vector<SendOthelloData>> &data)
 
 	//
 	auto itr = othellos.begin();
+	int chainName = itr->GetGameData()->chainName;
+
+
 	list<list<Othello>::iterator> sandOthellos;
 	list<list<Othello>::iterator> repairOthellos;
 	//生きているやつを挟んだフラグ
@@ -1878,8 +1881,19 @@ void OthelloManager::TypeXI(list<Othello>::iterator playerItr, list<Othello>::it
 void OthelloManager::TypeUp(list<Othello>::iterator playerItr, list<Othello>::iterator nextItr, int x, int y)
 {
 	bool OnPlayer = playerItr != othellos.end();
+	bool isNextPanel = nextItr != othellos.end();
+	bool isSpawnPanel = isNextPanel;
+	if (isNextPanel)
+	{
+		if (nextItr->GetGameData()->isSpawn)
+		{
+		int a = nextItr->GetGameData()->spawnTimer;
+			float nowScale = static_cast<float>(a) / SpawnAnimationTimerMax;
+			isSpawnPanel = nowScale >= 0.6f;
+		}
+	}
 	//移動先にパネルがあるか
-	if (nextItr != othellos.end())
+	if (isNextPanel && isSpawnPanel)
 	{
 		float nextStep = 0.0f;
 		float nowStep = 0.0f;
@@ -1925,6 +1939,10 @@ void OthelloManager::TypeUp(list<Othello>::iterator playerItr, list<Othello>::it
 	{
 		if (OnPlayer)
 		{
+			if (isNextPanel)
+			{
+				nextItr->GetGameData()->isDead = true;
+			}
 			bool isNotMovePanel = (playerItr->GetGameData()->isVanish || playerItr->GetGameData()->isSpawn || playerItr->GetGameData()->isSandwich);
 			bool isNotDown = (downStepCount < downStepCountMax &&isNotMovePanel);
 			if (isNotDown)
