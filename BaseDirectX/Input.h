@@ -2,7 +2,7 @@
 #define DIRECTINPUT_VERSION  0x0800
 #include <dinput.h>
 #include <windef.h>
-#include <Windows.h>
+//#include <Windows.h>
 #include "BaseDirectX.h"
 #include "DirectInput.h"
 

@@ -21,6 +21,7 @@ struct FormatChunk
 
 struct SoundData
 {
+	~SoundData();
 	WAVEFORMATEX wfex;
 	BYTE *pBuffer;
 	unsigned int bufferSize;
@@ -44,6 +45,7 @@ void SoundLoad(const char *filename, SoundData &sound);
 void SoundUnload(SoundData *sounddata);
 //サウンド再生
 void SoundPlayerWave(SoundData &soundData);
+void SoundPlayLoop(SoundData &soundData);
 //サウンドを止める
 void SoundStopWave(SoundData &soundData);
 //一度だけ鳴らす

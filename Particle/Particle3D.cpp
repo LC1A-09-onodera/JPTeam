@@ -952,6 +952,7 @@ void ParticleIndi::BackParticle(const DirectX::XMFLOAT3 emitterPosition, float s
 	Add(life, pos, vel, acc, startSize, endSize);
 }
 
+
 void ParticleIndi::FlashParticle(const DirectX::XMFLOAT3 emitterPosition, float startSize, float endSize, int life)
 {
 	XMFLOAT3 pos{};

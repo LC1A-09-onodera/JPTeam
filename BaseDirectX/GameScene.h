@@ -2,18 +2,13 @@
 #include "../3DModel/Model.h"
 #include "../Camera/Camera.h"
 #include "../Sprite/Sprite.h"
-#include "../Player/Player.h"
-//#include "../Enemy/Enemy.h"
 #include "../Light/Light.h"
-#include "../RenderTarget/RenderTarget.h"
 #include "../PostEffect/PostEffect.h"
 #include "../FBXObject/FBXObject.h"
 #include "../FbxLoader/FbxLoader.h"
-#include "../King/King.h"
-#include "../Bomb/BombManager.h"
 #include "../Oserro/Oserro.h"
 #include "../CheakOthello/CheakOthello.h"
-#include "../water/water.h"
+#include "../Sound/Sound.h"
 enum GameSceneName { TITLE, SELECT, GAME, END, RESULT };
 
 class GameScene
@@ -63,14 +58,10 @@ public://シーンで使うもの
 	float circleShadowAtten[3] = { 0.5f, 0.6f, 0.0f };
 	float circleShadowFactorAngle[2] = { 0.0f, 0.0f };
 
-	Tex stageFrameTex;
-	Sprite stageFrameSp;
-
 	PostEffect postEffect;
 	Model sample;
 	OthelloManager othelloManager;
 	CheakOthello checkObject;
-	Water water;
 	Sprite title;
 	Sprite titleBack;
 	Sprite spaceBack;
@@ -116,12 +107,12 @@ public://シーンで使うもの
 	Model sky;
 	Model othelloStage;
 
-	SoundData selectSound;
+	/*SoundData selectSound;
 	SoundData timeUpSound;
 	SoundData enterSound;
 	SoundData BGMSound;
 	SoundData countdDownSound;
-	SoundData startSound;
+	SoundData startSound;*/
 	bool isPouse;
 	int selectPouse = 0;
 	const int selectMaxPouse = 2;
@@ -161,6 +152,16 @@ public://シーンで使うもの
 	bool selectWindow = false;
 	//モードセレクトに入るかどうかをチェック
 	bool select = false;
+
+	int selectStageNum = 1;
+	bool selectStage = false;
+
+	//動く方向右がfalse;左がture;
+	bool selectEaseDirection = false;
+	bool selectEase = false;
+	float selectEaseTime = 0.0f;
+	float selectNumDistance = 10.0f;
+	Sprite selectStageNumSprite[10];
 
 	bool isScorePuls;
 };

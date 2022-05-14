@@ -12,26 +12,32 @@ void ObjectParticle3D::Add(XMFLOAT3& emitter, ParticleType type)
 	if (type == ParticleType::Exprotion)
 	{
 		InitExprotion(emitter);
+		this->type = type;
 	}
 	else if (type == ParticleType::Converge)
 	{
 		InitConverge(emitter);
+		this->type = type;
 	}
 	else if (type == ParticleType::TITLE)
 	{
 		InitTitle(emitter);
+		this->type = type;
 	}
 	else if (type == ParticleType::Swell)
 	{
 		InitSwell(emitter);
+		this->type = type;
 	}
 	else if (type == ParticleType::Target)
 	{
 		InitTarget(emitter);
+		this->type = type;
 	}
 	else if (type == ParticleType::Tornado)
 	{
 		InitTornado(emitter);
+		this->type = type;
 	}
 	else if (type == ParticleType::Born)
 	{
