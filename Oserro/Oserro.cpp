@@ -1915,7 +1915,8 @@ void OthelloManager::TypeUp(list<Othello>::iterator playerItr, list<Othello>::it
 			nextStep = 1.0f - (static_cast<float>(nextItr->GetGameData()->vanishTimer) / vanishTimerMax);
 			if (OnPlayer && playerItr->GetIsActive())
 			{
-				nowStep = 1.0f - static_cast<float>(playerItr->GetGameData()->vanishTimer) / vanishTimerMax;
+				//nowStep = 1.0f - static_cast<float>(playerItr->GetGameData()->vanishTimer) / vanishTimerMax;
+				nowStep = 1.0f;
 			}
 		}
 		float stepSize = nextStep - nowStep;
@@ -2535,4 +2536,9 @@ void OthelloManager::LoadAllStage()
 	}
 
 	int stageCount = NormaStartOthellos.size();
+}
+
+int OthelloManager::GetNormaStagesCount()
+{
+	return NormaStartOthellos.size();
 }

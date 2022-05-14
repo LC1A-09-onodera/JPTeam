@@ -152,7 +152,7 @@ namespace OthelloConstData
 
 	const float PanelSize = 10.0f;
 
-	const float panelWallRate = 0.3f;
+	const float panelWallRate = 0.0f;
 	const int downStepCountMax = 0;
 	const int TutorialEndTextTimer = 300;
 
@@ -311,6 +311,8 @@ public://ノルマモード用関数
 	void SetScore(const int score){nowScore = score;}
 
 	void NormaTextDraw();
+	int GetNormaStagesCount();
+
 private://ノルマモード用内部処理関数
 	void StartNormaField(int stageNum = 0);
 	void TestStage();
