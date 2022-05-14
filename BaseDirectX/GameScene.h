@@ -160,8 +160,9 @@ public://ÉVÅ[ÉìÇ≈égÇ§Ç‡ÇÃ
 	bool selectEaseDirection = false;
 	bool selectEase = false;
 	float selectEaseTime = 0.0f;
-	float selectNumDistance = 10.0f;
+	float selectNumDistance = 100.0f;
 	Sprite selectStageNumSprite[10];
-
+	XMFLOAT3 selectStageFarstStartPos;
+	XMFLOAT3 selectStageFarstEndPos;
 	bool isScorePuls;
 };

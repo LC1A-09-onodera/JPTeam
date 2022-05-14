@@ -173,16 +173,16 @@ void GameScene::Init()
 		addConbo[i + 9].CreateSprite(num[9], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
 	}
 
-	selectStageNumSprite[0].CreateSprite(num[0], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-	selectStageNumSprite[1].CreateSprite(num[1], XMFLOAT3(window_width / 2 - 10 + selectNumDistance * 1.0f, window_height / 2 - 10, 0));
-	selectStageNumSprite[2].CreateSprite(num[2], XMFLOAT3(window_width / 2 - 10 + selectNumDistance * 2.0f, window_height / 2 - 10, 0));
-	selectStageNumSprite[3].CreateSprite(num[3], XMFLOAT3(window_width / 2 - 10 + selectNumDistance * 3.0f, window_height / 2 - 10, 0));
-	selectStageNumSprite[4].CreateSprite(num[4], XMFLOAT3(window_width / 2 - 10 + selectNumDistance * 4.0f, window_height / 2 - 10, 0));
-	selectStageNumSprite[5].CreateSprite(num[5], XMFLOAT3(window_width / 2 - 10 + selectNumDistance * 5.0f, window_height / 2 - 10, 0));
-	selectStageNumSprite[6].CreateSprite(num[6], XMFLOAT3(window_width / 2 - 10 + selectNumDistance * 6.0f, window_height / 2 - 10, 0));
-	selectStageNumSprite[7].CreateSprite(num[7], XMFLOAT3(window_width / 2 - 10 + selectNumDistance * 7.0f, window_height / 2 - 10, 0));
-	selectStageNumSprite[8].CreateSprite(num[8], XMFLOAT3(window_width / 2 - 10 + selectNumDistance * 8.0f, window_height / 2 - 10, 0));
-	selectStageNumSprite[9].CreateSprite(num[9], XMFLOAT3(window_width / 2 - 10 + selectNumDistance * 9.0f, window_height / 2 - 10, 0));
+	//selectStageNumSprite[0].CreateSprite(num[0], XMFLOAT3(window_width / 2 - 30,                            window_height / 2 + 50, 0));
+	selectStageNumSprite[1].CreateSprite(num[1], XMFLOAT3(window_width / 2 - 30 + selectNumDistance * 0.0f, window_height / 2 + 50, 0));
+	selectStageNumSprite[2].CreateSprite(num[2], XMFLOAT3(window_width / 2 - 30 + selectNumDistance * 1.0f, window_height / 2 + 50, 0));
+	selectStageNumSprite[3].CreateSprite(num[3], XMFLOAT3(window_width / 2 - 30 + selectNumDistance * 2.0f, window_height / 2 + 50, 0));
+	selectStageNumSprite[4].CreateSprite(num[4], XMFLOAT3(window_width / 2 - 30 + selectNumDistance * 3.0f, window_height / 2 + 50, 0));
+	selectStageNumSprite[5].CreateSprite(num[5], XMFLOAT3(window_width / 2 - 30 + selectNumDistance * 4.0f, window_height / 2 + 50, 0));
+	selectStageNumSprite[6].CreateSprite(num[6], XMFLOAT3(window_width / 2 - 30 + selectNumDistance * 5.0f, window_height / 2 + 50, 0));
+	selectStageNumSprite[7].CreateSprite(num[7], XMFLOAT3(window_width / 2 - 30 + selectNumDistance * 6.0f, window_height / 2 + 50, 0));
+	selectStageNumSprite[8].CreateSprite(num[8], XMFLOAT3(window_width / 2 - 30 + selectNumDistance * 7.0f, window_height / 2 + 50, 0));
+	selectStageNumSprite[9].CreateSprite(num[9], XMFLOAT3(window_width / 2 - 30 + selectNumDistance * 8.0f, window_height / 2 + 50, 0));
 	
 	addReverse.CreateSprite(L"Resource/Img/combo.png", XMFLOAT3(0, 0, 0));
 	scoreSprite.CreateSprite(L"Resource/Img/score.png", XMFLOAT3(0, 0, 0));
@@ -279,6 +279,8 @@ void GameScene::TitleUpdate()
 				else
 				{
 					select = true;
+					selectStage = false;
+					selectMode = false;
 				}
 			}
 		}
@@ -293,14 +295,14 @@ void GameScene::TitleUpdate()
 				{
 					selectMode = true;
 				}
-				else if (selectStage)
+				else if (selectStage && 1 < selectStageNum && !selectEase)
 				{
 					selectEaseDirection = true;
 					selectEase = true;
-					if (0 < selectStageNum)
-					{
-						selectStageNum--;
-					}
+					selectStageFarstStartPos = ConvertXMVECTORtoXMFLOAT3(selectStageNumSprite[1].position);
+					selectStageFarstEndPos = selectStageFarstStartPos;
+					selectStageFarstEndPos.x += selectNumDistance;
+					selectStageNum--;
 				}
 			}
 			if (Input::KeyTrigger(DIK_D) || directInput->IsButtonPush(directInput->RightButton))
@@ -311,11 +313,13 @@ void GameScene::TitleUpdate()
 				{
 					selectMode = false;
 				}
-				else if (selectStage)
+				else if (selectStage && !selectEase)
 				{
 					selectEaseDirection = false;
 					selectEase = true;
-
+					selectStageFarstStartPos = ConvertXMVECTORtoXMFLOAT3(selectStageNumSprite[1].position);
+					selectStageFarstEndPos = selectStageFarstStartPos;
+					selectStageFarstEndPos.x -= selectNumDistance;
 					selectStageNum++;
 				}
 			}
@@ -355,17 +359,19 @@ void GameScene::TitleUpdate()
 	}
 	if (selectEase)
 	{
-		if (selectEaseDirection)
+		selectStageNumSprite[1].position = ConvertXMFLOAT3toXMVECTOR(ShlomonMath::EaseInQuad(selectStageFarstStartPos, selectStageFarstEndPos, selectEaseTime));
+		for (int i = 2; i < 10; i++)
 		{
-			
+			selectStageNumSprite[i].position.m128_f32[0] = selectStageNumSprite[1].position.m128_f32[0] + (selectNumDistance * (i - 1));
 		}
-		else
-		{
-			
-		}
-		selectEaseTime += 0.05f;
+		selectEaseTime += 0.1f;
 		if (selectEaseTime > 1.0f)
 		{
+			selectStageNumSprite[1].position = ConvertXMFLOAT3toXMVECTOR(ShlomonMath::EaseInQuad(selectStageFarstStartPos, selectStageFarstEndPos, 1.0));
+			for (int i = 2; i < 10; i++)
+			{
+				selectStageNumSprite[i].position.m128_f32[0] = selectStageNumSprite[1].position.m128_f32[0] + (selectNumDistance * (i - 1));
+			}
 			selectEase = false;
 			selectEaseTime = 0;
 		}
@@ -799,7 +805,7 @@ void GameScene::TitleDraw()
 		}
 		else
 		{
-			selectStageNumSprite[0].SpriteDraw();
+			//selectStageNumSprite[0].SpriteDraw();
 			selectStageNumSprite[1].SpriteDraw();
 			selectStageNumSprite[2].SpriteDraw();
 			selectStageNumSprite[3].SpriteDraw();
