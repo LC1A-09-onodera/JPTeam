@@ -105,17 +105,14 @@ void PostEffect::Initialize(HLSLShader& shader)
 
 void PostEffect::Draw()
 {
-	if (Input::KeyTrigger(DIK_0))
-	{
-		static int tex = 0;
-		tex = (tex + 1) % 2;
-		D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
-		srvDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
-		srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-		srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-		srvDesc.Texture2D.MipLevels = 1;
-		BaseDirectX::dev->CreateShaderResourceView(renderTarget.texBuff[tex].Get(), &srvDesc, descHeapSRV->GetCPUDescriptorHandleForHeapStart());
-	}
+
+	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
+	srvDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+	srvDesc.Texture2D.MipLevels = 1;
+	BaseDirectX::dev->CreateShaderResourceView(renderTarget.texBuff[0].Get(), &srvDesc, descHeapSRV->GetCPUDescriptorHandleForHeapStart());
+	
 	//ワールド行列更新
 	matWorld = XMMatrixIdentity();
 	matWorld *= XMMatrixRotationZ(rotation);

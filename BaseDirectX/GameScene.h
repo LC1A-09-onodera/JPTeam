@@ -153,5 +153,15 @@ public://シーンで使うもの
 	//モードセレクトに入るかどうかをチェック
 	bool select = false;
 
+	int selectStageNum = 1;
+	bool selectStage = false;
+
+	//動く方向右がfalse;左がture;
+	bool selectEaseDirection = false;
+	bool selectEase = false;
+	float selectEaseTime = 0.0f;
+	float selectNumDistance = 10.0f;
+	Sprite selectStageNumSprite[10];
+
 	bool isScorePuls;
 };

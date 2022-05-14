@@ -77,6 +77,19 @@ void SoundPlayerWave(SoundData &soundData)
     BaseDirectX::result = soundData.pSourceVoice->SubmitSourceBuffer(&soundData.buf);
     BaseDirectX::result = soundData.pSourceVoice->Start();
 }
+void SoundPlayLoop(SoundData& soundData)
+{
+    IXAudio2SourceVoice* pSourceVoice = nullptr;
+    BaseDirectX::result = Sound::xAudio2->CreateSourceVoice(&pSourceVoice, &soundData.wfex);
+    assert(SUCCEEDED(BaseDirectX::result));
+    XAUDIO2_BUFFER buf{};
+    buf.pAudioData = soundData.pBuffer;
+    buf.AudioBytes = soundData.bufferSize;
+    buf.LoopCount = XAUDIO2_LOOP_INFINITE;
+    buf.Flags = XAUDIO2_END_OF_STREAM;
+    BaseDirectX::result = soundData.pSourceVoice->SubmitSourceBuffer(&soundData.buf);
+    BaseDirectX::result = soundData.pSourceVoice->Start();
+}
 void SoundStopWave(SoundData &soundData)
 {
     BaseDirectX::result = soundData.pSourceVoice->Stop();

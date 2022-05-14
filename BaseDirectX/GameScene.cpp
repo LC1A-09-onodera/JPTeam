@@ -172,6 +172,18 @@ void GameScene::Init()
 		addConbo[i + 8].CreateSprite(num[8], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
 		addConbo[i + 9].CreateSprite(num[9], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
 	}
+
+	selectStageNumSprite[0].CreateSprite(num[0], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
+	selectStageNumSprite[1].CreateSprite(num[1], XMFLOAT3(window_width / 2 - 10 + selectNumDistance * 1.0f, window_height / 2 - 10, 0));
+	selectStageNumSprite[2].CreateSprite(num[2], XMFLOAT3(window_width / 2 - 10 + selectNumDistance * 2.0f, window_height / 2 - 10, 0));
+	selectStageNumSprite[3].CreateSprite(num[3], XMFLOAT3(window_width / 2 - 10 + selectNumDistance * 3.0f, window_height / 2 - 10, 0));
+	selectStageNumSprite[4].CreateSprite(num[4], XMFLOAT3(window_width / 2 - 10 + selectNumDistance * 4.0f, window_height / 2 - 10, 0));
+	selectStageNumSprite[5].CreateSprite(num[5], XMFLOAT3(window_width / 2 - 10 + selectNumDistance * 5.0f, window_height / 2 - 10, 0));
+	selectStageNumSprite[6].CreateSprite(num[6], XMFLOAT3(window_width / 2 - 10 + selectNumDistance * 6.0f, window_height / 2 - 10, 0));
+	selectStageNumSprite[7].CreateSprite(num[7], XMFLOAT3(window_width / 2 - 10 + selectNumDistance * 7.0f, window_height / 2 - 10, 0));
+	selectStageNumSprite[8].CreateSprite(num[8], XMFLOAT3(window_width / 2 - 10 + selectNumDistance * 8.0f, window_height / 2 - 10, 0));
+	selectStageNumSprite[9].CreateSprite(num[9], XMFLOAT3(window_width / 2 - 10 + selectNumDistance * 9.0f, window_height / 2 - 10, 0));
+	
 	addReverse.CreateSprite(L"Resource/Img/combo.png", XMFLOAT3(0, 0, 0));
 	scoreSprite.CreateSprite(L"Resource/Img/score.png", XMFLOAT3(0, 0, 0));
 	timeUp.CreateSprite(L"Resource/Img/time_up.png", XMFLOAT3(0, 0, 0));
@@ -277,18 +289,34 @@ void GameScene::TitleUpdate()
 			{
 				/*SoundStopWave(selectSound);
 				SoundPlayOnce(selectSound);*/
-				if (!selectMode)
+				if (!selectStage)
 				{
 					selectMode = true;
+				}
+				else if (selectStage)
+				{
+					selectEaseDirection = true;
+					selectEase = true;
+					if (0 < selectStageNum)
+					{
+						selectStageNum--;
+					}
 				}
 			}
 			if (Input::KeyTrigger(DIK_D) || directInput->IsButtonPush(directInput->RightButton))
 			{
 				/*SoundStopWave(selectSound);
 				SoundPlayOnce(selectSound);*/
-				if (selectMode)
+				if (!selectStage)
 				{
 					selectMode = false;
+				}
+				else if (selectStage)
+				{
+					selectEaseDirection = false;
+					selectEase = true;
+
+					selectStageNum++;
 				}
 			}
 			if ((Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01)) && !isPouse)
@@ -297,24 +325,51 @@ void GameScene::TitleUpdate()
 				/*SoundStopWave(enterSound);
 				SoundPlayOnce(enterSound);*/
 
-				ToGame();
-				titleSelectNum = 0;
+				//スコアアタック
 				if (!selectMode)
 				{
 					othelloManager.StartSetPos();
 					gameTime = gameMaxTime;
 					isTutorial = false;
+					ToGame();
+					titleSelectNum = 0;
 				}
+				//ノルマモード
 				else
 				{
-					othelloManager.StartNormaMode();
-					gameTime = gameMaxTime;
-					isTutorial = false;
+					if (selectStage)
+					{
+						othelloManager.StartNormaMode(selectStageNum);
+						gameTime = gameMaxTime;
+						isTutorial = false;
+						ToGame();
+						titleSelectNum = 0;
+					}
+					else
+					{
+						selectStage = true;
+					}
 				}
 			}
 		}
 	}
-
+	if (selectEase)
+	{
+		if (selectEaseDirection)
+		{
+			
+		}
+		else
+		{
+			
+		}
+		selectEaseTime += 0.05f;
+		if (selectEaseTime > 1.0f)
+		{
+			selectEase = false;
+			selectEaseTime = 0;
+		}
+	}
 	//ポーズ画面に移行する
 	if (!isPouse && (Input::KeyTrigger(DIK_ESCAPE) || directInput->IsButtonPush(directInput->ButtonPouse)))
 	{
@@ -361,6 +416,7 @@ void GameScene::TitleUpdate()
 			{
 				gameTime = 0;
 				isPouse = false;
+				select = false;
 				checkObject.Init();
 			}
 			else if (selectPouse == 2)
@@ -431,11 +487,11 @@ void GameScene::GameUpdate()
 				checkObject.Update(othelloManager.Send(), othelloManager.GetIsSendDataUpdate());
 				othelloManager.Receive(checkObject.GetOthelloDatas());
 			}
-			if (!isTutorial)
+			if (!isTutorial && !selectMode)
 			{
 				gameTime--;
 			}
-			else if (othelloManager.IsTutorialEnd())
+			else if (othelloManager.IsTutorialEnd() && isTutorial)
 			{
 				gameTime--;
 			}
@@ -659,7 +715,7 @@ void GameScene::TitleDraw()
 	Draw3DObject(sky);
 	Draw3DObject(othelloStage);
 	if (!isSceneChange) OthlloPlayer::Draw();
-	
+
 	ParticleControl::Draw();
 	ObjectParticles::Draw();
 	Lights::Draw();
@@ -708,7 +764,7 @@ void GameScene::TitleDraw()
 				kagikakkoEndSprite.SpriteDraw();
 			}
 		}
-		else
+		else if (!selectStage)
 		{
 			gameScoreAttackSprite.ChangeSize(232 * spsize, 63 * spsize);
 			gameScoreAttackSprite.position.m128_f32[0] = window_width / 2 + 110;
@@ -740,6 +796,19 @@ void GameScene::TitleDraw()
 				kagikakkoEndSprite.position.m128_f32[1] = 410;
 				kagikakkoEndSprite.SpriteDraw();
 			}
+		}
+		else
+		{
+			selectStageNumSprite[0].SpriteDraw();
+			selectStageNumSprite[1].SpriteDraw();
+			selectStageNumSprite[2].SpriteDraw();
+			selectStageNumSprite[3].SpriteDraw();
+			selectStageNumSprite[4].SpriteDraw();
+			selectStageNumSprite[5].SpriteDraw();
+			selectStageNumSprite[6].SpriteDraw();
+			selectStageNumSprite[7].SpriteDraw();
+			selectStageNumSprite[8].SpriteDraw();
+			selectStageNumSprite[9].SpriteDraw();
 		}
 	}
 	if (isPouse)
@@ -830,8 +899,8 @@ void GameScene::GameDraw()
 
 	Draw3DObject(sky);
 	Draw3DObject(othelloStage);
-		OthlloPlayer::Draw();
-	
+	OthlloPlayer::Draw();
+
 	ObjectParticles::Draw();
 	ParticleControl::Draw();
 	othelloManager.Draw();
