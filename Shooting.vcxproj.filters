@@ -276,6 +276,21 @@
     <ClInclude Include="CheakOthello\CheakOthello.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="OthlloPlayer\OthlloPlayer.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseDirectX\Library.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Thunder\Thunder.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="LightObject\LightObject.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="NormaChecker\NormaChecker.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -419,6 +434,18 @@
     <ClCompile Include="CheakOthello\CheakOthello.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="OthlloPlayer\OthlloPlayer.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Thunder\Thunder.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="LightObject\LightObject.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="NormaChecker\NormaChecker.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resource\HLSL\OBJPixelShader.hlsl" />
@@ -444,6 +471,9 @@
     <FxCompile Include="Resource\HLSL\OBJHS.hlsl" />
     <FxCompile Include="Resource\HLSL\SamplePS.hlsl" />
     <FxCompile Include="Resource\HLSL\SampleVS.hlsl" />
+    <FxCompile Include="Resource\HLSL\OthelloPS.hlsl" />
+    <FxCompile Include="Resource\HLSL\OthelloVS.hlsl" />
+    <FxCompile Include="Resource\HLSL\FramePS.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resource\HLSL\BSH.hlsli" />
