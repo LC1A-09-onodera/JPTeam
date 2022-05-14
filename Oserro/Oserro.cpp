@@ -1940,7 +1940,7 @@ void OthelloManager::TypeUp(list<Othello>::iterator playerItr, list<Othello>::it
 	{
 		if (OnPlayer)
 		{
-			if (isNextPanel)
+			if (isNextPanel && !playerItr->GetGameData()->isSandwich)
 			{
 				nextItr->GetGameData()->isDead = true;
 			}
