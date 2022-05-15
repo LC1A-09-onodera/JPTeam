@@ -1169,7 +1169,7 @@ void GameScene::ResultDraw()
 	BaseDirectX::UpdateFront();
 	//PostEffectのDraw
 	//postEffect.Draw();
-	OthlloPlayer::Draw();
+	//OthlloPlayer::Draw();
 	Draw3DObject(sky);
 	Draw3DObject(othelloStage);
 	//スプライトの描画-------------------------
