@@ -208,8 +208,10 @@ void GameScene::Init()
 	backSprite.CreateSprite(L"Resource/Img/back.png", XMFLOAT3(0, 0, 0));
 	endSprite.CreateSprite(L"Resource/Img/end.png", XMFLOAT3(0, 0, 0));
 	titleSprite.CreateSprite(L"Resource/Img/go_title.png", XMFLOAT3(0, 0, 0));
-	kagikakkoStartSprite.CreateSprite(L"Resource/Img/kagikakko_start.png", XMFLOAT3(0, 0, 0));
-	kagikakkoEndSprite.CreateSprite(L"Resource/Img/kagikakko_end.png", XMFLOAT3(0, 0, 0));
+	kagikakkoStartSprite.CreateSprite(L"Resource/Img/select_big_1.png", XMFLOAT3(0, 0, 0));
+	kagikakkoEndSprite.CreateSprite(L"Resource/Img/select_big_0.png", XMFLOAT3(0, 0, 0));
+	kagikakkoSelectStartSprite.CreateSprite(L"Resource/Img/select_0.png", XMFLOAT3(0, 0, 0));
+	kagikakkoSelectEndSprite.CreateSprite(L"Resource/Img/select_1.png", XMFLOAT3(0, 0, 0));
 	tutorialSprite.CreateSprite(L"Resource/Img/tutorial.png", XMFLOAT3(0, 0, 0));
 	gameScoreAttackSprite.CreateSprite(L"Resource/Img/score_attack.png", XMFLOAT3(0, 0, 0));
 	gameNormaSprite.CreateSprite(L"Resource/Img/quota.png", XMFLOAT3(0, 0, 0));
@@ -750,19 +752,19 @@ void GameScene::TitleDraw()
 			if (titleSelectNum == 0)
 			{
 				kagikakkoStartSprite.ChangeSize(30, 70);
-				kagikakkoStartSprite.position.m128_f32[0] = window_width / 2 + 80;
-				kagikakkoStartSprite.position.m128_f32[1] = 400;
+				kagikakkoStartSprite.position.m128_f32[0] = window_width / 2 + 60;
+				kagikakkoStartSprite.position.m128_f32[1] = 410;
 				kagikakkoStartSprite.SpriteDraw();
 				kagikakkoEndSprite.ChangeSize(30, 70);
-				kagikakkoEndSprite.position.m128_f32[0] = window_width / 2 + 370;
+				kagikakkoEndSprite.position.m128_f32[0] = window_width / 2 + 390;
 				kagikakkoEndSprite.position.m128_f32[1] = 410;
 				kagikakkoEndSprite.SpriteDraw();
 			}
 			else
 			{
 				kagikakkoStartSprite.ChangeSize(30, 70);
-				kagikakkoStartSprite.position.m128_f32[0] = window_width / 2 - 430;
-				kagikakkoStartSprite.position.m128_f32[1] = 400;
+				kagikakkoStartSprite.position.m128_f32[0] = window_width / 2 - 440;
+				kagikakkoStartSprite.position.m128_f32[1] = 410;
 				kagikakkoStartSprite.SpriteDraw();
 				kagikakkoEndSprite.ChangeSize(30, 70);
 				kagikakkoEndSprite.position.m128_f32[0] = window_width / 2 - 10;
@@ -783,11 +785,11 @@ void GameScene::TitleDraw()
 			if (!selectMode)
 			{
 				kagikakkoStartSprite.ChangeSize(30, 70);
-				kagikakkoStartSprite.position.m128_f32[0] = window_width / 2 + 80;
-				kagikakkoStartSprite.position.m128_f32[1] = 400;
+				kagikakkoStartSprite.position.m128_f32[0] = window_width / 2 + 75;
+				kagikakkoStartSprite.position.m128_f32[1] = 410;
 				kagikakkoStartSprite.SpriteDraw();
 				kagikakkoEndSprite.ChangeSize(30, 70);
-				kagikakkoEndSprite.position.m128_f32[0] = window_width / 2 + 370;
+				kagikakkoEndSprite.position.m128_f32[0] = window_width / 2 + 400;
 				kagikakkoEndSprite.position.m128_f32[1] = 410;
 				kagikakkoEndSprite.SpriteDraw();
 			}
@@ -795,7 +797,7 @@ void GameScene::TitleDraw()
 			{
 				kagikakkoStartSprite.ChangeSize(30, 70);
 				kagikakkoStartSprite.position.m128_f32[0] = window_width / 2 - 430;
-				kagikakkoStartSprite.position.m128_f32[1] = 400;
+				kagikakkoStartSprite.position.m128_f32[1] = 410;
 				kagikakkoStartSprite.SpriteDraw();
 				kagikakkoEndSprite.ChangeSize(30, 70);
 				kagikakkoEndSprite.position.m128_f32[0] = window_width / 2 - 50;
@@ -815,6 +817,13 @@ void GameScene::TitleDraw()
 			selectStageNumSprite[7].SpriteDraw();
 			selectStageNumSprite[8].SpriteDraw();
 			selectStageNumSprite[9].SpriteDraw();
+
+			kagikakkoSelectStartSprite.position.m128_f32[0] = 520;
+			kagikakkoSelectStartSprite.position.m128_f32[1] = 410;
+			kagikakkoSelectEndSprite.position.m128_f32[0] = 700;
+			kagikakkoSelectEndSprite.position.m128_f32[1] = 410;
+			kagikakkoSelectStartSprite.SpriteDraw();
+			kagikakkoSelectEndSprite.SpriteDraw();
 		}
 	}
 	if (isPouse)
@@ -835,34 +844,34 @@ void GameScene::TitleDraw()
 		if (selectPouse == 0)
 		{
 			kagikakkoStartSprite.ChangeSize(30, 70);
-			kagikakkoStartSprite.position.m128_f32[0] = window_width / 2 - 120;
-			kagikakkoStartSprite.position.m128_f32[1] = window_height / 2 - 10;
+			kagikakkoStartSprite.position.m128_f32[0] = window_width / 2 - 140;
+			kagikakkoStartSprite.position.m128_f32[1] = window_height / 2 + 5;
 			kagikakkoStartSprite.SpriteDraw();
 			kagikakkoEndSprite.ChangeSize(30, 70);
-			kagikakkoEndSprite.position.m128_f32[0] = window_width / 2 + 110;
-			kagikakkoEndSprite.position.m128_f32[1] = window_height / 2 + 15;
+			kagikakkoEndSprite.position.m128_f32[0] = window_width / 2 + 120;
+			kagikakkoEndSprite.position.m128_f32[1] = window_height / 2 + 5;
 			kagikakkoEndSprite.SpriteDraw();
 		}
 		else if (selectPouse == 1)
 		{
 			kagikakkoStartSprite.ChangeSize(30, 70);
-			kagikakkoStartSprite.position.m128_f32[0] = window_width / 2 - 120;
-			kagikakkoStartSprite.position.m128_f32[1] = window_height / 2 + 70;
+			kagikakkoStartSprite.position.m128_f32[0] = window_width / 2 - 140;
+			kagikakkoStartSprite.position.m128_f32[1] = window_height / 2 + 85;
 			kagikakkoStartSprite.SpriteDraw();
 			kagikakkoEndSprite.ChangeSize(30, 70);
-			kagikakkoEndSprite.position.m128_f32[0] = window_width / 2 + 110;
-			kagikakkoEndSprite.position.m128_f32[1] = window_height / 2 + 95;
+			kagikakkoEndSprite.position.m128_f32[0] = window_width / 2 + 120;
+			kagikakkoEndSprite.position.m128_f32[1] = window_height / 2 + 85;
 			kagikakkoEndSprite.SpriteDraw();
 		}
 		else if (selectPouse == 2)
 		{
 			kagikakkoStartSprite.ChangeSize(30, 70);
-			kagikakkoStartSprite.position.m128_f32[0] = window_width / 2 - 120;
-			kagikakkoStartSprite.position.m128_f32[1] = window_height / 2 + 160;
+			kagikakkoStartSprite.position.m128_f32[0] = window_width / 2 - 140;
+			kagikakkoStartSprite.position.m128_f32[1] = window_height / 2 + 165;
 			kagikakkoStartSprite.SpriteDraw();
 			kagikakkoEndSprite.ChangeSize(30, 70);
 			kagikakkoEndSprite.position.m128_f32[0] = window_width / 2 + 70;
-			kagikakkoEndSprite.position.m128_f32[1] = window_height / 2 + 175;
+			kagikakkoEndSprite.position.m128_f32[1] = window_height / 2 + 165;
 			kagikakkoEndSprite.SpriteDraw();
 		}
 	}
@@ -1107,34 +1116,34 @@ void GameScene::GameDraw()
 		if (selectPouse == 0)
 		{
 			kagikakkoStartSprite.ChangeSize(30, 70);
-			kagikakkoStartSprite.position.m128_f32[0] = window_width / 2 - 120;
-			kagikakkoStartSprite.position.m128_f32[1] = window_height / 2 - 10;
+			kagikakkoStartSprite.position.m128_f32[0] = window_width / 2 - 140;
+			kagikakkoStartSprite.position.m128_f32[1] = window_height / 2 + 5;
 			kagikakkoStartSprite.SpriteDraw();
 			kagikakkoEndSprite.ChangeSize(30, 70);
-			kagikakkoEndSprite.position.m128_f32[0] = window_width / 2 + 110;
-			kagikakkoEndSprite.position.m128_f32[1] = window_height / 2 + 15;
+			kagikakkoEndSprite.position.m128_f32[0] = window_width / 2 + 125;
+			kagikakkoEndSprite.position.m128_f32[1] = window_height / 2 + 5;
 			kagikakkoEndSprite.SpriteDraw();
 		}
 		else if (selectPouse == 1)
 		{
 			kagikakkoStartSprite.ChangeSize(30, 70);
-			kagikakkoStartSprite.position.m128_f32[0] = window_width / 2 - 120;
-			kagikakkoStartSprite.position.m128_f32[1] = window_height / 2 + 70;
+			kagikakkoStartSprite.position.m128_f32[0] = window_width / 2 - 140;
+			kagikakkoStartSprite.position.m128_f32[1] = window_height / 2 + 80;
 			kagikakkoStartSprite.SpriteDraw();
 			kagikakkoEndSprite.ChangeSize(30, 70);
-			kagikakkoEndSprite.position.m128_f32[0] = window_width / 2 + 110;
-			kagikakkoEndSprite.position.m128_f32[1] = window_height / 2 + 95;
+			kagikakkoEndSprite.position.m128_f32[0] = window_width / 2 + 125;
+			kagikakkoEndSprite.position.m128_f32[1] = window_height / 2 + 80;
 			kagikakkoEndSprite.SpriteDraw();
 		}
 		else if (selectPouse == 2)
 		{
 			kagikakkoStartSprite.ChangeSize(30, 70);
-			kagikakkoStartSprite.position.m128_f32[0] = window_width / 2 - 120;
-			kagikakkoStartSprite.position.m128_f32[1] = window_height / 2 + 160;
+			kagikakkoStartSprite.position.m128_f32[0] = window_width / 2 - 140;
+			kagikakkoStartSprite.position.m128_f32[1] = window_height / 2 + 170;
 			kagikakkoStartSprite.SpriteDraw();
 			kagikakkoEndSprite.ChangeSize(30, 70);
-			kagikakkoEndSprite.position.m128_f32[0] = window_width / 2 + 70;
-			kagikakkoEndSprite.position.m128_f32[1] = window_height / 2 + 175;
+			kagikakkoEndSprite.position.m128_f32[0] = window_width / 2 + 75;
+			kagikakkoEndSprite.position.m128_f32[1] = window_height / 2 + 170;
 			kagikakkoEndSprite.SpriteDraw();
 		}
 	}
