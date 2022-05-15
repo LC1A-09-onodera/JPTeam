@@ -315,7 +315,7 @@ void GameScene::TitleUpdate()
 				{
 					selectMode = false;
 				}
-				else if (selectStage < 10 && selectStage && !selectEase)
+				else if (selectStageNum < othelloManager.GetNormaStagesCount() && selectStage && !selectEase)
 				{
 					selectEaseDirection = false;
 					selectEase = true;
