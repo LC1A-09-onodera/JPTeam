@@ -315,7 +315,7 @@ void GameScene::TitleUpdate()
 				{
 					selectMode = false;
 				}
-				else if (selectStage && !selectEase)
+				else if (selectStage < 10 && selectStage && !selectEase)
 				{
 					selectEaseDirection = false;
 					selectEase = true;
