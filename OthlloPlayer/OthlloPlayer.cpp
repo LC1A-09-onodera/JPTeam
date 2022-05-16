@@ -21,9 +21,9 @@ void OthlloPlayer::Init()
 	playerFbxObj = new FBXObject;
 	playerFbxObj->Initialize();
 	playerFbxObj->SetModel(playerFbx);
-	playerFbxObj->rotation = { 90, 0, 0 };
-	playerFbxObj->scale = { 0.5f, 0.5f, 0.5f };
-	playerFbxObj->position = { 0, 0, -2 };
+	playerFbxObj->rotation = { 0, 180, 0 };
+	playerFbxObj->scale = { 0.008f, 0.008f, 0.008f };
+	playerFbxObj->position = { 0, 0, -5 };
 	startPos = { 0, 0, -2 };
 	//playerFbxObj->PlayAnimation();
 	each.CreateConstBuff0();

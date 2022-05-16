@@ -653,7 +653,7 @@ void ObjectParticle3D::UpdateBornAndShake()
 	each.position = ConvertXMFLOAT3toXMVECTOR(startPosition);
 	each.position.m128_f32[0] += (rand() % (int)(20.0f * easeTime + 1) - (9 * easeTime)) / 400.0f;
 	each.position.m128_f32[1] += (rand() % (int)(20.0f * easeTime + 1) - (9 * easeTime)) / 400.0f;
-	easeTime -= 0.002f;
+	easeTime -= 0.0017f;
 	if (easeTime <= 0.0f)
 	{
 		time = 0;

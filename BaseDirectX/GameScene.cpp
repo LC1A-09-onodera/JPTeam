@@ -722,7 +722,7 @@ void GameScene::TitleDraw()
 	//postEffect.Draw();
 	Draw3DObject(sky);
 	Draw3DObject(othelloStage);
-	if (!isSceneChange) OthlloPlayer::Draw();
+	//if (!isSceneChange) OthlloPlayer::Draw();
 
 	ParticleControl::Draw();
 	ObjectParticles::Draw();
