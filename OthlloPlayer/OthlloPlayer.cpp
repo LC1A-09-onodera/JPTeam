@@ -17,18 +17,18 @@ FBXObject* OthlloPlayer::playerFbxObj;
 void OthlloPlayer::Init()
 {
 	player.CreateModel("player", ShaderManager::playerShader);
-	playerFbx = FbxLoader::GetInstance()->LoadModelFromFile("newPlayer_move");
+	playerFbx = FbxLoader::GetInstance()->LoadModelFromFile("newPlayer");
 	playerFbxObj = new FBXObject;
 	playerFbxObj->Initialize();
 	playerFbxObj->SetModel(playerFbx);
-	playerFbxObj->rotation = { 0, 180, -90 };
+	playerFbxObj->rotation = { 90, 0, 0 };
 	playerFbxObj->scale = { 0.5f, 0.5f, 0.5f };
 	playerFbxObj->position = { 0, 0, -2 };
 	startPos = { 0, 0, -2 };
 	//playerFbxObj->PlayAnimation();
 	each.CreateConstBuff0();
 	each.CreateConstBuff1();
-	each.rotation = { 0, -90, 90 };
+	each.rotation = { 0, -90, 0 };
 	each.scale = { 0.5f, 0.5f, 0.5f };
 	each.position = { 0, 0, -2 ,1 };
 	//SoundLoad("Resource/Sound/move_.wav", moveSound);
@@ -106,7 +106,7 @@ void OthlloPlayer::EaseUpdate()
 	}
 	each.position = ConvertXMFLOAT3toXMVECTOR(ShlomonMath::EaseInQuad(startPos, endPos, easeTime));
 	playerFbxObj->position = ShlomonMath::EaseInQuad(startPos, endPos, easeTime);
-	playerFbxObj->rotation.y = 90;
+	//playerFbxObj->rotation.y = 90;
 }
 
 void OthlloPlayer::MoveCancel()
