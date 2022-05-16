@@ -721,6 +721,7 @@ void OthelloManager::TutorialUpdate()
 		if (TutorialTimer >= tutorialTimerLimit)
 		{
 			scenes = TutorialSceneFlow::ChainSpawn;
+			ObjectParticles::othelloFrame.DeleteAllParticle();
 		}
 		if (retry)
 		{
