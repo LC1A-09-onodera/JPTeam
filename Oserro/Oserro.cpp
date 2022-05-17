@@ -126,7 +126,6 @@ void Othello::Draw()
 		Draw3DObject(*model);
 		if (data.type == STOP && !GetIsActive())
 		{
-		each.scale = XMFLOAT3(2, 2, 1);
 			chainModel->Update(&each);
 			Draw3DObject(*chainModel);
 		}
@@ -919,8 +918,11 @@ void OthelloManager::NormaUpdate(int combo)
 	{
 		isFieldUpdate = true;
 	}
-	Undo();
-	normaChecker.Update(othellos, nowScore, nowMaxCombo);
+	if (isNormaMode)
+	{
+		Undo();
+		normaChecker.Update(othellos, nowScore, nowMaxCombo);
+	}
 }
 void OthelloManager::Draw()
 {
@@ -1182,8 +1184,12 @@ void OthelloManager::Receive(const vector<vector<SendOthelloData>> &data)
 {
 	sendDatas = data;
 
-	//
+	if (othellos.size() == 0)
+	{
+		return;
+	}
 	auto itr = othellos.begin();
+
 	int chainName = itr->GetGameData()->chainName;
 
 
@@ -1900,7 +1906,7 @@ void OthelloManager::TypeUp(list<Othello>::iterator playerItr, list<Othello>::it
 	{
 		if (nextItr->GetGameData()->isSpawn)
 		{
-		int a = nextItr->GetGameData()->spawnTimer;
+			int a = nextItr->GetGameData()->spawnTimer;
 			float nowScale = static_cast<float>(a) / SpawnAnimationTimerMax;
 			isSpawnPanel = nowScale >= 0.6f;
 		}
@@ -2023,7 +2029,7 @@ void OthelloManager::SaveSpawn()
 		if (saveTimer >= saveTimerLimit)
 		{
 			Othello data;
-			data.Init(& oserroModel, &stopOserroModel);
+			data.Init(&oserroModel, &stopOserroModel);
 			bool randFront = rand() % 2;
 			int x = playerPanelPos.x;
 			int y = playerPanelPos.y;
