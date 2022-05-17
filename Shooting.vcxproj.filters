@@ -94,6 +94,21 @@
     <Filter Include="3DObjectParticle">
       <UniqueIdentifier>{316fe141-119a-4bd4-b1aa-eb45bc23d102}</UniqueIdentifier>
     </Filter>
+    <Filter Include="othlloPlayer">
+      <UniqueIdentifier>{01b07d50-2c85-428b-a20b-d46b823ac43d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ground">
+      <UniqueIdentifier>{5583abc1-f68e-4fe2-989b-783d4b64d2d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Thunder">
+      <UniqueIdentifier>{0389b049-f612-464a-ab54-53392f48e70b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LightObject">
+      <UniqueIdentifier>{3c9ebb52-4bdb-482f-b100-efdf155e710e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NormaChecker">
+      <UniqueIdentifier>{10e297d7-7640-485c-be95-e07191c6ed51}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="imgui\imconfig.h">
@@ -276,6 +291,21 @@
     <ClInclude Include="CheakOthello\CheakOthello.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="OthlloPlayer\OthlloPlayer.h">
+      <Filter>othlloPlayer</Filter>
+    </ClInclude>
+    <ClInclude Include="Ground\Ground.h">
+      <Filter>Ground</Filter>
+    </ClInclude>
+    <ClInclude Include="Thunder\Thunder.h">
+      <Filter>Thunder</Filter>
+    </ClInclude>
+    <ClInclude Include="LightObject\LightObject.h">
+      <Filter>LightObject</Filter>
+    </ClInclude>
+    <ClInclude Include="NormaChecker\NormaChecker.h">
+      <Filter>NormaChecker</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -419,6 +449,21 @@
     <ClCompile Include="CheakOthello\CheakOthello.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="OthlloPlayer\OthlloPlayer.cpp">
+      <Filter>othlloPlayer</Filter>
+    </ClCompile>
+    <ClCompile Include="Ground\Ground.cpp">
+      <Filter>Ground</Filter>
+    </ClCompile>
+    <ClCompile Include="Thunder\Thunder.cpp">
+      <Filter>Thunder</Filter>
+    </ClCompile>
+    <ClCompile Include="LightObject\LightObject.cpp">
+      <Filter>LightObject</Filter>
+    </ClCompile>
+    <ClCompile Include="NormaChecker\NormaChecker.cpp">
+      <Filter>NormaChecker</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resource\HLSL\OBJPixelShader.hlsl" />
@@ -444,6 +489,13 @@
     <FxCompile Include="Resource\HLSL\OBJHS.hlsl" />
     <FxCompile Include="Resource\HLSL\SamplePS.hlsl" />
     <FxCompile Include="Resource\HLSL\SampleVS.hlsl" />
+    <FxCompile Include="Resource\HLSL\OthelloPS.hlsl">
+      <Filter>リソース ファイル</Filter>
+    </FxCompile>
+    <FxCompile Include="Resource\HLSL\OthelloVS.hlsl">
+      <Filter>リソース ファイル</Filter>
+    </FxCompile>
+    <FxCompile Include="Resource\HLSL\FramePS.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resource\HLSL\BSH.hlsli" />
