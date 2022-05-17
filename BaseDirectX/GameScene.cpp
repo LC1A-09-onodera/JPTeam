@@ -225,11 +225,12 @@ void GameScene::Init()
 	checkObject.SoundInit();
 	selectGameTypeActive = false;
 	selectGameType = 1;
+	SoundPlayLoop(BGMSound);
 }
 
 void GameScene::TitleUpdate()
 {
-	SoundPlayLoop(BGMSound);
+	//SoundPlayLoop(BGMSound);
 	
 	//オセロのパーティクルを出していく
 	static int particleTime = 0;
@@ -578,11 +579,13 @@ void GameScene::GameUpdate()
 				if (isPouseToTitle == true)
 				{
 					SceneNum = TITLE;
+					SoundPlayLoop(BGMSound);
 					isPouseToTitle = false;
 				}
 				else if (isTutorial == true)
 				{
 					SceneNum = TITLE;
+					SoundPlayLoop(BGMSound);
 					isTutorial = false;
 				}
 				else
@@ -694,7 +697,7 @@ void GameScene::ResultUpdate()
 		SoundStopWave(enterSound);
 		SoundPlayOnce(enterSound);
 		OthlloPlayer::SetPosition(XMFLOAT3(0, 0, -2));
-
+		SoundPlayLoop(BGMSound);
 		SceneNum = TITLE;
 	}
 }

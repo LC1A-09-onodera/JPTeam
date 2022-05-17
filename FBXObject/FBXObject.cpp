@@ -64,6 +64,7 @@ void FBXObject::Update()
 		if (currentTime > endTime)
 		{
 			currentTime = startTime;
+			isPlay = false;
 		}
 	}
 	std::vector<Bone> &bones = model->GetBornes();

@@ -14,14 +14,69 @@ bool OthlloPlayer::isMoveEnd;
 float OthlloPlayer::easeTime;
 FBXModel* OthlloPlayer::playerFbx;
 FBXObject* OthlloPlayer::playerFbxObj;
+
+
+FBXModel* OthlloPlayer::playerStay;
+FBXObject* OthlloPlayer::playerStayObject;
+FBXModel* OthlloPlayer::playerRunStart;
+FBXObject* OthlloPlayer::playerRunStartObject;
+FBXModel* OthlloPlayer::playerRunNow;
+FBXObject* OthlloPlayer::playerRunNowObject;
+FBXModel* OthlloPlayer::playerRunEnd;
+FBXObject* OthlloPlayer::playerRunEndObject;
+FBXModel* OthlloPlayer::playerReverse;
+FBXObject* OthlloPlayer::playerReverseObject;
+
+bool OthlloPlayer::isStay = true;
+bool OthlloPlayer::isRunStart = false;
+bool OthlloPlayer::isRunNow = false;
+bool OthlloPlayer::isRunEnd = false;
+bool OthlloPlayer::isReverse = false;
+
+int OthlloPlayer::runSTime = 0;
+int OthlloPlayer::runNTime = 0;
+int OthlloPlayer::runETime = 0;
+int OthlloPlayer::reverseTime = 0;
+
+const int OthlloPlayer::MaxSTime = 60;
+const int OthlloPlayer::MaxNTime = 60;
+const int OthlloPlayer::MaxETime = 60;
+const int OthlloPlayer::MaxReverseTime = 60;
+
+
 void OthlloPlayer::Init()
 {
 	player.CreateModel("player", ShaderManager::playerShader);
-	playerFbx = FbxLoader::GetInstance()->LoadModelFromFile("newPlayer");
+	playerFbx = FbxLoader::GetInstance()->LoadModelFromFile("player_stay");
+
+	playerStay = FbxLoader::GetInstance()->LoadModelFromFile("player_stay");
+	playerRunStart = FbxLoader::GetInstance()->LoadModelFromFile("player_move_start");
+	playerRunNow = FbxLoader::GetInstance()->LoadModelFromFile("player_move_now");
+	playerRunEnd = FbxLoader::GetInstance()->LoadModelFromFile("player_move_end");
+	playerReverse = FbxLoader::GetInstance()->LoadModelFromFile("player_reverse");
+
+	playerStayObject = new FBXObject;
+	playerRunStartObject = new FBXObject;
+	playerRunNowObject = new FBXObject;
+	playerRunEndObject = new FBXObject;
+	playerReverseObject = new FBXObject;
+
+	playerStayObject->Initialize();
+	playerRunStartObject->Initialize();
+	playerRunNowObject->Initialize();
+	playerRunEndObject->Initialize();
+	playerReverseObject->Initialize();
+
+	playerStayObject->SetModel(playerStay);
+	playerRunStartObject->SetModel(playerRunStart);
+	playerRunNowObject->SetModel(playerRunNow);
+	playerRunEndObject->SetModel(playerRunEnd);
+	playerReverseObject->SetModel(playerReverse);
+
 	playerFbxObj = new FBXObject;
 	playerFbxObj->Initialize();
 	playerFbxObj->SetModel(playerFbx);
-	playerFbxObj->rotation = { 0, 180, 0 };
+	playerFbxObj->rotation = { -30, 0, 0 };
 	playerFbxObj->scale = { 0.008f, 0.008f, 0.008f };
 	playerFbxObj->position = { 0, 0, -5 };
 	startPos = { 0, 0, -2 };
@@ -50,8 +105,53 @@ void OthlloPlayer::Update()
 void OthlloPlayer::Draw()
 {
 	//player.Update(&each);
-	playerFbxObj->Update();
-	playerFbxObj->Draw(BaseDirectX::cmdList.Get());
+	if (isRunStart)
+	{
+		playerRunStartObject->position = playerFbxObj->position;
+		playerRunStartObject->rotation = playerFbxObj->rotation;
+		playerRunStartObject->scale = playerFbxObj->scale;
+		playerRunStartObject->Update(); 
+		playerRunStartObject->Draw(BaseDirectX::cmdList.Get());
+	}
+	else if (isRunNow)
+	{
+		playerRunNowObject->position = playerFbxObj->position;
+		playerRunNowObject->rotation = playerFbxObj->rotation;
+		playerRunNowObject->scale = playerFbxObj->scale;
+		playerRunNowObject->Update();
+		playerRunNowObject->Draw(BaseDirectX::cmdList.Get());
+	}
+	else if (isRunEnd)
+	{
+		playerRunEndObject->position = playerFbxObj->position;
+		playerRunEndObject->rotation = playerFbxObj->rotation;
+		playerRunEndObject->scale = playerFbxObj->scale;
+		playerRunEndObject->Update();
+		playerRunEndObject->Draw(BaseDirectX::cmdList.Get());
+	}
+	else if (isReverse)
+	{
+		playerReverseObject->position = playerFbxObj->position;
+		playerReverseObject->rotation = playerFbxObj->rotation;
+		playerReverseObject->scale = playerFbxObj->scale;
+		playerReverseObject->Update();
+		playerReverseObject->Draw(BaseDirectX::cmdList.Get());
+	}
+	else
+	{
+		playerStayObject->position = playerFbxObj->position;
+		playerStayObject->rotation = playerFbxObj->rotation;
+		playerStayObject->rotation.x = -30;
+		playerStayObject->scale = playerFbxObj->scale;
+		if (!playerStayObject->GetPlay())
+		{
+			playerStayObject->PlayAnimation();
+		}
+		playerStayObject->Update();
+		playerStayObject->Draw(BaseDirectX::cmdList.Get());
+	}
+	//playerFbxObj->Update();
+	//playerFbxObj->Draw(BaseDirectX::cmdList.Get());
 	//Draw3DObject(player);
 }
 
@@ -74,6 +174,11 @@ void OthlloPlayer::Move()
 		isMoveEnd = false;
 		startPos = playerFbxObj->position;
 		endPos = startPos;
+
+		isRunStart = true;
+		playerRunStartObject->PlayAnimation();
+		runSTime = MaxSTime;
+
 		if ((D || padD) && each.position.m128_f32[0] < 6.0f)
 		{
 			endPos.x += MaxMoveAmount;
@@ -92,6 +197,48 @@ void OthlloPlayer::Move()
 		}
 		isEase = true;
 		easeTime = 0;
+	}
+
+	if (isRunStart)
+	{
+		isRunNow = false;
+		isRunEnd = false;
+		if (!playerRunStartObject->GetPlay())
+		{
+			isRunStart = false;
+			isRunNow = true;
+			runNTime = MaxNTime;
+			playerRunNowObject->PlayAnimation();
+		}
+	}
+	else if (isRunNow)
+	{
+		isRunStart = false;
+		isRunEnd = false;
+		if (!playerRunNowObject->GetPlay())
+		{
+			isRunEnd = true;
+			isRunNow = false;
+			runETime = MaxETime;
+			playerRunEndObject->PlayAnimation();
+		}
+	}
+	else if (isRunEnd)
+	{
+		isRunStart = false;
+		isRunNow = false;
+		if (!playerRunEndObject->GetPlay())
+		{
+			isRunEnd = false;
+			isStay = true;
+		}
+	}
+	else if (isStay)
+	{
+		if (!playerRunEndObject->GetPlay())
+		{
+			playerRunEndObject->PlayAnimation();
+		}
 	}
 }
 
