@@ -63,7 +63,7 @@ void OthlloPlayer::Init()
 
 	playerStayObject->Initialize();
 	playerRunStartObject->Initialize();
-	playerRunNowObject->Initialize();
+	playerRunNowObject->Initialize(1);
 	playerRunEndObject->Initialize();
 	playerReverseObject->Initialize();
 
@@ -108,7 +108,8 @@ void OthlloPlayer::Draw()
 	if (isRunStart)
 	{
 		playerRunStartObject->position = playerFbxObj->position;
-		playerRunStartObject->rotation = playerFbxObj->rotation;
+		//playerRunStartObject->rotation = playerFbxObj->rotation;
+		playerRunStartObject->rotation.x = -90;
 		playerRunStartObject->scale = playerFbxObj->scale;
 		playerRunStartObject->Update(); 
 		playerRunStartObject->Draw(BaseDirectX::cmdList.Get());
@@ -116,7 +117,8 @@ void OthlloPlayer::Draw()
 	else if (isRunNow)
 	{
 		playerRunNowObject->position = playerFbxObj->position;
-		playerRunNowObject->rotation = playerFbxObj->rotation;
+		//playerRunNowObject->rotation = playerFbxObj->rotation;
+		playerRunNowObject->rotation.x = -90;
 		playerRunNowObject->scale = playerFbxObj->scale;
 		playerRunNowObject->Update();
 		playerRunNowObject->Draw(BaseDirectX::cmdList.Get());
@@ -124,7 +126,8 @@ void OthlloPlayer::Draw()
 	else if (isRunEnd)
 	{
 		playerRunEndObject->position = playerFbxObj->position;
-		playerRunEndObject->rotation = playerFbxObj->rotation;
+		//playerRunEndObject->rotation = playerFbxObj->rotation;
+		playerRunEndObject->rotation.x = -90;
 		playerRunEndObject->scale = playerFbxObj->scale;
 		playerRunEndObject->Update();
 		playerRunEndObject->Draw(BaseDirectX::cmdList.Get());
@@ -132,7 +135,8 @@ void OthlloPlayer::Draw()
 	else if (isReverse)
 	{
 		playerReverseObject->position = playerFbxObj->position;
-		playerReverseObject->rotation = playerFbxObj->rotation;
+		//playerReverseObject->rotation = playerFbxObj->rotation;
+		playerReverseObject->rotation.x = -90;
 		playerReverseObject->scale = playerFbxObj->scale;
 		playerReverseObject->Update();
 		playerReverseObject->Draw(BaseDirectX::cmdList.Get());
@@ -140,8 +144,8 @@ void OthlloPlayer::Draw()
 	else
 	{
 		playerStayObject->position = playerFbxObj->position;
-		playerStayObject->rotation = playerFbxObj->rotation;
-		playerStayObject->rotation.x = -30;
+		//playerStayObject->rotation = playerFbxObj->rotation;
+		playerStayObject->rotation.z = -90;
 		playerStayObject->scale = playerFbxObj->scale;
 		if (!playerStayObject->GetPlay())
 		{
@@ -175,8 +179,10 @@ void OthlloPlayer::Move()
 		startPos = playerFbxObj->position;
 		endPos = startPos;
 
-		isRunStart = true;
-		playerRunStartObject->PlayAnimation();
+		isRunNow = true;
+		//isRunStart = true;
+		//playerRunStartObject->PlayAnimation();
+		playerRunNowObject->PlayAnimation();
 		runSTime = MaxSTime;
 
 		if ((D || padD) && each.position.m128_f32[0] < 6.0f)
@@ -217,10 +223,12 @@ void OthlloPlayer::Move()
 		isRunEnd = false;
 		if (!playerRunNowObject->GetPlay())
 		{
-			isRunEnd = true;
+			//isRunEnd = true;
+			isStay = true;
 			isRunNow = false;
 			runETime = MaxETime;
-			playerRunEndObject->PlayAnimation();
+			//playerRunEndObject->PlayAnimation();
+			playerStayObject->PlayAnimation();
 		}
 	}
 	else if (isRunEnd)
@@ -235,9 +243,9 @@ void OthlloPlayer::Move()
 	}
 	else if (isStay)
 	{
-		if (!playerRunEndObject->GetPlay())
+		if (!playerStayObject->GetPlay())
 		{
-			playerRunEndObject->PlayAnimation();
+			playerStayObject->PlayAnimation();
 		}
 	}
 }
