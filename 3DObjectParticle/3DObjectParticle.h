@@ -86,6 +86,7 @@ public:
 	static ObjectParticleInfo othello;
 	static ObjectParticleInfo frame;
 	static ObjectParticleInfo othelloFrame;
+	static ObjectParticleInfo six;
 	static void LoadModels();
 	static void Update();
 	static void Draw();

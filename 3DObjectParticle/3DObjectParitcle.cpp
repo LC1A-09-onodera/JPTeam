@@ -7,6 +7,7 @@ ObjectParticleInfo ObjectParticles::triangle;
 ObjectParticleInfo ObjectParticles::othello;
 ObjectParticleInfo ObjectParticles::frame;
 ObjectParticleInfo ObjectParticles::othelloFrame;
+ObjectParticleInfo ObjectParticles::six;
 void ObjectParticle3D::Add(XMFLOAT3& emitter, ParticleType type)
 {
 	if (type == ParticleType::Exprotion)
@@ -127,7 +128,7 @@ void ObjectParticle3D::InitExprotion(XMFLOAT3& emitter)
 	acc.x = acc.x / 400.0f;
 	acc.y = acc.y / 400.0f;
 	acc.z = acc.z / 400.0f;
-	addRotation = GetRandom(2.0f);
+	addRotation = GetRandom(5.0f);
 }
 
 void ObjectParticle::CreateModel(const char* name, HLSLShader& shader, bool smoothing, bool addAlpha)
@@ -653,7 +654,7 @@ void ObjectParticle3D::UpdateBornAndShake()
 	each.position = ConvertXMFLOAT3toXMVECTOR(startPosition);
 	each.position.m128_f32[0] += (rand() % (int)(20.0f * easeTime + 1) - (9 * easeTime)) / 400.0f;
 	each.position.m128_f32[1] += (rand() % (int)(20.0f * easeTime + 1) - (9 * easeTime)) / 400.0f;
-	easeTime -= 0.002f;
+	easeTime -= 0.0017f;
 	if (easeTime <= 0.0f)
 	{
 		time = 0;
@@ -736,6 +737,7 @@ void ObjectParticles::LoadModels()
 	othello.object.CreateModel("newOserro", ShaderManager::playerShader);
 	frame.object.CreateModel("Frame", ShaderManager::playerShader);
 	othelloFrame.object.CreateModel("OthelloFrame", ShaderManager::othelloFrame);
+	six.object.CreateModel("six", ShaderManager::playerShader);
 }
 
 void ObjectParticles::Update()
@@ -744,6 +746,7 @@ void ObjectParticles::Update()
 	othello.Update();
 	frame.Update();
 	othelloFrame.Update();
+	six.Update();
 }
 
 void ObjectParticles::Draw()
@@ -752,13 +755,14 @@ void ObjectParticles::Draw()
 	othello.Draw(othello.object);
 	frame.Draw(frame.object);
 	othelloFrame.Draw(othelloFrame.object);
+	six.Draw(six.object);
 }
 
 void ObjectParticles::DeleteAllParticles()
 {
-
 	triangle.DeleteAllParticle();
 	othello.DeleteAllParticle();
 	frame.DeleteAllParticle();
 	othelloFrame.DeleteAllParticle();
+	six.DeleteAllParticle();
 }

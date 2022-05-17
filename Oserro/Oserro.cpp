@@ -34,7 +34,7 @@ void Othello::Init(OthelloModel *model)
 	each.CreateConstBuff1();
 }
 
-void Othello::Update()
+void Othello::Update(int combo)
 {
 	//タイプがNONE出なかったら生きている
 	bool isAlive = data.type != NONE;
@@ -50,7 +50,7 @@ void Othello::Update()
 	{
 		if (data.isReverce)
 		{
-			ReversUpdate();
+			ReversUpdate(combo);
 		}
 		else if (data.isSandwich)
 		{
@@ -182,7 +182,7 @@ void Othello::SpawnUpdate()
 	}
 }
 
-void Othello::ReversUpdate()
+void Othello::ReversUpdate(int combo)
 {
 	if (data.waitTimer > 0)
 	{
@@ -262,6 +262,7 @@ void Othello::ReversUpdate()
 		data.isVanish = true;
 		XMFLOAT3 pos = ConvertXMVECTORtoXMFLOAT3(each.position);
 		ObjectParticles::othelloFrame.Init(pos, 1, ParticleType::BornAndShake);
+		ObjectParticles::six.Init(pos, combo * 3, ParticleType::Exprotion);
 		////ひっくり返ったら起動フラグをオンにする
 		//data.isMove = true;
 	}
@@ -561,6 +562,7 @@ void Othello::SinkWait()
 	data.isVanish = true;
 	XMFLOAT3 pos = ConvertXMVECTORtoXMFLOAT3(each.position);
 	ObjectParticles::othelloFrame.Init(pos, 1, ParticleType::BornAndShake);
+	ObjectParticles::six.Init(pos, 5, ParticleType::Exprotion);
 }
 
 void Othello::Sink()
@@ -643,7 +645,7 @@ void OthelloManager::Init()
 	LoadAllStage();
 }
 
-void OthelloManager::Update()
+void OthelloManager::Update(int combo)
 {
 	//死ぬ
 	DeadPanel();
@@ -657,7 +659,7 @@ void OthelloManager::Update()
 
 	for (; itr != othellos.end(); ++itr)
 	{
-		itr->Update();
+		itr->Update(combo);
 	}
 	if (Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01))
 	{
@@ -669,7 +671,7 @@ void OthelloManager::Update()
 
 }
 
-void OthelloManager::TutorialUpdate()
+void OthelloManager::TutorialUpdate(int combo)
 {
 	//死ぬ
 	DeadPanel();
@@ -681,7 +683,7 @@ void OthelloManager::TutorialUpdate()
 	bool tutorialOnPlayer = false;
 	for (; itr != othellos.end(); ++itr)
 	{
-		itr->Update();
+		itr->Update(combo);
 		if (!itr->GetIsActive())
 		{
 			panelCount++;
@@ -725,6 +727,7 @@ void OthelloManager::TutorialUpdate()
 		if (TutorialTimer >= tutorialTimerLimit)
 		{
 			scenes = TutorialSceneFlow::ChainSpawn;
+			ObjectParticles::othelloFrame.DeleteAllParticle();
 		}
 		if (retry)
 		{
@@ -886,7 +889,7 @@ void OthelloManager::TutorialTextDraw()
 	}
 }
 
-void OthelloManager::NormaUpdate()
+void OthelloManager::NormaUpdate(int combo)
 {
 	//死ぬ
 	DeadPanel();
@@ -900,7 +903,7 @@ void OthelloManager::NormaUpdate()
 	int nowMaxCombo = 0;
 	for (; itr != othellos.end(); ++itr)
 	{
-		itr->Update();
+		itr->Update(combo);
 		if (itr->GetGameData()->maxComboCount >= nowMaxCombo)
 		{
 			nowMaxCombo = itr->GetGameData()->maxComboCount;
@@ -1316,7 +1319,7 @@ void OthelloManager::SetPanel()
 		Othello data;
 		data.Init(&oserroModel);
 		data.Spawn(NORMAL, x, y, true);
-		data.Update();
+		data.Update(0);
 		data.GetGameData()->isMove = false;
 		if (x == playerPanelPos.x && y == playerPanelPos.y)
 		{
@@ -1428,7 +1431,7 @@ void OthelloManager::SpawnPanel(bool isInGame)
 	{
 		data.Spawn(NORMAL, x, y, randFront);
 	}
-	data.Update();
+	data.Update(0);
 	data.GetGameData()->isMove = false;
 	if (x == playerPanelPos.x && y == playerPanelPos.y)
 	{
@@ -2019,7 +2022,7 @@ void OthelloManager::SaveSpawn()
 			int x = playerPanelPos.x;
 			int y = playerPanelPos.y;
 			data.Borne(NORMAL, x, y, randFront);
-			data.Update();
+			data.Update(0);
 			othellos.push_back(data);
 			saveTimer = 0;
 			isFieldUpdate = true;
@@ -2229,7 +2232,7 @@ void OthelloManager::SetSpawnPanel(int x, int y, bool Front, OthelloType type)
 		data.SetScale(XMFLOAT3(1, 1, PanelSize));
 	}
 
-	data.Update();
+	data.Update(0);
 	othellos.push_back(data);
 }
 
@@ -2573,7 +2576,7 @@ void OthelloManager::LoadNormaStage(string stage)
 
 void OthelloManager::LoadAllStage()
 {
-	LoadNormaStage("test");
+	//LoadNormaStage("test");
 
 	string baseName = "stage";
 	for (int i = 0; i < NormaStageCount; i++)

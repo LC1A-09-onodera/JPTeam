@@ -158,7 +158,7 @@ namespace OthelloConstData
 	const int downStepCountMax = 0;
 	const int TutorialEndTextTimer = 300;
 
-	const int NormaStageCount = 10;
+	const int NormaStageCount = 11;
 	//アニメーション
 	const int vanishTimerMax = 600;
 	const int animationTimerMax = 30;
@@ -213,7 +213,7 @@ public:
 	void SetScale(XMFLOAT3 &scale){this->each.scale = scale;}
 public:
 	void Init(OthelloModel *model);
-	void Update();
+	void Update(int combo);
 	void Draw();
 	void Finalize();
 
@@ -235,7 +235,7 @@ public:
 
 	void SpawnUpdate();
 private:
-	void ReversUpdate();
+	void ReversUpdate(int combo);
 	void LeftRevers();
 	void Shake();
 	void NormalUpdate();
@@ -268,8 +268,8 @@ class OthelloManager
 {
 public:
 	void Init();
-	void Update();
-	void TutorialUpdate();
+	void Update(int combo);
+	void TutorialUpdate(int combo);
 	void Draw();
 	void Finalize();
 	void Controll();
@@ -303,7 +303,7 @@ public:
 	bool IsTutorialEnd();
 
 public://ノルマモード用関数
-	void NormaUpdate();
+	void NormaUpdate(int combo);
 	void SetNormaMove();
 	void Undo();
 	void StartNormaMode(int stageNum = 0);
