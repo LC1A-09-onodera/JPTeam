@@ -1,7 +1,7 @@
 #pragma once
 #include <list>
-
-
+#include <string>
+#include "../Sprite/Sprite.h"
 class Othello;
 
 namespace Norma
@@ -39,7 +39,7 @@ public:
 	NormaChecker();
 	~NormaChecker();
 	void Init();
-	void Update(std::list<Othello> panels);
+	void Update(std::list<Othello> panels, int score, int combo);
 	void Draw();
 	void Finalize();
 public:
@@ -51,6 +51,7 @@ public:
 
 	bool GetClear();
 	bool GetFailed();
+
 private:
 	std::list<Norma::FieldStatus> preField;
 	Norma::NormaType nowType = Norma::Combo;
@@ -66,5 +67,6 @@ private:
 	int normaMoveCount = 0;
 	bool isClear = false;
 	bool isFailed = false;
+	Sprite clearText;
 };
 

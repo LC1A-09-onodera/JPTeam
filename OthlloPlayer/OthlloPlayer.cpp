@@ -5,7 +5,7 @@ using namespace ConstOthlloPlayer;
 
 Model OthlloPlayer::player;
 EachInfo OthlloPlayer::each;
-SoundData OthlloPlayer::moveSound;
+//SoundData OthlloPlayer::moveSound;
 
 XMFLOAT3 OthlloPlayer::startPos;
 XMFLOAT3 OthlloPlayer::endPos;
@@ -17,21 +17,21 @@ FBXObject* OthlloPlayer::playerFbxObj;
 void OthlloPlayer::Init()
 {
 	player.CreateModel("player", ShaderManager::playerShader);
-	playerFbx = FbxLoader::GetInstance()->LoadModelFromFile("player");
+	playerFbx = FbxLoader::GetInstance()->LoadModelFromFile("newPlayer");
 	playerFbxObj = new FBXObject;
 	playerFbxObj->Initialize();
 	playerFbxObj->SetModel(playerFbx);
-	playerFbxObj->rotation = { 0, 180, -90 };
-	playerFbxObj->scale = { 0.5f, 0.5f, 0.5f };
-	playerFbxObj->position = { 0, 0, -2 };
+	playerFbxObj->rotation = { 0, 180, 0 };
+	playerFbxObj->scale = { 0.008f, 0.008f, 0.008f };
+	playerFbxObj->position = { 0, 0, -5 };
 	startPos = { 0, 0, -2 };
 	//playerFbxObj->PlayAnimation();
 	each.CreateConstBuff0();
 	each.CreateConstBuff1();
-	each.rotation = { 0, -90, 90 };
+	each.rotation = { 0, -90, 0 };
 	each.scale = { 0.5f, 0.5f, 0.5f };
 	each.position = { 0, 0, -2 ,1 };
-	SoundLoad("Resource/Sound/move_.wav", moveSound);
+	//SoundLoad("Resource/Sound/move_.wav", moveSound);
 }
 
 void OthlloPlayer::Update()
@@ -68,8 +68,9 @@ void OthlloPlayer::Move()
 
 	if ((D || A || S || W || padD || padA || padW || padS) && !isEase)
 	{
-		SoundStopWave(moveSound);
-		SoundPlayOnce(moveSound);
+		//SoundStopWave(moveSound);
+		//SoundPlayOnce(moveSound);
+		playerFbxObj->PlayAnimation();
 		isMoveEnd = false;
 		startPos = playerFbxObj->position;
 		endPos = startPos;
@@ -105,6 +106,7 @@ void OthlloPlayer::EaseUpdate()
 	}
 	each.position = ConvertXMFLOAT3toXMVECTOR(ShlomonMath::EaseInQuad(startPos, endPos, easeTime));
 	playerFbxObj->position = ShlomonMath::EaseInQuad(startPos, endPos, easeTime);
+	//playerFbxObj->rotation.y = 90;
 }
 
 void OthlloPlayer::MoveCancel()

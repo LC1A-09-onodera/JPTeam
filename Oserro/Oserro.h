@@ -152,10 +152,11 @@ namespace OthelloConstData
 
 	const float PanelSize = 10.0f;
 
-	const float panelWallRate = 0.3f;
+	const float panelWallRate = 0.0f;
 	const int downStepCountMax = 0;
 	const int TutorialEndTextTimer = 300;
 
+	const int NormaStageCount = 8;
 	//アニメーション
 	const int vanishTimerMax = 600;
 	const int animationTimerMax = 30;
@@ -210,7 +211,7 @@ public:
 
 public:
 	void Init(OthelloModel *model);
-	void Update();
+	void Update(int combo);
 	void Draw();
 	void Finalize();
 
@@ -232,7 +233,7 @@ public:
 
 	void SpawnUpdate();
 private:
-	void ReversUpdate();
+	void ReversUpdate(int combo);
 	void LeftRevers();
 	void Shake();
 };
@@ -262,8 +263,8 @@ class OthelloManager
 {
 public:
 	void Init();
-	void Update();
-	void TutorialUpdate();
+	void Update(int combo);
+	void TutorialUpdate(int combo);
 	void Draw();
 	void Finalize();
 	void Controll();
@@ -297,19 +298,26 @@ public:
 	bool IsTutorialEnd();
 
 public://ノルマモード用関数
-	void NormaUpdate();
+	void NormaUpdate(int combo);
 	void SetNormaMove();
 	void Undo();
-	void StartNormaMode(Norma::NormaType normaType = Norma::Combo, int normaStatus = 0, int normaMoveCount = 0);
+	void StartNormaMode(int stageNum = 0);
 	void EndNormaMode();
 	void RestartNorma();
 	bool GetIsNormaClear();
 	bool GetIsNormaFailed();
 	bool isNormaMode = false;
 
+	void SetScore(const int score){nowScore = score;}
+
+	void NormaTextDraw();
+	int GetNormaStagesCount();
+
 private://ノルマモード用内部処理関数
-	void StartNormaField();
+	void StartNormaField(int stageNum = 0);
 	void TestStage();
+	void LoadNormaStage(std::string stage);
+	void LoadAllStage();
 private:
 	void SetPlayer();
 
@@ -391,6 +399,7 @@ private:
 	int downStepCount = 0;
 	int saveTimer = 0;
 	int TutorialEndTextCount = 0;
+	int nowScore = 0;
 	XMFLOAT3 mousePoint;
 
 	static OthelloModel oserroModel;
