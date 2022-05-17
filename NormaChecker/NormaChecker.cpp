@@ -1,6 +1,6 @@
 #include "NormaChecker.h"
 #include "../Oserro/Oserro.h"
-
+#include <algorithm>
 using namespace Norma;
 NormaChecker::NormaChecker()
 {
@@ -10,19 +10,23 @@ NormaChecker::~NormaChecker()
 }
 void NormaChecker::Init()
 {
+	clearText.CreateSprite(L"Resource/Img/genius.png", XMFLOAT3(0, 0, 0));
+	float changeScale = 0.5f;
+	clearText.ChangeSize(318 * changeScale, 101 * changeScale);
+	clearText.position = XMVECTOR{ 640 - (318 * changeScale / 2), 360 - (101 * changeScale), 0, 0 };
 	Reset();
 }
 
-void NormaChecker::Update(std::list<Othello> panels)
+void NormaChecker::Update(std::list<Othello> panels, int score,int combo)
 {
 	PanelUpdate(panels);
 	switch (nowType)
 	{
 	case Norma::Combo:
-		isClear = nowComboCount >= normaComboCount;
+		isClear = combo >= normaComboCount;
 		break;
 	case Norma::Score:
-		//isClear = nowComboCount >= normaComboCount;
+		isClear = score >= normaScore;
 		break;
 	case Norma::ComboScore:
 		//isClear = nowComboCount >= normaComboCount;
@@ -49,6 +53,10 @@ void NormaChecker::Update(std::list<Othello> panels)
 
 void NormaChecker::Draw()
 {
+	if (isClear)
+	{
+		clearText.SpriteDraw();
+	}
 }
 
 void NormaChecker::Finalize()
@@ -163,7 +171,7 @@ Norma::FieldStatus NormaChecker::Undo()
 	//ä™Ç´ñﬂÇ∑êÊÇÃÉfÅ[É^Ç™Ç»Ç©Ç¡ÇΩèÍçá
 	if (preField.size() <= 0)
 	{
-	//êÊì™Ç≈Ç†ÇÈÇ∆Ç¢Ç§èÓïÒÇtrueÇ…Ç∑ÇÈ
+		//êÊì™Ç≈Ç†ÇÈÇ∆Ç¢Ç§èÓïÒÇtrueÇ…Ç∑ÇÈ
 		data.isFirst = true;
 	}
 	else
@@ -184,3 +192,5 @@ bool NormaChecker::GetFailed()
 {
 	return isFailed;
 }
+
+

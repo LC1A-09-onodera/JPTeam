@@ -1,18 +1,14 @@
+#include "../VoiceUDPRecive/VoiceUDPRecive.h"
 #include"GameScene.h"
-#include "BaseDirectX.h"
 #include "../WindowsAPI/WinAPI.h"
 #include "Input.h"
 #include "../Sound/Sound.h"
 #include "viewport.h"
 #include "../Particle/Particle3D.h"
 #include "../imgui/ImguiControl.h"
-#include "../Sound/Sound.h"
-#include "../Light/Light.h"
 #include "vec3.h"
 #include "../FBXObject/FBXObject.h"
 #include "../Shader/ShaderManager.h"
-#include"../Enemy/Enemy.h"
-#include "../Hole/Hole.h"
 #include "../3DObjectParticle/3DObjectParticle.h"
 #include "../OthlloPlayer/OthlloPlayer.h"
 #include "../Thunder/Thunder.h"
@@ -25,9 +21,8 @@ GameScene::GameScene()
 
 GameScene::~GameScene()
 {
+	VoiceReciver::EndRecive();
 	delete(light);
-	/*delete(object);
-	delete(model);*/
 }
 
 void GameScene::SceneManageUpdateAndDraw()
@@ -91,11 +86,9 @@ void GameScene::Init()
 	light = Light::Create();
 	//モデルすべてにライトを適用
 	Model::SetLight(light);
-	//プレイヤーの初期化
-	Player::GetPlayer()->Init();
 
 	//ポストエフェクトの初期化
-	postEffect.Initialize();
+	PostEffects::Init();
 
 	/*model = FbxLoader::GetInstance()->LoadModelFromFile("boneTest");
 	object = new FBXObject;
@@ -108,9 +101,6 @@ void GameScene::Init()
 
 	checkObject.Init();
 	ObjectParticles::LoadModels();
-
-	water.CreateWater();
-	OthlloPlayer::Init();
 
 	othelloManager.Init();
 	othelloManager.AddPanel();
@@ -182,12 +172,25 @@ void GameScene::Init()
 		addConbo[i + 8].CreateSprite(num[8], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
 		addConbo[i + 9].CreateSprite(num[9], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
 	}
+
+	//selectStageNumSprite[0].CreateSprite(num[0], XMFLOAT3(window_width / 2 - 30,                            window_height / 2 + 50, 0));
+	selectStageNumSprite[1].CreateSprite(num[1], XMFLOAT3(window_width / 2 - 30 + selectNumDistance * 0.0f, window_height / 2 + 50, 0));
+	selectStageNumSprite[2].CreateSprite(num[2], XMFLOAT3(window_width / 2 - 30 + selectNumDistance * 1.0f, window_height / 2 + 50, 0));
+	selectStageNumSprite[3].CreateSprite(num[3], XMFLOAT3(window_width / 2 - 30 + selectNumDistance * 2.0f, window_height / 2 + 50, 0));
+	selectStageNumSprite[4].CreateSprite(num[4], XMFLOAT3(window_width / 2 - 30 + selectNumDistance * 3.0f, window_height / 2 + 50, 0));
+	selectStageNumSprite[5].CreateSprite(num[5], XMFLOAT3(window_width / 2 - 30 + selectNumDistance * 4.0f, window_height / 2 + 50, 0));
+	selectStageNumSprite[6].CreateSprite(num[6], XMFLOAT3(window_width / 2 - 30 + selectNumDistance * 5.0f, window_height / 2 + 50, 0));
+	selectStageNumSprite[7].CreateSprite(num[7], XMFLOAT3(window_width / 2 - 30 + selectNumDistance * 6.0f, window_height / 2 + 50, 0));
+	selectStageNumSprite[8].CreateSprite(num[8], XMFLOAT3(window_width / 2 - 30 + selectNumDistance * 7.0f, window_height / 2 + 50, 0));
+	selectStageNumSprite[9].CreateSprite(num[9], XMFLOAT3(window_width / 2 - 30 + selectNumDistance * 8.0f, window_height / 2 + 50, 0));
+	selectStageNumSprite[10].CreateSprite(L"Resource/Img/number_10__.png", XMFLOAT3(window_width / 2 - 30 + selectNumDistance * 9.0f, window_height / 2 + 50, 0));
 	addReverse.CreateSprite(L"Resource/Img/combo.png", XMFLOAT3(0, 0, 0));
 	scoreSprite.CreateSprite(L"Resource/Img/score.png", XMFLOAT3(0, 0, 0));
 	timeUp.CreateSprite(L"Resource/Img/time_up.png", XMFLOAT3(0, 0, 0));
 	startSprite.CreateSprite(L"Resource/Img/START.png", XMFLOAT3(0, 0, 0));
 	gameTime = gameMaxTime;
 	Lights::LoadModels();
+	OthlloPlayer::Init();
 	sky.CreateModel("world", ShaderManager::playerShader, true);
 	sky.each.rotation = { 70, 0.0f, 0 };
 	sky.each.scale = { 100.0f ,100.0f, 100.f };
@@ -205,8 +208,10 @@ void GameScene::Init()
 	backSprite.CreateSprite(L"Resource/Img/back.png", XMFLOAT3(0, 0, 0));
 	endSprite.CreateSprite(L"Resource/Img/end.png", XMFLOAT3(0, 0, 0));
 	titleSprite.CreateSprite(L"Resource/Img/go_title.png", XMFLOAT3(0, 0, 0));
-	kagikakkoStartSprite.CreateSprite(L"Resource/Img/kagikakko_start.png", XMFLOAT3(0, 0, 0));
-	kagikakkoEndSprite.CreateSprite(L"Resource/Img/kagikakko_end.png", XMFLOAT3(0, 0, 0));
+	kagikakkoStartSprite.CreateSprite(L"Resource/Img/select_big_1.png", XMFLOAT3(0, 0, 0));
+	kagikakkoEndSprite.CreateSprite(L"Resource/Img/select_big_0.png", XMFLOAT3(0, 0, 0));
+	kagikakkoSelectStartSprite.CreateSprite(L"Resource/Img/select_0.png", XMFLOAT3(0, 0, 0));
+	kagikakkoSelectEndSprite.CreateSprite(L"Resource/Img/select_1.png", XMFLOAT3(0, 0, 0));
 	tutorialSprite.CreateSprite(L"Resource/Img/tutorial.png", XMFLOAT3(0, 0, 0));
 	gameScoreAttackSprite.CreateSprite(L"Resource/Img/score_attack.png", XMFLOAT3(0, 0, 0));
 	gameNormaSprite.CreateSprite(L"Resource/Img/quota.png", XMFLOAT3(0, 0, 0));
@@ -224,7 +229,8 @@ void GameScene::Init()
 
 void GameScene::TitleUpdate()
 {
-	SoundPlayOnce(BGMSound);
+	SoundPlayLoop(BGMSound);
+	
 	//オセロのパーティクルを出していく
 	static int particleTime = 0;
 	//シーンチェンジ開始前
@@ -276,6 +282,8 @@ void GameScene::TitleUpdate()
 				else
 				{
 					select = true;
+					selectStage = false;
+					selectMode = false;
 				}
 			}
 		}
@@ -286,18 +294,36 @@ void GameScene::TitleUpdate()
 			{
 				SoundStopWave(selectSound);
 				SoundPlayOnce(selectSound);
-				if (!selectMode)
+				if (!selectStage)
 				{
 					selectMode = true;
+				}
+				else if (selectStage && 1 < selectStageNum && !selectEase)
+				{
+					selectEaseDirection = true;
+					selectEase = true;
+					selectStageFarstStartPos = ConvertXMVECTORtoXMFLOAT3(selectStageNumSprite[1].position);
+					selectStageFarstEndPos = selectStageFarstStartPos;
+					selectStageFarstEndPos.x += selectNumDistance;
+					selectStageNum--;
 				}
 			}
 			if (Input::KeyTrigger(DIK_D) || directInput->IsButtonPush(directInput->RightButton))
 			{
 				SoundStopWave(selectSound);
 				SoundPlayOnce(selectSound);
-				if (selectMode)
+				if (!selectStage)
 				{
 					selectMode = false;
+				}
+				else if (selectStageNum < othelloManager.GetNormaStagesCount() && selectStage && !selectEase)
+				{
+					selectEaseDirection = false;
+					selectEase = true;
+					selectStageFarstStartPos = ConvertXMVECTORtoXMFLOAT3(selectStageNumSprite[1].position);
+					selectStageFarstEndPos = selectStageFarstStartPos;
+					selectStageFarstEndPos.x -= selectNumDistance;
+					selectStageNum++;
 				}
 			}
 			if ((Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01)) && !isPouse)
@@ -306,73 +332,53 @@ void GameScene::TitleUpdate()
 				SoundStopWave(enterSound);
 				SoundPlayOnce(enterSound);
 
-				ToGame();
-				titleSelectNum = 0;
+				//スコアアタック
 				if (!selectMode)
 				{
 					othelloManager.StartSetPos();
 					gameTime = gameMaxTime;
 					isTutorial = false;
+					ToGame();
+					titleSelectNum = 0;
 				}
+				//ノルマモード
 				else
 				{
-					othelloManager.StartNormaMode();
-					gameTime = gameMaxTime;
-					isTutorial = false;
+					if (selectStage)
+					{
+						othelloManager.StartNormaMode(selectStageNum);
+						gameTime = gameMaxTime;
+						isTutorial = false;
+						ToGame();
+						titleSelectNum = 0;
+					}
+					else
+					{
+						selectStage = true;
+					}
 				}
 			}
 		}
 	}
-	////ゲームに移行する
-	//else if ((Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01)) && !isPouse && selectWindow)
-	//{
-	//	SoundStopWave(enterSound);
-	//	SoundPlayOnce(enterSound);
-	//	ToGame();
-	//	if (titleSelectNum == 1 && select == false)
-	//	{
-	//		isTutorial = true;
-	//		titleSelectNum = 0;
-	//	}
-	//	else
-	//	{
-	//		isTutorial = false;
-	//	}
-	//	if (isTutorial)
-	//	{
-	//		othelloManager.whySandwichSpawn();
-	//		gameTime = 60;
-	//	}
-	//	else
-	//	{
-	//		if (selectMode == false)
-	//		{
-	//			othelloManager.StartSetPos();
-	//			//othelloManager.StartNormaMode();
-	//			gameTime = gameMaxTime;
-	//		}
-	//		else
-	//		{
-	//			othelloManager.StartNormaMode();
-	//			gameTime = gameMaxTime;
-	//		}
-	//	}
-	//}
-	////モードの切り替え
-	//if (selectWindow)
-	//{
-	//	if (Input::KeyTrigger(DIK_D))
-	//	{
-	//		titleSelectNum = 0;
-	//		selectMode = false;
-	//	}
-	//	if (Input::KeyTrigger(DIK_A))
-	//	{
-	//		titleSelectNum = 1;
-	//		selectMode = true;
-	//	}
-	//}
-
+	if (selectEase)
+	{
+		selectStageNumSprite[1].position = ConvertXMFLOAT3toXMVECTOR(ShlomonMath::EaseInQuad(selectStageFarstStartPos, selectStageFarstEndPos, selectEaseTime));
+		for (int i = 2; i < othelloManager.GetNormaStagesCount(); i++)
+		{
+			selectStageNumSprite[i].position.m128_f32[0] = selectStageNumSprite[1].position.m128_f32[0] + (selectNumDistance * (i - 1));
+		}
+		selectEaseTime += 0.1f;
+		if (selectEaseTime > 1.0f)
+		{
+			selectStageNumSprite[1].position = ConvertXMFLOAT3toXMVECTOR(ShlomonMath::EaseInQuad(selectStageFarstStartPos, selectStageFarstEndPos, 1.0));
+			for (int i = 2; i < othelloManager.GetNormaStagesCount(); i++)
+			{
+				selectStageNumSprite[i].position.m128_f32[0] = selectStageNumSprite[1].position.m128_f32[0] + (selectNumDistance * (i - 1));
+			}
+			selectEase = false;
+			selectEaseTime = 0;
+		}
+	}
 	//ポーズ画面に移行する
 	if (!isPouse && (Input::KeyTrigger(DIK_ESCAPE) || directInput->IsButtonPush(directInput->ButtonPouse)))
 	{
@@ -419,6 +425,7 @@ void GameScene::TitleUpdate()
 			{
 				gameTime = 0;
 				isPouse = false;
+				select = false;
 				checkObject.Init();
 			}
 			else if (selectPouse == 2)
@@ -443,8 +450,6 @@ void GameScene::SelectUpdate()
 {
 	if (Input::KeyTrigger(DIK_SPACE))
 	{
-		Player::GetPlayer()->Init();
-
 		SceneNum = GAME;
 	}
 }
@@ -464,17 +469,18 @@ void GameScene::GameUpdate()
 			othelloManager.Controll();
 			if (isTutorial)
 			{
-				othelloManager.TutorialUpdate();
+				othelloManager.TutorialUpdate(checkObject.GetCombo());
 			}
 			else
 			{
 				if (!selectMode)
 				{
-					othelloManager.Update();
+					othelloManager.Update(checkObject.GetCombo());
 				}
 				else if (selectMode)
 				{
-					othelloManager.NormaUpdate();
+					othelloManager.SetScore(checkObject.GetScore());
+					othelloManager.NormaUpdate(checkObject.GetCombo());
 				}
 				if (othelloManager.GetIsNormaFailed())
 				{
@@ -482,7 +488,7 @@ void GameScene::GameUpdate()
 				}
 				else if (othelloManager.GetIsNormaClear())
 				{
-					
+					isSceneChange = true;
 				}
 			}
 			if (othelloManager.GetIsSendDataUpdate())
@@ -490,11 +496,11 @@ void GameScene::GameUpdate()
 				checkObject.Update(othelloManager.Send(), othelloManager.GetIsSendDataUpdate());
 				othelloManager.Receive(checkObject.GetOthelloDatas());
 			}
-			if (!isTutorial)
+			if (!isTutorial && !selectMode)
 			{
 				gameTime--;
 			}
-			else if (othelloManager.IsTutorialEnd())
+			else if (othelloManager.IsTutorialEnd() && isTutorial)
 			{
 				gameTime--;
 			}
@@ -699,7 +705,6 @@ void GameScene::EndUpdate()
 	{
 		SceneNum = TITLE;
 		Camera::Init();
-		Player::GetPlayer()->Init();
 	}
 }
 
@@ -718,8 +723,8 @@ void GameScene::TitleDraw()
 	//postEffect.Draw();
 	Draw3DObject(sky);
 	Draw3DObject(othelloStage);
-	if (!isSceneChange) OthlloPlayer::Draw();
-	
+	//if (!isSceneChange) OthlloPlayer::Draw();
+
 	ParticleControl::Draw();
 	ObjectParticles::Draw();
 	Lights::Draw();
@@ -748,19 +753,19 @@ void GameScene::TitleDraw()
 			if (titleSelectNum == 0)
 			{
 				kagikakkoStartSprite.ChangeSize(30, 70);
-				kagikakkoStartSprite.position.m128_f32[0] = window_width / 2 + 80;
-				kagikakkoStartSprite.position.m128_f32[1] = 400;
+				kagikakkoStartSprite.position.m128_f32[0] = window_width / 2 + 60;
+				kagikakkoStartSprite.position.m128_f32[1] = 410;
 				kagikakkoStartSprite.SpriteDraw();
 				kagikakkoEndSprite.ChangeSize(30, 70);
-				kagikakkoEndSprite.position.m128_f32[0] = window_width / 2 + 370;
+				kagikakkoEndSprite.position.m128_f32[0] = window_width / 2 + 390;
 				kagikakkoEndSprite.position.m128_f32[1] = 410;
 				kagikakkoEndSprite.SpriteDraw();
 			}
 			else
 			{
 				kagikakkoStartSprite.ChangeSize(30, 70);
-				kagikakkoStartSprite.position.m128_f32[0] = window_width / 2 - 430;
-				kagikakkoStartSprite.position.m128_f32[1] = 400;
+				kagikakkoStartSprite.position.m128_f32[0] = window_width / 2 - 440;
+				kagikakkoStartSprite.position.m128_f32[1] = 410;
 				kagikakkoStartSprite.SpriteDraw();
 				kagikakkoEndSprite.ChangeSize(30, 70);
 				kagikakkoEndSprite.position.m128_f32[0] = window_width / 2 - 10;
@@ -768,7 +773,7 @@ void GameScene::TitleDraw()
 				kagikakkoEndSprite.SpriteDraw();
 			}
 		}
-		else
+		else if (!selectStage)
 		{
 			gameScoreAttackSprite.ChangeSize(232 * spsize, 63 * spsize);
 			gameScoreAttackSprite.position.m128_f32[0] = window_width / 2 + 110;
@@ -781,11 +786,11 @@ void GameScene::TitleDraw()
 			if (!selectMode)
 			{
 				kagikakkoStartSprite.ChangeSize(30, 70);
-				kagikakkoStartSprite.position.m128_f32[0] = window_width / 2 + 80;
-				kagikakkoStartSprite.position.m128_f32[1] = 400;
+				kagikakkoStartSprite.position.m128_f32[0] = window_width / 2 + 75;
+				kagikakkoStartSprite.position.m128_f32[1] = 410;
 				kagikakkoStartSprite.SpriteDraw();
 				kagikakkoEndSprite.ChangeSize(30, 70);
-				kagikakkoEndSprite.position.m128_f32[0] = window_width / 2 + 370;
+				kagikakkoEndSprite.position.m128_f32[0] = window_width / 2 + 400;
 				kagikakkoEndSprite.position.m128_f32[1] = 410;
 				kagikakkoEndSprite.SpriteDraw();
 			}
@@ -793,13 +798,29 @@ void GameScene::TitleDraw()
 			{
 				kagikakkoStartSprite.ChangeSize(30, 70);
 				kagikakkoStartSprite.position.m128_f32[0] = window_width / 2 - 430;
-				kagikakkoStartSprite.position.m128_f32[1] = 400;
+				kagikakkoStartSprite.position.m128_f32[1] = 410;
 				kagikakkoStartSprite.SpriteDraw();
 				kagikakkoEndSprite.ChangeSize(30, 70);
 				kagikakkoEndSprite.position.m128_f32[0] = window_width / 2 - 50;
 				kagikakkoEndSprite.position.m128_f32[1] = 410;
 				kagikakkoEndSprite.SpriteDraw();
 			}
+		}
+		else
+		{
+			//selectStageNumSprite[0].SpriteDraw();
+			for (int i = 1; i < othelloManager.GetNormaStagesCount(); i++)
+			{
+				selectStageNumSprite[i].SpriteDraw();
+				
+			}
+
+			kagikakkoSelectStartSprite.position.m128_f32[0] = 520;
+			kagikakkoSelectStartSprite.position.m128_f32[1] = 410;
+			kagikakkoSelectEndSprite.position.m128_f32[0] = 700;
+			kagikakkoSelectEndSprite.position.m128_f32[1] = 410;
+			kagikakkoSelectStartSprite.SpriteDraw();
+			kagikakkoSelectEndSprite.SpriteDraw();
 		}
 	}
 	if (isPouse)
@@ -820,34 +841,34 @@ void GameScene::TitleDraw()
 		if (selectPouse == 0)
 		{
 			kagikakkoStartSprite.ChangeSize(30, 70);
-			kagikakkoStartSprite.position.m128_f32[0] = window_width / 2 - 120;
-			kagikakkoStartSprite.position.m128_f32[1] = window_height / 2 - 10;
+			kagikakkoStartSprite.position.m128_f32[0] = window_width / 2 - 140;
+			kagikakkoStartSprite.position.m128_f32[1] = window_height / 2 + 5;
 			kagikakkoStartSprite.SpriteDraw();
 			kagikakkoEndSprite.ChangeSize(30, 70);
-			kagikakkoEndSprite.position.m128_f32[0] = window_width / 2 + 110;
-			kagikakkoEndSprite.position.m128_f32[1] = window_height / 2 + 15;
+			kagikakkoEndSprite.position.m128_f32[0] = window_width / 2 + 120;
+			kagikakkoEndSprite.position.m128_f32[1] = window_height / 2 + 5;
 			kagikakkoEndSprite.SpriteDraw();
 		}
 		else if (selectPouse == 1)
 		{
 			kagikakkoStartSprite.ChangeSize(30, 70);
-			kagikakkoStartSprite.position.m128_f32[0] = window_width / 2 - 120;
-			kagikakkoStartSprite.position.m128_f32[1] = window_height / 2 + 70;
+			kagikakkoStartSprite.position.m128_f32[0] = window_width / 2 - 140;
+			kagikakkoStartSprite.position.m128_f32[1] = window_height / 2 + 85;
 			kagikakkoStartSprite.SpriteDraw();
 			kagikakkoEndSprite.ChangeSize(30, 70);
-			kagikakkoEndSprite.position.m128_f32[0] = window_width / 2 + 110;
-			kagikakkoEndSprite.position.m128_f32[1] = window_height / 2 + 95;
+			kagikakkoEndSprite.position.m128_f32[0] = window_width / 2 + 120;
+			kagikakkoEndSprite.position.m128_f32[1] = window_height / 2 + 85;
 			kagikakkoEndSprite.SpriteDraw();
 		}
 		else if (selectPouse == 2)
 		{
 			kagikakkoStartSprite.ChangeSize(30, 70);
-			kagikakkoStartSprite.position.m128_f32[0] = window_width / 2 - 120;
-			kagikakkoStartSprite.position.m128_f32[1] = window_height / 2 + 160;
+			kagikakkoStartSprite.position.m128_f32[0] = window_width / 2 - 140;
+			kagikakkoStartSprite.position.m128_f32[1] = window_height / 2 + 165;
 			kagikakkoStartSprite.SpriteDraw();
 			kagikakkoEndSprite.ChangeSize(30, 70);
 			kagikakkoEndSprite.position.m128_f32[0] = window_width / 2 + 70;
-			kagikakkoEndSprite.position.m128_f32[1] = window_height / 2 + 175;
+			kagikakkoEndSprite.position.m128_f32[1] = window_height / 2 + 165;
 			kagikakkoEndSprite.SpriteDraw();
 		}
 	}
@@ -859,23 +880,16 @@ void GameScene::TitleDraw()
 void GameScene::SelectDraw()
 {
 	//PostEffectのPreDraw
-	postEffect.PreDraw();
-
-	Player::GetPlayer()->Draw();
-
-	//PostEffectのPostDraw
-	postEffect.PostDraw();
-
+	PostEffects::PreDraw();
+	Draw3DObject(sample);
 	BaseDirectX::clearColor[0] = 0.0f;
 	BaseDirectX::clearColor[1] = 0.0f;
 	BaseDirectX::clearColor[2] = 0.0f;
 	BaseDirectX::clearColor[3] = 0.0f;
 	BaseDirectX::UpdateFront();
 	//PostEffectのDraw
-	postEffect.Draw();
-
-	//スプライトの描画-------------------------
-	//titleSprite.SpriteDraw();
+	PostEffects::Draw();
+	PostEffects::PostDraw();
 
 	//描画コマンドここまで
 	BaseDirectX::UpdateBack();
@@ -897,8 +911,8 @@ void GameScene::GameDraw()
 
 	Draw3DObject(sky);
 	Draw3DObject(othelloStage);
-		OthlloPlayer::Draw();
-	
+	OthlloPlayer::Draw();
+
 	ObjectParticles::Draw();
 	ParticleControl::Draw();
 	othelloManager.Draw();
@@ -1074,6 +1088,8 @@ void GameScene::GameDraw()
 		moveSprite.SpriteDraw();
 
 		//othelloManager.TutorialRetryText.SpriteDraw();
+
+		othelloManager.NormaTextDraw();
 		if (isTutorial)
 		{
 			othelloManager.TutorialTextDraw();
@@ -1097,34 +1113,34 @@ void GameScene::GameDraw()
 		if (selectPouse == 0)
 		{
 			kagikakkoStartSprite.ChangeSize(30, 70);
-			kagikakkoStartSprite.position.m128_f32[0] = window_width / 2 - 120;
-			kagikakkoStartSprite.position.m128_f32[1] = window_height / 2 - 10;
+			kagikakkoStartSprite.position.m128_f32[0] = window_width / 2 - 140;
+			kagikakkoStartSprite.position.m128_f32[1] = window_height / 2 + 5;
 			kagikakkoStartSprite.SpriteDraw();
 			kagikakkoEndSprite.ChangeSize(30, 70);
-			kagikakkoEndSprite.position.m128_f32[0] = window_width / 2 + 110;
-			kagikakkoEndSprite.position.m128_f32[1] = window_height / 2 + 15;
+			kagikakkoEndSprite.position.m128_f32[0] = window_width / 2 + 125;
+			kagikakkoEndSprite.position.m128_f32[1] = window_height / 2 + 5;
 			kagikakkoEndSprite.SpriteDraw();
 		}
 		else if (selectPouse == 1)
 		{
 			kagikakkoStartSprite.ChangeSize(30, 70);
-			kagikakkoStartSprite.position.m128_f32[0] = window_width / 2 - 120;
-			kagikakkoStartSprite.position.m128_f32[1] = window_height / 2 + 70;
+			kagikakkoStartSprite.position.m128_f32[0] = window_width / 2 - 140;
+			kagikakkoStartSprite.position.m128_f32[1] = window_height / 2 + 80;
 			kagikakkoStartSprite.SpriteDraw();
 			kagikakkoEndSprite.ChangeSize(30, 70);
-			kagikakkoEndSprite.position.m128_f32[0] = window_width / 2 + 110;
-			kagikakkoEndSprite.position.m128_f32[1] = window_height / 2 + 95;
+			kagikakkoEndSprite.position.m128_f32[0] = window_width / 2 + 125;
+			kagikakkoEndSprite.position.m128_f32[1] = window_height / 2 + 80;
 			kagikakkoEndSprite.SpriteDraw();
 		}
 		else if (selectPouse == 2)
 		{
 			kagikakkoStartSprite.ChangeSize(30, 70);
-			kagikakkoStartSprite.position.m128_f32[0] = window_width / 2 - 120;
-			kagikakkoStartSprite.position.m128_f32[1] = window_height / 2 + 160;
+			kagikakkoStartSprite.position.m128_f32[0] = window_width / 2 - 140;
+			kagikakkoStartSprite.position.m128_f32[1] = window_height / 2 + 170;
 			kagikakkoStartSprite.SpriteDraw();
 			kagikakkoEndSprite.ChangeSize(30, 70);
-			kagikakkoEndSprite.position.m128_f32[0] = window_width / 2 + 70;
-			kagikakkoEndSprite.position.m128_f32[1] = window_height / 2 + 175;
+			kagikakkoEndSprite.position.m128_f32[0] = window_width / 2 + 75;
+			kagikakkoEndSprite.position.m128_f32[1] = window_height / 2 + 170;
 			kagikakkoEndSprite.SpriteDraw();
 		}
 	}
@@ -1150,7 +1166,7 @@ void GameScene::ResultDraw()
 	BaseDirectX::UpdateFront();
 	//PostEffectのDraw
 	//postEffect.Draw();
-	OthlloPlayer::Draw();
+	//OthlloPlayer::Draw();
 	Draw3DObject(sky);
 	Draw3DObject(othelloStage);
 	//スプライトの描画-------------------------
@@ -1200,8 +1216,8 @@ void GameScene::ResultDraw()
 
 void GameScene::ReStart()
 {
-	SoundStopWave(timeUpSound);
-	SoundPlayOnce(timeUpSound);
+	//SoundStopWave(timeUpSound);
+	//SoundPlayOnce(timeUpSound);
 	for (auto triangleItr = OthelloManager::othellos.begin(); triangleItr != OthelloManager::othellos.end(); ++triangleItr)
 	{
 		XMFLOAT3 pos = triangleItr->GetPosition();
@@ -1254,13 +1270,8 @@ void GameScene::ToGame()
 void GameScene::EndDraw()
 {
 	//PostEffectのPreDraw
-	postEffect.PreDraw();
-
-	Player::GetPlayer()->Draw();
-
-	//PostEffectのPostDraw
-	postEffect.PostDraw();
-
+	PostEffects::PreDraw();
+	Draw3DObject(sample);
 	BaseDirectX::clearColor[0] = 0.0f;
 	BaseDirectX::clearColor[1] = 0.0f;
 	BaseDirectX::clearColor[2] = 0.0f;
@@ -1278,14 +1289,14 @@ void GameScene::EndDraw()
 void GameScene::LightUpdate()
 {
 	light->SetPointLightActive(0, false);
-	light->SetSpotLightActive(0, Imgui::spotLight1);
+	light->SetSpotLightActive(0, false);
 	//light->SetCircleShadowActive(0, false);
 	light->SetPointLightPos(0, XMFLOAT3(pointLightPos));
 	light->SetPointLightAtten(0, XMFLOAT3(pointLightAtten));
 	light->SetPointLightColor(0, XMFLOAT3(pointLightColor));
 	light->SetSpotLightDir(0, XMVECTOR({ spotLightDir[0], spotLightDir[1], spotLightDir[2], 0 }));
 	light->SetSpotLightPos(0, XMFLOAT3(spotLightPos));
-	light->SetSpotLightColor(0, XMFLOAT3(Imgui::lightColor[0], Imgui::lightColor[1], Imgui::lightColor[2]));
+	light->SetSpotLightColor(0, XMFLOAT3(spotLightColor));
 	light->SetSpotLightAtten(0, XMFLOAT3(spotLightAtten));
 	light->SetSpotLightAngle(0, XMFLOAT2(spotLightAngle));
 }

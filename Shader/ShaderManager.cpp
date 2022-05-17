@@ -4,6 +4,8 @@ HLSLShader ShaderManager::playerShader;
 HLSLShader ShaderManager::thunderShader;
 HLSLShader ShaderManager::othelloShader;
 HLSLShader ShaderManager::othelloFrame;
+
+HLSLShader ShaderManager::postEffect;
 //HLSLShader ShaderManager::translucentShader;
 void ShaderManager::LoadShaders()
 {
@@ -15,6 +17,9 @@ void ShaderManager::LoadShaders()
 	othelloShader.psBlob = LoadShader(L"Resource/HLSL/OthelloPS.hlsl", "ps_5_0");
 	othelloFrame.vsBlob = LoadShader(L"Resource/HLSL/OthelloVS.hlsl", "vs_5_0");
 	othelloFrame.psBlob = LoadShader(L"Resource/HLSL/FramePS.hlsl", "ps_5_0");
+
+	postEffect.vsBlob = LoadShader(L"Resource/HLSL/PostEffectTestVS.hlsl", "vs_5_0");
+	postEffect.psBlob = LoadShader(L"Resource/HLSL/PostEffectTestPS.hlsl", "ps_5_0");
 	/*translucentShader.vsBlob = LoadShader(L"Resource/HLSL/OBJVertexShader.hlsl", "vs_5_0");
 	translucentShader.psBlob = LoadShader(L"Resource/HLSL/transluentPixelShader.hlsl", "ps_5_0");*/
 }

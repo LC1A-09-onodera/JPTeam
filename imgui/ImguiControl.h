@@ -4,6 +4,24 @@
 using namespace Microsoft::WRL;
 using namespace DirectX;
 
+class ImguiEnumElement
+{
+public:
+    int number;
+    std::string name;
+};
+
+class ImguiEnum
+{
+public:
+    ImguiEnum(int count, ...);
+    ~ImguiEnum();
+    const char* GetNames();
+    std::list<ImguiEnumElement> enums;
+    std::string nameString;
+    int enumCount;
+};
+
 class Imgui
 {
 private:

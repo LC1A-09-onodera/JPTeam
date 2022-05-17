@@ -1,5 +1,5 @@
 #pragma once
-#include <Windows.h>
+//#include <Windows.h>
 #include <vector>
 #include <string>
 #include <d3d12.h>

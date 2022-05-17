@@ -9,5 +9,7 @@ public:
 	static HLSLShader othelloShader;
 	static HLSLShader othelloFrame;
 	//static HLSLShader translucentShader;
+
+	static HLSLShader postEffect;
 	static void LoadShaders();
 };
