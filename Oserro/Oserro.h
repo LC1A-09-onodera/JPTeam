@@ -7,7 +7,8 @@
 enum OthelloType
 {
 	NORMAL,
-	HARF,
+	WALL,
+	STOP,
 	NONE,
 };
 namespace
@@ -21,6 +22,7 @@ namespace
 	{
 		panelPos pos;
 		bool isFront;
+		OthelloType type = NORMAL;
 	};
 	struct NormaModeFieldData
 	{
@@ -197,6 +199,7 @@ private:
 	XMFLOAT3 startPos;
 	XMFLOAT3 endPos;
 	OthelloModel *model;
+	OthelloModel *chainModel;
 	float startAngle;
 	float endAngle;
 	float time;
@@ -208,9 +211,9 @@ public:
 	XMFLOAT3 GetPosition() { return ConvertXMVECTORtoXMFLOAT3(each.position); }
 	void SetIsEase(bool isEase) { this->isEase = isEase; }
 	void SetPosition(XMFLOAT3 &position) { this->each.position = ConvertXMFLOAT3toXMVECTOR(position); }
-
+	void SetScale(XMFLOAT3 &scale){this->each.scale = scale;}
 public:
-	void Init(OthelloModel *model);
+	void Init(OthelloModel *model, OthelloModel *chainModel);
 	void Update(int combo);
 	void Draw();
 	void Finalize();
@@ -236,6 +239,9 @@ private:
 	void ReversUpdate(int combo);
 	void LeftRevers();
 	void Shake();
+	void NormalUpdate();
+	void WallUpdate();
+	void StopUpdate();
 };
 
 class ChanceModel : public OthelloModel
@@ -388,7 +394,7 @@ private:
 	void SetSpawnPlayer(int x, int y);
 
 	//特定のマスにパネルを配置する
-	void SetSpawnPanel(int x, int y, bool Front);
+	void SetSpawnPanel(int x, int y, bool Front,OthelloType type = NORMAL);
 
 private:
 	panelPos playerPanelPos;
@@ -403,6 +409,8 @@ private:
 	XMFLOAT3 mousePoint;
 
 	static OthelloModel oserroModel;
+	static OthelloModel stopOserroModel;
+	static OthelloModel wallOserroModel;
 	static ChanceModel chanceModelBlue;
 	static ChanceModel chanceModelOrange;
 	static vector<vector<SendOthelloData>> sendDatas;

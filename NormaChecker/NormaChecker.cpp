@@ -85,6 +85,7 @@ void NormaChecker::SetMove(std::list<Othello> panels, int x, int y)
 			PanelData.x = itr->GetGameData()->widthPos;
 			PanelData.y = itr->GetGameData()->heightPos;
 			PanelData.isFront = itr->GetGameData()->isFront;
+			PanelData.type = static_cast<int>(itr->GetGameData()->type);
 			alivePanels.push_back(PanelData);
 		}
 	}
@@ -115,7 +116,7 @@ void NormaChecker::PanelUpdate(std::list<Othello> panels)
 		}
 
 		//生きてるパネルを移動後パネルに追加する
-		bool isPanelAlive = !itr->GetGameData()->isVanish;
+		bool isPanelAlive = !itr->GetGameData()->isVanish && !(itr->GetGameData()->type == OthelloType::WALL);
 		if (isPanelAlive)
 		{
 			TmpOthelloData PanelData;
