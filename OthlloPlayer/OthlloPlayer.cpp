@@ -43,7 +43,7 @@ const int OthlloPlayer::MaxNTime = 60;
 const int OthlloPlayer::MaxETime = 60;
 const int OthlloPlayer::MaxReverseTime = 60;
 
-
+XMFLOAT3 OthlloPlayer::rotation = {0, 0, 0};
 void OthlloPlayer::Init()
 {
 	player.CreateModel("player", ShaderManager::playerShader);
@@ -63,9 +63,9 @@ void OthlloPlayer::Init()
 
 	playerStayObject->Initialize();
 	playerRunStartObject->Initialize();
-	playerRunNowObject->Initialize(1);
+	playerRunNowObject->Initialize(2);
 	playerRunEndObject->Initialize();
-	playerReverseObject->Initialize();
+	playerReverseObject->Initialize(2);
 
 	playerStayObject->SetModel(playerStay);
 	playerRunStartObject->SetModel(playerRunStart);
@@ -109,7 +109,7 @@ void OthlloPlayer::Draw()
 	{
 		playerRunStartObject->position = playerFbxObj->position;
 		//playerRunStartObject->rotation = playerFbxObj->rotation;
-		playerRunStartObject->rotation.x = -90;
+		playerRunStartObject->rotation = rotation;
 		playerRunStartObject->scale = playerFbxObj->scale;
 		playerRunStartObject->Update(); 
 		playerRunStartObject->Draw(BaseDirectX::cmdList.Get());
@@ -118,7 +118,7 @@ void OthlloPlayer::Draw()
 	{
 		playerRunNowObject->position = playerFbxObj->position;
 		//playerRunNowObject->rotation = playerFbxObj->rotation;
-		playerRunNowObject->rotation.x = -90;
+		playerRunNowObject->rotation = rotation;
 		playerRunNowObject->scale = playerFbxObj->scale;
 		playerRunNowObject->Update();
 		playerRunNowObject->Draw(BaseDirectX::cmdList.Get());
@@ -127,7 +127,7 @@ void OthlloPlayer::Draw()
 	{
 		playerRunEndObject->position = playerFbxObj->position;
 		//playerRunEndObject->rotation = playerFbxObj->rotation;
-		playerRunEndObject->rotation.x = -90;
+		playerRunEndObject->rotation = rotation;
 		playerRunEndObject->scale = playerFbxObj->scale;
 		playerRunEndObject->Update();
 		playerRunEndObject->Draw(BaseDirectX::cmdList.Get());
@@ -136,7 +136,7 @@ void OthlloPlayer::Draw()
 	{
 		playerReverseObject->position = playerFbxObj->position;
 		//playerReverseObject->rotation = playerFbxObj->rotation;
-		playerReverseObject->rotation.x = -90;
+		playerReverseObject->rotation = rotation;
 		playerReverseObject->scale = playerFbxObj->scale;
 		playerReverseObject->Update();
 		playerReverseObject->Draw(BaseDirectX::cmdList.Get());
@@ -145,7 +145,7 @@ void OthlloPlayer::Draw()
 	{
 		playerStayObject->position = playerFbxObj->position;
 		//playerStayObject->rotation = playerFbxObj->rotation;
-		playerStayObject->rotation.z = -90;
+		playerStayObject->rotation = rotation;
 		playerStayObject->scale = playerFbxObj->scale;
 		if (!playerStayObject->GetPlay())
 		{
@@ -169,6 +169,16 @@ void OthlloPlayer::Move()
 	bool padS = directInput->IsButtonPush(DirectInput::ButtonKind::DownButton);
 	bool padA = directInput->IsButtonPush(DirectInput::ButtonKind::LeftButton);
 	bool padW = directInput->IsButtonPush(DirectInput::ButtonKind::UpButton);
+	
+	if (Input::KeyTrigger(DIK_SPACE))
+	{
+		isReverse = true;
+		isRunStart = false;
+		isRunEnd = false;
+		isRunNow = false;
+		isStay = false;
+		playerReverseObject->PlayAnimation();
+	}
 
 	if ((D || A || S || W || padD || padA || padW || padS) && !isEase)
 	{
@@ -188,18 +198,22 @@ void OthlloPlayer::Move()
 		if ((D || padD) && each.position.m128_f32[0] < 6.0f)
 		{
 			endPos.x += MaxMoveAmount;
+			rotation.z = -90;
 		}
 		else if ((A || padA) && each.position.m128_f32[0] > -8.0f)
 		{
 			endPos.x -= MaxMoveAmount;
+			rotation.z = 90;
 		}
 		else if ((S || padS) && each.position.m128_f32[1] > -6.0f)
 		{
 			endPos.y -= MaxMoveAmount;
+			rotation.z = 180;
 		}
 		else if ((W || padW) && each.position.m128_f32[1] < 8.0f)
 		{
 			endPos.y += MaxMoveAmount;
+			rotation.z = 0;
 		}
 		isEase = true;
 		easeTime = 0;

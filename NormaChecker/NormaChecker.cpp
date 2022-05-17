@@ -85,6 +85,7 @@ void NormaChecker::SetMove(std::list<Othello> panels, int x, int y)
 			PanelData.x = itr->GetGameData()->widthPos;
 			PanelData.y = itr->GetGameData()->heightPos;
 			PanelData.isFront = itr->GetGameData()->isFront;
+			PanelData.type = static_cast<int>(itr->GetGameData()->type);
 			alivePanels.push_back(PanelData);
 		}
 	}

@@ -56,6 +56,8 @@ public:
 	static const int MaxETime;
 	static const int MaxReverseTime;
 
+	static XMFLOAT3 rotation;
+
 	static bool GetIsMoveEnd(){return isMoveEnd;}
 	static void MoveCancel();
 	static void Init();
