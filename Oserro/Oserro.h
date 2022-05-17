@@ -156,7 +156,7 @@ namespace OthelloConstData
 	const int downStepCountMax = 0;
 	const int TutorialEndTextTimer = 300;
 
-	const int NormaStageCount = 8;
+	const int NormaStageCount = 11;
 	//アニメーション
 	const int vanishTimerMax = 600;
 	const int animationTimerMax = 30;

@@ -107,12 +107,12 @@ public://シーンで使うもの
 	Model sky;
 	Model othelloStage;
 
-	/*SoundData selectSound;
+	SoundData selectSound;
 	SoundData timeUpSound;
 	SoundData enterSound;
 	SoundData BGMSound;
 	SoundData countdDownSound;
-	SoundData startSound;*/
+	SoundData startSound;
 	bool isPouse;
 	int selectPouse = 0;
 	const int selectMaxPouse = 2;
@@ -163,7 +163,8 @@ public://シーンで使うもの
 	bool selectEase = false;
 	float selectEaseTime = 0.0f;
 	float selectNumDistance = 170.0f;
-	Sprite selectStageNumSprite[10];
+	//float selectNumBigDistance = 160.0f;
+	Sprite selectStageNumSprite[11];
 	XMFLOAT3 selectStageFarstStartPos;
 	XMFLOAT3 selectStageFarstEndPos;
 	bool isScorePuls;

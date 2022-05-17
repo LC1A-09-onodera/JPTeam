@@ -13,7 +13,7 @@ class OthlloPlayer
 	
 	static Model player;
 	static EachInfo each;
-	//static SoundData moveSound;
+	static SoundData moveSound;
 	
 	static bool isMoveEnd;
 	static void Move();
