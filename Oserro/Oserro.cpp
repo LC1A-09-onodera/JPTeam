@@ -142,6 +142,7 @@ void Othello::Revers()
 	data.isFront = !data.isFront;
 	XMFLOAT3 pos = ConvertXMVECTORtoXMFLOAT3(each.position);
 	pos.z = -0.3f;
+	ObjectParticles::six.Init(pos, data.maxComboCount * 3, ParticleType::Exprotion);
 }
 
 
@@ -156,7 +157,7 @@ void Othello::Sandwich()
 	//data.JumpTimer = 0;
 	//data.isJumpUp = true;
 	XMFLOAT3 pos = ConvertXMVECTORtoXMFLOAT3(each.position);
-	pos.z = -0.3f;
+	ObjectParticles::six.Init(pos, data.maxComboCount * 3, ParticleType::Exprotion);
 
 }
 
@@ -262,7 +263,6 @@ void Othello::ReversUpdate(int combo)
 		data.isVanish = true;
 		XMFLOAT3 pos = ConvertXMVECTORtoXMFLOAT3(each.position);
 		ObjectParticles::othelloFrame.Init(pos, 1, ParticleType::BornAndShake);
-		ObjectParticles::six.Init(pos, combo * 3, ParticleType::Exprotion);
 		////ひっくり返ったら起動フラグをオンにする
 		//data.isMove = true;
 	}
@@ -562,7 +562,6 @@ void Othello::SinkWait()
 	data.isVanish = true;
 	XMFLOAT3 pos = ConvertXMVECTORtoXMFLOAT3(each.position);
 	ObjectParticles::othelloFrame.Init(pos, 1, ParticleType::BornAndShake);
-	ObjectParticles::six.Init(pos, 5, ParticleType::Exprotion);
 }
 
 void Othello::Sink()
