@@ -1512,6 +1512,10 @@ void OthelloManager::KeySetPlayer()
 {
 	isFieldUpdate = false;
 
+	if (pressPos.size() > 0)
+	{
+		pressPos.clear();
+	}
 	if (othellos.size() <= 0)
 	{
 		return;
@@ -1962,6 +1966,7 @@ void OthelloManager::TypeUp(list<Othello>::iterator playerItr, list<Othello>::it
 			if (isNextPanel && !playerItr->GetGameData()->isSandwich)
 			{
 				nextItr->GetGameData()->isDead = true;
+				pressPos.push_back(nextItr->GetPosition());
 			}
 			bool isNotMovePanel = (playerItr->GetGameData()->isVanish || playerItr->GetGameData()->isSpawn || playerItr->GetGameData()->isSandwich);
 			bool isNotDown = (downStepCount < downStepCountMax &&isNotMovePanel);
@@ -2603,4 +2608,9 @@ void OthelloManager::LoadAllStage()
 int OthelloManager::GetNormaStagesCount()
 {
 	return NormaStartOthellos.size();
+}
+
+std::list<XMFLOAT3> &OthelloManager::GetPressPanellPos()
+{
+	return pressPos;
 }

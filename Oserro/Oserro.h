@@ -303,6 +303,7 @@ public:
 
 	bool IsTutorialEnd();
 
+	std::list<XMFLOAT3> &GetPressPanellPos();
 public://ノルマモード用関数
 	void NormaUpdate(int combo);
 	void SetNormaMove();
@@ -440,4 +441,5 @@ private:
 	bool textChange = false;
 
 	NormaChecker normaChecker;
+	std::list<XMFLOAT3> pressPos;
 };
