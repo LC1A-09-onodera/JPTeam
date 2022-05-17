@@ -199,6 +199,7 @@ private:
 	XMFLOAT3 startPos;
 	XMFLOAT3 endPos;
 	OthelloModel *model;
+	OthelloModel *chainModel;
 	float startAngle;
 	float endAngle;
 	float time;
@@ -212,7 +213,7 @@ public:
 	void SetPosition(XMFLOAT3 &position) { this->each.position = ConvertXMFLOAT3toXMVECTOR(position); }
 	void SetScale(XMFLOAT3 &scale){this->each.scale = scale;}
 public:
-	void Init(OthelloModel *model);
+	void Init(OthelloModel *model, OthelloModel *chainModel);
 	void Update(int combo);
 	void Draw();
 	void Finalize();
