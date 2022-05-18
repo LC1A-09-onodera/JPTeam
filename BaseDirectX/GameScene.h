@@ -165,4 +165,12 @@ public://ÉVÅ[ÉìÇ≈égÇ§Ç‡ÇÃ
 	XMFLOAT3 selectStageFarstStartPos;
 	XMFLOAT3 selectStageFarstEndPos;
 	bool isScorePuls;
+
+	int sceneChageType = 0;
+	Sprite sceneChangeSprite2;
+	XMFLOAT3 sceneChangeSpriteStartPos;
+	XMFLOAT3 sceneChangeSpriteEndPos;
+	int sceneChangeDiray2 = 0;
+	float sceneChangeAfterTime = 0.0f;
+	bool isSceneChangeRady = false;
 };

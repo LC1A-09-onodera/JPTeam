@@ -633,7 +633,6 @@ void ObjectParticle3D::UpdateTornado()
 
 void ObjectParticle3D::UpdateBorn(list<XMFLOAT3> list)
 {
-
 	if (each.scale.x >= 1.0f)
 	{
 		easeTime -= 0.02f;
