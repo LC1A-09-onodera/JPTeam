@@ -30,6 +30,7 @@ private:
 	void ReStart();
 	void ToGame();
 	void ToGame2();
+	void ToGame3();
 
 public:
 	GameScene();
