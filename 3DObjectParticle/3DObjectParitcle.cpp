@@ -64,7 +64,7 @@ void ObjectParticle3D::Add(XMFLOAT3& emitter, ParticleType type, XMFLOAT3& size)
 	this->type = type;
 }
 
-void ObjectParticle3D::Update()
+void ObjectParticle3D::Update(list<XMFLOAT3> list)
 {
 	if (this->type == ParticleType::Exprotion)
 	{
@@ -92,7 +92,7 @@ void ObjectParticle3D::Update()
 	}
 	else if (type == ParticleType::Born)
 	{
-		UpdateBorn();
+		UpdateBorn(list);
 	}
 	else if (type == ParticleType::BornAndShake)
 	{
@@ -100,7 +100,7 @@ void ObjectParticle3D::Update()
 	}
 	else if (type == ParticleType::Combo)
 	{
-		UpdateCombo();
+		UpdateCombo(list);
 	}
 	else if (type == ParticleType::ComboNum)
 	{
@@ -631,7 +631,7 @@ void ObjectParticle3D::UpdateTornado()
 	}
 }
 
-void ObjectParticle3D::UpdateBorn()
+void ObjectParticle3D::UpdateBorn(list<XMFLOAT3> list)
 {
 
 	if (each.scale.x >= 1.0f)
@@ -647,6 +647,14 @@ void ObjectParticle3D::UpdateBorn()
 		each.rotation.z += 1.0f;
 		each.scale = each.scale + 0.01f;
 	}
+	if (list.size() <= 0) return;
+	for (auto itr = list.begin(); itr != list.end(); ++itr)
+	{
+		if (Lenght(each.position, XMFLOAT3(itr->x, itr->y, itr->z)) < 1.0f)
+		{
+			time = 0;
+		}
+	}
 }
 
 void ObjectParticle3D::UpdateBornAndShake()
@@ -661,7 +669,7 @@ void ObjectParticle3D::UpdateBornAndShake()
 	}
 }
 
-void ObjectParticle3D::UpdateCombo()
+void ObjectParticle3D::UpdateCombo(list<XMFLOAT3> list)
 {
 	easeTime -= 0.01f;
 	each.scale = {1.0f,	0.5f, 0.5f};
@@ -700,11 +708,11 @@ void ObjectParticleInfo::Init(XMFLOAT3& emitter, int count, ParticleType type, X
 	}
 }
 
-void ObjectParticleInfo::Update()
+void ObjectParticleInfo::Update(list<XMFLOAT3> list)
 {
 	for (auto itr = particles.begin(); itr != particles.end(); ++itr)
 	{
-		itr->Update();
+		itr->Update(list);
 		if (itr->time <= 0)
 		{
 			deleteItr.push_back(itr);
@@ -740,13 +748,13 @@ void ObjectParticles::LoadModels()
 	six.object.CreateModel("six", ShaderManager::playerShader);
 }
 
-void ObjectParticles::Update()
+void ObjectParticles::Update(list<XMFLOAT3> list)
 {
-	triangle.Update();
-	othello.Update();
-	frame.Update();
-	othelloFrame.Update();
-	six.Update();
+	triangle.Update(list);
+	othello.Update(list);
+	frame.Update(list);
+	othelloFrame.Update(list);
+	six.Update(list);
 }
 
 void ObjectParticles::Draw()

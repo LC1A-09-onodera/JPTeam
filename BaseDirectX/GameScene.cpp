@@ -440,7 +440,7 @@ void GameScene::TitleUpdate()
 			isPouse = false;
 		}
 	}
-	ObjectParticles::Update();
+	ObjectParticles::Update(othelloManager.GetPressPanellPos());
 	light->SetLightDir(XMFLOAT3(Camera::GetTargetDirection()));
 	LightUpdate();
 	sky.Update();
@@ -519,7 +519,7 @@ void GameScene::GameUpdate()
 		SoundStopWave(startSound);
 		SoundPlayOnce(startSound);
 	}
-	ObjectParticles::Update();
+	ObjectParticles::Update(othelloManager.GetPressPanellPos());
 	//タイトルからgameシーンへ
 	if (isSceneChange)
 	{
@@ -683,6 +683,7 @@ void GameScene::GameUpdate()
 			ReStart();
 		}
 	}
+	
 	sky.Update();
 	othelloStage.Update();
 	Lights::Add(checkObject);
@@ -901,7 +902,8 @@ void GameScene::SelectDraw()
 void GameScene::GameDraw()
 {
 	//PostEffectのPreDraw
-	//postEffect.PreDraw();
+	//PostEffects::PreDraw();
+
 	//Draw3DObject(sample);
 
 	BaseDirectX::clearColor[0] = 0.0f;
@@ -910,16 +912,19 @@ void GameScene::GameDraw()
 	BaseDirectX::clearColor[3] = 0.0f;
 	BaseDirectX::UpdateFront();
 	//PostEffectのDraw
-	//postEffect.Draw();
+	//PostEffects::Draw();
+	
+	//PostEffectのPostDraw
+	//PostEffects::PostDraw();
 
 	Draw3DObject(sky);
 	Draw3DObject(othelloStage);
 	OthlloPlayer::Draw();
-
 	ObjectParticles::Draw();
 	ParticleControl::Draw();
 	othelloManager.Draw();
 	Lights::Draw();
+
 	//スプライトの描画-------------------------
 	//titleSprite.SpriteDraw();
 	if (countDown > 0 && isSceneChange == false)
@@ -938,7 +943,6 @@ void GameScene::GameDraw()
 			numbers[countDown / 60].SpriteDraw();
 		}
 	}
-
 	if (gameTime > 0 && countDown <= 0)
 	{
 		numbers[gameTime / 60 % 10].ChangeSize(48, 64);
@@ -1052,11 +1056,6 @@ void GameScene::GameDraw()
 		float wid = 35;
 		float widPuls = 40;
 		float hi = 50;
-		/*if (scoreChange)
-		{
-			wid = 45;
-			widPuls = 50;
-		}*/
 		scoreSprite.position.m128_f32[0] = 0;
 		scoreSprite.position.m128_f32[1] = 15;
 		scoreSprite.ChangeSize(150, 50);
@@ -1148,6 +1147,7 @@ void GameScene::GameDraw()
 			kagikakkoEndSprite.SpriteDraw();
 		}
 	}
+
 	//Imgui::DrawImGui();
 	//描画コマンドここまで
 	BaseDirectX::UpdateBack();
@@ -1269,6 +1269,10 @@ void GameScene::ToGame()
 	checkObject.SetScore(0);
 	OthlloPlayer::SetPosition(XMFLOAT3(0, 0, -2));
 	OthlloPlayer::isEase = false;
+}
+
+void GameScene::ToGame2()
+{
 }
 
 void GameScene::EndDraw()

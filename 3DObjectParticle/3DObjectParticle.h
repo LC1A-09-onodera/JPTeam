@@ -40,7 +40,7 @@ public:
 	EachInfo each;
 	void Add(XMFLOAT3& emitter, ParticleType type);
 	void Add(XMFLOAT3& emitter, ParticleType type, XMFLOAT3 &size);
-	void Update();
+	void Update(list<XMFLOAT3> list);
 	void Draw(ObjectParticle& object);
 	void InitExprotion(XMFLOAT3& emitter);
 	void InitConverge(XMFLOAT3& emitter);
@@ -58,9 +58,9 @@ public:
 	void UpdateSwell();
 	void UpdateTarget();
 	void UpdateTornado();
-	void UpdateBorn();
+	void UpdateBorn(list<XMFLOAT3> list);
 	void UpdateBornAndShake();
-	void UpdateCombo();
+	void UpdateCombo(list<XMFLOAT3> list);
 	void UpdateConboNum();
 	int time;
 };
@@ -73,7 +73,7 @@ public:
 	ObjectParticle object;
 	void Init(XMFLOAT3& emitter, int count, ParticleType type);
 	void Init(XMFLOAT3& emitter, int count, ParticleType type, XMFLOAT3 size);
-	void Update();
+	void Update(list<XMFLOAT3> list);
 	void Draw(ObjectParticle& object);
 	void DeleteAllParticle();
 
@@ -88,7 +88,7 @@ public:
 	static ObjectParticleInfo othelloFrame;
 	static ObjectParticleInfo six;
 	static void LoadModels();
-	static void Update();
+	static void Update(list<XMFLOAT3> list);
 	static void Draw();
 	static void DeleteAllParticles();
 };

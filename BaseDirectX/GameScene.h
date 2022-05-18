@@ -27,9 +27,9 @@ private:
 	void SelectDraw();
 	void ResultDraw();
 	int SceneNum = TITLE;
-
 	void ReStart();
 	void ToGame();
+	void ToGame2();
 
 public:
 	GameScene();
@@ -38,7 +38,6 @@ public:
 	void SceneManageUpdateAndDraw();
 	//初期化
 	void Init();
-
 	void LightUpdate();
 
 public://シーンで使うもの
@@ -129,9 +128,7 @@ public://シーンで使うもの
 	Sprite kagikakkoEndSprite;
 	Sprite kagikakkoSelectStartSprite;
 	Sprite kagikakkoSelectEndSprite;
-
 	Sprite tutorialSprite;
-
 	Sprite gameScoreAttackSprite;
 	Sprite gameNormaSprite;
 	

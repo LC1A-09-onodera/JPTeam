@@ -117,12 +117,15 @@ void PostEffect::Draw()
 	matWorld = XMMatrixIdentity();
 	matWorld *= XMMatrixRotationZ(rotation);
 	matWorld *= XMMatrixTranslationFromVector(position);
+
+	//ガウスブラー用
+	CalcWeightGaussian(weights, NumWeight, 8.0f);
+	XMFLOAT4 weight0 = { weights[0], weights[1] ,weights[2] ,weights[3] };
+	XMFLOAT4 weight1 = { weights[4], weights[5] ,weights[6] ,weights[7] };
 	//転送
 	PostEffectConstBuffer* constMap = nullptr;
 	BaseDirectX::result = constBuff->Map(0, nullptr, (void**)&constMap);
 	constMap->mat = matWorld * common.matProjection;
-	XMFLOAT4 weight0 = { weights[0], weights[1] ,weights[2] ,weights[3] };
-	XMFLOAT4 weight1 = { weights[4], weights[5] ,weights[6] ,weights[7] };
 	constMap->weight0 = weight0;
 	constMap->weight1 = weight1;
 	constMap->frameTime = frameTime;
