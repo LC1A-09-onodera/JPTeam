@@ -547,19 +547,26 @@ void GameScene::GameUpdate()
 		}
 		else if (sceneChageType == 2)
 		{
+			//回転スタート
 			sceneChangeSprite2.rotation += 0.05f;
+			//はじめの回転の時間
 			eyeEaseTime += 0.02f;
+			//画面を覆ったらいったん止めて
 			if (sceneChangeSprite2.rotation > 0.0f)
 			{
 				eyeEaseTime = 1.0f;
+				//一定時間立つまでまつ
 				if (!isSceneChangeRady)sceneChangeSprite2.rotation = 0.0f;
+				//カメラをゲーム画面に固定
 				Camera::target.v = ShlomonMath::EaseInQuad(eyeStart, eyeEnd, 1.0f);
 				sceneChangeDiray2++;
+				//一定時間たったら
 				if (sceneChangeDiray2 > 120)
 				{
 					isSceneChangeRady = true;
 					if (sceneChangeSprite2.rotation < 2.0f)sceneChangeSprite2.rotation += 0.05f;
 					sceneChangeAfterTime += 0.02f;
+					//ゲーム画面」に移行し、カウントダウン開始
 					if (sceneChangeAfterTime >= 1.0f)
 					{
 						isSceneChange = false;
@@ -577,6 +584,10 @@ void GameScene::GameUpdate()
 				}
 			}
 			Camera::Update();
+		}
+		else if (sceneChageType == 3)
+		{
+
 		}
 	}
 	//ゲームシーンからリザルトへのトリガー
@@ -1337,6 +1348,33 @@ void GameScene::ToGame2()
 
 	sceneChangeDiray2 = 0;
 
+	nowScore = 0;
+	displayScore = 0;
+	oldDisplay = 0;
+	countDown = 239;
+	checkObject.SetScore(0);
+	OthlloPlayer::SetPosition(XMFLOAT3(0, 0, -2));
+	OthlloPlayer::isEase = false;
+}
+
+void GameScene::ToGame3()
+{
+	//初期化
+	checkObject.Init();
+	//シーンが変わることを伝える
+	isSceneChange = true;
+	//シーンの種類を決める
+	sceneChageType = 3;
+
+	isPouse = false;
+	SceneNum = GAME;
+	//カメラの終点を決める
+	eyeStart = Camera::target.v;
+	eyeEnd = { 0.0f, 0.0f, 0.0f };
+	eyeEaseTime = 0.0f;
+	sceneChangeAfterTime = 0.0f;
+
+	//なんやかんやの初期化
 	nowScore = 0;
 	displayScore = 0;
 	oldDisplay = 0;
