@@ -66,8 +66,10 @@ void GameScene::Init()
 	BaseDirectX::GetAdress();
 	//カメラ初期化
 	Camera::Init();
-	Camera::eye.v = gameNowEye;
-	Camera::target.v = gameOpTarget;
+	//Camera::eye.v = gameNowEye;
+	Camera::eye.v = { -1, 1, -15 };
+	//Camera::target.v = gameOpTarget;
+	Camera::target.v = { -1, 1, 0 };
 	Camera::Update();
 	//Imguiの初期化
 	Imgui::Init();
@@ -237,7 +239,7 @@ void GameScene::Init()
 			each.CreateConstBuff1();
 			each.rotation.x = 0;
 			each.position.m128_f32[0] = -(20 / 2.0f * OthelloR) + (i * OthelloR);
-			each.position.m128_f32[1] = -(12 / 2.0f * OthelloR) + (j * OthelloR) - 20;
+			each.position.m128_f32[1] = -(12 / 2.0f * OthelloR) + (j * OthelloR);
 			each.position.m128_f32[2] = 0;
 			each.scale = { 0.01f, 0.01f, 0.01f };
 			opOthellos.push_back(each);
@@ -355,8 +357,7 @@ void GameScene::TitleUpdate()
 				{
 					gameTime = gameMaxTime;
 					isTutorial = false;
-					ToGame2();
-					othelloManager.StartSetPos();
+					ToGame4();
 					titleSelectNum = 0;
 				}
 				//ノルマモード
@@ -366,7 +367,7 @@ void GameScene::TitleUpdate()
 					{
 						gameTime = gameMaxTime;
 						isTutorial = false;
-						ToGame2();
+						ToGame4();
 						othelloManager.StartNormaMode(selectStageNum);
 						titleSelectNum = 0;
 					}
@@ -461,7 +462,7 @@ void GameScene::TitleUpdate()
 	light->SetLightDir(XMFLOAT3(Camera::GetTargetDirection()));
 	LightUpdate();
 	sky.Update();
-	othelloStage.Update();
+	//othelloStage.Update();
 }
 
 void GameScene::SelectUpdate()
@@ -659,7 +660,70 @@ void GameScene::GameUpdate()
 							SoundPlayOnce(countdDownSound);
 						}
 					}
-					
+
+				}
+			}
+			Camera::Update();
+		}
+		else if (sceneChageType == 4)
+		{
+			Camera::eye.v = eyeStart;
+			Camera::target.v = camTargetStart;
+			eyeEaseTime += 0.02f;
+			for (auto opOthelloItr = opOthellos.begin(); opOthelloItr != opOthellos.end(); ++opOthelloItr)
+			{
+				opOthelloItr->scale = ShlomonMath::EaseInQuad(XMFLOAT3(0.01f, 0.01f, 0.01f), XMFLOAT3(1.5f, 1.5f, 1.0f), eyeEaseTime);
+				opOthelloItr->rotation = ShlomonMath::EaseInQuad(XMFLOAT3(0, 0, 0), XMFLOAT3(0, 0, 90), eyeEaseTime);
+				//opOthelloItr->rotation.y = 180;
+			}
+			if (eyeEaseTime >= 1.0f)
+			{
+				isStageDisplay = true;
+				eyeEaseTime = 1.0f;
+				sceneChangeDiray2++;
+				for (auto opOthelloItr = opOthellos.begin(); opOthelloItr != opOthellos.end(); ++opOthelloItr)
+				{
+					opOthelloItr->scale = ShlomonMath::EaseInQuad(XMFLOAT3(0.01f, 0.01f, 0.01f), XMFLOAT3(1.5f, 1.5f, 1.0f), eyeEaseTime);
+					opOthelloItr->rotation = ShlomonMath::EaseInQuad(XMFLOAT3(0, 0, 0), XMFLOAT3(0, 0, 90), eyeEaseTime);
+					//opOthelloItr->rotation.y = 180;
+				}
+				if (sceneChangeDiray2 >= 180)
+				{
+					sceneChangeAfterTime += 0.01f;
+					for (auto opOthelloItr = opOthellos.begin(); opOthelloItr != opOthellos.end(); ++opOthelloItr)
+					{
+						opOthelloItr->scale = ShlomonMath::EaseInQuad(XMFLOAT3(1.5f, 1.5f, 1.5f), XMFLOAT3(0.01f, 0.01f, 0.01f), sceneChangeAfterTime);
+						opOthelloItr->rotation = ShlomonMath::EaseInQuad(XMFLOAT3(0, 0, 90), XMFLOAT3(0, 0, 0), sceneChangeAfterTime);
+						//opOthelloItr->rotation.y = 180;
+					}
+				}
+				//ゲーム画面」に移行し、カウントダウン開始
+				if (sceneChangeAfterTime >= 1.0f)
+				{
+					sceneChangeAfterTime = 1.0f;
+					for (auto opOthelloItr = opOthellos.begin(); opOthelloItr != opOthellos.end(); ++opOthelloItr)
+					{
+						opOthelloItr->scale = ShlomonMath::EaseInQuad(XMFLOAT3(1.5f, 1.5f, 1.5f), XMFLOAT3(0.01f, 0.01f, 0.01f), sceneChangeAfterTime);
+						opOthelloItr->rotation = ShlomonMath::EaseInQuad(XMFLOAT3(0, 0, 90), XMFLOAT3(0, 0, 0), sceneChangeAfterTime);
+						//opOthelloItr->rotation.y = 180;
+					}
+					goToGameTime += 0.02f;
+					Camera::eye.v = ShlomonMath::EaseInQuad(eyeStart, eyeEnd, goToGameTime);
+					if (goToGameTime >= 1.0f)
+					{
+						isSceneChange = false;
+						if (isTutorial)
+						{
+							gameTime = 1;
+						}
+						else
+						{
+							gameTime = gameMaxTime;
+							othelloManager.StartSetPos();
+							SoundStopWave(countdDownSound);
+							SoundPlayOnce(countdDownSound);
+						}
+					}
 				}
 			}
 			Camera::Update();
@@ -1041,8 +1105,8 @@ void GameScene::GameDraw()
 	//PostEffects::PostDraw();
 
 	Draw3DObject(sky);
-	Draw3DObject(othelloStage);
-	if (isSceneChange == true && sceneChageType == 3)
+	if (isStageDisplay)Draw3DObject(othelloStage);
+	if (isSceneChange == true && (sceneChageType == 3 || sceneChageType == 4))
 	{
 		for (auto opOthelloItr = opOthellos.begin(); opOthelloItr != opOthellos.end(); ++opOthelloItr)
 		{
@@ -1050,7 +1114,10 @@ void GameScene::GameDraw()
 			Draw3DObject(ObjectParticles::othello2.object);
 		}
 	}
-	OthlloPlayer::Draw();
+	if (!isSceneChange)
+	{
+		OthlloPlayer::Draw();
+	}
 	ObjectParticles::Draw();
 	ParticleControl::Draw();
 	othelloManager.Draw();
@@ -1467,6 +1534,41 @@ void GameScene::ToGame3()
 	checkObject.SetScore(0);
 	OthlloPlayer::SetPosition(XMFLOAT3(0, 0, -2));
 	OthlloPlayer::isEase = false;
+}
+
+void GameScene::ToGame4()
+{
+	//初期化
+	checkObject.Init();
+	//シーンが変わることを伝える
+	isSceneChange = true;
+	//シーンの種類を決める
+	sceneChageType = 4;
+
+	isPouse = false;
+	SceneNum = GAME;
+	//カメラの終点を決める
+	eyeStart = XMFLOAT3(-1, 1, -15.0f);
+	eyeEnd = gameNowEye;
+	camTargetStart = { -1, 1, 0 };
+	camTargetEnd = { -1, 0, 0 };
+
+	eyeEaseTime = 0.0f;
+	sceneChangeAfterTime = 0.0f;
+
+	isStageDisplay = false;
+	goToGameTime = 0.0f;
+	sceneChangeDiray2 = 0;
+	//なんやかんやの初期化
+	nowScore = 0;
+	displayScore = 0;
+	oldDisplay = 0;
+	countDown = 239;
+	checkObject.SetScore(0);
+	OthlloPlayer::SetPosition(XMFLOAT3(0, 0, -2));
+	OthlloPlayer::isEase = false;
+
+	ObjectParticles::othello.DeleteAllParticle();
 }
 
 void GameScene::EndDraw()

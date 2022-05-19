@@ -218,7 +218,6 @@
   <ItemGroup>
     <ClCompile Include="3DModel\Model.cpp" />
     <ClCompile Include="3DObjectParticle\3DObjectParitcle.cpp" />
-    <ClCompile Include="3DObjectParticle\3DObjectParticle.cpp" />
     <ClCompile Include="BaseDirectX\BaseDirectX.cpp" />
     <ClCompile Include="BaseDirectX\DirectInput.cpp" />
     <ClCompile Include="BaseDirectX\GameScene.cpp" />

@@ -33,6 +33,7 @@ private:
 	void ToGame();
 	void ToGame2();
 	void ToGame3();
+	void ToGame4();
 
 public:
 	GameScene();
@@ -180,6 +181,11 @@ public://ÉVÅ[ÉìÇ≈égÇ§Ç‡ÇÃ
 	int sceneChangeDiray2 = 0;
 	float sceneChangeAfterTime = 0.0f;
 	bool isSceneChangeRady = false;
+	XMFLOAT3 camTargetStart;
+	XMFLOAT3 camTargetEnd;
+
+	bool isStageDisplay = false;
+	float goToGameTime = 0.0f;
 
 	list<FrameEach> opOthellos;
 };
