@@ -183,7 +183,7 @@ void GameScene::Init()
 	selectStageNumSprite[7].CreateSprite(num[7], XMFLOAT3(window_width / 2 - 30 + selectNumDistance * 6.0f, window_height / 2 + 50, 0));
 	selectStageNumSprite[8].CreateSprite(num[8], XMFLOAT3(window_width / 2 - 30 + selectNumDistance * 7.0f, window_height / 2 + 50, 0));
 	selectStageNumSprite[9].CreateSprite(num[9], XMFLOAT3(window_width / 2 - 30 + selectNumDistance * 8.0f, window_height / 2 + 50, 0));
-	selectStageNumSprite[10].CreateSprite(L"Resource/Img/number_10__.png", XMFLOAT3(window_width / 2 - 30 + selectNumDistance * 9.0f, window_height / 2 + 50, 0));
+	selectStageNumSprite[10].CreateSprite(L"Resource/Img/number_10.png", XMFLOAT3(window_width / 2 - 30 + selectNumDistance * 9.0f, window_height / 2 + 50, 0));
 	addReverse.CreateSprite(L"Resource/Img/combo.png", XMFLOAT3(0, 0, 0));
 	scoreSprite.CreateSprite(L"Resource/Img/score.png", XMFLOAT3(0, 0, 0));
 	timeUp.CreateSprite(L"Resource/Img/time_up.png", XMFLOAT3(0, 0, 0));
