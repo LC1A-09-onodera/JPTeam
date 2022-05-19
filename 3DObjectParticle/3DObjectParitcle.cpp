@@ -8,6 +8,7 @@ ObjectParticleInfo ObjectParticles::othello;
 ObjectParticleInfo ObjectParticles::frame;
 ObjectParticleInfo ObjectParticles::othelloFrame;
 ObjectParticleInfo ObjectParticles::six;
+ObjectParticleInfo ObjectParticles::othello2;
 void ObjectParticle3D::Add(XMFLOAT3& emitter, ParticleType type)
 {
 	if (type == ParticleType::Exprotion)
@@ -745,6 +746,7 @@ void ObjectParticles::LoadModels()
 	frame.object.CreateModel("Frame", ShaderManager::playerShader);
 	othelloFrame.object.CreateModel("OthelloFrame", ShaderManager::othelloFrame);
 	six.object.CreateModel("six", ShaderManager::playerShader);
+	othello2.object.CreateModel("newOserro3", ShaderManager::playerShader);
 }
 
 void ObjectParticles::Update(list<XMFLOAT3> list)
@@ -754,6 +756,7 @@ void ObjectParticles::Update(list<XMFLOAT3> list)
 	frame.Update(list);
 	othelloFrame.Update(list);
 	six.Update(list);
+	othello2.Update(list);
 }
 
 void ObjectParticles::Draw()
@@ -763,6 +766,7 @@ void ObjectParticles::Draw()
 	frame.Draw(frame.object);
 	othelloFrame.Draw(othelloFrame.object);
 	six.Draw(six.object);
+	othello2.Draw(othello2.object);
 }
 
 void ObjectParticles::DeleteAllParticles()
@@ -772,4 +776,5 @@ void ObjectParticles::DeleteAllParticles()
 	frame.DeleteAllParticle();
 	othelloFrame.DeleteAllParticle();
 	six.DeleteAllParticle();
+	othello2.DeleteAllParticle();
 }

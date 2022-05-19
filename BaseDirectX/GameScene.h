@@ -44,6 +44,10 @@ public:
 public://シーンで使うもの
 	Light* light = nullptr;
 	PostEffect post;
+	XMFLOAT3 gameNowEye = { -1.0f, -10.0f, -15.0f };
+	XMFLOAT3 gameOpEye = {0, 0, -15.0f};
+	XMFLOAT3 gameNowTarget = {-1.0f, 0, 0};
+	XMFLOAT3 gameOpTarget = { -1.0f, 100.0f, 0 };
 	float pointLightPos[3] = { 0, 1, 0 };
 	float pointLightColor[3] = { 1, 1, 1 };
 	float pointLightAtten[3] = { 0.3f, 0.1f, 0.1f };
@@ -174,4 +178,6 @@ public://シーンで使うもの
 	int sceneChangeDiray2 = 0;
 	float sceneChangeAfterTime = 0.0f;
 	bool isSceneChangeRady = false;
+
+	list<EachInfo> opOthellos;
 };
