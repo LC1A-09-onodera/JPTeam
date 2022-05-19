@@ -353,10 +353,10 @@ void GameScene::TitleUpdate()
 				//スコアアタック
 				if (!selectMode)
 				{
-					othelloManager.StartSetPos();
 					gameTime = gameMaxTime;
 					isTutorial = false;
 					ToGame2();
+					othelloManager.StartSetPos();
 					titleSelectNum = 0;
 				}
 				//ノルマモード
@@ -364,10 +364,10 @@ void GameScene::TitleUpdate()
 				{
 					if (selectStage)
 					{
-						othelloManager.StartNormaMode(selectStageNum);
 						gameTime = gameMaxTime;
 						isTutorial = false;
 						ToGame2();
+						othelloManager.StartNormaMode(selectStageNum);
 						titleSelectNum = 0;
 					}
 					else
