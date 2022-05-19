@@ -27,9 +27,10 @@ private:
 	void SelectDraw();
 	void ResultDraw();
 	int SceneNum = TITLE;
-
 	void ReStart();
 	void ToGame();
+	void ToGame2();
+	void ToGame3();
 
 public:
 	GameScene();
@@ -38,12 +39,15 @@ public:
 	void SceneManageUpdateAndDraw();
 	//初期化
 	void Init();
-
 	void LightUpdate();
 
 public://シーンで使うもの
 	Light* light = nullptr;
 	PostEffect post;
+	XMFLOAT3 gameNowEye = { -1.0f, -10.0f, -15.0f };
+	XMFLOAT3 gameOpEye = {0, 0, -15.0f};
+	XMFLOAT3 gameNowTarget = {-1.0f, 0, 0};
+	XMFLOAT3 gameOpTarget = { -1.0f, 100.0f, 0 };
 	float pointLightPos[3] = { 0, 1, 0 };
 	float pointLightColor[3] = { 1, 1, 1 };
 	float pointLightAtten[3] = { 0.3f, 0.1f, 0.1f };
@@ -129,9 +133,7 @@ public://シーンで使うもの
 	Sprite kagikakkoEndSprite;
 	Sprite kagikakkoSelectStartSprite;
 	Sprite kagikakkoSelectEndSprite;
-
 	Sprite tutorialSprite;
-
 	Sprite gameScoreAttackSprite;
 	Sprite gameNormaSprite;
 	
@@ -168,4 +170,14 @@ public://シーンで使うもの
 	XMFLOAT3 selectStageFarstStartPos;
 	XMFLOAT3 selectStageFarstEndPos;
 	bool isScorePuls;
+
+	int sceneChageType = 0;
+	Sprite sceneChangeSprite2;
+	XMFLOAT3 sceneChangeSpriteStartPos;
+	XMFLOAT3 sceneChangeSpriteEndPos;
+	int sceneChangeDiray2 = 0;
+	float sceneChangeAfterTime = 0.0f;
+	bool isSceneChangeRady = false;
+
+	list<EachInfo> opOthellos;
 };

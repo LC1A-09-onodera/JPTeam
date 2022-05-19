@@ -12,6 +12,8 @@ list<Othello> OthelloManager::othellos;
 list<NormaModeFieldData> OthelloManager::NormaStartOthellos;
 list<ChanceObject> OthelloManager::chances;
 OthelloModel OthelloManager::oserroModel;
+OthelloModel OthelloManager::stopOserroModel;
+OthelloModel OthelloManager::wallOserroModel;
 ChanceModel OthelloManager::chanceModelBlue;
 ChanceModel OthelloManager::chanceModelOrange;
 vector<vector<SendOthelloData>> OthelloManager::sendDatas;
@@ -25,9 +27,10 @@ OthelloData::OthelloData()
 	}
 }
 
-void Othello::Init(OthelloModel *model)
+void Othello::Init(OthelloModel *model, OthelloModel *chainModel)
 {
 	this->model = model;
+	this->chainModel = chainModel;
 	each.CreateConstBuff0();
 	each.CreateConstBuff1();
 }
@@ -121,6 +124,11 @@ void Othello::Draw()
 		}
 		model->Update(&each);
 		Draw3DObject(*model);
+		if (data.type == STOP && !GetIsActive())
+		{
+			chainModel->Update(&each);
+			Draw3DObject(*chainModel);
+		}
 	}
 }
 
@@ -140,6 +148,7 @@ void Othello::Revers()
 	data.isFront = !data.isFront;
 	XMFLOAT3 pos = ConvertXMVECTORtoXMFLOAT3(each.position);
 	pos.z = -0.3f;
+	ObjectParticles::six.Init(pos, data.maxComboCount * 3, ParticleType::Exprotion);
 }
 
 
@@ -154,7 +163,7 @@ void Othello::Sandwich()
 	//data.JumpTimer = 0;
 	//data.isJumpUp = true;
 	XMFLOAT3 pos = ConvertXMVECTORtoXMFLOAT3(each.position);
-	pos.z = -0.3f;
+	ObjectParticles::six.Init(pos, data.maxComboCount * 3, ParticleType::Exprotion);
 
 }
 
@@ -260,7 +269,6 @@ void Othello::ReversUpdate(int combo)
 		data.isVanish = true;
 		XMFLOAT3 pos = ConvertXMVECTORtoXMFLOAT3(each.position);
 		ObjectParticles::othelloFrame.Init(pos, 1, ParticleType::BornAndShake);
-		ObjectParticles::six.Init(pos, combo * 3, ParticleType::Exprotion);
 		////ひっくり返ったら起動フラグをオンにする
 		//data.isMove = true;
 	}
@@ -560,7 +568,6 @@ void Othello::SinkWait()
 	data.isVanish = true;
 	XMFLOAT3 pos = ConvertXMVECTORtoXMFLOAT3(each.position);
 	ObjectParticles::othelloFrame.Init(pos, 1, ParticleType::BornAndShake);
-	ObjectParticles::six.Init(pos, 5, ParticleType::Exprotion);
 }
 
 void Othello::Sink()
@@ -595,6 +602,8 @@ bool Othello::GetIsActive()
 void OthelloManager::Init()
 {
 	oserroModel.CreateModel("newOserro", ShaderManager::othelloShader);
+	stopOserroModel.CreateModel("rock_othello", ShaderManager::othelloShader);
+	wallOserroModel.CreateModel("wall", ShaderManager::othelloShader);
 	chanceModelBlue.CreateModel("chance_1", ShaderManager::othelloShader);
 	chanceModelOrange.CreateModel("chance", ShaderManager::othelloShader);
 	sendDatas.resize(fieldSize);
@@ -909,8 +918,11 @@ void OthelloManager::NormaUpdate(int combo)
 	{
 		isFieldUpdate = true;
 	}
-	Undo();
-	normaChecker.Update(othellos, nowScore, nowMaxCombo);
+	if (isNormaMode)
+	{
+		Undo();
+		normaChecker.Update(othellos, nowScore, nowMaxCombo);
+	}
 }
 void OthelloManager::Draw()
 {
@@ -1128,7 +1140,7 @@ const vector<vector<SendOthelloData>> &OthelloManager::Send()
 	{
 		OthelloData gameDatas = *itr->GetGameData();
 		SendOthelloData data;
-		if (gameDatas.isPlayer || gameDatas.isSpawn)
+		if (gameDatas.isPlayer || gameDatas.isSpawn || gameDatas.type == OthelloType::WALL)
 		{
 			continue;
 		}
@@ -1172,8 +1184,12 @@ void OthelloManager::Receive(const vector<vector<SendOthelloData>> &data)
 {
 	sendDatas = data;
 
-	//
+	if (othellos.size() == 0)
+	{
+		return;
+	}
 	auto itr = othellos.begin();
+
 	int chainName = itr->GetGameData()->chainName;
 
 
@@ -1313,7 +1329,7 @@ void OthelloManager::SetPanel()
 	if (itr == othellos.end())
 	{
 		Othello data;
-		data.Init(&oserroModel);
+		data.Init(&oserroModel, &stopOserroModel);
 		data.Spawn(NORMAL, x, y, true);
 		data.Update(0);
 		data.GetGameData()->isMove = false;
@@ -1416,7 +1432,7 @@ void OthelloManager::SpawnPanel(bool isInGame)
 
 	}
 	Othello data;
-	data.Init(&oserroModel);
+	data.Init(&oserroModel, &stopOserroModel);
 
 	bool randFront = rand() % 2;
 	if (isInGame)
@@ -1496,6 +1512,10 @@ void OthelloManager::KeySetPlayer()
 {
 	isFieldUpdate = false;
 
+	if (pressPos.size() > 0)
+	{
+		pressPos.clear();
+	}
 	if (othellos.size() <= 0)
 	{
 		return;
@@ -1606,7 +1626,7 @@ void OthelloManager::StartSetPos()
 	int y = stagePos.y / -(cellScale * 2);
 
 	Othello data;
-	data.Init(&oserroModel);
+	data.Init(&oserroModel, &stopOserroModel);
 
 	bool randFront = rand() % 2;
 	data.Spawn(NORMAL, x, y, randFront);
@@ -1890,7 +1910,7 @@ void OthelloManager::TypeUp(list<Othello>::iterator playerItr, list<Othello>::it
 	{
 		if (nextItr->GetGameData()->isSpawn)
 		{
-		int a = nextItr->GetGameData()->spawnTimer;
+			int a = nextItr->GetGameData()->spawnTimer;
 			float nowScale = static_cast<float>(a) / SpawnAnimationTimerMax;
 			isSpawnPanel = nowScale >= 0.6f;
 		}
@@ -1924,7 +1944,7 @@ void OthelloManager::TypeUp(list<Othello>::iterator playerItr, list<Othello>::it
 		}
 		float stepSize = nextStep - nowStep;
 		bool isStepUp = stepSize <= panelWallRate;
-		bool isNotMove = (nextItr->GetGameData()->isReverce || !isStepUp);
+		bool isNotMove = (nextItr->GetGameData()->isReverce || !isStepUp || nextItr->GetGameData()->type == OthelloType::WALL);
 		if (isNotMove)
 		{
 			playerNotMove();
@@ -1946,6 +1966,7 @@ void OthelloManager::TypeUp(list<Othello>::iterator playerItr, list<Othello>::it
 			if (isNextPanel && !playerItr->GetGameData()->isSandwich)
 			{
 				nextItr->GetGameData()->isDead = true;
+				pressPos.push_back(nextItr->GetPosition());
 			}
 			bool isNotMovePanel = (playerItr->GetGameData()->isVanish || playerItr->GetGameData()->isSpawn || playerItr->GetGameData()->isSandwich);
 			bool isNotDown = (downStepCount < downStepCountMax &&isNotMovePanel);
@@ -1955,7 +1976,7 @@ void OthelloManager::TypeUp(list<Othello>::iterator playerItr, list<Othello>::it
 				return;
 			}
 			isPanelMove = true;
-			if (!playerItr->GetGameData()->isVanish && !playerItr->GetGameData()->isReverce && !playerItr->GetGameData()->isSandwich && !playerItr->GetGameData()->isSpawn)
+			if (!playerItr->GetGameData()->isVanish && !playerItr->GetGameData()->isReverce && !playerItr->GetGameData()->isSandwich && !playerItr->GetGameData()->isSpawn && (playerItr->GetGameData()->type == OthelloType::NORMAL))
 			{
 				playerItr->GetGameData()->isPlayer = true;
 				SetNormaMove();
@@ -2013,7 +2034,7 @@ void OthelloManager::SaveSpawn()
 		if (saveTimer >= saveTimerLimit)
 		{
 			Othello data;
-			data.Init(&oserroModel);
+			data.Init(&oserroModel, &stopOserroModel);
 			bool randFront = rand() % 2;
 			int x = playerPanelPos.x;
 			int y = playerPanelPos.y;
@@ -2206,12 +2227,27 @@ void OthelloManager::whyStepSpawn()
 
 }
 
-void OthelloManager::SetSpawnPanel(int x, int y, bool Front)
+void OthelloManager::SetSpawnPanel(int x, int y, bool Front, OthelloType type)
 {
 	Othello data;
-	data.Init(&oserroModel);
+	if (type == WALL)
+	{//タイプが壁だったら
+		data.Init(&wallOserroModel, &stopOserroModel);
+	}
+	else if (type == STOP)
+	{//タイプが壁だったら
+		data.Init(&oserroModel, &stopOserroModel);
+	}
+	else
+	{
+		data.Init(&oserroModel, &stopOserroModel);
+	}
+	data.Spawn(type, x, y, Front);
 
-	data.Spawn(NORMAL, x, y, Front);
+	if (type == WALL)
+	{//タイプが壁だったら大きくしてる
+		data.SetScale(XMFLOAT3(1, 1, 1));
+	}
 
 	data.Update(0);
 	othellos.push_back(data);
@@ -2318,7 +2354,7 @@ void OthelloManager::Undo()
 		auto panelItr = data.othellos.begin();
 		for (; panelItr != data.othellos.end(); panelItr++)
 		{
-			SetSpawnPanel(panelItr->x, panelItr->y, panelItr->isFront);
+			SetSpawnPanel(panelItr->x, panelItr->y, panelItr->isFront, static_cast<OthelloType>(panelItr->type));
 		}
 
 		SetSpawnPlayer(data.playerPos.x, data.playerPos.y);
@@ -2350,7 +2386,7 @@ void OthelloManager::StartNormaField(int stageNum)
 
 	//ステージ番号に応じたイテレーターを呼び出す
 	auto stageItr = NormaStartOthellos.begin();
-	for (int i = 0; i < stageNum; i++)
+	for (int i = 1; i < stageNum; i++)
 	{
 		stageItr++;
 	}
@@ -2366,7 +2402,7 @@ void OthelloManager::StartNormaField(int stageNum)
 	auto panelItr = stageItr->panels.begin();
 	for (; panelItr != stageItr->panels.end(); panelItr++)
 	{
-		SetSpawnPanel(panelItr->pos.x, panelItr->pos.y, panelItr->isFront);
+		SetSpawnPanel(panelItr->pos.x, panelItr->pos.y, panelItr->isFront, panelItr->type);
 	}
 	SetSpawnPlayer(stageItr->playerPos.x, stageItr->playerPos.y);
 	normaChecker.SetNorma(stageItr->type, stageItr->normaStatus, stageItr->normaMoveCount);
@@ -2380,6 +2416,7 @@ void OthelloManager::TestStage()
 
 	a.isFront = true;
 	a.pos = { 0, 0 };
+	a.type = STOP;
 
 	testStage.panels.push_back(a);
 	b.isFront = false;
@@ -2519,6 +2556,33 @@ void OthelloManager::LoadNormaStage(string stage)
 					panel.isFront = false;
 					NormaField.panels.push_back(panel);
 				}
+				//固定表
+				else if (panelID == 3)
+				{
+					panelData panel;
+					panel.pos = { i, yPos };
+					panel.isFront = true;
+					panel.type = STOP;
+					NormaField.panels.push_back(panel);
+				}
+				//固定裏
+				else if (panelID == 4)
+				{
+					panelData panel;
+					panel.pos = { i, yPos };
+					panel.isFront = false;
+					panel.type = STOP;
+					NormaField.panels.push_back(panel);
+				}
+				//壁
+				else if (panelID == 5)
+				{
+					panelData panel;
+					panel.pos = { i, yPos };
+					panel.isFront = true;
+					panel.type = WALL;
+					NormaField.panels.push_back(panel);
+				}
 			}
 			yPos++;
 
@@ -2544,4 +2608,9 @@ void OthelloManager::LoadAllStage()
 int OthelloManager::GetNormaStagesCount()
 {
 	return NormaStartOthellos.size();
+}
+
+std::list<XMFLOAT3> &OthelloManager::GetPressPanellPos()
+{
+	return pressPos;
 }

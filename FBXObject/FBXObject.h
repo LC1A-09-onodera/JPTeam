@@ -29,11 +29,12 @@ public:
 	{
 		XMMATRIX bones[MAX_BONES];
 	};
-	void Initialize();
+	void Initialize(int speed = 1);
 	void Update();
 	void Draw(ID3D12GraphicsCommandList *cmdList);
 	void SetModel(FBXModel* model){this->model = model;}
 	void PlayAnimation();
+	bool GetPlay(){return isPlay;}
 	static void SetDevice(ID3D12Device *dev){FBXObject::dev = dev;}
 	static void CreateGraphicsPipeline();
 	XMFLOAT3 scale = {1, 1, 1};

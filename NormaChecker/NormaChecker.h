@@ -24,6 +24,7 @@ namespace Norma
 		int x = 0;
 		int y = 0;
 		bool isFront = false;
+		int type = 0;
 	};
 	struct FieldStatus
 	{

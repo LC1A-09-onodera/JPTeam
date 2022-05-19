@@ -12,12 +12,12 @@ ID3D12Device *FBXObject::dev = nullptr;
 ComPtr<ID3D12RootSignature> FBXObject::rootSignature;
 ComPtr<ID3D12PipelineState> FBXObject::pipelineState;
 
-void FBXObject::Initialize()
+void FBXObject::Initialize(int speed)
 {
 	HRESULT result;
 	result = dev->CreateCommittedResource(&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD), D3D12_HEAP_FLAG_NONE, &CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferDataTransform) + 0xff) & ~0xff), D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&constBuffTrabsform));
 	result = dev->CreateCommittedResource(&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD), D3D12_HEAP_FLAG_NONE, &CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferDataSkin) + 0xff) & ~0xff), D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&constBufferSkin));
-	frameTime.SetTime(0, 0, 0, 1, 0, FbxTime::EMode::eFrames60);
+	frameTime.SetTime(0, 0, 0, speed, 0, FbxTime::EMode::eFrames60);
 	ConstBufferDataSkin *constMapSkin = nullptr;
 	result = constBufferSkin->Map(0, nullptr, (void **)&constMapSkin);
 	for (int i = 0; i < MAX_BONES; i++)
@@ -64,6 +64,7 @@ void FBXObject::Update()
 		if (currentTime > endTime)
 		{
 			currentTime = startTime;
+			isPlay = false;
 		}
 	}
 	std::vector<Bone> &bones = model->GetBornes();
