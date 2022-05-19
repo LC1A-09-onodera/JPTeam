@@ -163,6 +163,8 @@ namespace OthelloConstData
 	const int NormaStageCount = 11;
 	//アニメーション
 	const int vanishTimerMax = 600;
+	const int vanishAnimation = 180;
+	const int vanishWaitTimer = vanishTimerMax - vanishAnimation;
 	const int animationTimerMax = 30;
 	const int waitTimerMax = 30;
 	const int JumpTimerMax = waitTimerMax / 2;

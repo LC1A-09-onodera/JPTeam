@@ -573,13 +573,17 @@ void Othello::SinkWait()
 void Othello::Sink()
 {
 	data.vanishTimer++;
+	if (data.vanishTimer <= vanishWaitTimer)
+	{
+		return;
+	}
 	if (data.vanishTimer >= vanishTimerMax)
 	{
 		data.isDead = true;
 	}
 	else
 	{
-		float nowScale = static_cast<float>(data.vanishTimer) / vanishTimerMax;
+		float nowScale = static_cast<float>(data.vanishTimer - vanishWaitTimer) / vanishAnimation;
 		data.isHarf = (nowScale >= 0.5f);
 		//each.scale = { 1 - nowScale, 1 - nowScale, 1.0f };
 		each.scale = { 1.0f, 1.0f, PanelSize * (1 - nowScale) };
