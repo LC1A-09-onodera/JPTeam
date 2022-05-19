@@ -296,7 +296,7 @@ public:
 	const vector<vector<SendOthelloData>> &Send();
 	void Receive(const vector<vector<SendOthelloData>> &data);
 
-	void MinSpawn();
+	void MinSpawn(bool inGame);
 	static list<Othello> othellos;
 	static list<NormaModeFieldData> NormaStartOthellos;
 

@@ -697,7 +697,7 @@ void OthelloManager::Update(int combo)
 	//Ž€‚Ê
 	DeadPanel();
 
-	MinSpawn();
+	MinSpawn(true);
 	//¶¬
 	RandumSetPanel();
 
@@ -1494,7 +1494,7 @@ void OthelloManager::SpawnPanel(bool isInGame)
 	othellos.push_back(data);
 }
 
-void OthelloManager::MinSpawn()
+void OthelloManager::MinSpawn(bool inGame)
 {
 	if (othellos.size() >= minPanelCount)return;
 
@@ -1502,7 +1502,7 @@ void OthelloManager::MinSpawn()
 
 	for (int i = 0; i < minPanelUnderCount; i++)
 	{
-		SpawnPanel(true);
+		SpawnPanel(inGame);
 	}
 }
 
@@ -1683,6 +1683,7 @@ void OthelloManager::StartSetPos()
 		SetChanceObject(i, i, true);
 		SetChanceObject(i, 7 - i, false);
 	}
+	MinSpawn(false);
 }
 
 
