@@ -583,13 +583,51 @@ void Othello::Sink()
 	}
 	else
 	{
-		float nowScale = static_cast<float>(data.vanishTimer - vanishWaitTimer) / vanishAnimation;
-		data.isHarf = (nowScale >= 0.5f);
-		//each.scale = { 1 - nowScale, 1 - nowScale, 1.0f };
-		each.scale = { 1.0f, 1.0f, PanelSize * (1 - nowScale) };
+		//沈むアニメーション
+		//SinkAnimation();
+		BreathAnimation();
+
 	}
 }
+void Othello::SinkAnimation()
+{
+	float nowScale = static_cast<float>(data.vanishTimer - vanishWaitTimer) / vanishAnimation;
+	data.isHarf = (nowScale >= 0.5f);
+	//each.scale = { 1 - nowScale, 1 - nowScale, 1.0f };
+	each.scale = { 1.0f, 1.0f, PanelSize * (1 - nowScale) };
 
+}
+
+void Othello::BreathAnimation()
+{
+	breathTimer++;
+	breathLevelTimer++;
+	int BreathTimerMax = Breath::breathSpan -(breathLevel * 2);
+	if (breathTimer >= BreathTimerMax)
+	{
+		breathTimer = 0;
+		BreathAnimationFlag = !BreathAnimationFlag;
+	}
+	if (breathLevelTimer >= Breath::breathLevelTimerMax)
+	{
+		breathLevelTimer = 0;
+		breathLevel++;
+	}
+	float nowScale = static_cast<float>(breathTimer) / BreathTimerMax;
+
+	if (BreathAnimationFlag)
+	{
+		nowScale = ShlomonMath::EaseInOutQuad(XMFLOAT3{}, XMFLOAT3{ 1, 0, 0 }, nowScale).x;
+	}
+	else
+	{
+		nowScale = ShlomonMath::EaseInOutQuad(XMFLOAT3{ 1, 0, 0 }, XMFLOAT3{}, nowScale).x;
+	}
+	nowScale *= -0.2f;
+	data.isHarf = (nowScale >= 0.5f);
+	//each.scale = { 1 - nowScale, 1 - nowScale, 1.0f };
+	each.scale = { 1.0f + nowScale, 1.0f + nowScale, PanelSize + nowScale };
+}
 void Othello::MakeParticle()
 {
 	XMFLOAT3 sample;

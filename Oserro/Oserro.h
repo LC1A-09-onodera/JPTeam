@@ -170,6 +170,12 @@ namespace OthelloConstData
 	const int JumpTimerMax = waitTimerMax / 2;
 	const int SpawnAnimationTimerMax = 120;
 	const int downStepTimerMax = 60;
+
+	namespace Breath
+	{
+		const int breathSpan = 10;
+		const int breathLevelTimerMax = 60;
+	};
 }
 
 class OthelloEachInfo : public EachInfo
@@ -215,7 +221,7 @@ public:
 	XMFLOAT3 GetPosition() { return ConvertXMVECTORtoXMFLOAT3(each.position); }
 	void SetIsEase(bool isEase) { this->isEase = isEase; }
 	void SetPosition(XMFLOAT3 &position) { this->each.position = ConvertXMFLOAT3toXMVECTOR(position); }
-	void SetScale(XMFLOAT3 &scale){this->each.scale = scale;}
+	void SetScale(XMFLOAT3 &scale) { this->each.scale = scale; }
 public:
 	void Init(OthelloModel *model, OthelloModel *chainModel);
 	void Update(int combo);
@@ -239,6 +245,13 @@ public:
 	bool GetIsActive();
 
 	void SpawnUpdate();
+private://アニメーション
+	void SinkAnimation();
+	void BreathAnimation();
+	bool BreathAnimationFlag = true;
+	int breathTimer = 5;//初期値
+	int breathLevelTimer = 0;
+	int breathLevel = 0;
 private:
 	void ReversUpdate(int combo);
 	void LeftRevers();
@@ -319,7 +332,7 @@ public://ノルマモード用関数
 	bool GetIsNormaFailed();
 	bool isNormaMode = false;
 
-	void SetScore(const int score){nowScore = score;}
+	void SetScore(const int score) { nowScore = score; }
 
 	void NormaTextDraw();
 	int GetNormaStagesCount();
@@ -398,7 +411,7 @@ private:
 	void SetSpawnPlayer(int x, int y);
 
 	//特定のマスにパネルを配置する
-	void SetSpawnPanel(int x, int y, bool Front,OthelloType type = NORMAL);
+	void SetSpawnPanel(int x, int y, bool Front, OthelloType type = NORMAL);
 
 private:
 	panelPos playerPanelPos;
