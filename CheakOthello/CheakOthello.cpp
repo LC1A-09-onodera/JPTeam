@@ -4,7 +4,7 @@
 #include "../BaseDirectX/Input.h"
 #include "../imgui/ImguiControl.h"
 
-SoundData CheakOthello::comboSound;
+//SoundData CheakOthello::comboSound[9];
 
 CheakOthello::CheakOthello()
 {
@@ -29,6 +29,8 @@ CheakOthello::~CheakOthello()
 
 void CheakOthello::Init()
 {
+	//SoundLoad("Resource/Sound/reverse_4_.wav", comboSound);
+
 	last_x = 0;				//最後に動かしたオセロのX座標
 	last_y = 0;				//最後に動かしたオセロのY座標
 	totalScore = 0;			//合計点
@@ -46,7 +48,17 @@ void CheakOthello::Init()
 
 void CheakOthello::SoundInit()
 {
-	SoundLoad("Resource/Sound/reverse_4_.wav", comboSound);
+	SoundLoad("Resource/Sound/reverse_0_.wav", comboSound[0]);
+	SoundLoad("Resource/Sound/reverse_1_.wav", comboSound[1]);
+	SoundLoad("Resource/Sound/reverse_2_.wav", comboSound[2]);
+	SoundLoad("Resource/Sound/reverse_3_.wav", comboSound[3]);
+	SoundLoad("Resource/Sound/reverse_4_.wav", comboSound[4]);
+	SoundLoad("Resource/Sound/reverse_5_.wav", comboSound[5]);
+	SoundLoad("Resource/Sound/reverse_6_.wav", comboSound[6]);
+	SoundLoad("Resource/Sound/reverse_7_.wav", comboSound[7]);
+	SoundLoad("Resource/Sound/reverse_8_.wav", comboSound[8]);
+	SoundLoad("Resource/Sound/reverse_9_.wav", comboSound[9]);
+	//SoundLoad("Resource/Sound/reverse_4_.wav", comboSound);
 }
 
 void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData, bool isCheck)
@@ -113,7 +125,7 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData, bo
 		OthelloCheck(Direction_X::EAST, Direction_Y::SOUTH, pPos.first, pPos.second, isCheck);
 	}
 
-	while (!sandwichData.empty())
+	/*while (!sandwichData.empty())
 	{
 		CheckReachOthello(Direction_X::WEST, NONE_DIRECTION);
 		CheckReachOthello(Direction_X::EAST, NONE_DIRECTION);
@@ -126,7 +138,7 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData, bo
 
 		sandwichData.erase(sandwichData.begin());
 		sandwichSide.erase(sandwichSide.begin());
-	}
+	}*/
 }
 
 void CheakOthello::CheckLastMove(const vector<vector<SendOthelloData>>& othelloData)
@@ -237,8 +249,6 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y, int last_x, in
 			{
 				if (isCombos) { isCombosCheck = true; }
 				isCombos = true;
-				SoundStopWave(comboSound);
-				SoundPlayOnce(comboSound);
 				totalDeleteOthello += loop;
 				//全部探索リストに入れる（自分と挟んだ駒まで）←sandwichArrayが同じかも参照する
 				//挟んだやつの最大のconboCountを取得→それ+1したのをコンボしたオセロにセット
@@ -325,6 +335,18 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y, int last_x, in
 					//スコア加算されたフラグ
 					isAddScore = true;
 
+					if (maxComboCount < 9)
+					{
+						SoundStopWave(comboSound[maxComboCount]);
+						SoundPlayOnce(comboSound[maxComboCount]);
+					}
+					else
+					{
+						SoundStopWave(comboSound[9]);
+						SoundPlayOnce(comboSound[9]);
+					}
+
+
 					//maxComboCountを加算
 					maxComboCount++;
 					comboCount++;
@@ -355,7 +377,7 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y, int last_x, in
 						checkScoreData.push_back(make_pair(pair_y, pair_x));
 						othelloDatas[pair_y][pair_x].comboCount = comboCount;
 						othelloDatas[pair_y][pair_x].maxComboCount = maxComboCount;
- 						othelloDatas[pair_y][pair_x].score = (baseScore + (loop * (loop + 2) * maxComboCount));
+						othelloDatas[pair_y][pair_x].score = (baseScore + (loop * (loop + 2) * maxComboCount));
 						if (maxScore < othelloDatas[pair_y][pair_x].score)
 						{
 							maxScore = othelloDatas[pair_y][pair_x].score;
@@ -591,38 +613,38 @@ void CheakOthello::ChangeScoreAndCombo()
 	checkScoreData.clear();
 }
 
-void CheakOthello::CheckReachOthello(int direction_x, int direction_y)
-{
-	if (sandwichData.empty()) { return; }
-
-	int lastX = sandwichData.front().second;
-	int lastY = sandwichData.front().first;
-	bool side = sandwichSide.front();
-	bool isReach = false;
-
-	while (1)
-	{
-		lastX += direction_x;
-		lastY += direction_y;
-
-		if (lastX < 0 || lastX > OthelloConstData::fieldSize - 1) { break; }
-		if (lastY < 0 || lastY > OthelloConstData::fieldSize - 1) { break; }
-
-		if (isReach)
-		{
-			if (othelloDatas[lastY][lastX].isFront == side) { continue; }
-			else
-			{
-				reachData.push_back(make_pair(lastY, lastX));
-				reachSide.push_back(side);
-				break;
-			}
-		}
-
-		else if (!isReach)
-		{
-			if (othelloDatas[lastY][lastX].isFront == side) { break; }
-			else { isReach = true; }
-		}
-	}
-}
+//void CheakOthello::CheckReachOthello(int direction_x, int direction_y)
+//{
+//	if (sandwichData.empty()) { return; }
+//
+//	int lastX = sandwichData.front().second;
+//	int lastY = sandwichData.front().first;
+//	bool side = sandwichSide.front();
+//	bool isReach = false;
+//
+//	while (1)
+//	{
+//		lastX += direction_x;
+//		lastY += direction_y;
+//
+//		if (lastX < 0 || lastX > OthelloConstData::fieldSize - 1) { break; }
+//		if (lastY < 0 || lastY > OthelloConstData::fieldSize - 1) { break; }
+//
+//		if (isReach)
+//		{
+//			if (othelloDatas[lastY][lastX].isFront == side) { continue; }
+//			else
+//			{
+//				reachData.push_back(make_pair(lastY, lastX));
+//				reachSide.push_back(side);
+//				break;
+//			}
+//		}
+//
+//		else if (!isReach)
+//		{
+//			if (othelloDatas[lastY][lastX].isFront == side) { break; }
+//			else { isReach = true; }
+//		}
+//	}
+//}

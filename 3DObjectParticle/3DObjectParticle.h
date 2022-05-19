@@ -87,6 +87,7 @@ public:
 	static ObjectParticleInfo frame;
 	static ObjectParticleInfo othelloFrame;
 	static ObjectParticleInfo six;
+	static ObjectParticleInfo othello2;
 	static void LoadModels();
 	static void Update(list<XMFLOAT3> list);
 	static void Draw();
