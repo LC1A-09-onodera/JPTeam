@@ -2,6 +2,7 @@
 #include "../DX12operator.h"
 #include "../Shader/ShaderManager.h"
 #include "../WindowsAPI/WinAPI.h"
+#include "../Camera/Camera.h"
 
 ObjectParticleInfo ObjectParticles::triangle;
 ObjectParticleInfo ObjectParticles::othello;
@@ -65,7 +66,7 @@ void ObjectParticle3D::Add(XMFLOAT3& emitter, ParticleType type, XMFLOAT3& size)
 	this->type = type;
 }
 
-void ObjectParticle3D::Update(list<XMFLOAT3> list)
+void ObjectParticle3D::Update(list<XMFLOAT3> list, int combo)
 {
 	if (this->type == ParticleType::Exprotion)
 	{
@@ -97,7 +98,7 @@ void ObjectParticle3D::Update(list<XMFLOAT3> list)
 	}
 	else if (type == ParticleType::BornAndShake)
 	{
-		UpdateBornAndShake();
+		UpdateBornAndShake(combo);
 	}
 	else if (type == ParticleType::Combo)
 	{
@@ -244,6 +245,28 @@ void ObjectParticle::CreateModel(const char* name, HLSLShader& shader, bool smoo
 	file.close();
 }
 
+void FrameEach::CreateBuff()
+{
+	CreateConstBuff0();
+	CreateConstBuff1();
+}
+
+void FrameEach::CreateConstBuff0()
+{
+	D3D12_HEAP_PROPERTIES heapprop{};
+	heapprop.Type = D3D12_HEAP_TYPE_UPLOAD;
+	//リソース設定
+	D3D12_RESOURCE_DESC resdesc{};
+	resdesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+	resdesc.Width = (sizeof(FrameConstBuff) + 0xff) & ~0xff;
+	resdesc.Height = 1;
+	resdesc.DepthOrArraySize = 1;
+	resdesc.MipLevels = 1;
+	resdesc.SampleDesc.Count = 1;
+	resdesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+	BaseDirectX::result = BaseDirectX::dev->CreateCommittedResource(&heapprop, D3D12_HEAP_FLAG_NONE, &resdesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&constBuff0));
+}
+
 bool ObjectParticle::InitializeGraphicsPipeline(HLSLShader& shader)
 {
 	HRESULT result = S_FALSE;
@@ -365,6 +388,123 @@ bool ObjectParticle::InitializeGraphicsPipeline(HLSLShader& shader)
 	return true;
 }
 
+void ObjectParticle::Update(FrameEach* each)
+{
+	if (each != nullptr)
+	{
+		this->each = *each;
+		XMMATRIX matScale, matRot, matTrans;
+		const XMFLOAT3& cameraPos = Camera::eye.v;
+		matScale = XMMatrixScaling(this->each.scale.x, this->each.scale.y, this->each.scale.z);
+		matRot = XMMatrixIdentity();
+		matRot *= XMMatrixRotationZ(XMConvertToRadians(this->each.rotation.z));
+		matRot *= XMMatrixRotationX(XMConvertToRadians(this->each.rotation.x));
+		matRot *= XMMatrixRotationY(XMConvertToRadians(this->each.rotation.y));
+		matTrans = XMMatrixTranslation(this->each.position.m128_f32[0], this->each.position.m128_f32[1], this->each.position.m128_f32[2]);
+		matWorld = XMMatrixIdentity();
+
+		//ビルボード
+		//if (billboard)
+		//{
+		//    matWorld *= BaseDirectX::matBillboard;//ビルボードをかける
+		//}
+		//ビルボードY
+		//if (billboard)
+		//{
+		//    matWorld *= Camera::matBillboardY;//ビルボードをかける
+		//}
+		matWorld *= matScale;
+		matWorld *= matRot;
+		matWorld *= matTrans;
+
+		Vertex* vertMap = nullptr;
+		BaseDirectX::result = mesh.vertBuff->Map(0, nullptr, (void**)&vertMap);
+		if (SUCCEEDED(BaseDirectX::result))
+		{
+			copy(mesh.vertices.begin(), mesh.vertices.end(), vertMap);
+			mesh.vertBuff->Unmap(0, nullptr);    // マップを解除
+		}
+
+		FrameConstBuff* constMap0 = nullptr;
+		if (SUCCEEDED(this->each.constBuff0->Map(0, nullptr, (void**)&constMap0)))
+		{
+			//constMap0->mat = matWorld * Camera::matView * BaseDirectX::matProjection;
+			constMap0->viewproj = Camera::matView * BaseDirectX::matProjection;
+			constMap0->world = matWorld;
+			constMap0->cameraPos = cameraPos;
+			//constMap0->flash = 1;
+			constMap0->flash = flash;
+			//constMap0->colorType = this->each.colorType;
+			constMap0->colorType = each->colorType;
+			this->each.constBuff0->Unmap(0, nullptr);
+		}
+
+		ConstBufferDataB1* constMap1 = nullptr;
+		BaseDirectX::result = this->each.constBuff1->Map(0, nullptr, (void**)&constMap1);
+		constMap1->ambient = material.ambient;
+		constMap1->diffuse = material.diffuse;
+		constMap1->specular = material.specular;
+		constMap1->alpha = material.alpha;
+		this->each.constBuff1->Unmap(0, nullptr);
+	}
+	else
+	{
+		XMMATRIX matScale, matRot, matTrans;
+		const XMFLOAT3& cameraPos = Camera::eye.v;
+		matScale = XMMatrixScaling(this->each.scale.x, this->each.scale.y, this->each.scale.z);
+		matRot = XMMatrixIdentity();
+		matRot *= XMMatrixRotationZ(XMConvertToRadians(this->each.rotation.z));
+		matRot *= XMMatrixRotationX(XMConvertToRadians(this->each.rotation.x));
+		matRot *= XMMatrixRotationY(XMConvertToRadians(this->each.rotation.y));
+		matTrans = XMMatrixTranslation(this->each.position.m128_f32[0], this->each.position.m128_f32[1], this->each.position.m128_f32[2]);
+		matWorld = XMMatrixIdentity();
+
+		//ビルボード
+		//if (billboard)
+		//{
+		//    matWorld *= BaseDirectX::matBillboard;//ビルボードをかける
+		//}
+		//ビルボードY
+		//if (billboard)
+		//{
+		//    matWorld *= Camera::matBillboardY;//ビルボードをかける
+		//}
+		matWorld *= matScale;
+		matWorld *= matRot;
+		matWorld *= matTrans;
+
+		Vertex* vertMap = nullptr;
+		BaseDirectX::result = mesh.vertBuff->Map(0, nullptr, (void**)&vertMap);
+		if (SUCCEEDED(BaseDirectX::result))
+		{
+			copy(mesh.vertices.begin(), mesh.vertices.end(), vertMap);
+			mesh.vertBuff->Unmap(0, nullptr);    // マップを解除
+		}
+
+		FrameConstBuff* constMap0 = nullptr;
+		if (SUCCEEDED(this->each.constBuff0->Map(0, nullptr, (void**)&constMap0)))
+		{
+			//constMap0->mat = matWorld * Camera::matView * BaseDirectX::matProjection;
+			constMap0->viewproj = Camera::matView * BaseDirectX::matProjection;
+			constMap0->world = matWorld;
+			constMap0->cameraPos = cameraPos;
+			//constMap0->flash = 1;
+			constMap0->flash = flash;
+			//constMap0->colorType = this->each.colorType;
+			constMap0->colorType = colorType;
+			this->each.constBuff0->Unmap(0, nullptr);
+		}
+
+		ConstBufferDataB1* constMap1 = nullptr;
+		BaseDirectX::result = this->each.constBuff1->Map(0, nullptr, (void**)&constMap1);
+		constMap1->ambient = material.ambient;
+		constMap1->diffuse = material.diffuse;
+		constMap1->specular = material.specular;
+		constMap1->alpha = material.alpha;
+		this->each.constBuff1->Unmap(0, nullptr);
+	}
+}
+
 void ObjectParticle3D::InitConverge(XMFLOAT3& emitter)
 {
 	int xSub = (rand() % 10 + 13.0f);
@@ -415,8 +555,7 @@ void ObjectParticle3D::InitTitle(XMFLOAT3& emitter)
 	{
 		zSub = -zSub;
 	}
-	each.CreateConstBuff0();
-	each.CreateConstBuff1();
+	each.CreateBuff();
 	speed = GetRandom(2.0f);
 	acc = GetRandom(1.0f);
 	startPosition = ConvertXMVECTORtoXMFLOAT3(each.position);
@@ -657,12 +796,13 @@ void ObjectParticle3D::UpdateBorn(list<XMFLOAT3> list)
 	}
 }
 
-void ObjectParticle3D::UpdateBornAndShake()
+void ObjectParticle3D::UpdateBornAndShake(int combo)
 {
 	each.position = ConvertXMFLOAT3toXMVECTOR(startPosition);
 	each.position.m128_f32[0] += (rand() % (int)(20.0f * easeTime + 1) - (9 * easeTime)) / 400.0f;
 	each.position.m128_f32[1] += (rand() % (int)(20.0f * easeTime + 1) - (9 * easeTime)) / 400.0f;
 	easeTime -= 1.0f / 600.0f;//vanishTimerMax
+	each.colorType = combo;
 	if (easeTime <= 0.0f)
 	{
 		time = 0;
@@ -708,11 +848,11 @@ void ObjectParticleInfo::Init(XMFLOAT3& emitter, int count, ParticleType type, X
 	}
 }
 
-void ObjectParticleInfo::Update(list<XMFLOAT3> list)
+void ObjectParticleInfo::Update(list<XMFLOAT3> list, int combo)
 {
 	for (auto itr = particles.begin(); itr != particles.end(); ++itr)
 	{
-		itr->Update(list);
+		itr->Update(list, combo);
 		if (itr->time <= 0)
 		{
 			deleteItr.push_back(itr);
@@ -749,14 +889,14 @@ void ObjectParticles::LoadModels()
 	othello2.object.CreateModel("newOserro3", ShaderManager::playerShader);
 }
 
-void ObjectParticles::Update(list<XMFLOAT3> list)
+void ObjectParticles::Update(list<XMFLOAT3> list, int combo)
 {
-	triangle.Update(list);
-	othello.Update(list);
-	frame.Update(list);
-	othelloFrame.Update(list);
-	six.Update(list);
-	othello2.Update(list);
+	triangle.Update(list, combo);
+	othello.Update(list, combo);
+	frame.Update(list, combo);
+	othelloFrame.Update(list, combo);
+	six.Update(list, combo);
+	othello2.Update(list, combo);
 }
 
 void ObjectParticles::Draw()

@@ -15,12 +15,33 @@ enum class ParticleType
 	ComboNum
 };
 
+class FrameConstBuff : public ConstBufferDataB0
+{
+public:
+	float flash;
+	UINT colorType;
+};
+
+class FrameEach : public EachInfo
+{
+public:
+	UINT colorType;
+	int nameInt;
+	void CreateBuff();
+	void CreateConstBuff0();
+};
+
 class ObjectParticle : public Model
 {
 public:
+	UINT colorType;
+	float flash;
+	//FrameEach each;
 	void CreateModel(const char* name, HLSLShader& shader, bool smoothing = false, bool addAlpha = true);
 	bool InitializeGraphicsPipeline(HLSLShader& shader);
+	void Update(FrameEach* each = nullptr);
 };
+
 class ObjectParticle3D
 {
 
@@ -37,10 +58,10 @@ class ObjectParticle3D
 	ParticleType type;
 	float angle;
 public:
-	EachInfo each;
+	FrameEach each;
 	void Add(XMFLOAT3& emitter, ParticleType type);
 	void Add(XMFLOAT3& emitter, ParticleType type, XMFLOAT3 &size);
-	void Update(list<XMFLOAT3> list);
+	void Update(list<XMFLOAT3> list, int combo);
 	void Draw(ObjectParticle& object);
 	void InitExprotion(XMFLOAT3& emitter);
 	void InitConverge(XMFLOAT3& emitter);
@@ -59,7 +80,7 @@ public:
 	void UpdateTarget();
 	void UpdateTornado();
 	void UpdateBorn(list<XMFLOAT3> list);
-	void UpdateBornAndShake();
+	void UpdateBornAndShake(int combo);
 	void UpdateCombo(list<XMFLOAT3> list);
 	void UpdateConboNum();
 	int time;
@@ -73,10 +94,9 @@ public:
 	ObjectParticle object;
 	void Init(XMFLOAT3& emitter, int count, ParticleType type);
 	void Init(XMFLOAT3& emitter, int count, ParticleType type, XMFLOAT3 size);
-	void Update(list<XMFLOAT3> list);
+	void Update(list<XMFLOAT3> list,int combo);
 	void Draw(ObjectParticle& object);
 	void DeleteAllParticle();
-
 };
 
 class ObjectParticles
@@ -89,7 +109,7 @@ public:
 	static ObjectParticleInfo six;
 	static ObjectParticleInfo othello2;
 	static void LoadModels();
-	static void Update(list<XMFLOAT3> list);
+	static void Update(list<XMFLOAT3> list, int combo);
 	static void Draw();
 	static void DeleteAllParticles();
 };

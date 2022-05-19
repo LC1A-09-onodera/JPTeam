@@ -232,7 +232,7 @@ void GameScene::Init()
 	{
 		for (int j = 0; j < 12; j++)
 		{
-			EachInfo each;
+			FrameEach each;
 			each.CreateConstBuff0();
 			each.CreateConstBuff1();
 			each.rotation.x = 0;
@@ -457,7 +457,7 @@ void GameScene::TitleUpdate()
 			isPouse = false;
 		}
 	}
-	ObjectParticles::Update(othelloManager.GetPressPanellPos());
+	ObjectParticles::Update(othelloManager.GetPressPanellPos(), checkObject.GetCombo());
 	light->SetLightDir(XMFLOAT3(Camera::GetTargetDirection()));
 	LightUpdate();
 	sky.Update();
@@ -536,7 +536,7 @@ void GameScene::GameUpdate()
 		SoundStopWave(startSound);
 		SoundPlayOnce(startSound);
 	}
-	ObjectParticles::Update(othelloManager.GetPressPanellPos());
+	ObjectParticles::Update(othelloManager.GetPressPanellPos(), checkObject.GetCombo());
 	//タイトルからgameシーンへ
 	if (isSceneChange)
 	{
