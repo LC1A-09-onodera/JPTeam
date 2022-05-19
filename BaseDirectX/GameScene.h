@@ -9,6 +9,8 @@
 #include "../Oserro/Oserro.h"
 #include "../CheakOthello/CheakOthello.h"
 #include "../Sound/Sound.h"
+#include "../3DObjectParticle/3DObjectParticle.h"
+
 enum GameSceneName { TITLE, SELECT, GAME, END, RESULT };
 
 class GameScene
@@ -179,5 +181,5 @@ public://ÉVÅ[ÉìÇ≈égÇ§Ç‡ÇÃ
 	float sceneChangeAfterTime = 0.0f;
 	bool isSceneChangeRady = false;
 
-	list<EachInfo> opOthellos;
+	list<FrameEach> opOthellos;
 };

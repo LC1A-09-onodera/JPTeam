@@ -98,5 +98,20 @@ float4 main(VSOutput input) : SV_TARGET
 	result.r += 0.3f;
 	result.g += 0.3f;
 	result.b += 0.3f;
+	if (colorType == 1)
+	{
+		result.z = 1.0;
+		result.xy = 0.0;
+	}
+	if (colorType == 2)
+	{
+		result.y = 1.0;
+		result.xz = 0.0;
+	}
+	if (colorType == 3)
+	{
+		result.x = 1.0;
+		result.yz = 0.0;
+	}
 	return result;
 }
