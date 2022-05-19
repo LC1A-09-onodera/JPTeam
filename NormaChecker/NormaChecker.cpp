@@ -20,6 +20,7 @@ void NormaChecker::Init()
 void NormaChecker::Update(std::list<Othello> panels, int score,int combo)
 {
 	PanelUpdate(panels);
+
 	switch (nowType)
 	{
 	case Norma::Combo:
@@ -38,6 +39,11 @@ void NormaChecker::Update(std::list<Othello> panels, int score,int combo)
 		break;
 	}
 
+	if (subNormaFlag)
+	{
+		bool SubNorma = nowPanelCount <= normaPanelCount;
+		isClear = (isClear && SubNorma);
+	}
 	//•à”‚Ì§ŒÀ‚ª‚ ‚é‚È‚ç
 	if (normaMoveCount > 0)
 	{
@@ -142,7 +148,7 @@ void NormaChecker::Reset()
 	preField.clear();
 }
 
-void NormaChecker::SetNorma(Norma::NormaType type, int normaStatus, int normaMoveCount)
+void NormaChecker::SetNorma(Norma::NormaType type, int normaStatus, int normaMoveCount, bool subNorma, int subNormaCount)
 {
 	nowType = type;
 	switch (nowType)
@@ -161,6 +167,11 @@ void NormaChecker::SetNorma(Norma::NormaType type, int normaStatus, int normaMov
 		break;
 	default:
 		break;
+	}
+	if (subNorma)
+	{
+		subNormaFlag = subNorma;
+		normaPanelCount = subNormaCount;
 	}
 	this->normaMoveCount = normaMoveCount;
 }

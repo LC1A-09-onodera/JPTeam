@@ -30,6 +30,8 @@ namespace
 		panelPos playerPos;
 		Norma::NormaType type = Norma::Panels;
 		int normaStatus = 0;
+		bool subNormaFlag = false;
+		int subNormaPanels = 0;
 		int normaMoveCount = 0;
 	};
 }

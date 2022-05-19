@@ -47,7 +47,7 @@ public:
 	void SetMove(std::list<Othello> panels, int x, int y);
 	void PanelUpdate(std::list<Othello> panels);
 	void Reset();
-	void SetNorma(Norma::NormaType type, int normaStatus,int normaMoveCount = 0);
+	void SetNorma(Norma::NormaType type, int normaStatus,int normaMoveCount = 0, bool subNorma = false,int subNormaCount = 0);
 	Norma::FieldStatus Undo();
 
 	bool GetClear();
@@ -66,6 +66,8 @@ private:
 	int nowComboScore = 0;
 	int nowMoveCount = 0;
 	int normaMoveCount = 0;
+
+	bool subNormaFlag = false;
 	bool isClear = false;
 	bool isFailed = false;
 	Sprite clearText;

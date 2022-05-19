@@ -2405,8 +2405,7 @@ void OthelloManager::StartNormaField(int stageNum)
 		SetSpawnPanel(panelItr->pos.x, panelItr->pos.y, panelItr->isFront, panelItr->type);
 	}
 	SetSpawnPlayer(stageItr->playerPos.x, stageItr->playerPos.y);
-	normaChecker.SetNorma(stageItr->type, stageItr->normaStatus, stageItr->normaMoveCount);
-
+	normaChecker.SetNorma(stageItr->type, stageItr->normaStatus, stageItr->normaMoveCount, stageItr->subNormaFlag, stageItr->subNormaPanels);
 }
 
 void OthelloManager::TestStage()
@@ -2528,6 +2527,16 @@ void OthelloManager::LoadNormaStage(string stage)
 			NormaField.playerPos = playerPos;
 
 			int hoge = 0;
+		}
+
+		//‘‚©‚È‚¯‚ê‚Î–â‘è‚È‚¢‚æ‚¤‚É
+		if (key == "d")
+		{
+
+			int Count;
+			line_Data >> Count;
+			NormaField.subNormaPanels = Count;
+			NormaField.subNormaFlag = true;
 		}
 		//î•ñ‚ª”Õ–Ê‚ÉŠÖ‚·‚éî•ñ‚¾‚Á‚½ê‡
 		if (key == "s")
