@@ -356,7 +356,7 @@ void GameScene::TitleUpdate()
 					othelloManager.StartSetPos();
 					gameTime = gameMaxTime;
 					isTutorial = false;
-					ToGame3();
+					ToGame2();
 					titleSelectNum = 0;
 				}
 				//ÉmÉãÉ}ÉÇÅ[Éh
@@ -367,7 +367,7 @@ void GameScene::TitleUpdate()
 						othelloManager.StartNormaMode(selectStageNum);
 						gameTime = gameMaxTime;
 						isTutorial = false;
-						ToGame3();
+						ToGame2();
 						titleSelectNum = 0;
 					}
 					else
@@ -1425,7 +1425,7 @@ void GameScene::ToGame2()
 	isSceneChangeRady = false;
 
 	eyeStart = Camera::target.v;
-	eyeEnd = { 0.0f, 0.0f, 0.0f };
+	eyeEnd = { -1.0f, 0.0f, 0.0f };
 	eyeEaseTime = 0.0f;
 	sceneChangeAfterTime = 0.0f;
 
