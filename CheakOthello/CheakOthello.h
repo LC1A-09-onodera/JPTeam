@@ -25,7 +25,7 @@ private:
 	static const int MAX_SIZE_Y = 8;
 
 private:
-	SoundData comboSound[10];
+	SoundData comboSound[15];
 
 private:
 	const int CHAIN_NAME = 100;

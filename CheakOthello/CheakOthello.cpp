@@ -59,6 +59,11 @@ void CheakOthello::SoundInit()
 	SoundLoad("Resource/Sound/reverse_7_.wav", comboSound[7]);
 	SoundLoad("Resource/Sound/reverse_8_.wav", comboSound[8]);
 	SoundLoad("Resource/Sound/reverse_9_.wav", comboSound[9]);
+	SoundLoad("Resource/Sound/reverse_10_.wav", comboSound[10]);
+	SoundLoad("Resource/Sound/reverse_11_.wav", comboSound[11]);
+	SoundLoad("Resource/Sound/reverse_12_.wav", comboSound[12]);
+	SoundLoad("Resource/Sound/reverse_13_.wav", comboSound[13]);
+	SoundLoad("Resource/Sound/reverse_14_.wav", comboSound[14]);
 	//SoundLoad("Resource/Sound/reverse_4_.wav", comboSound);
 }
 
@@ -354,15 +359,15 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y, int last_x, in
 					//スコア加算されたフラグ
 					isAddScore = true;
 
-					if (maxComboCount < 9)
+					if (maxComboCount < 15)
 					{
 						SoundStopWave(comboSound[maxComboCount]);
 						SoundPlayOnce(comboSound[maxComboCount]);
 					}
 					else
 					{
-						SoundStopWave(comboSound[9]);
-						SoundPlayOnce(comboSound[9]);
+						SoundStopWave(comboSound[14]);
+						SoundPlayOnce(comboSound[14]);
 					}
 
 
