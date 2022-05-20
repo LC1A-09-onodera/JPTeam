@@ -487,11 +487,39 @@ void GameScene::GameUpdate()
 	{
 		if (isModeSelect)
 		{
-			if (Input::KeyTrigger(DIK_SPACE))
+			OthlloPlayer::Update();
+			othelloManager.Controll();
+			//セレクト画面のアップデート
+			othelloManager.ModeSelectUpdate();
+
+			//モード変更する！フラグ(現在はキー入力があった場合)
+			//othelloManager.InMode();
+
+			//選択したモードを返す(場所参照)
+			//othelloManager.GetEnterModeType();
+			//ステージ番号を受け取る
+			//othelloManager.GetEnterNormaStage();
+
+			//使用例
+#pragma region example
+			//スコアアタックを選択した
+			if (othelloManager.InMode() && othelloManager.GetEnterModeType() == GameMode::ScoreAttack)
 			{
 				isTutorial = false;
 				ToGame4();
+				othelloManager.AllDeadPanel();
 			}
+			//ノルマモードを選択した
+			if (othelloManager.InMode() && othelloManager.GetEnterModeType() == GameMode::NormaMode)
+			{//内部でステージ数を検索(中身は適当です)
+				othelloManager.GetEnterNormaStage();
+				isTutorial = false;
+				ToGame4();
+				othelloManager.AllDeadPanel();
+			}
+#pragma endregion
+
+
 		}
 		else if (countDown <= 0)
 		{
@@ -1683,6 +1711,7 @@ void GameScene::ToModeSelectUpdate()
 			if (goToGameTime >= 1.0f)
 			{
 				isSceneChange = false;
+				othelloManager.ModeSelectStart();
 			}
 		}
 	}

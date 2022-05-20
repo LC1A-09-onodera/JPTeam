@@ -871,7 +871,7 @@ void ObjectParticle3D::UpdateBornAndShake(int combo)
 	each.position = ConvertXMFLOAT3toXMVECTOR(startPosition);
 	each.position.m128_f32[0] += (rand() % (int)(20.0f * easeTime + 1) - (9 * easeTime)) / 400.0f;
 	each.position.m128_f32[1] += (rand() % (int)(20.0f * easeTime + 1) - (9 * easeTime)) / 400.0f;
-	easeTime -= 1.0f / 600.0f;//vanishTimerMax
+	easeTime -= 1.0f / 1200.0f;//vanishTimerMax
 	each.colorType = combo;
 	if (easeTime <= 0.0f)
 	{
