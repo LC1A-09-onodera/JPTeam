@@ -33,7 +33,16 @@ private:
 	void ToGame();
 	void ToGame2();
 	void ToGame3();
+	void ToGame4();
 
+	void ToGame1Update();
+	void ToGame2Update();
+	void ToGame3Update();
+	void ToGame4Update();
+	void ToModeSelectUpdate();
+	void ToModeSelect();
+
+	void ToResult();
 public:
 	GameScene();
 	~GameScene();
@@ -180,6 +189,11 @@ public://シーンで使うもの
 	int sceneChangeDiray2 = 0;
 	float sceneChangeAfterTime = 0.0f;
 	bool isSceneChangeRady = false;
+	XMFLOAT3 camTargetStart;
+	XMFLOAT3 camTargetEnd;
+
+	bool isStageDisplay = false;
+	float goToGameTime = 0.0f;
 
 	list<FrameEach> opOthellos;
 
@@ -194,4 +208,6 @@ public://シーンで使うもの
 	int timerCount = 0;
 	float size_x = MAX_SIZE_X;
 	float size_y = MAX_SIZE_Y;
+	//ステージ選択の画面に行く
+	bool isModeSelect = false;
 };
