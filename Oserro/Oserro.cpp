@@ -124,7 +124,7 @@ void Othello::Draw()
 		}
 		model->Update(&each);
 		Draw3DObject(*model);
-		if (data.type == STOP && !GetIsActive())
+		if (data.type == STOP && !GetIsActive() && isRockDraw)
 		{
 			chainModel->Update(&each);
 			Draw3DObject(*chainModel);
@@ -1104,6 +1104,135 @@ void OthelloManager::Move(const XMFLOAT3 &MousePos)
 
 }
 
+void OthelloManager::ModeSelectStart()
+{
+
+	XMFLOAT3 startPos = OthlloPlayer::GetPosition();
+
+	startPos.z = 0.0f;
+	XMFLOAT3 stagePos = startPos - stageLeftTop - XMFLOAT3{ -cellScale / 2, cellScale / 2 , 0 };
+
+	//どのマスにマウスがあるのかを確認
+	int x = stagePos.x / (cellScale * 2);
+	int y = stagePos.y / -(cellScale * 2);
+
+//プレイヤーの下の駒を設置する処理
+
+	//Othello data;
+	//data.Init(&oserroModel, &stopOserroModel);
+	//bool randFront = rand() % 2;
+	//data.Spawn(NORMAL, x, y, randFront);
+	//data.GetGameData()->isMove = false;
+	//data.GetGameData()->isPlayer = false;
+	//othellos.push_back(data);
+
+
+
+	playerPanelPos = { x, y };
+
+	//for (int i = 0; i < 8; i++)
+	//{
+	//	SetChanceObject(i, i, true);
+	//	SetChanceObject(i, 7 - i, false);
+	//}
+	//MinSpawn(false);
+	SetModeSelectPanel();
+}
+
+void OthelloManager::ModeSelectUpdate()
+{
+	//死ぬ
+	DeadPanel();
+
+	//MinSpawn(true);
+	////生成
+	//RandumSetPanel();
+
+	//更新
+	auto itr = othellos.begin();
+
+	for (; itr != othellos.end(); ++itr)
+	{	//コンボ数を位置として計算
+		panelPos nowPos = {itr->GetGameData()->widthPos, itr->GetGameData()->heightPos};
+
+			itr->GetGameData()->isShake = (nowPos == playerPanelPos);
+
+		itr->Update(1);
+	}
+	if (Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01))
+	{
+		isFieldUpdate = true;
+	}
+
+
+	//SaveSpawn();
+
+}
+
+
+void OthelloManager::ModeSelectControll()
+{
+	//マウスのクリックがされた瞬間
+	if (isPlayerEnd)
+	{
+		KeySetPlayer();
+	}
+	//マウスがドラッグ中
+	if (isPanelMove)
+	{
+		Move(OthlloPlayer::GetPosition());
+	}
+
+	playerMoveEnd();
+}
+
+bool OthelloManager::InMode()
+{
+	return Input::KeyTrigger(DIK_SPACE);
+}
+
+GameMode OthelloManager::GetEnterModeType()
+{
+	GameMode now = GameMode::None;
+
+	if (playerPanelPos.y < 7)
+	{
+		now = GameMode::NormaMode;
+	}
+	else if (playerPanelPos == scoreAttack)
+	{
+		now = GameMode::ScoreAttack;
+	}
+	return now;
+}
+
+int OthelloManager::GetEnterNormaStage()
+{
+	int stageNum = 1;
+	stageNum += playerPanelPos.x;
+	stageNum += playerPanelPos.y * 8;
+	return stageNum;
+}
+
+void OthelloManager::ModeSelectDraw()
+{
+}
+
+void OthelloManager::SetModeSelectPanel()
+{
+	AllDeadPanel();
+	for (int y = 0; y < 7; y++)
+	{
+		for (int x = 0; x < 8; x++)
+		{
+			SetSpawnPanel(x, y, false, STOP, false);
+		}
+	}
+	//SetSpawnPanel(normaMode.x, normaMode.y, true, STOP, false);
+	SetSpawnPanel(scoreAttack.x, scoreAttack.y, true, STOP, false);
+	SetSpawnPlayer(7, 7);
+}
+
 void OthelloManager::RemovePlayer()
 {
 	auto itr = othellos.begin();
@@ -1544,10 +1673,10 @@ void OthelloManager::PlayerControll()
 
 	playerMoveEnd();
 
-	if (Input::MouseTrigger(MouseButton::RBUTTON))
-	{
-		SetPanel();
-	}
+	//if (Input::MouseTrigger(MouseButton::RBUTTON))
+	//{
+	//	SetPanel();
+	//}
 }
 
 void OthelloManager::KeySetPlayer()
@@ -1655,6 +1784,7 @@ void OthelloManager::KeySetPlayer()
 	}
 }
 
+
 void OthelloManager::StartSetPos()
 {
 
@@ -1678,11 +1808,6 @@ void OthelloManager::StartSetPos()
 
 	playerPanelPos = { x, y };
 
-	for (int i = 0; i < 8; i++)
-	{
-		SetChanceObject(i, i, true);
-		SetChanceObject(i, 7 - i, false);
-	}
 	MinSpawn(false);
 }
 
@@ -2270,7 +2395,7 @@ void OthelloManager::whyStepSpawn()
 
 }
 
-void OthelloManager::SetSpawnPanel(int x, int y, bool Front, OthelloType type)
+void OthelloManager::SetSpawnPanel(int x, int y, bool Front, OthelloType type,bool isRockDraw)
 {
 	Othello data;
 	if (type == WALL)
@@ -2280,6 +2405,7 @@ void OthelloManager::SetSpawnPanel(int x, int y, bool Front, OthelloType type)
 	else if (type == STOP)
 	{//タイプが壁だったら
 		data.Init(&oserroModel, &stopOserroModel);
+		data.SetIsRockDraw(isRockDraw);
 	}
 	else
 	{
@@ -2665,4 +2791,9 @@ int OthelloManager::GetNormaStagesCount()
 std::list<XMFLOAT3> &OthelloManager::GetPressPanellPos()
 {
 	return pressPos;
+}
+
+bool operator==(const panelPos &a, const panelPos &b)
+{
+	return (a.x == b.x && a.y == b.y);
 }

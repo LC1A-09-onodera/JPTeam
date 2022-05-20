@@ -11,6 +11,13 @@ enum OthelloType
 	STOP,
 	NONE,
 };
+
+enum GameMode
+{
+	None,
+	NormaMode,
+	ScoreAttack,
+};
 namespace
 {
 	struct panelPos
@@ -36,6 +43,7 @@ namespace
 	};
 }
 
+bool operator ==(const panelPos &a, const panelPos &b);
 namespace TutorialSceneFlow
 {
 	enum TutorialScene
@@ -176,6 +184,8 @@ namespace OthelloConstData
 		const int breathSpan = 10;
 		const int breathLevelTimerMax = 60;
 	};
+	const panelPos normaMode = { 0, 0 };
+	const panelPos scoreAttack = { 0, 7 };
 }
 
 class OthelloEachInfo : public EachInfo
@@ -214,12 +224,14 @@ private:
 	float endAngle;
 	float time;
 	bool isEase;
+	bool isRockDraw = true;
 	OthelloData data;
 public:
 	OthelloData *GetGameData() { return &data; }
 	bool GetIsEase() { return isEase; }
 	XMFLOAT3 GetPosition() { return ConvertXMVECTORtoXMFLOAT3(each.position); }
 	void SetIsEase(bool isEase) { this->isEase = isEase; }
+	void SetIsRockDraw(bool isRockDraw) {this->isRockDraw = isRockDraw;}
 	void SetPosition(XMFLOAT3 &position) { this->each.position = ConvertXMFLOAT3toXMVECTOR(position); }
 	void SetScale(XMFLOAT3 &scale) { this->each.scale = scale; }
 public:
@@ -341,6 +353,25 @@ private://ノルマモード用内部処理関数
 	void TestStage();
 	void LoadNormaStage(std::string stage);
 	void LoadAllStage();
+
+public://モードセレクト用外部関数
+	//モード選択開始時
+	void ModeSelectStart();
+
+	void ModeSelectControll();
+	//モード選択中
+	void ModeSelectUpdate();
+	//モード選択決定した瞬間
+	bool InMode();
+	//モード選択内容(ゲームモード)
+	GameMode GetEnterModeType();
+	//モード選択内容(ノルマステージ)
+	int GetEnterNormaStage();
+	//何かしら描画があるなら
+	void ModeSelectDraw();
+private://モードセレクト用変数
+private://モードセレクト用内部関数
+	void SetModeSelectPanel();
 private:
 	void SetPlayer();
 
@@ -411,7 +442,7 @@ private:
 	void SetSpawnPlayer(int x, int y);
 
 	//特定のマスにパネルを配置する
-	void SetSpawnPanel(int x, int y, bool Front, OthelloType type = NORMAL);
+	void SetSpawnPanel(int x, int y, bool Front, OthelloType type = NORMAL, bool isRockDraw = true);
 
 private:
 	panelPos playerPanelPos;
