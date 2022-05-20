@@ -552,6 +552,7 @@ void GameScene::GameUpdate()
 		SoundPlayOnce(startSound);
 	}
 	ObjectParticles::Update(othelloManager.GetPressPanellPos(), checkObject.GetCombo());
+	ObjectParticles::Update(othelloManager.GetPressPanellPos(), checkObject.GetNameAndCombos());
 	//タイトルからgameシーンへ
 	if (isSceneChange)
 	{

@@ -3,6 +3,7 @@
 #include "../Shader/ShaderManager.h"
 #include "../WindowsAPI/WinAPI.h"
 #include "../Camera/Camera.h"
+#include <vector>
 
 ObjectParticleInfo ObjectParticles::triangle;
 ObjectParticleInfo ObjectParticles::othello;
@@ -49,6 +50,53 @@ void ObjectParticle3D::Add(XMFLOAT3& emitter, ParticleType type)
 	else if (type == ParticleType::BornAndShake)
 	{
 		InitBornAndShake(emitter);
+	}
+	else if (type == ParticleType::Combo)
+	{
+		InitConbo(emitter);
+	}
+	this->type = type;
+}
+
+void ObjectParticle3D::Add(XMFLOAT3& emitter, ParticleType type, int name, int combo)
+{
+	if (type == ParticleType::Exprotion)
+	{
+		InitExprotion(emitter);
+		this->type = type;
+	}
+	else if (type == ParticleType::Converge)
+	{
+		InitConverge(emitter);
+		this->type = type;
+	}
+	else if (type == ParticleType::TITLE)
+	{
+		InitTitle(emitter);
+		this->type = type;
+	}
+	else if (type == ParticleType::Swell)
+	{
+		InitSwell(emitter);
+		this->type = type;
+	}
+	else if (type == ParticleType::Target)
+	{
+		InitTarget(emitter);
+		this->type = type;
+	}
+	else if (type == ParticleType::Tornado)
+	{
+		InitTornado(emitter);
+		this->type = type;
+	}
+	else if (type == ParticleType::Born)
+	{
+		InitBorn(emitter);
+	}
+	else if (type == ParticleType::BornAndShake)
+	{
+		InitBornAndShake(emitter, name, combo);
 	}
 	else if (type == ParticleType::Combo)
 	{
@@ -107,6 +155,14 @@ void ObjectParticle3D::Update(list<XMFLOAT3> list, int combo)
 	else if (type == ParticleType::ComboNum)
 	{
 		UpdateConboNum();
+	}
+}
+
+void ObjectParticle3D::Update(list<XMFLOAT3> list, vector<pair<int, int>> ComboAndname)
+{
+	if (type == ParticleType::BornAndShake)
+	{
+		UpdateBornAndShake(ComboAndname);
 	}
 }
 
@@ -637,6 +693,20 @@ void ObjectParticle3D::InitBornAndShake(XMFLOAT3& emitter)
 	startPosition = emitter;
 }
 
+void ObjectParticle3D::InitBornAndShake(XMFLOAT3& emitter, int name, int combo)
+{
+	time = 1;
+	each.CreateConstBuff0();
+	each.CreateConstBuff1();
+	each.position = ConvertXMFLOAT3toXMVECTOR(emitter);
+
+	each.scale = { 1.0f, 1.0f, 6.0f };
+	each.colorType = combo;
+	othellosName = name;
+	easeTime = 1.0f;
+	startPosition = emitter;
+}
+
 void ObjectParticle3D::InitConbo(XMFLOAT3& emitter)
 {
 	time = 1;
@@ -809,6 +879,26 @@ void ObjectParticle3D::UpdateBornAndShake(int combo)
 	}
 }
 
+void ObjectParticle3D::UpdateBornAndShake(vector<pair<int, int>> ComboAndname)
+{
+	each.position = ConvertXMFLOAT3toXMVECTOR(startPosition);
+	each.position.m128_f32[0] += (rand() % (int)(20.0f * easeTime + 1) - (9 * easeTime)) / 400.0f;
+	each.position.m128_f32[1] += (rand() % (int)(20.0f * easeTime + 1) - (9 * easeTime)) / 400.0f;
+	easeTime -= 1.0f / 600.0f;//vanishTimerMax
+	int othellotypeint = othellosName;
+	for (auto itr = ComboAndname.begin(); itr != ComboAndname.end(); ++itr)
+	{
+		if (itr->first == othellosName)
+		{
+			each.colorType = itr->second;
+		}
+	}
+	if (easeTime <= 0.0f)
+	{
+		time = 0;
+	}
+}
+
 void ObjectParticle3D::UpdateCombo(list<XMFLOAT3> list)
 {
 	easeTime -= 0.01f;
@@ -838,6 +928,16 @@ void ObjectParticleInfo::Init(XMFLOAT3& emitter, int count, ParticleType type)
 	}
 }
 
+void ObjectParticleInfo::Init(XMFLOAT3& emitter, int count, ParticleType type, int name, int combo)
+{
+	for (int i = 0; i < count; i++)
+	{
+		ObjectParticle3D element;
+		element.Add(emitter, type, name, combo);
+		particles.push_back(element);
+	}
+}
+
 void ObjectParticleInfo::Init(XMFLOAT3& emitter, int count, ParticleType type, XMFLOAT3 size)
 {
 	for (int i = 0; i < count; i++)
@@ -853,6 +953,23 @@ void ObjectParticleInfo::Update(list<XMFLOAT3> list, int combo)
 	for (auto itr = particles.begin(); itr != particles.end(); ++itr)
 	{
 		itr->Update(list, combo);
+		if (itr->time <= 0)
+		{
+			deleteItr.push_back(itr);
+		}
+	}
+	for (auto deleteitr = deleteItr.begin(); deleteitr != deleteItr.end(); ++deleteitr)
+	{
+		particles.erase(*deleteitr);
+	}
+	deleteItr.clear();
+}
+
+void ObjectParticleInfo::Update(list<XMFLOAT3> list, vector<pair<int, int>> ComboAndname)
+{
+	for (auto itr = particles.begin(); itr != particles.end(); ++itr)
+	{
+		itr->Update(list, ComboAndname);
 		if (itr->time <= 0)
 		{
 			deleteItr.push_back(itr);
@@ -894,9 +1011,13 @@ void ObjectParticles::Update(list<XMFLOAT3> list, int combo)
 	triangle.Update(list, combo);
 	othello.Update(list, combo);
 	frame.Update(list, combo);
-	othelloFrame.Update(list, combo);
 	six.Update(list, combo);
 	othello2.Update(list, combo);
+}
+
+void ObjectParticles::Update(list<XMFLOAT3> list, vector<pair<int, int>> ComboAndname)
+{
+	othelloFrame.Update(list, ComboAndname);
 }
 
 void ObjectParticles::Draw()

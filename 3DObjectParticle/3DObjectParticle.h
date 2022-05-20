@@ -57,11 +57,15 @@ class ObjectParticle3D
 	bool isSize;
 	ParticleType type;
 	float angle;
+
+	int othellosName;
 public:
 	FrameEach each;
 	void Add(XMFLOAT3& emitter, ParticleType type);
+	void Add(XMFLOAT3& emitter, ParticleType type, int name, int combo);
 	void Add(XMFLOAT3& emitter, ParticleType type, XMFLOAT3 &size);
 	void Update(list<XMFLOAT3> list, int combo);
+	void Update(list<XMFLOAT3> list, vector<pair<int, int>> ComboAndname);
 	void Draw(ObjectParticle& object);
 	void InitExprotion(XMFLOAT3& emitter);
 	void InitConverge(XMFLOAT3& emitter);
@@ -71,6 +75,7 @@ public:
 	void InitTornado(XMFLOAT3 &emitter);
 	void InitBorn(XMFLOAT3 &emitter);
 	void InitBornAndShake(XMFLOAT3 &emitter);
+	void InitBornAndShake(XMFLOAT3& emitter, int name, int combo);
 	void InitConbo(XMFLOAT3 &emitter);
 	void InitConboNum(XMFLOAT3& emitter, XMFLOAT3 &size);
 	void UpdateExprotion();
@@ -81,6 +86,7 @@ public:
 	void UpdateTornado();
 	void UpdateBorn(list<XMFLOAT3> list);
 	void UpdateBornAndShake(int combo);
+	void UpdateBornAndShake(vector<pair<int, int>> ComboAndname);
 	void UpdateCombo(list<XMFLOAT3> list);
 	void UpdateConboNum();
 	int time;
@@ -93,8 +99,10 @@ public:
 	list<list<ObjectParticle3D>::iterator> deleteItr;
 	ObjectParticle object;
 	void Init(XMFLOAT3& emitter, int count, ParticleType type);
+	void Init(XMFLOAT3& emitter, int count, ParticleType type, int name, int combo);
 	void Init(XMFLOAT3& emitter, int count, ParticleType type, XMFLOAT3 size);
 	void Update(list<XMFLOAT3> list,int combo);
+	void Update(list<XMFLOAT3> list, vector<pair<int, int>> ComboAndname);
 	void Draw(ObjectParticle& object);
 	void DeleteAllParticle();
 };
@@ -110,6 +118,7 @@ public:
 	static ObjectParticleInfo othello2;
 	static void LoadModels();
 	static void Update(list<XMFLOAT3> list, int combo);
+	static void Update(list<XMFLOAT3> list, vector<pair<int, int>> ComboAndname);
 	static void Draw();
 	static void DeleteAllParticles();
 };
