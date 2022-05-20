@@ -713,7 +713,7 @@ void GameScene::GameUpdate()
 	if (checkObject.GetCombo() >= 3)
 	{
 		tornadoTime++;
-		if (tornadoTime > 20)
+		if (tornadoTime > 40)
 		{
 			ObjectParticles::triangle.Init(XMFLOAT3(0, 0, 0), checkObject.GetCombo() - 2, ParticleType::Tornado);
 			tornadoTime = 0;
@@ -1355,7 +1355,7 @@ void GameScene::ToGame()
 	for (auto triangleItr = ObjectParticles::othello.particles.begin(); triangleItr != ObjectParticles::othello.particles.end(); ++triangleItr)
 	{
 		XMFLOAT3 pos = ConvertXMVECTORtoXMFLOAT3(triangleItr->each.position);
-		ObjectParticles::triangle.Init(pos, 3, ParticleType::Exprotion);
+		ObjectParticles::triangle.Init(pos, 2, ParticleType::Exprotion);
 		triangleItr->time = 1;
 		countDown = countMax;
 	}
