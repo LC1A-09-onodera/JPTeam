@@ -243,6 +243,12 @@ void GameScene::Init()
 			opOthellos.push_back(each);
 		}
 	}
+
+	//TimerŠÇ——p
+	isChanged = false;
+	timerCount = 0;
+	size_x = MAX_SIZE_X;
+	size_y = MAX_SIZE_Y;
 }
 
 void GameScene::TitleUpdate()
@@ -659,7 +665,7 @@ void GameScene::GameUpdate()
 							SoundPlayOnce(countdDownSound);
 						}
 					}
-					
+
 				}
 			}
 			Camera::Update();
@@ -1082,8 +1088,47 @@ void GameScene::GameDraw()
 	}
 	if (gameTime > 0 && countDown <= 0)
 	{
-		numbers[gameTime / 60 % 10].ChangeSize(48, 64);
-		numbers[gameTime / 600 % 10 + 10].ChangeSize(48, 64);
+		if (gameTime / 60 >= CHANGE_TIMER_SECOND)
+		{
+			numbers[gameTime / 60 % 10].ChangeSize(48, 64);
+			numbers[gameTime / 600 % 10 + 10].ChangeSize(48, 64);
+		}
+		if (gameTime / 60 <= CHANGE_TIMER_SECOND)
+		{
+			if (gameTime % 60 == 0)
+			{
+				isChanged = true;
+			}
+			if (isChanged)
+			{
+				if (timerCount < MAX_COUNT / 2)
+				{
+					size_x += ADD_SIZE;
+					size_y += ADD_SIZE;
+				}
+				else if (timerCount < MAX_COUNT)
+				{
+					size_x -= ADD_SIZE;
+					size_y -= ADD_SIZE;
+				}
+
+				if (timerCount > 10)
+				{
+					size_x = MAX_SIZE_X;
+					size_y = MAX_SIZE_Y;
+					//numbers[gameTime / 60 % 10].ChangeSize(size_x, size_y);
+					//numbers[gameTime / 600 % 10].ChangeSize(size_x, size_y);
+					timerCount = 0;
+					isChanged = false;
+				}
+
+				numbers[gameTime / 60 % 10].ChangeSize(size_x, size_y);
+				numbers[gameTime / 600 % 10 + 10].ChangeSize(size_x, size_y);
+
+				timerCount++;
+			}
+		}
+
 		numbers[gameTime / 60 % 10].position.m128_f32[0] = window_width / 2 + 0;
 		numbers[gameTime / 60 % 10].position.m128_f32[1] = 10;
 		numbers[gameTime / 60 % 10].SpriteDraw();

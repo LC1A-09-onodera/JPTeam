@@ -47,8 +47,8 @@ public://シーンで使うもの
 	Light* light = nullptr;
 	PostEffect post;
 	XMFLOAT3 gameNowEye = { -1.0f, -10.0f, -15.0f };
-	XMFLOAT3 gameOpEye = {0, 0, -15.0f};
-	XMFLOAT3 gameNowTarget = {-1.0f, 0, 0};
+	XMFLOAT3 gameOpEye = { 0, 0, -15.0f };
+	XMFLOAT3 gameNowTarget = { -1.0f, 0, 0 };
 	XMFLOAT3 gameOpTarget = { -1.0f, 100.0f, 0 };
 	float pointLightPos[3] = { 0, 1, 0 };
 	float pointLightColor[3] = { 1, 1, 1 };
@@ -138,7 +138,7 @@ public://シーンで使うもの
 	Sprite tutorialSprite;
 	Sprite gameScoreAttackSprite;
 	Sprite gameNormaSprite;
-	
+
 	int tornadoTime;
 
 	int displayScore;
@@ -182,4 +182,16 @@ public://シーンで使うもの
 	bool isSceneChangeRady = false;
 
 	list<FrameEach> opOthellos;
+
+	//Timer管理用
+	const int CHANGE_TIMER_SECOND = 100;	//-1の値から振動開始
+	const int MAX_COUNT = 10;				//何フレームかけて拡縮するか（偶数必須）
+	const float ADD_SIZE = 4.0f;			//1フレームで拡縮するサイズ
+	const float MAX_SIZE_X = 48.0f;			//初期の画像サイズ_X
+	const float MAX_SIZE_Y = 64.0f;			//初期の画像サイズ_Y
+
+	bool isChanged = false;
+	int timerCount = 0;
+	float size_x = MAX_SIZE_X;
+	float size_y = MAX_SIZE_Y;
 };

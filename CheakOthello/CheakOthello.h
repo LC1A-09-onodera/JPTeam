@@ -25,7 +25,7 @@ private:
 	static const int MAX_SIZE_Y = 8;
 
 private:
-	SoundData comboSound[10];
+	SoundData comboSound[15];
 
 private:
 	const int CHAIN_NAME = 100;
@@ -42,6 +42,8 @@ private:
 	std::vector<bool> sandwichSide;
 	//std::vector<pair<int, int>> reachData;
 	//std::vector<bool> reachSide;
+	std::vector<pair<int, int>> nameAndCombos;				//名前とコンボ数
+	std::vector<int> chainNames;
 
 private:
 	int last_x;				//最後に動かしたオセロのX座標
@@ -51,6 +53,7 @@ private:
 	int collectiveCount;	//まとまりの数
 	int addScore;			//加算されるスコア
 	int combo;
+	int synchroCount;		//同時消しを考慮するカウント
 	bool side;				//表裏保存
 	bool checkOthello;
 	bool isAddScore;
@@ -78,6 +81,7 @@ public:
 	//const vector<bool>& GetReachSides() { return reachSide; }			//リーチの場所の表裏
 	const int GetCombo() { return combo; }
 	const bool IsAddScore() { return isAddScore; }
+	const vector<pair<int, int>> GetNameAndCombos() { return nameAndCombos; }
 
 private:
 	//盤面チェック
