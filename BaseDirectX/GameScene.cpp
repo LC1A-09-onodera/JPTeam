@@ -515,6 +515,7 @@ void GameScene::GameUpdate()
 				othelloManager.AllDeadPanel();
 				gameTime = gameMaxTime;
 				isTutorial = false;
+				selectMode = true;
 				ToGame4();
 				othelloManager.StartNormaMode(othelloManager.GetEnterNormaStage());
 				titleSelectNum = 0;
@@ -533,7 +534,7 @@ void GameScene::GameUpdate()
 			}
 			else
 			{
-				if (!selectMode && othelloManager.GetEnterModeType() != GameMode::NormaMode)
+				if (!selectMode)
 				{
 					othelloManager.Update(checkObject.GetCombo());
 				}
