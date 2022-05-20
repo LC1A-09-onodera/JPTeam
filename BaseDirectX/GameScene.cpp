@@ -512,14 +512,14 @@ void GameScene::GameUpdate()
 			//ノルマモードを選択した
 			if (othelloManager.InMode() && othelloManager.GetEnterModeType() == GameMode::NormaMode)
 			{//内部でステージ数を検索(中身は適当です)
-				othelloManager.GetEnterNormaStage();
+				othelloManager.AllDeadPanel();
+				gameTime = gameMaxTime;
 				isTutorial = false;
 				ToGame4();
-				othelloManager.AllDeadPanel();
+				othelloManager.StartNormaMode(othelloManager.GetEnterNormaStage());
+				titleSelectNum = 0;
 			}
 #pragma endregion
-
-
 		}
 		else if (countDown <= 0)
 		{
@@ -533,7 +533,7 @@ void GameScene::GameUpdate()
 			}
 			else
 			{
-				if (!selectMode)
+				if (!selectMode && othelloManager.GetEnterModeType() != GameMode::NormaMode)
 				{
 					othelloManager.Update(checkObject.GetCombo());
 				}
@@ -557,7 +557,7 @@ void GameScene::GameUpdate()
 				checkObject.Update(othelloManager.Send(), othelloManager.GetIsSendDataUpdate());
 				othelloManager.Receive(checkObject.GetOthelloDatas());
 			}
-			if (!isTutorial && !selectMode)
+			if (!isTutorial && !selectMode && othelloManager.GetEnterModeType() != GameMode::NormaMode)
 			{
 				gameTime--;
 			}
@@ -1654,7 +1654,10 @@ void GameScene::ToGame4Update()
 				else
 				{
 					gameTime = gameMaxTime;
-					othelloManager.StartSetPos();
+					if (othelloManager.GetEnterModeType() != GameMode::NormaMode)
+					{
+						othelloManager.StartSetPos();
+					}
 					SoundStopWave(countdDownSound);
 					SoundPlayOnce(countdDownSound);
 				}
