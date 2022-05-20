@@ -148,7 +148,7 @@ void Othello::Revers()
 	data.isFront = !data.isFront;
 	XMFLOAT3 pos = ConvertXMVECTORtoXMFLOAT3(each.position);
 	pos.z = -0.3f;
-	ObjectParticles::six.Init(pos, data.maxComboCount * 3, ParticleType::Exprotion);
+	ObjectParticles::six.Init(pos, data.maxComboCount, ParticleType::Exprotion);
 }
 
 
@@ -163,7 +163,7 @@ void Othello::Sandwich()
 	//data.JumpTimer = 0;
 	//data.isJumpUp = true;
 	XMFLOAT3 pos = ConvertXMVECTORtoXMFLOAT3(each.position);
-	ObjectParticles::six.Init(pos, data.maxComboCount * 3, ParticleType::Exprotion);
+	ObjectParticles::six.Init(pos, data.maxComboCount, ParticleType::Exprotion);
 
 }
 
@@ -632,7 +632,7 @@ void Othello::MakeParticle()
 {
 	XMFLOAT3 sample;
 	sample = ConvertXMVECTORtoXMFLOAT3(each.position);
-	ObjectParticles::triangle.Init(sample, 10, ParticleType::Exprotion);
+	ObjectParticles::triangle.Init(sample, 5, ParticleType::Exprotion);
 	//ObjectParticles::triangle.Init(XMFLOAT3(0, 0, 0), 60, ParticleType::Swell);
 }
 

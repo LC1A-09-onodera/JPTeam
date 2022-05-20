@@ -885,14 +885,16 @@ void ObjectParticle3D::UpdateBornAndShake(vector<pair<int, int>> ComboAndname)
 	each.position.m128_f32[0] += (rand() % (int)(20.0f * easeTime + 1) - (9 * easeTime)) / 400.0f;
 	each.position.m128_f32[1] += (rand() % (int)(20.0f * easeTime + 1) - (9 * easeTime)) / 400.0f;
 	easeTime -= 1.0f / 600.0f;//vanishTimerMax
-	int othellotypeint = othellosName;
+
+	/*int othellotypeint = othellosName;
 	for (auto itr = ComboAndname.begin(); itr != ComboAndname.end(); ++itr)
 	{
 		if (itr->first == othellosName)
 		{
 			each.colorType = itr->second;
 		}
-	}
+	}*/
+
 	if (easeTime <= 0.0f)
 	{
 		time = 0;

@@ -534,7 +534,7 @@ void GameScene::GameUpdate()
 			}
 			else
 			{
-				if (!selectMode)
+				if (!selectMode )
 				{
 					othelloManager.Update(checkObject.GetCombo());
 				}
@@ -558,7 +558,7 @@ void GameScene::GameUpdate()
 				checkObject.Update(othelloManager.Send(), othelloManager.GetIsSendDataUpdate());
 				othelloManager.Receive(checkObject.GetOthelloDatas());
 			}
-			if (!isTutorial && !selectMode && othelloManager.GetEnterModeType() != GameMode::NormaMode)
+			if (!isTutorial && !selectMode )
 			{
 				gameTime--;
 			}
@@ -748,6 +748,7 @@ void GameScene::ResultUpdate()
 		OthlloPlayer::SetPosition(XMFLOAT3(0, 0, -2));
 		SoundPlayLoop(BGMSound);
 		SceneNum = TITLE;
+		isSceneChange = false;
 	}
 }
 
@@ -1655,7 +1656,7 @@ void GameScene::ToGame4Update()
 				else
 				{
 					gameTime = gameMaxTime;
-					if (othelloManager.GetEnterModeType() != GameMode::NormaMode)
+					if (!selectMode)
 					{
 						othelloManager.StartSetPos();
 					}
@@ -1782,6 +1783,7 @@ void GameScene::ToResult()
 	eyeEaseTime = 0;
 	resultForTime = 0;
 	select = false;
+	sceneChageType = 0;
 	ObjectParticles::othelloFrame.DeleteAllParticle();
 }
 
