@@ -245,6 +245,12 @@ void GameScene::Init()
 			opOthellos.push_back(each);
 		}
 	}
+
+	//Timer管理用
+	isChanged = false;
+	timerCount = 0;
+	size_x = MAX_SIZE_X;
+	size_y = MAX_SIZE_Y;
 }
 
 void GameScene::TitleUpdate()
@@ -481,7 +487,11 @@ void GameScene::GameUpdate()
 	{
 		if (isModeSelect)
 		{
-
+			if (Input::KeyTrigger(DIK_SPACE))
+			{
+				isTutorial = false;
+				ToGame4();
+			}
 		}
 		else if (countDown <= 0)
 		{
@@ -511,6 +521,7 @@ void GameScene::GameUpdate()
 				else if (othelloManager.GetIsNormaClear())
 				{
 					isSceneChange = true;
+					ToResult();
 				}
 			}
 			if (othelloManager.GetIsSendDataUpdate())
@@ -568,23 +579,7 @@ void GameScene::GameUpdate()
 	//ゲームシーンからリザルトへのトリガー
 	if (gameTime <= 0 && !isResultSceneChange)
 	{
-		SoundStopWave(BGMSound);
-		SoundStopWave(timeUpSound);
-		SoundPlayOnce(timeUpSound);
-		for (auto triangleItr = OthelloManager::othellos.begin(); triangleItr != OthelloManager::othellos.end(); ++triangleItr)
-		{
-			XMFLOAT3 pos = triangleItr->GetPosition();
-			ObjectParticles::triangle.Init(pos, 2, ParticleType::Exprotion);
-			triangleItr->GetGameData()->isDead = true;
-		}
-		othelloManager.DeadPanel();
-		isResultSceneChange = true;
-		eyeStart = Camera::target.v;
-		eyeEnd = { -1, 100, 0 };
-		eyeEaseTime = 0;
-		resultForTime = 0;
-		select = false;
-		ObjectParticles::othelloFrame.DeleteAllParticle();
+		ToResult();
 	}
 	//カメラの動き
 	if (isResultSceneChange)
@@ -985,8 +980,47 @@ void GameScene::GameDraw()
 	}
 	if (gameTime > 0 && countDown <= 0)
 	{
-		numbers[gameTime / 60 % 10].ChangeSize(48, 64);
-		numbers[gameTime / 600 % 10 + 10].ChangeSize(48, 64);
+		if (gameTime / 60 >= CHANGE_TIMER_SECOND)
+		{
+			numbers[gameTime / 60 % 10].ChangeSize(48, 64);
+			numbers[gameTime / 600 % 10 + 10].ChangeSize(48, 64);
+		}
+		if (gameTime / 60 <= CHANGE_TIMER_SECOND)
+		{
+			if (gameTime % 60 == 0)
+			{
+				isChanged = true;
+			}
+			if (isChanged)
+			{
+				if (timerCount < MAX_COUNT / 2)
+				{
+					size_x += ADD_SIZE;
+					size_y += ADD_SIZE;
+				}
+				else if (timerCount < MAX_COUNT)
+				{
+					size_x -= ADD_SIZE;
+					size_y -= ADD_SIZE;
+				}
+
+				if (timerCount > 10)
+				{
+					size_x = MAX_SIZE_X;
+					size_y = MAX_SIZE_Y;
+					//numbers[gameTime / 60 % 10].ChangeSize(size_x, size_y);
+					//numbers[gameTime / 600 % 10].ChangeSize(size_x, size_y);
+					timerCount = 0;
+					isChanged = false;
+				}
+
+				numbers[gameTime / 60 % 10].ChangeSize(size_x, size_y);
+				numbers[gameTime / 600 % 10 + 10].ChangeSize(size_x, size_y);
+
+				timerCount++;
+			}
+		}
+
 		numbers[gameTime / 60 % 10].position.m128_f32[0] = window_width / 2 + 0;
 		numbers[gameTime / 60 % 10].position.m128_f32[1] = 10;
 		numbers[gameTime / 60 % 10].SpriteDraw();
@@ -1392,6 +1426,10 @@ void GameScene::ToGame4()
 	eyeEaseTime = 0.0f;
 	sceneChangeAfterTime = 0.0f;
 
+	isModeSelect = false;
+
+	gameTime = gameMaxTime;
+
 	isStageDisplay = false;
 	goToGameTime = 0.0f;
 	sceneChangeDiray2 = 0;
@@ -1690,6 +1728,27 @@ void GameScene::ToModeSelect()
 	select = true;
 	selectStage = false;
 	selectMode = false;
+}
+
+void GameScene::ToResult()
+{
+	SoundStopWave(BGMSound);
+	SoundStopWave(timeUpSound);
+	SoundPlayOnce(timeUpSound);
+	for (auto triangleItr = OthelloManager::othellos.begin(); triangleItr != OthelloManager::othellos.end(); ++triangleItr)
+	{
+		XMFLOAT3 pos = triangleItr->GetPosition();
+		ObjectParticles::triangle.Init(pos, 2, ParticleType::Exprotion);
+		triangleItr->GetGameData()->isDead = true;
+	}
+	othelloManager.DeadPanel();
+	isResultSceneChange = true;
+	eyeStart = Camera::target.v;
+	eyeEnd = { -1, 100, 0 };
+	eyeEaseTime = 0;
+	resultForTime = 0;
+	select = false;
+	ObjectParticles::othelloFrame.DeleteAllParticle();
 }
 
 void GameScene::EndDraw()

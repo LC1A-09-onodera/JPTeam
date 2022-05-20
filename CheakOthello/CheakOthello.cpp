@@ -38,6 +38,7 @@ void CheakOthello::Init()
 	collectiveCount = 0;	//まとまりの数
 	addScore = 0;			//加算されるスコア
 	combo = 0;				//コンボ
+	synchroCount = 0;
 	side = 0;				//表裏保存
 	checkOthello = 0;		//
 	isAddScore = 0;			//
@@ -149,6 +150,8 @@ void CheakOthello::CheckLastMove(const vector<vector<SendOthelloData>>& othelloD
 	//ChainName保存用配列
 	vector<int> chainName;
 
+	nameAndCombos.clear();
+
 	//その場にオセロが存在するかつ、最後に動かしてたかを判定（←ちょっと効率悪そう）
 	for (int i = 0; i < MAX_SIZE_Y; i++)
 	{
@@ -175,10 +178,23 @@ void CheakOthello::CheckLastMove(const vector<vector<SendOthelloData>>& othelloD
 				{
 					chainName.push_back(othelloDatas[i][j].chainName);
 					chainNameCount = othelloDatas[i][j].chainName;
+
+					nameAndCombos.push_back(make_pair(
+						othelloDatas[i][j].chainName,
+						othelloDatas[i][j].maxComboCount
+					));
 				}
 				else
 				{
-					if (!VectorFinder(chainName, chainNameCount)) { chainName.push_back(chainNameCount); }
+					if (!VectorFinder(chainName, othelloDatas[i][j].chainName))
+					{
+						chainName.push_back(othelloDatas[i][j].chainName);
+
+						nameAndCombos.push_back(make_pair(
+							othelloDatas[i][j].chainName,
+							othelloDatas[i][j].maxComboCount
+						));
+					}
 				}
 			}
 
@@ -193,6 +209,9 @@ void CheakOthello::CheckLastMove(const vector<vector<SendOthelloData>>& othelloD
 
 	//纏まりのカウントを計算
 	collectiveCount = chainName.size();
+
+	//if (!chainNames.empty()) { chainNames.clear(); }
+	//copy(chainName.begin(), chainName.end(), back_inserter(chainNames));
 }
 
 pair<int, int> CheakOthello::GetCheckOthello()
@@ -352,7 +371,7 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y, int last_x, in
 					comboCount++;
 
 					//使用する乱数を定義
-					int random = (int)ShlomonMath::xor64;
+					int random = std::rand();
 					int maxScore = 0;
 
 					//Score計算
@@ -413,6 +432,7 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y, int last_x, in
 					//コンボを繋げた場合
 					if (maxChainName.size() == 1)
 					{
+						//int chainName = maxChainName.front();
 						int chainName = maxChainName.front();
 
 						for (int i = 0; i < OthelloConstData::fieldSize; i++)
@@ -420,6 +440,7 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y, int last_x, in
 							for (int j = 0; j < OthelloConstData::fieldSize; j++)
 							{
 								if (othelloDatas[i][j].chainName != chainName) { continue; }
+								//othelloDatas[i][j].chainName = random;
 								othelloDatas[i][j].chainName = random;
 							}
 						}
@@ -438,16 +459,40 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y, int last_x, in
 								for (int j = 0; j < OthelloConstData::fieldSize; j++)
 								{
 									if (othelloDatas[i][j].chainName != chainName) { continue; }
+									//othelloDatas[i][j].chainName = random;
 									othelloDatas[i][j].chainName = random;
 								}
 							}
 						}
 					}
 
-					//ComboCountとScore修正
-					if (!maxChainName.empty())
+					//ゴリ押し用
+					std::vector<int> chainNames;
+					for (int i = 0; i < OthelloConstData::fieldSize; i++)
 					{
-						for (auto itr = maxChainName.begin(); itr != maxChainName.end(); ++itr)
+						for (int j = 0; j < OthelloConstData::fieldSize; j++)
+						{
+							if (othelloDatas[i][j].chainName != 0)
+							{
+								if (chainNames.empty())
+								{
+									chainNames.push_back(othelloDatas[i][j].chainName);
+								}
+								else
+								{
+									if (!VectorFinder(chainNames, othelloDatas[i][j].chainName))
+									{
+										chainNames.push_back(othelloDatas[i][j].chainName);
+									}
+								}
+							}
+						}
+					}
+
+					//ComboCountとScore修正
+					if (!chainNames.empty())
+					{
+						for (auto itr = chainNames.begin(); itr != chainNames.end(); ++itr)
 						{
 							int chainName = *itr;
 
@@ -457,7 +502,7 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y, int last_x, in
 								{
 									if (othelloDatas[i][j].chainName == chainName)
 									{
-										if (othelloDatas[i][j].maxComboCount != maxComboCount)
+										if (othelloDatas[i][j].maxComboCount < maxComboCount)
 										{
 											othelloDatas[i][j].maxComboCount = maxComboCount;
 										}
@@ -562,6 +607,8 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y, int last_x, in
 			loop++;
 		}
 	}
+
+	synchroCount++;
 }
 
 void CheakOthello::AddScore()
