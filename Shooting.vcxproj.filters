@@ -383,9 +383,6 @@
     <ClCompile Include="LightObject\LightObject.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="3DObjectParticle\3DObjectParticle.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resource\HLSL\OBJPixelShader.hlsl" />
