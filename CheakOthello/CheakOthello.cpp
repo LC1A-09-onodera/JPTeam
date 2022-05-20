@@ -574,73 +574,77 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y, int last_x, in
 					}
 
 					//周回したよ（こいつで何個挟んだか判定できる）
-					loop++;
+					//loop++;
 				}
 
-				else
+				break;
+			}
+
+			//周回したよ（こいつで何個挟んだか判定できる）
+			loop++;
+			synchroCount++;
+		}
+
+		else
+		{
+			//カウント用
+			//int count = 1;
+
+			//マス判定
+			//othelloCheckDatas[pair_y][pair_y] = true;
+			//if (othelloCheckDatas[pair_y][pair_x]) { return; }
+
+			//次のマス
+			pair_x += direction_x;
+			pair_y += direction_y;
+
+			//範囲外
+			if (pair_x < 0 || pair_x > OthelloConstData::fieldSize - 1) { break; }
+			if (pair_y < 0 || pair_y > OthelloConstData::fieldSize - 1) { break; }
+
+			//存在しない
+			if (othelloDatas[pair_y][pair_x].type == NONE) { break; }
+			//存在しない
+			if (othelloDatas[count_y][count_x].type == NONE) { break; }
+			//同色と隣接
+			if (othelloDatas[pair_y][pair_x].isFront == side && loop == 0) { break; }
+
+			//探索可能
+			bool isActiveOthello = false;
+			for (int i = 0; i < loop; i++)
+			{
+				count_x += direction_x;
+				count_y += direction_y;
+				if (!othelloDatas[count_y][count_x].isSandwich) {
+					isActiveOthello = true;
+				}
+				//if (i == loop) { isActiveOthello = true; }
+			}
+
+			//初期化
+			count_x = last_x;
+			count_y = last_y;
+
+			//挟めるオセロが見つかったら
+			if (isActiveOthello)
+			{
+				if (othelloDatas[pair_y][pair_x].isFront == side && loop != 0)
 				{
-					//カウント用
-					//int count = 1;
-
-					//マス判定
-					//othelloCheckDatas[pair_y][pair_y] = true;
-					//if (othelloCheckDatas[pair_y][pair_x]) { return; }
-
-					//次のマス
-					pair_x += direction_x;
-					pair_y += direction_y;
-
-					//範囲外
-					if (pair_x < 0 || pair_x > OthelloConstData::fieldSize - 1) { break; }
-					if (pair_y < 0 || pair_y > OthelloConstData::fieldSize - 1) { break; }
-
-					//存在しない
-					if (othelloDatas[pair_y][pair_x].type == NONE) { break; }
-					//存在しない
-					if (othelloDatas[count_y][count_x].type == NONE) { break; }
-					//同色と隣接
-					if (othelloDatas[pair_y][pair_x].isFront == side && loop == 0) { break; }
-
-					//探索可能
-					bool isActiveOthello = false;
-					for (int i = 0; i < loop; i++)
+					for (int i = 0; i <= loop + 1; i++)
 					{
+						othelloDatas[count_y][count_x].isCheckEnd = true;
 						count_x += direction_x;
 						count_y += direction_y;
-						if (!othelloDatas[count_y][count_x].isSandwich) {
-							isActiveOthello = true;
-						}
-						//if (i == loop) { isActiveOthello = true; }
 					}
-
-					//初期化
-					count_x = last_x;
-					count_y = last_y;
-
-					//挟めるオセロが見つかったら
-					if (isActiveOthello)
-					{
-						if (othelloDatas[pair_y][pair_x].isFront == side && loop != 0)
-						{
-							for (int i = 0; i <= loop + 1; i++)
-							{
-								othelloDatas[count_y][count_x].isCheckEnd = true;
-								count_x += direction_x;
-								count_y += direction_y;
-							}
-							break;
-						}
-					}
-
-					//次のマス
-					//pair_x += direction_x;
-					//pair_y += direction_y;
-
-					loop++;
+					break;
 				}
 			}
 
-			synchroCount++;
+			//次のマス
+			//pair_x += direction_x;
+			//pair_y += direction_y;
+
+			loop++;
 		}
 	}
 }
