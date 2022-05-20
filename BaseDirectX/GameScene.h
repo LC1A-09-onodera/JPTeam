@@ -35,6 +35,12 @@ private:
 	void ToGame3();
 	void ToGame4();
 
+	void ToGame1Update();
+	void ToGame2Update();
+	void ToGame3Update();
+	void ToGame4Update();
+	void ToModeSelectUpdate();
+	void ToModeSelect();
 public:
 	GameScene();
 	~GameScene();
@@ -188,4 +194,7 @@ public://シーンで使うもの
 	float goToGameTime = 0.0f;
 
 	list<FrameEach> opOthellos;
+
+	//ステージ選択の画面に行く
+	bool isModeSelect = false;
 };
