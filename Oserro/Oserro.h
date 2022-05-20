@@ -148,7 +148,7 @@ namespace OthelloConstData
 	const int spawnTimerMAx = 300;
 	const int spawnMoveCount = 100;
 	const int spawnPanelCount = 2;
-	const int minPanelCount = 20;
+	const int minPanelCount = 25;
 	const int chainRepairTime = 0;
 	const int saveTimerLimit = 180;
 	const int tutorialTimerLimit = 180;
@@ -162,7 +162,7 @@ namespace OthelloConstData
 
 	const int NormaStageCount = 11;
 	//アニメーション
-	const int vanishTimerMax = 600;
+	const int vanishTimerMax = 1200;
 	const int vanishAnimation = 180;
 	const int vanishWaitTimer = vanishTimerMax - vanishAnimation;
 	const int animationTimerMax = 30;
