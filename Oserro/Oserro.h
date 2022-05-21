@@ -343,7 +343,7 @@ public://ノルマモード用関数
 	bool GetIsNormaClear();
 	bool GetIsNormaFailed();
 	bool isNormaMode = false;
-
+	NormaChecker normaChecker;
 	void SetScore(const int score) { nowScore = score; }
 
 	void NormaTextDraw();
@@ -488,6 +488,6 @@ private:
 	int textChangeTimer = 0;
 	bool textChange = false;
 
-	NormaChecker normaChecker;
+	
 	std::list<XMFLOAT3> pressPos;
 };

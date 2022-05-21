@@ -308,7 +308,11 @@ void GameScene::TitleUpdate()
 				//Ç±Ç±Ç≈ÉÇÅ[ÉhëIëÇ…îÚÇ‘
 				else
 				{
+					gameTime = 1;
 					ToModeSelect();
+					/*select = true;
+					selectStage = false;
+					selectMode = false;*/
 				}
 			}
 		}
@@ -372,8 +376,7 @@ void GameScene::TitleUpdate()
 					{
 						gameTime = gameMaxTime;
 						isTutorial = false;
-						ToGame4();
-						othelloManager.StartNormaMode(selectStageNum);
+						ToGame4(true);
 						titleSelectNum = 0;
 					}
 					else
@@ -516,8 +519,8 @@ void GameScene::GameUpdate()
 				gameTime = gameMaxTime;
 				isTutorial = false;
 				selectMode = true;
-				ToGame4();
-				othelloManager.StartNormaMode(othelloManager.GetEnterNormaStage());
+				ToGame4(true);
+				//othelloManager.StartNormaMode(othelloManager.GetEnterNormaStage());
 				titleSelectNum = 0;
 			}
 #pragma endregion
@@ -639,6 +642,8 @@ void GameScene::GameUpdate()
 				else
 				{
 					SceneNum = RESULT;
+					resultForTime = 0;
+					isResultSceneChange = false;
 					displayScore = checkObject.GetScore();
 				}
 			}
@@ -1437,7 +1442,7 @@ void GameScene::ToGame3()
 	OthlloPlayer::isEase = false;
 }
 
-void GameScene::ToGame4()
+void GameScene::ToGame4(bool flags)
 {
 	//èâä˙âª
 	checkObject.Init();
@@ -1470,10 +1475,12 @@ void GameScene::ToGame4()
 	oldDisplay = 0;
 	countDown = 239;
 	checkObject.SetScore(0);
+	othelloManager.normaChecker.isClear = false;
 	OthlloPlayer::SetPosition(XMFLOAT3(0, 0, -2));
 	OthlloPlayer::isEase = false;
 
 	ObjectParticles::othello.DeleteAllParticle();
+	flagss = flags;
 }
 
 void GameScene::ToGame1Update()
@@ -1662,6 +1669,10 @@ void GameScene::ToGame4Update()
 					}
 					SoundStopWave(countdDownSound);
 					SoundPlayOnce(countdDownSound);
+					if (flagss)
+					{
+						othelloManager.StartNormaMode(selectStageNum);
+					}
 				}
 			}
 		}
@@ -1778,6 +1789,7 @@ void GameScene::ToResult()
 	}
 	othelloManager.DeadPanel();
 	isResultSceneChange = true;
+	isSceneChange = false;
 	eyeStart = Camera::target.v;
 	eyeEnd = { -1, 100, 0 };
 	eyeEaseTime = 0;

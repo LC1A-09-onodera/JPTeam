@@ -52,7 +52,7 @@ public:
 
 	bool GetClear();
 	bool GetFailed();
-
+	bool isClear = false;
 private:
 	std::list<Norma::FieldStatus> preField;
 	Norma::NormaType nowType = Norma::Combo;
@@ -68,7 +68,7 @@ private:
 	int normaMoveCount = 0;
 
 	bool subNormaFlag = false;
-	bool isClear = false;
+	
 	bool isFailed = false;
 	Sprite clearText;
 };

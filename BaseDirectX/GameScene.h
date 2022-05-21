@@ -33,7 +33,7 @@ private:
 	void ToGame();
 	void ToGame2();
 	void ToGame3();
-	void ToGame4();
+	void ToGame4(bool flags = false);
 
 	void ToGame1Update();
 	void ToGame2Update();
@@ -210,4 +210,6 @@ public://シーンで使うもの
 	float size_y = MAX_SIZE_Y;
 	//ステージ選択の画面に行く
 	bool isModeSelect = false;
+
+	float flagss;
 };

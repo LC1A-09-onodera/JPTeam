@@ -643,7 +643,7 @@ bool Othello::GetIsActive()
 
 void OthelloManager::Init()
 {
-	oserroModel.CreateModel("newOserro", ShaderManager::othelloShader);
+	oserroModel.CreateModel("newOserro4", ShaderManager::othelloShader);
 	stopOserroModel.CreateModel("rock_othello", ShaderManager::othelloShader);
 	wallOserroModel.CreateModel("wall", ShaderManager::othelloShader);
 	chanceModelBlue.CreateModel("chance_1", ShaderManager::othelloShader);
