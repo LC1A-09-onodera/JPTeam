@@ -212,4 +212,5 @@ public://ƒV[ƒ“‚Åg‚¤‚à‚Ì
 	bool isModeSelect = false;
 
 	float flagss;
+	Model numbersObject[10];
 };

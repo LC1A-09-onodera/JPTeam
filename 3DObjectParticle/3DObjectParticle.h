@@ -86,7 +86,7 @@ public:
 	void UpdateTornado();
 	void UpdateBorn(list<XMFLOAT3> list);
 	void UpdateBornAndShake(int combo);
-	void UpdateBornAndShake(vector<pair<int, int>> ComboAndname);
+	void UpdateBornAndShake();
 	void UpdateCombo(list<XMFLOAT3> list);
 	void UpdateConboNum();
 	int time;

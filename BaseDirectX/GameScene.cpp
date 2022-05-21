@@ -251,6 +251,7 @@ void GameScene::Init()
 	timerCount = 0;
 	size_x = MAX_SIZE_X;
 	size_y = MAX_SIZE_Y;
+	numbersObject[1].CreateModel("number1", ShaderManager::playerShader);
 }
 
 void GameScene::TitleUpdate()
@@ -537,7 +538,7 @@ void GameScene::GameUpdate()
 			}
 			else
 			{
-				if (!selectMode )
+				if (!selectMode)
 				{
 					othelloManager.Update(checkObject.GetCombo());
 				}
@@ -561,7 +562,7 @@ void GameScene::GameUpdate()
 				checkObject.Update(othelloManager.Send(), othelloManager.GetIsSendDataUpdate());
 				othelloManager.Receive(checkObject.GetOthelloDatas());
 			}
-			if (!isTutorial && !selectMode )
+			if (!isTutorial && !selectMode)
 			{
 				gameTime--;
 			}
@@ -1074,10 +1075,24 @@ void GameScene::GameDraw()
 			int addComboint = checkObject.GetCombo();
 			if (addComboint < 10)
 			{
-				addScoreNum[addComboint % 10].position.m128_f32[0] = window_width / 2 - 64;
-				addScoreNum[addComboint % 10].position.m128_f32[1] = 74;
-				addScoreNum[addComboint % 10].ChangeSize(48, 64);
-				addScoreNum[addComboint % 10].SpriteDraw();
+				if (addComboint % 10 == 1)
+				{
+					numbersObject[1].each.position.m128_f32[0] = -2.0f;
+					numbersObject[1].each.position.m128_f32[1] = 13.0f;
+					numbersObject[1].each.position.m128_f32[2] = -0.5f;
+					numbersObject[1].each.scale = {0.5f, 0.5f, 0.5f};
+					numbersObject[1].each.rotation.x = -30.0f;
+					numbersObject[1].each.rotation.y += 2.0f;
+					numbersObject[1].Update();
+					Draw3DObject(numbersObject[1]);
+				}
+				else
+				{
+					addScoreNum[addComboint % 10].position.m128_f32[0] = window_width / 2 - 64;
+					addScoreNum[addComboint % 10].position.m128_f32[1] = 74;
+					addScoreNum[addComboint % 10].ChangeSize(48, 64);
+					addScoreNum[addComboint % 10].SpriteDraw();
+				}
 				addReverse.position.m128_f32[0] = window_width / 2;
 				addReverse.position.m128_f32[1] = 74 + 32;
 				addReverse.ChangeSize(192, 32);

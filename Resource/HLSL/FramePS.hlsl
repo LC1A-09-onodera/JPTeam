@@ -98,6 +98,11 @@ float4 main(VSOutput input) : SV_TARGET
 	result.r += 0.3f;
 	result.g += 0.3f;
 	result.b += 0.3f;
+    if (colorType == 0)
+    {
+        result.x = 0.0f;
+        result.yz = 0.0f;
+    }
 	if (colorType == 1)
 	{
         result.x = 0.8f;

@@ -4,6 +4,7 @@
 #include "../WindowsAPI/WinAPI.h"
 #include "../Camera/Camera.h"
 #include <vector>
+#include "../Oserro/Oserro.h"
 
 ObjectParticleInfo ObjectParticles::triangle;
 ObjectParticleInfo ObjectParticles::othello;
@@ -162,7 +163,7 @@ void ObjectParticle3D::Update(list<XMFLOAT3> list, vector<pair<int, int>> ComboA
 {
 	if (type == ParticleType::BornAndShake)
 	{
-		UpdateBornAndShake(ComboAndname);
+		UpdateBornAndShake();
 	}
 }
 
@@ -491,7 +492,14 @@ void ObjectParticle::Update(FrameEach* each)
 			//constMap0->flash = 1;
 			constMap0->flash = flash;
 			//constMap0->colorType = this->each.colorType;
-			constMap0->colorType = each->colorType;
+			if (each->colorType > 0)
+			{
+				constMap0->colorType = each->colorType;
+			}
+			else
+			{
+				constMap0->colorType = 0;
+			}
 			this->each.constBuff0->Unmap(0, nullptr);
 		}
 
@@ -879,7 +887,7 @@ void ObjectParticle3D::UpdateBornAndShake(int combo)
 	}
 }
 
-void ObjectParticle3D::UpdateBornAndShake(vector<pair<int, int>> ComboAndname)
+void ObjectParticle3D::UpdateBornAndShake()
 {
 	each.position = ConvertXMFLOAT3toXMVECTOR(startPosition);
 	each.position.m128_f32[0] += (rand() % (int)(20.0f * easeTime + 1) - (9 * easeTime)) / 400.0f;
@@ -894,7 +902,14 @@ void ObjectParticle3D::UpdateBornAndShake(vector<pair<int, int>> ComboAndname)
 			each.colorType = itr->second;
 		}
 	}*/
-
+	XMFLOAT3 pos = ConvertXMVECTORtoXMFLOAT3(each.position);
+	for (auto itr = OthelloManager::othellos.begin(); itr != OthelloManager::othellos.end(); ++itr)
+	{
+		if (Lenght(pos, itr->GetPosition()) < 0.001f)
+		{
+			each.colorType = itr->GetGameData()->comboCount;
+		}
+	}
 	if (easeTime <= 0.0f)
 	{
 		time = 0;
