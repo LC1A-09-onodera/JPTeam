@@ -905,9 +905,9 @@ void ObjectParticle3D::UpdateBornAndShake()
 	XMFLOAT3 pos = ConvertXMVECTORtoXMFLOAT3(each.position);
 	for (auto itr = OthelloManager::othellos.begin(); itr != OthelloManager::othellos.end(); ++itr)
 	{
-		if (Lenght(pos, itr->GetPosition()) < 0.001f)
+		if (Lenght(pos, itr->GetPosition()) < 2.0f && itr->GetGameData()->comboCount != 0)
 		{
-			each.colorType = itr->GetGameData()->comboCount;
+			each.colorType = itr->GetGameData()->maxComboCount;
 		}
 	}
 	if (easeTime <= 0.0f)
