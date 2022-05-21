@@ -1080,7 +1080,7 @@ void GameScene::GameDraw()
 					numbersObject[1].each.position.m128_f32[0] = -2.0f;
 					numbersObject[1].each.position.m128_f32[1] = 13.0f;
 					numbersObject[1].each.position.m128_f32[2] = -0.5f;
-					numbersObject[1].each.scale = {0.5f, 0.5f, 0.5f};
+					numbersObject[1].each.scale = { 0.5f, 0.5f, 0.5f };
 					numbersObject[1].each.rotation.x = -30.0f;
 					numbersObject[1].each.rotation.y += 2.0f;
 					numbersObject[1].Update();
@@ -1481,6 +1481,8 @@ void GameScene::ToGame4(bool flags)
 
 	gameTime = gameMaxTime;
 
+	isTipsOk = false;
+
 	isStageDisplay = false;
 	goToGameTime = 0.0f;
 	sceneChangeDiray2 = 0;
@@ -1648,12 +1650,19 @@ void GameScene::ToGame4Update()
 		}
 		if (sceneChangeDiray2 >= 180)
 		{
-			sceneChangeAfterTime += 0.01f;
-			for (auto opOthelloItr = opOthellos.begin(); opOthelloItr != opOthellos.end(); ++opOthelloItr)
+			if (Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01))
 			{
-				opOthelloItr->scale = ShlomonMath::EaseInQuad(XMFLOAT3(1.5f, 1.5f, 1.5f), XMFLOAT3(0.01f, 0.01f, 0.01f), sceneChangeAfterTime);
-				opOthelloItr->rotation = ShlomonMath::EaseInQuad(XMFLOAT3(0, 0, 90), XMFLOAT3(0, 0, 0), sceneChangeAfterTime);
-				//opOthelloItr->rotation.y = 180;
+				isTipsOk = true;
+			}
+			if (isTipsOk)
+			{
+				sceneChangeAfterTime += 0.01f;
+				for (auto opOthelloItr = opOthellos.begin(); opOthelloItr != opOthellos.end(); ++opOthelloItr)
+				{
+					opOthelloItr->scale = ShlomonMath::EaseInQuad(XMFLOAT3(1.5f, 1.5f, 1.5f), XMFLOAT3(0.01f, 0.01f, 0.01f), sceneChangeAfterTime);
+					opOthelloItr->rotation = ShlomonMath::EaseInQuad(XMFLOAT3(0, 0, 90), XMFLOAT3(0, 0, 0), sceneChangeAfterTime);
+					//opOthelloItr->rotation.y = 180;
+				}
 			}
 		}
 		//ゲーム画面」に移行し、カウントダウン開始
@@ -1689,6 +1698,7 @@ void GameScene::ToGame4Update()
 						othelloManager.StartNormaMode(selectStageNum);
 					}
 				}
+
 			}
 		}
 	}
@@ -1719,12 +1729,19 @@ void GameScene::ToModeSelectUpdate()
 		}
 		if (sceneChangeDiray2 >= 180)
 		{
-			sceneChangeAfterTime += 0.01f;
-			for (auto opOthelloItr = opOthellos.begin(); opOthelloItr != opOthellos.end(); ++opOthelloItr)
+			if (Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01))
 			{
-				opOthelloItr->scale = ShlomonMath::EaseInQuad(XMFLOAT3(1.5f, 1.5f, 1.5f), XMFLOAT3(0.01f, 0.01f, 0.01f), sceneChangeAfterTime);
-				opOthelloItr->rotation = ShlomonMath::EaseInQuad(XMFLOAT3(0, 0, 90), XMFLOAT3(0, 0, 0), sceneChangeAfterTime);
-				//opOthelloItr->rotation.y = 180;
+				isTipsOk = true;
+			}
+			if (isTipsOk)
+			{
+				sceneChangeAfterTime += 0.01f;
+				for (auto opOthelloItr = opOthellos.begin(); opOthelloItr != opOthellos.end(); ++opOthelloItr)
+				{
+					opOthelloItr->scale = ShlomonMath::EaseInQuad(XMFLOAT3(1.5f, 1.5f, 1.5f), XMFLOAT3(0.01f, 0.01f, 0.01f), sceneChangeAfterTime);
+					opOthelloItr->rotation = ShlomonMath::EaseInQuad(XMFLOAT3(0, 0, 90), XMFLOAT3(0, 0, 0), sceneChangeAfterTime);
+					//opOthelloItr->rotation.y = 180;
+				}
 			}
 		}
 		//ゲーム画面」に移行し、カウントダウン開始
@@ -1771,6 +1788,8 @@ void GameScene::ToModeSelect()
 
 	//
 	isModeSelect = true;
+
+	isTipsOk = false;
 
 	isStageDisplay = false;
 	goToGameTime = 0.0f;
