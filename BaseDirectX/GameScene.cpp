@@ -262,6 +262,21 @@ void GameScene::Init()
 	numbersObject[8].CreateModel("number8", ShaderManager::playerShader);
 	numbersObject[9].CreateModel("number9", ShaderManager::playerShader);
 	reverseObject.CreateModel("reverse", ShaderManager::playerShader);
+
+	scoreObject.CreateModel("score", ShaderManager::playerShader);
+
+	for (int i = 0; i < 2; i++)
+	{
+		reversEach[i].CreateConstBuff0();
+		reversEach[i].CreateConstBuff1();
+		timerEach[i].CreateConstBuff0();
+		timerEach[i].CreateConstBuff1();
+	}
+	for (int i = 0; i < 6; i++)
+	{
+		scoreEach[i].CreateConstBuff0();
+		scoreEach[i].CreateConstBuff1();
+	}
 }
 
 void GameScene::TitleUpdate()
@@ -1069,21 +1084,21 @@ void GameScene::GameDraw()
 		}
 
 		int hoge1 = gameTime / 600 % 10;
-		numbersObject[hoge1].each.position.m128_f32[0] = -1.0f;
-		numbersObject[hoge1].each.position.m128_f32[1] = 18.0f;
-		numbersObject[hoge1].each.position.m128_f32[2] = -1.0f;
-		numbersObject[hoge1].each.scale = { 0.3f, 0.3f, 0.3f };
-		numbersObject[hoge1].each.rotation.x = -30.0f;
-		numbersObject[hoge1].Update();
+		timerEach[0].position.m128_f32[0] = -1.0f;
+		timerEach[0].position.m128_f32[1] = 18.0f;
+		timerEach[0].position.m128_f32[2] = -1.0f;
+		timerEach[0].scale = { 0.3f, 0.3f, 0.3f };
+		timerEach[0].rotation.x = -30.0f;
+		numbersObject[hoge1].Update(&timerEach[0]);
 		Draw3DObject(numbersObject[hoge1]);
 
 		int hoge2 = gameTime / 60 % 10;
-		numbersObject[hoge2].each.position.m128_f32[0] = 1.0f;
-		numbersObject[hoge2].each.position.m128_f32[1] = 18.0f;
-		numbersObject[hoge2].each.position.m128_f32[2] = -1.0f;
-		numbersObject[hoge2].each.scale = { 0.3f, 0.3f, 0.3f };
-		numbersObject[hoge2].each.rotation.x = -30.0f;
-		numbersObject[hoge2].Update();
+		timerEach[1].position.m128_f32[0] = 1.0f;
+		timerEach[1].position.m128_f32[1] = 18.0f;
+		timerEach[1].position.m128_f32[2] = -1.0f;
+		timerEach[1].scale = { 0.3f, 0.3f, 0.3f };
+		timerEach[1].rotation.x = -30.0f;
+		numbersObject[hoge2].Update(&timerEach[1]);
 		Draw3DObject(numbersObject[hoge2]);
 
 		oldDisplay = nowScore;
@@ -1096,20 +1111,16 @@ void GameScene::GameDraw()
 			int addComboint = checkObject.GetCombo();
 			if (addComboint < 10 && addComboint >= 1)
 			{
-				numbersObject[addComboint % 10].each.position = ConvertXMFLOAT3toXMVECTOR(OthlloPlayer::GetPosition());
-				numbersObject[addComboint % 10].each.position.m128_f32[0] -= 0.0f;
-				numbersObject[addComboint % 10].each.position.m128_f32[1] += 2.0f;
-				//numbersObject[addComboint % 10].each.position = {-3.0f, 13.0f, -0.5f, 1.0f};
-				//numbersObject[addComboint % 10].each.scale = { 0.5f, 0.5f, 0.5f };
-				numbersObject[addComboint % 10].each.scale = { 0.2f, 0.2f, 0.2f };
-				numbersObject[addComboint % 10].each.rotation.x = -30.0f;
-				numbersObject[addComboint % 10].Update();
+				reversEach[0].position = ConvertXMFLOAT3toXMVECTOR(OthlloPlayer::GetPosition());
+				reversEach[0].position.m128_f32[0] -= 0.0f;
+				reversEach[0].position.m128_f32[1] += 2.0f;
+				reversEach[0].scale = { 0.2f, 0.2f, 0.2f };
+				reversEach[0].rotation.x = -30.0f;
+				numbersObject[addComboint % 10].Update(&reversEach[0]);
 				Draw3DObject(numbersObject[addComboint % 10]);
-				//reverseObject.each.position = { 5.0f, 13.0f, -0.5f, 1.0f };
 				reverseObject.each.position = ConvertXMFLOAT3toXMVECTOR(OthlloPlayer::GetPosition());
 				reverseObject.each.position.m128_f32[0] += 2.0f;
 				reverseObject.each.position.m128_f32[1] += 2.0f;
-				//reverseObject.each.scale = { 0.5f, 0.5f, 0.5f };
 				reverseObject.each.scale = { 0.1f, 0.1f, 0.1f };
 				reverseObject.each.rotation.x = -30.0f;
 				reverseObject.Update();
@@ -1117,19 +1128,19 @@ void GameScene::GameDraw()
 			}
 			else if (addComboint < 100)
 			{
-				numbersObject[addComboint % 10].each.position.m128_f32[0] = -3.0f;
-				numbersObject[addComboint % 10].each.position.m128_f32[1] = 13.0f;
-				numbersObject[addComboint % 10].each.position.m128_f32[2] = -0.5f;
-				numbersObject[addComboint % 10].each.scale = { 0.5f, 0.5f, 0.5f };
-				numbersObject[addComboint % 10].each.rotation.x = -30.0f;
-				numbersObject[addComboint % 10].Update();
+				reversEach[0].position.m128_f32[0] = -3.0f;
+				reversEach[0].position.m128_f32[1] = 13.0f;
+				reversEach[0].position.m128_f32[2] = -0.5f;
+				reversEach[0].scale = { 0.5f, 0.5f, 0.5f };
+				reversEach[0].rotation.x = -30.0f;
+				numbersObject[addComboint % 10].Update(&reversEach[0]);
 				Draw3DObject(numbersObject[addComboint % 10]);
-				numbersObject[addComboint / 10 % 10].each.position.m128_f32[0] = -6.0f;
-				numbersObject[addComboint / 10 % 10].each.position.m128_f32[1] = 13.0f;
-				numbersObject[addComboint / 10 % 10].each.position.m128_f32[2] = -0.5f;
-				numbersObject[addComboint / 10 % 10].each.scale = { 0.5f, 0.5f, 0.5f };
-				numbersObject[addComboint / 10 % 10].each.rotation.x = -30.0f;
-				numbersObject[addComboint / 10 % 10].Update();
+				reversEach[1].position.m128_f32[0] = -6.0f;
+				reversEach[1].position.m128_f32[1] = 13.0f;
+				reversEach[1].position.m128_f32[2] = -0.5f;
+				reversEach[1].scale = { 0.5f, 0.5f, 0.5f };
+				reversEach[1].rotation.x = -30.0f;
+				numbersObject[addComboint / 10 % 10].Update(&reversEach[1]);
 				Draw3DObject(numbersObject[addComboint % 10]);
 				reverseObject.each.position = { 5.0f, 13.0f, -0.5f, 1.0f };
 				reverseObject.each.scale = { 0.5f, 0.5f, 0.5f };
@@ -1160,6 +1171,10 @@ void GameScene::GameDraw()
 					if (changeCount == changeTime)
 					{
 						displayScore++;
+						if (displayScore >= nowScore)
+						{
+							displayScore = nowScore;
+						}
 						changeCount = 0;
 					}
 				}
@@ -1169,6 +1184,10 @@ void GameScene::GameDraw()
 					if (changeCount == changeTime)
 					{
 						displayScore += sub / 60;
+						if (displayScore >= nowScore)
+						{
+							displayScore = nowScore;
+						}
 						changeCount = 0;
 					}
 				}
@@ -1182,7 +1201,7 @@ void GameScene::GameDraw()
 			}
 		}
 
-		float wid = 35;
+		/*float wid = 35;
 		float widPuls = 40;
 		float hi = 50;
 		scoreSprite.position.m128_f32[0] = 0;
@@ -1212,13 +1231,57 @@ void GameScene::GameDraw()
 		scoreNum[displayScore / 100000 % 10 + 50].ChangeSize(wid, hi);
 		scoreNum[displayScore / 100000 % 10 + 50].position.m128_f32[0] = widPuls * 4;
 		scoreNum[displayScore / 100000 % 10 + 50].position.m128_f32[1] = 10;
-		scoreNum[displayScore / 100000 % 10 + 50].SpriteDraw();
+		scoreNum[displayScore / 100000 % 10 + 50].SpriteDraw();*/
+		XMFLOAT3 scoreScale = {0.4f, 0.4f, 0.4f};
+		float scoreDirection = 2.0f;
+		float scoreBaseX = -8.0f;
+		scoreEach[0].position = { scoreBaseX - scoreDirection * 0, 18.0f, -1.0f, 1.0f};
+		scoreEach[0].scale = scoreScale;
+		scoreEach[0].rotation.x = -30.0f;
+		numbersObject[displayScore % 10].Update(&scoreEach[0]);
+		Draw3DObject(numbersObject[displayScore % 10]);
+
+		scoreEach[1].position = { scoreBaseX - scoreDirection * 1, 18.0f, -1.0f, 1.0f };
+		scoreEach[1].scale = scoreScale;
+		scoreEach[1].rotation.x = -30.0f;
+		numbersObject[displayScore / 10 % 10].Update(&scoreEach[1]);
+		Draw3DObject(numbersObject[displayScore / 10 % 10]);
+
+		scoreEach[2].position = { scoreBaseX - scoreDirection * 2, 18.0f, -1.0f, 1.0f };
+		scoreEach[2].scale = scoreScale;
+		scoreEach[2].rotation.x = -30.0f;
+		numbersObject[displayScore / 100 % 10].Update(&scoreEach[2]);
+		Draw3DObject(numbersObject[displayScore / 100 % 10]);
+
+		scoreEach[3].position = { scoreBaseX - scoreDirection * 3, 18.0f, -1.0f, 1.0f };
+		scoreEach[3].scale = scoreScale;
+		scoreEach[3].rotation.x = -30.0f;
+		numbersObject[displayScore / 1000 % 10].Update(&scoreEach[3]);
+		Draw3DObject(numbersObject[displayScore / 1000 % 10]);
+
+		scoreEach[4].position = { scoreBaseX - scoreDirection * 4, 18.0f, -1.0f, 1.0f };
+		scoreEach[4].scale = scoreScale;
+		scoreEach[4].rotation.x = -30.0f;
+		numbersObject[displayScore / 10000 % 10].Update(&scoreEach[4]);
+		Draw3DObject(numbersObject[displayScore / 10000 % 10]);
+
+		scoreEach[5].position = { scoreBaseX - scoreDirection * 5, 18.0f, -1.0f, 1.0f };
+		scoreEach[5].scale = scoreScale;
+		scoreEach[5].rotation.x = -30.0f;
+		numbersObject[displayScore / 100000 % 10].Update(&scoreEach[5]);
+		Draw3DObject(numbersObject[displayScore / 100000 % 10]);
+
+		scoreObject.each.position = { scoreBaseX - 2.0f - scoreDirection * 7, 18.0f, -1.0f, 1.0f };
+		scoreObject.each.scale = scoreScale;
+		scoreObject.each.rotation.x = -30.0f;
+		scoreObject.Update();
+		Draw3DObject(scoreObject);
+
 		/*moveSprite.position.m128_f32[0] = 950;
 		moveSprite.position.m128_f32[1] = 10;
 		float sizeSp = 0.6f;
 		moveSprite.ChangeSize(382 * sizeSp, 433 * sizeSp);
 		moveSprite.SpriteDraw();*/
-
 		//othelloManager.TutorialRetryText.SpriteDraw();
 
 		othelloManager.NormaTextDraw();

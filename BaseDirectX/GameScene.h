@@ -214,6 +214,10 @@ public://ÉVÅ[ÉìÇ≈égÇ§Ç‡ÇÃ
 	float flagss;
 	Model numbersObject[10];
 	Model reverseObject;
+	Model scoreObject;
 
+	EachInfo reversEach[2];
+	EachInfo timerEach[2];
+	EachInfo scoreEach[6];
 	bool isTipsOk = false;
 };
