@@ -253,7 +253,32 @@ void GameScene::Init()
 	timerCount = 0;
 	size_x = MAX_SIZE_X;
 	size_y = MAX_SIZE_Y;
+	numbersObject[0].CreateModel("number0", ShaderManager::playerShader);
 	numbersObject[1].CreateModel("number1", ShaderManager::playerShader);
+	numbersObject[2].CreateModel("number2", ShaderManager::playerShader);
+	numbersObject[3].CreateModel("number3", ShaderManager::playerShader);
+	numbersObject[4].CreateModel("number4", ShaderManager::playerShader);
+	numbersObject[5].CreateModel("number5", ShaderManager::playerShader);
+	numbersObject[6].CreateModel("number6", ShaderManager::playerShader);
+	numbersObject[7].CreateModel("number7", ShaderManager::playerShader);
+	numbersObject[8].CreateModel("number8", ShaderManager::playerShader);
+	numbersObject[9].CreateModel("number9", ShaderManager::playerShader);
+	reverseObject.CreateModel("reverse", ShaderManager::playerShader);
+
+	scoreObject.CreateModel("score", ShaderManager::playerShader);
+
+	for (int i = 0; i < 2; i++)
+	{
+		reversEach[i].CreateConstBuff0();
+		reversEach[i].CreateConstBuff1();
+		timerEach[i].CreateConstBuff0();
+		timerEach[i].CreateConstBuff1();
+	}
+	for (int i = 0; i < 6; i++)
+	{
+		scoreEach[i].CreateConstBuff0();
+		scoreEach[i].CreateConstBuff1();
+	}
 }
 
 void GameScene::TitleUpdate()
@@ -1069,12 +1094,23 @@ void GameScene::GameDraw()
 			}
 		}
 
-		numbers[gameTime / 60 % 10].position.m128_f32[0] = window_width / 2 + 0;
-		numbers[gameTime / 60 % 10].position.m128_f32[1] = 10;
-		numbers[gameTime / 60 % 10].SpriteDraw();
-		numbers[gameTime / 600 % 10 + 10].position.m128_f32[0] = window_width / 2 - 50;
-		numbers[gameTime / 600 % 10 + 10].position.m128_f32[1] = 10;
-		numbers[gameTime / 600 % 10 + 10].SpriteDraw();
+		int hoge1 = gameTime / 600 % 10;
+		timerEach[0].position.m128_f32[0] = -1.0f;
+		timerEach[0].position.m128_f32[1] = 18.0f;
+		timerEach[0].position.m128_f32[2] = -1.0f;
+		timerEach[0].scale = { 0.3f, 0.3f, 0.3f };
+		timerEach[0].rotation.x = -30.0f;
+		numbersObject[hoge1].Update(&timerEach[0]);
+		Draw3DObject(numbersObject[hoge1]);
+
+		int hoge2 = gameTime / 60 % 10;
+		timerEach[1].position.m128_f32[0] = 1.0f;
+		timerEach[1].position.m128_f32[1] = 18.0f;
+		timerEach[1].position.m128_f32[2] = -1.0f;
+		timerEach[1].scale = { 0.3f, 0.3f, 0.3f };
+		timerEach[1].rotation.x = -30.0f;
+		numbersObject[hoge2].Update(&timerEach[1]);
+		Draw3DObject(numbersObject[hoge2]);
 
 		oldDisplay = nowScore;
 		oldScore = nowScore;
@@ -1084,66 +1120,45 @@ void GameScene::GameDraw()
 		if (checkObject.IsAddScore())
 		{
 			int addComboint = checkObject.GetCombo();
-			if (addComboint < 10)
+			if (addComboint < 10 && addComboint >= 1)
 			{
-				if (addComboint % 10 == 1)
-				{
-					numbersObject[1].each.position.m128_f32[0] = -2.0f;
-					numbersObject[1].each.position.m128_f32[1] = 13.0f;
-					numbersObject[1].each.position.m128_f32[2] = -0.5f;
-					numbersObject[1].each.scale = {0.5f, 0.5f, 0.5f};
-					numbersObject[1].each.rotation.x = -30.0f;
-					numbersObject[1].each.rotation.y += 2.0f;
-					numbersObject[1].Update();
-					Draw3DObject(numbersObject[1]);
-				}
-				else
-				{
-					addScoreNum[addComboint % 10].position.m128_f32[0] = window_width / 2 - 64;
-					addScoreNum[addComboint % 10].position.m128_f32[1] = 74;
-					addScoreNum[addComboint % 10].ChangeSize(48, 64);
-					addScoreNum[addComboint % 10].SpriteDraw();
-				}
-				addReverse.position.m128_f32[0] = window_width / 2;
-				addReverse.position.m128_f32[1] = 74 + 32;
-				addReverse.ChangeSize(192, 32);
-				addReverse.SpriteDraw();
+				reversEach[0].position = ConvertXMFLOAT3toXMVECTOR(OthlloPlayer::GetPosition());
+				reversEach[0].position.m128_f32[0] -= 0.0f;
+				reversEach[0].position.m128_f32[1] += 2.0f;
+				reversEach[0].scale = { 0.2f, 0.2f, 0.2f };
+				reversEach[0].rotation.x = -30.0f;
+				numbersObject[addComboint % 10].Update(&reversEach[0]);
+				Draw3DObject(numbersObject[addComboint % 10]);
+				reverseObject.each.position = ConvertXMFLOAT3toXMVECTOR(OthlloPlayer::GetPosition());
+				reverseObject.each.position.m128_f32[0] += 2.0f;
+				reverseObject.each.position.m128_f32[1] += 2.0f;
+				reverseObject.each.scale = { 0.1f, 0.1f, 0.1f };
+				reverseObject.each.rotation.x = -30.0f;
+				reverseObject.Update();
+				Draw3DObject(reverseObject);
 			}
 			else if (addComboint < 100)
 			{
-				addScoreNum[addComboint % 10].position.m128_f32[0] = window_width / 2 - 64;
-				addScoreNum[addComboint % 10].position.m128_f32[1] = 74;
-				addScoreNum[addComboint % 10].ChangeSize(48, 64);
-				addScoreNum[addComboint % 10].SpriteDraw();
-
-				addScoreNum[addComboint / 10 % 10 + 10].position.m128_f32[0] = window_width / 2 - 112;
-				addScoreNum[addComboint / 10 % 10 + 10].position.m128_f32[1] = 74;
-				addScoreNum[addComboint / 10 % 10 + 10].ChangeSize(48, 64);
-				addScoreNum[addComboint / 10 % 10 + 10].SpriteDraw();
-
-				addReverse.position.m128_f32[0] = window_width / 2;
-				addReverse.position.m128_f32[1] = 74 + 32;
-				addReverse.ChangeSize(192, 32);
-				addReverse.SpriteDraw();
+				reversEach[0].position.m128_f32[0] = -3.0f;
+				reversEach[0].position.m128_f32[1] = 13.0f;
+				reversEach[0].position.m128_f32[2] = -0.5f;
+				reversEach[0].scale = { 0.5f, 0.5f, 0.5f };
+				reversEach[0].rotation.x = -30.0f;
+				numbersObject[addComboint % 10].Update(&reversEach[0]);
+				Draw3DObject(numbersObject[addComboint % 10]);
+				reversEach[1].position.m128_f32[0] = -6.0f;
+				reversEach[1].position.m128_f32[1] = 13.0f;
+				reversEach[1].position.m128_f32[2] = -0.5f;
+				reversEach[1].scale = { 0.5f, 0.5f, 0.5f };
+				reversEach[1].rotation.x = -30.0f;
+				numbersObject[addComboint / 10 % 10].Update(&reversEach[1]);
+				Draw3DObject(numbersObject[addComboint % 10]);
+				reverseObject.each.position = { 5.0f, 13.0f, -0.5f, 1.0f };
+				reverseObject.each.scale = { 0.5f, 0.5f, 0.5f };
+				reverseObject.each.rotation.x = -30.0f;
+				reverseObject.Update();
+				Draw3DObject(reverseObject);
 			}
-			else if (addComboint < 1000)
-			{
-				addScoreNum[addComboint % 10].position.m128_f32[0] = window_width / 2 - 64;
-				addScoreNum[addComboint % 10].position.m128_f32[1] = 74;
-				addScoreNum[addComboint % 10].ChangeSize(48, 64);
-				addScoreNum[addComboint % 10].SpriteDraw();
-
-				addScoreNum[addComboint / 10 % 10 + 10].position.m128_f32[0] = window_width / 2 - 112;
-				addScoreNum[addComboint / 10 % 10 + 10].position.m128_f32[1] = 74;
-				addScoreNum[addComboint / 10 % 10 + 10].ChangeSize(48, 64);
-				addScoreNum[addComboint / 10 % 10 + 10].SpriteDraw();
-
-				addReverse.position.m128_f32[0] = window_width / 2;
-				addReverse.position.m128_f32[1] = 74 + 32;
-				addReverse.ChangeSize(192, 32);
-				addReverse.SpriteDraw();
-			}
-
 		}
 
 		if (oldDisplay != nowScore)
@@ -1167,6 +1182,10 @@ void GameScene::GameDraw()
 					if (changeCount == changeTime)
 					{
 						displayScore++;
+						if (displayScore >= nowScore)
+						{
+							displayScore = nowScore;
+						}
 						changeCount = 0;
 					}
 				}
@@ -1176,6 +1195,10 @@ void GameScene::GameDraw()
 					if (changeCount == changeTime)
 					{
 						displayScore += sub / 60;
+						if (displayScore >= nowScore)
+						{
+							displayScore = nowScore;
+						}
 						changeCount = 0;
 					}
 				}
@@ -1189,7 +1212,7 @@ void GameScene::GameDraw()
 			}
 		}
 
-		float wid = 35;
+		/*float wid = 35;
 		float widPuls = 40;
 		float hi = 50;
 		scoreSprite.position.m128_f32[0] = 0;
@@ -1219,13 +1242,57 @@ void GameScene::GameDraw()
 		scoreNum[displayScore / 100000 % 10 + 50].ChangeSize(wid, hi);
 		scoreNum[displayScore / 100000 % 10 + 50].position.m128_f32[0] = widPuls * 4;
 		scoreNum[displayScore / 100000 % 10 + 50].position.m128_f32[1] = 10;
-		scoreNum[displayScore / 100000 % 10 + 50].SpriteDraw();
+		scoreNum[displayScore / 100000 % 10 + 50].SpriteDraw();*/
+		XMFLOAT3 scoreScale = {0.4f, 0.4f, 0.4f};
+		float scoreDirection = 2.0f;
+		float scoreBaseX = -8.0f;
+		scoreEach[0].position = { scoreBaseX - scoreDirection * 0, 18.0f, -1.0f, 1.0f};
+		scoreEach[0].scale = scoreScale;
+		scoreEach[0].rotation.x = -30.0f;
+		numbersObject[displayScore % 10].Update(&scoreEach[0]);
+		Draw3DObject(numbersObject[displayScore % 10]);
+
+		scoreEach[1].position = { scoreBaseX - scoreDirection * 1, 18.0f, -1.0f, 1.0f };
+		scoreEach[1].scale = scoreScale;
+		scoreEach[1].rotation.x = -30.0f;
+		numbersObject[displayScore / 10 % 10].Update(&scoreEach[1]);
+		Draw3DObject(numbersObject[displayScore / 10 % 10]);
+
+		scoreEach[2].position = { scoreBaseX - scoreDirection * 2, 18.0f, -1.0f, 1.0f };
+		scoreEach[2].scale = scoreScale;
+		scoreEach[2].rotation.x = -30.0f;
+		numbersObject[displayScore / 100 % 10].Update(&scoreEach[2]);
+		Draw3DObject(numbersObject[displayScore / 100 % 10]);
+
+		scoreEach[3].position = { scoreBaseX - scoreDirection * 3, 18.0f, -1.0f, 1.0f };
+		scoreEach[3].scale = scoreScale;
+		scoreEach[3].rotation.x = -30.0f;
+		numbersObject[displayScore / 1000 % 10].Update(&scoreEach[3]);
+		Draw3DObject(numbersObject[displayScore / 1000 % 10]);
+
+		scoreEach[4].position = { scoreBaseX - scoreDirection * 4, 18.0f, -1.0f, 1.0f };
+		scoreEach[4].scale = scoreScale;
+		scoreEach[4].rotation.x = -30.0f;
+		numbersObject[displayScore / 10000 % 10].Update(&scoreEach[4]);
+		Draw3DObject(numbersObject[displayScore / 10000 % 10]);
+
+		scoreEach[5].position = { scoreBaseX - scoreDirection * 5, 18.0f, -1.0f, 1.0f };
+		scoreEach[5].scale = scoreScale;
+		scoreEach[5].rotation.x = -30.0f;
+		numbersObject[displayScore / 100000 % 10].Update(&scoreEach[5]);
+		Draw3DObject(numbersObject[displayScore / 100000 % 10]);
+
+		scoreObject.each.position = { scoreBaseX - 2.0f - scoreDirection * 7, 18.0f, -1.0f, 1.0f };
+		scoreObject.each.scale = scoreScale;
+		scoreObject.each.rotation.x = -30.0f;
+		scoreObject.Update();
+		Draw3DObject(scoreObject);
+
 		/*moveSprite.position.m128_f32[0] = 950;
 		moveSprite.position.m128_f32[1] = 10;
 		float sizeSp = 0.6f;
 		moveSprite.ChangeSize(382 * sizeSp, 433 * sizeSp);
 		moveSprite.SpriteDraw();*/
-
 		//othelloManager.TutorialRetryText.SpriteDraw();
 
 		if (isTutorial)
@@ -1491,6 +1558,8 @@ void GameScene::ToGame4(bool flags)
 
 	gameTime = gameMaxTime;
 
+	isTipsOk = false;
+
 	isStageDisplay = false;
 	goToGameTime = 0.0f;
 	sceneChangeDiray2 = 0;
@@ -1658,12 +1727,51 @@ void GameScene::ToGame4Update()
 		}
 		if (sceneChangeDiray2 >= 180)
 		{
-			sceneChangeAfterTime += 0.01f;
+			if (Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01))
+			{
+				isTipsOk = true;
+			}
+			if (isTipsOk)
+			{
+				sceneChangeAfterTime += 0.01f;
+				for (auto opOthelloItr = opOthellos.begin(); opOthelloItr != opOthellos.end(); ++opOthelloItr)
+				{
+					opOthelloItr->scale = ShlomonMath::EaseInQuad(XMFLOAT3(1.5f, 1.5f, 1.5f), XMFLOAT3(0.01f, 0.01f, 0.01f), sceneChangeAfterTime);
+					opOthelloItr->rotation = ShlomonMath::EaseInQuad(XMFLOAT3(0, 0, 90), XMFLOAT3(0, 0, 0), sceneChangeAfterTime);
+					//opOthelloItr->rotation.y = 180;
+				}
+			}
+		}
+		if (sceneChangeAfterTime >= 0.8f && sceneChangeAfterTime < 1.0f)
+		{
 			for (auto opOthelloItr = opOthellos.begin(); opOthelloItr != opOthellos.end(); ++opOthelloItr)
 			{
 				opOthelloItr->scale = ShlomonMath::EaseInQuad(XMFLOAT3(1.5f, 1.5f, 1.5f), XMFLOAT3(0.01f, 0.01f, 0.01f), sceneChangeAfterTime);
 				opOthelloItr->rotation = ShlomonMath::EaseInQuad(XMFLOAT3(0, 0, 90), XMFLOAT3(0, 0, 0), sceneChangeAfterTime);
-				//opOthelloItr->rotation.y = 180;
+			}
+			goToGameTime += 0.02f;
+			Camera::eye.v = ShlomonMath::EaseInQuad(eyeStart, eyeEnd, goToGameTime);
+			if (goToGameTime >= 1.0f)
+			{
+				isSceneChange = false;
+				if (isTutorial)
+				{
+					gameTime = 1;
+				}
+				else
+				{
+					gameTime = gameMaxTime;
+					if (!selectMode)
+					{
+						othelloManager.StartSetPos();
+					}
+					SoundStopWave(countdDownSound);
+					SoundPlayOnce(countdDownSound);
+					if (flagss)
+					{
+						othelloManager.StartNormaMode(selectStageNum);
+					}
+				}
 			}
 		}
 		//ゲーム画面」に移行し、カウントダウン開始
@@ -1674,7 +1782,6 @@ void GameScene::ToGame4Update()
 			{
 				opOthelloItr->scale = ShlomonMath::EaseInQuad(XMFLOAT3(1.5f, 1.5f, 1.5f), XMFLOAT3(0.01f, 0.01f, 0.01f), sceneChangeAfterTime);
 				opOthelloItr->rotation = ShlomonMath::EaseInQuad(XMFLOAT3(0, 0, 90), XMFLOAT3(0, 0, 0), sceneChangeAfterTime);
-				//opOthelloItr->rotation.y = 180;
 			}
 			goToGameTime += 0.02f;
 			Camera::eye.v = ShlomonMath::EaseInQuad(eyeStart, eyeEnd, goToGameTime);
@@ -1729,16 +1836,38 @@ void GameScene::ToModeSelectUpdate()
 		}
 		if (sceneChangeDiray2 >= 180)
 		{
-			sceneChangeAfterTime += 0.01f;
+			if (Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01))
+			{
+				isTipsOk = true;
+			}
+			if (isTipsOk)
+			{
+				sceneChangeAfterTime += 0.01f;
+				for (auto opOthelloItr = opOthellos.begin(); opOthelloItr != opOthellos.end(); ++opOthelloItr)
+				{
+					opOthelloItr->scale = ShlomonMath::EaseInQuad(XMFLOAT3(1.5f, 1.5f, 1.5f), XMFLOAT3(0.01f, 0.01f, 0.01f), sceneChangeAfterTime);
+					opOthelloItr->rotation = ShlomonMath::EaseInQuad(XMFLOAT3(0, 0, 90), XMFLOAT3(0, 0, 0), sceneChangeAfterTime);
+				}
+			}
+		}
+		if (sceneChangeAfterTime >= 0.8f && sceneChangeAfterTime < 1.0f)
+		{
 			for (auto opOthelloItr = opOthellos.begin(); opOthelloItr != opOthellos.end(); ++opOthelloItr)
 			{
 				opOthelloItr->scale = ShlomonMath::EaseInQuad(XMFLOAT3(1.5f, 1.5f, 1.5f), XMFLOAT3(0.01f, 0.01f, 0.01f), sceneChangeAfterTime);
 				opOthelloItr->rotation = ShlomonMath::EaseInQuad(XMFLOAT3(0, 0, 90), XMFLOAT3(0, 0, 0), sceneChangeAfterTime);
 				//opOthelloItr->rotation.y = 180;
 			}
+			goToGameTime += 0.02f;
+			Camera::eye.v = ShlomonMath::EaseInQuad(eyeStart, eyeEnd, goToGameTime);
+			if (goToGameTime >= 1.0f)
+			{
+				isSceneChange = false;
+				othelloManager.ModeSelectStart();
+			}
 		}
 		//ゲーム画面」に移行し、カウントダウン開始
-		if (sceneChangeAfterTime >= 1.0f)
+		else if (sceneChangeAfterTime >= 1.0f)
 		{
 			sceneChangeAfterTime = 1.0f;
 			for (auto opOthelloItr = opOthellos.begin(); opOthelloItr != opOthellos.end(); ++opOthelloItr)
@@ -1781,6 +1910,8 @@ void GameScene::ToModeSelect()
 
 	//
 	isModeSelect = true;
+
+	isTipsOk = false;
 
 	isStageDisplay = false;
 	goToGameTime = 0.0f;
