@@ -251,7 +251,17 @@ void GameScene::Init()
 	timerCount = 0;
 	size_x = MAX_SIZE_X;
 	size_y = MAX_SIZE_Y;
+	numbersObject[0].CreateModel("number0", ShaderManager::playerShader);
 	numbersObject[1].CreateModel("number1", ShaderManager::playerShader);
+	numbersObject[2].CreateModel("number2", ShaderManager::playerShader);
+	numbersObject[3].CreateModel("number3", ShaderManager::playerShader);
+	numbersObject[4].CreateModel("number4", ShaderManager::playerShader);
+	numbersObject[5].CreateModel("number5", ShaderManager::playerShader);
+	numbersObject[6].CreateModel("number6", ShaderManager::playerShader);
+	numbersObject[7].CreateModel("number7", ShaderManager::playerShader);
+	numbersObject[8].CreateModel("number8", ShaderManager::playerShader);
+	numbersObject[9].CreateModel("number9", ShaderManager::playerShader);
+	reverseObject.CreateModel("reverse", ShaderManager::playerShader);
 }
 
 void GameScene::TitleUpdate()
@@ -1058,12 +1068,23 @@ void GameScene::GameDraw()
 			}
 		}
 
-		numbers[gameTime / 60 % 10].position.m128_f32[0] = window_width / 2 + 0;
-		numbers[gameTime / 60 % 10].position.m128_f32[1] = 10;
-		numbers[gameTime / 60 % 10].SpriteDraw();
-		numbers[gameTime / 600 % 10 + 10].position.m128_f32[0] = window_width / 2 - 50;
-		numbers[gameTime / 600 % 10 + 10].position.m128_f32[1] = 10;
-		numbers[gameTime / 600 % 10 + 10].SpriteDraw();
+		int hoge1 = gameTime / 600 % 10;
+		numbersObject[hoge1].each.position.m128_f32[0] = -1.0f;
+		numbersObject[hoge1].each.position.m128_f32[1] = 18.0f;
+		numbersObject[hoge1].each.position.m128_f32[2] = -1.0f;
+		numbersObject[hoge1].each.scale = { 0.3f, 0.3f, 0.3f };
+		numbersObject[hoge1].each.rotation.x = -30.0f;
+		numbersObject[hoge1].Update();
+		Draw3DObject(numbersObject[hoge1]);
+
+		int hoge2 = gameTime / 60 % 10;
+		numbersObject[hoge2].each.position.m128_f32[0] = 1.0f;
+		numbersObject[hoge2].each.position.m128_f32[1] = 18.0f;
+		numbersObject[hoge2].each.position.m128_f32[2] = -1.0f;
+		numbersObject[hoge2].each.scale = { 0.3f, 0.3f, 0.3f };
+		numbersObject[hoge2].each.rotation.x = -30.0f;
+		numbersObject[hoge2].Update();
+		Draw3DObject(numbersObject[hoge2]);
 
 		oldDisplay = nowScore;
 		oldScore = nowScore;
@@ -1073,66 +1094,49 @@ void GameScene::GameDraw()
 		if (checkObject.IsAddScore())
 		{
 			int addComboint = checkObject.GetCombo();
-			if (addComboint < 10)
+			if (addComboint < 10 && addComboint >= 1)
 			{
-				if (addComboint % 10 == 1)
-				{
-					numbersObject[1].each.position.m128_f32[0] = -2.0f;
-					numbersObject[1].each.position.m128_f32[1] = 13.0f;
-					numbersObject[1].each.position.m128_f32[2] = -0.5f;
-					numbersObject[1].each.scale = { 0.5f, 0.5f, 0.5f };
-					numbersObject[1].each.rotation.x = -30.0f;
-					numbersObject[1].each.rotation.y += 2.0f;
-					numbersObject[1].Update();
-					Draw3DObject(numbersObject[1]);
-				}
-				else
-				{
-					addScoreNum[addComboint % 10].position.m128_f32[0] = window_width / 2 - 64;
-					addScoreNum[addComboint % 10].position.m128_f32[1] = 74;
-					addScoreNum[addComboint % 10].ChangeSize(48, 64);
-					addScoreNum[addComboint % 10].SpriteDraw();
-				}
-				addReverse.position.m128_f32[0] = window_width / 2;
-				addReverse.position.m128_f32[1] = 74 + 32;
-				addReverse.ChangeSize(192, 32);
-				addReverse.SpriteDraw();
+				numbersObject[addComboint % 10].each.position = ConvertXMFLOAT3toXMVECTOR(OthlloPlayer::GetPosition());
+				numbersObject[addComboint % 10].each.position.m128_f32[0] -= 0.0f;
+				numbersObject[addComboint % 10].each.position.m128_f32[1] += 2.0f;
+				//numbersObject[addComboint % 10].each.position = {-3.0f, 13.0f, -0.5f, 1.0f};
+				//numbersObject[addComboint % 10].each.scale = { 0.5f, 0.5f, 0.5f };
+				numbersObject[addComboint % 10].each.scale = { 0.2f, 0.2f, 0.2f };
+				numbersObject[addComboint % 10].each.rotation.x = -30.0f;
+				numbersObject[addComboint % 10].Update();
+				Draw3DObject(numbersObject[addComboint % 10]);
+				//reverseObject.each.position = { 5.0f, 13.0f, -0.5f, 1.0f };
+				reverseObject.each.position = ConvertXMFLOAT3toXMVECTOR(OthlloPlayer::GetPosition());
+				reverseObject.each.position.m128_f32[0] += 2.0f;
+				reverseObject.each.position.m128_f32[1] += 2.0f;
+				//reverseObject.each.scale = { 0.5f, 0.5f, 0.5f };
+				reverseObject.each.scale = { 0.1f, 0.1f, 0.1f };
+				reverseObject.each.rotation.x = -30.0f;
+				reverseObject.Update();
+				Draw3DObject(reverseObject);
 			}
 			else if (addComboint < 100)
 			{
-				addScoreNum[addComboint % 10].position.m128_f32[0] = window_width / 2 - 64;
-				addScoreNum[addComboint % 10].position.m128_f32[1] = 74;
-				addScoreNum[addComboint % 10].ChangeSize(48, 64);
-				addScoreNum[addComboint % 10].SpriteDraw();
-
-				addScoreNum[addComboint / 10 % 10 + 10].position.m128_f32[0] = window_width / 2 - 112;
-				addScoreNum[addComboint / 10 % 10 + 10].position.m128_f32[1] = 74;
-				addScoreNum[addComboint / 10 % 10 + 10].ChangeSize(48, 64);
-				addScoreNum[addComboint / 10 % 10 + 10].SpriteDraw();
-
-				addReverse.position.m128_f32[0] = window_width / 2;
-				addReverse.position.m128_f32[1] = 74 + 32;
-				addReverse.ChangeSize(192, 32);
-				addReverse.SpriteDraw();
+				numbersObject[addComboint % 10].each.position.m128_f32[0] = -3.0f;
+				numbersObject[addComboint % 10].each.position.m128_f32[1] = 13.0f;
+				numbersObject[addComboint % 10].each.position.m128_f32[2] = -0.5f;
+				numbersObject[addComboint % 10].each.scale = { 0.5f, 0.5f, 0.5f };
+				numbersObject[addComboint % 10].each.rotation.x = -30.0f;
+				numbersObject[addComboint % 10].Update();
+				Draw3DObject(numbersObject[addComboint % 10]);
+				numbersObject[addComboint / 10 % 10].each.position.m128_f32[0] = -6.0f;
+				numbersObject[addComboint / 10 % 10].each.position.m128_f32[1] = 13.0f;
+				numbersObject[addComboint / 10 % 10].each.position.m128_f32[2] = -0.5f;
+				numbersObject[addComboint / 10 % 10].each.scale = { 0.5f, 0.5f, 0.5f };
+				numbersObject[addComboint / 10 % 10].each.rotation.x = -30.0f;
+				numbersObject[addComboint / 10 % 10].Update();
+				Draw3DObject(numbersObject[addComboint % 10]);
+				reverseObject.each.position = { 5.0f, 13.0f, -0.5f, 1.0f };
+				reverseObject.each.scale = { 0.5f, 0.5f, 0.5f };
+				reverseObject.each.rotation.x = -30.0f;
+				reverseObject.Update();
+				Draw3DObject(reverseObject);
 			}
-			else if (addComboint < 1000)
-			{
-				addScoreNum[addComboint % 10].position.m128_f32[0] = window_width / 2 - 64;
-				addScoreNum[addComboint % 10].position.m128_f32[1] = 74;
-				addScoreNum[addComboint % 10].ChangeSize(48, 64);
-				addScoreNum[addComboint % 10].SpriteDraw();
-
-				addScoreNum[addComboint / 10 % 10 + 10].position.m128_f32[0] = window_width / 2 - 112;
-				addScoreNum[addComboint / 10 % 10 + 10].position.m128_f32[1] = 74;
-				addScoreNum[addComboint / 10 % 10 + 10].ChangeSize(48, 64);
-				addScoreNum[addComboint / 10 % 10 + 10].SpriteDraw();
-
-				addReverse.position.m128_f32[0] = window_width / 2;
-				addReverse.position.m128_f32[1] = 74 + 32;
-				addReverse.ChangeSize(192, 32);
-				addReverse.SpriteDraw();
-			}
-
 		}
 
 		if (oldDisplay != nowScore)
@@ -1665,15 +1669,12 @@ void GameScene::ToGame4Update()
 				}
 			}
 		}
-		//ゲーム画面」に移行し、カウントダウン開始
-		if (sceneChangeAfterTime >= 1.0f)
+		if (sceneChangeAfterTime >= 0.8f && sceneChangeAfterTime < 1.0f)
 		{
-			sceneChangeAfterTime = 1.0f;
 			for (auto opOthelloItr = opOthellos.begin(); opOthelloItr != opOthellos.end(); ++opOthelloItr)
 			{
 				opOthelloItr->scale = ShlomonMath::EaseInQuad(XMFLOAT3(1.5f, 1.5f, 1.5f), XMFLOAT3(0.01f, 0.01f, 0.01f), sceneChangeAfterTime);
 				opOthelloItr->rotation = ShlomonMath::EaseInQuad(XMFLOAT3(0, 0, 90), XMFLOAT3(0, 0, 0), sceneChangeAfterTime);
-				//opOthelloItr->rotation.y = 180;
 			}
 			goToGameTime += 0.02f;
 			Camera::eye.v = ShlomonMath::EaseInQuad(eyeStart, eyeEnd, goToGameTime);
@@ -1698,7 +1699,40 @@ void GameScene::ToGame4Update()
 						othelloManager.StartNormaMode(selectStageNum);
 					}
 				}
-
+			}
+		}
+		//ゲーム画面」に移行し、カウントダウン開始
+		if (sceneChangeAfterTime >= 1.0f)
+		{
+			sceneChangeAfterTime = 1.0f;
+			for (auto opOthelloItr = opOthellos.begin(); opOthelloItr != opOthellos.end(); ++opOthelloItr)
+			{
+				opOthelloItr->scale = ShlomonMath::EaseInQuad(XMFLOAT3(1.5f, 1.5f, 1.5f), XMFLOAT3(0.01f, 0.01f, 0.01f), sceneChangeAfterTime);
+				opOthelloItr->rotation = ShlomonMath::EaseInQuad(XMFLOAT3(0, 0, 90), XMFLOAT3(0, 0, 0), sceneChangeAfterTime);
+			}
+			goToGameTime += 0.02f;
+			Camera::eye.v = ShlomonMath::EaseInQuad(eyeStart, eyeEnd, goToGameTime);
+			if (goToGameTime >= 1.0f)
+			{
+				isSceneChange = false;
+				if (isTutorial)
+				{
+					gameTime = 1;
+				}
+				else
+				{
+					gameTime = gameMaxTime;
+					if (!selectMode)
+					{
+						othelloManager.StartSetPos();
+					}
+					SoundStopWave(countdDownSound);
+					SoundPlayOnce(countdDownSound);
+					if (flagss)
+					{
+						othelloManager.StartNormaMode(selectStageNum);
+					}
+				}
 			}
 		}
 	}
@@ -1740,12 +1774,27 @@ void GameScene::ToModeSelectUpdate()
 				{
 					opOthelloItr->scale = ShlomonMath::EaseInQuad(XMFLOAT3(1.5f, 1.5f, 1.5f), XMFLOAT3(0.01f, 0.01f, 0.01f), sceneChangeAfterTime);
 					opOthelloItr->rotation = ShlomonMath::EaseInQuad(XMFLOAT3(0, 0, 90), XMFLOAT3(0, 0, 0), sceneChangeAfterTime);
-					//opOthelloItr->rotation.y = 180;
 				}
 			}
 		}
+		if (sceneChangeAfterTime >= 0.8f && sceneChangeAfterTime < 1.0f)
+		{
+			for (auto opOthelloItr = opOthellos.begin(); opOthelloItr != opOthellos.end(); ++opOthelloItr)
+			{
+				opOthelloItr->scale = ShlomonMath::EaseInQuad(XMFLOAT3(1.5f, 1.5f, 1.5f), XMFLOAT3(0.01f, 0.01f, 0.01f), sceneChangeAfterTime);
+				opOthelloItr->rotation = ShlomonMath::EaseInQuad(XMFLOAT3(0, 0, 90), XMFLOAT3(0, 0, 0), sceneChangeAfterTime);
+				//opOthelloItr->rotation.y = 180;
+			}
+			goToGameTime += 0.02f;
+			Camera::eye.v = ShlomonMath::EaseInQuad(eyeStart, eyeEnd, goToGameTime);
+			if (goToGameTime >= 1.0f)
+			{
+				isSceneChange = false;
+				othelloManager.ModeSelectStart();
+			}
+		}
 		//ゲーム画面」に移行し、カウントダウン開始
-		if (sceneChangeAfterTime >= 1.0f)
+		else if (sceneChangeAfterTime >= 1.0f)
 		{
 			sceneChangeAfterTime = 1.0f;
 			for (auto opOthelloItr = opOthellos.begin(); opOthelloItr != opOthellos.end(); ++opOthelloItr)

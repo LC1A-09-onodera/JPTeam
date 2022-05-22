@@ -213,6 +213,7 @@ public://ƒV[ƒ“‚Åg‚¤‚à‚Ì
 
 	float flagss;
 	Model numbersObject[10];
+	Model reverseObject;
 
 	bool isTipsOk = false;
 };
