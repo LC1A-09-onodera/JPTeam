@@ -104,8 +104,7 @@ void GameScene::Init()
 	checkObject.Init();
 	ObjectParticles::LoadModels();
 
-	othelloManager.Init();
-	othelloManager.AddPanel();
+
 
 	title.CreateSprite(L"Resource/Img/titel.png", XMFLOAT3(70, 60 + 50, 0));
 	titleBack.CreateSprite(L"Resource/Img/title_back.png", XMFLOAT3(0, 46 + 50, 0));
@@ -229,6 +228,9 @@ void GameScene::Init()
 	selectGameTypeActive = false;
 	selectGameType = 1;
 	SoundPlayLoop(BGMSound);
+
+	othelloManager.Init(num);
+	othelloManager.AddPanel();
 	const float OthelloR = 1.8f;
 	for (int i = 0; i < 20; i++)
 	{
@@ -523,6 +525,7 @@ void GameScene::GameUpdate()
 				ToGame4(true);
 				//othelloManager.StartNormaMode(othelloManager.GetEnterNormaStage());
 				titleSelectNum = 0;
+				selectStageNum = othelloManager.GetEnterNormaStage();
 			}
 #pragma endregion
 		}
@@ -993,6 +996,14 @@ void GameScene::GameDraw()
 
 	//スプライトの描画-------------------------
 	//titleSprite.SpriteDraw();
+	if (selectMode)
+	{
+		othelloManager.NormaTextDraw(selectStageNum);
+	}
+	if (isModeSelect)
+	{
+		othelloManager.ModeSelectDraw();
+	}
 	if (countDown > 0 && isSceneChange == false && isModeSelect == false)
 	{
 		if (countDown < 59)
@@ -1217,7 +1228,6 @@ void GameScene::GameDraw()
 
 		//othelloManager.TutorialRetryText.SpriteDraw();
 
-		othelloManager.NormaTextDraw();
 		if (isTutorial)
 		{
 			othelloManager.TutorialTextDraw();

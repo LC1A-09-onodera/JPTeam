@@ -186,6 +186,8 @@ namespace OthelloConstData
 	};
 	const panelPos normaMode = { 0, 0 };
 	const panelPos scoreAttack = { 0, 7 };
+	const XMVECTOR moveTextPos = { 400, 0, 0,0 };
+	const XMVECTOR moveSubTextPos = { 105, 50, 0,0 };
 }
 
 class OthelloEachInfo : public EachInfo
@@ -297,7 +299,7 @@ private:
 class OthelloManager
 {
 public:
-	void Init();
+	void Init(Tex num[10]);
 	void Update(int combo);
 	void TutorialUpdate(int combo);
 	void Draw();
@@ -346,14 +348,15 @@ public://ノルマモード用関数
 	NormaChecker normaChecker;
 	void SetScore(const int score) { nowScore = score; }
 
-	void NormaTextDraw();
+	void NormaTextDraw(int stageNum);
 	int GetNormaStagesCount();
+	list<NormaModeFieldData>::iterator GetNormaStage(int num);
 private://ノルマモード用内部処理関数
 	void StartNormaField(int stageNum = 0);
 	void TestStage();
 	void LoadNormaStage(std::string stage);
 	void LoadAllStage();
-
+	void CountDraw(int count);
 public://モードセレクト用外部関数
 	//モード選択開始時
 	void ModeSelectStart();
@@ -372,6 +375,12 @@ public://モードセレクト用外部関数
 private://モードセレクト用変数
 private://モードセレクト用内部関数
 	void SetModeSelectPanel();
+	void NormaComboTextSetPos(bool isNormaMode);
+	void NormaPanelsTextSetPos(bool isNormaMode);
+	void NormaScoreTextSetPos(bool isNormaMode);
+	void SetCountPos(bool isNormaMode);
+	void SetTextPos(bool isNormaMode);
+	void SubNormaTextPos(bool isNormaMode);
 private:
 	void SetPlayer();
 
@@ -484,6 +493,12 @@ private:
 	Sprite TutorialText6;
 	Sprite CongraturationText;
 	Sprite back;
+	Sprite normaCountTex[50];
+
+
+	Sprite NormaPanelsText;
+	Sprite NormaComboText;
+	Sprite NormaScoreText;
 
 	int textChangeTimer = 0;
 	bool textChange = false;

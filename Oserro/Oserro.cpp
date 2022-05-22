@@ -602,7 +602,7 @@ void Othello::BreathAnimation()
 {
 	breathTimer++;
 	breathLevelTimer++;
-	int BreathTimerMax = Breath::breathSpan -(breathLevel * 2);
+	int BreathTimerMax = Breath::breathSpan - (breathLevel * 2);
 	if (breathTimer >= BreathTimerMax)
 	{
 		breathTimer = 0;
@@ -641,7 +641,7 @@ bool Othello::GetIsActive()
 	return (data.isVanish || data.isSandwich);
 }
 
-void OthelloManager::Init()
+void OthelloManager::Init(Tex num[10])
 {
 	oserroModel.CreateModel("newOserro4", ShaderManager::othelloShader);
 	stopOserroModel.CreateModel("rock_othello", ShaderManager::othelloShader);
@@ -665,6 +665,10 @@ void OthelloManager::Init()
 	CongraturationText.CreateSprite(L"Resource/Img/excellent.png", XMFLOAT3(0, 0, 0));
 	//TutorialRetryText.CreateSprite(L"Resource/Img/reset.png", XMFLOAT3(0, 0, 0));
 	back.CreateSprite(L"Resource/Img/title_back_80.png", XMFLOAT3(0, 0, 0));
+	NormaPanelsText.CreateSprite(L"Resource/Img/all_delete_UI.png", XMFLOAT3(0, 0, 0));
+	NormaComboText.CreateSprite(L"Resource/Img/combo_UI.png", XMFLOAT3(0, 0, 0));
+	NormaScoreText.CreateSprite(L"Resource/Img/score_UI.png", XMFLOAT3(0, 0, 0));
+
 	float changeScale = 0.5f;
 
 	TutorialText1.ChangeSize(1227 * changeScale, 332 * changeScale);
@@ -675,6 +679,9 @@ void OthelloManager::Init()
 	TutorialText6.ChangeSize(1070 * changeScale / 2, 154 * changeScale / 2);
 	CongraturationText.ChangeSize(457 * changeScale, 79 * changeScale);
 	//TutorialRetryText.ChangeSize(288 * changeScale, 231 * changeScale);
+	NormaPanelsText.ChangeSize(444 * changeScale, 72 * changeScale);
+	NormaComboText.ChangeSize(219 * changeScale, 72 * changeScale);
+	NormaScoreText.ChangeSize(221 * changeScale, 68 * changeScale);
 
 	TutorialText1.position = XMVECTOR{ 640 - (1227 * changeScale / 2), 720 - (332 * changeScale + 30), 0, 0 };
 	TutorialText2.position = XMVECTOR{ 640 - (1158 * changeScale / 2), 720 - (207 * changeScale + 30), 0, 0 };
@@ -685,10 +692,26 @@ void OthelloManager::Init()
 
 	CongraturationText.position = XMVECTOR{ 640 - (457 * changeScale / 2), 360 - (79 * changeScale / 2), 0, 0 };
 
+	NormaPanelsText.position = XMVECTOR{ 640 - (444 * changeScale / 2),  (72 * changeScale - 5), 0, 0 };
+	NormaComboText.position = XMVECTOR{ 640 - (219 * changeScale / 2),  (72 * changeScale - 5), 0, 0 };
+	NormaScoreText.position = XMVECTOR{ 640 - (221 * changeScale / 2),  (68 * changeScale - 5), 0, 0 };
+
+
+
 	//TutorialRetryText.position = XMVECTOR{ 990, 300, 0, 0 };
 	normaChecker.Init();
 	//TestStage();
 	//LoadNormaStage("test");
+	for (int i = 0; i < 5; i++)
+	{
+		for (int j = 0; j < 10; j++)
+		{
+			int count = (i * 10) + j;
+			normaCountTex[count].CreateSprite(num[j], XMFLOAT3(window_width / 2 - 10 + (i * 50), 10, 0));
+			normaCountTex[count].ChangeSize(48, 64);
+		}
+	}
+
 	LoadAllStage();
 }
 
@@ -994,8 +1017,34 @@ void OthelloManager::ChanceDraw()
 	}
 }
 
-void OthelloManager::NormaTextDraw()
+void OthelloManager::NormaTextDraw(int stageNum)
 {
+	SetTextPos(true);
+
+	list<NormaModeFieldData>::iterator data = GetNormaStage(stageNum);
+
+	int status = data->normaStatus;
+	if (data->type == Norma::Combo)
+	{
+		NormaComboText.SpriteDraw();
+	}
+	else if (data->type == Norma::Panels)
+	{
+		NormaPanelsTextSetPos(true);
+		NormaPanelsText.SpriteDraw();
+		status = data->panels.size();
+	}
+	else if (data->type == Norma::Score)
+	{
+		NormaScoreText.SpriteDraw();
+	}
+	if (data->subNormaFlag)
+	{
+		NormaPanelsText.SpriteDraw();
+	}
+	CountDraw(status);
+
+
 	normaChecker.Draw();
 }
 
@@ -1104,6 +1153,7 @@ void OthelloManager::Move(const XMFLOAT3 &MousePos)
 
 }
 
+
 void OthelloManager::ModeSelectStart()
 {
 
@@ -1116,15 +1166,15 @@ void OthelloManager::ModeSelectStart()
 	int x = stagePos.x / (cellScale * 2);
 	int y = stagePos.y / -(cellScale * 2);
 
-//プレイヤーの下の駒を設置する処理
+	//プレイヤーの下の駒を設置する処理
 
-	//Othello data;
-	//data.Init(&oserroModel, &stopOserroModel);
-	//bool randFront = rand() % 2;
-	//data.Spawn(NORMAL, x, y, randFront);
-	//data.GetGameData()->isMove = false;
-	//data.GetGameData()->isPlayer = false;
-	//othellos.push_back(data);
+		//Othello data;
+		//data.Init(&oserroModel, &stopOserroModel);
+		//bool randFront = rand() % 2;
+		//data.Spawn(NORMAL, x, y, randFront);
+		//data.GetGameData()->isMove = false;
+		//data.GetGameData()->isPlayer = false;
+		//othellos.push_back(data);
 
 
 
@@ -1153,9 +1203,9 @@ void OthelloManager::ModeSelectUpdate()
 
 	for (; itr != othellos.end(); ++itr)
 	{	//コンボ数を位置として計算
-		panelPos nowPos = {itr->GetGameData()->widthPos, itr->GetGameData()->heightPos};
+		panelPos nowPos = { itr->GetGameData()->widthPos, itr->GetGameData()->heightPos };
 
-			itr->GetGameData()->isShake = (nowPos == playerPanelPos);
+		itr->GetGameData()->isShake = (nowPos == playerPanelPos);
 
 		itr->Update(1);
 	}
@@ -1195,7 +1245,8 @@ GameMode OthelloManager::GetEnterModeType()
 {
 	GameMode now = GameMode::None;
 
-	if (playerPanelPos.y < 7)
+	int stageNum = (playerPanelPos.y * 8) + playerPanelPos.x + 1;
+	if (stageNum < NormaStageCount)
 	{
 		now = GameMode::NormaMode;
 	}
@@ -1216,16 +1267,81 @@ int OthelloManager::GetEnterNormaStage()
 
 void OthelloManager::ModeSelectDraw()
 {
+	SetTextPos(false);
+
+	if (GetEnterModeType() != GameMode::NormaMode) { return; }
+	list<NormaModeFieldData>::iterator data = GetNormaStage(GetEnterNormaStage());
+	int status = data->normaStatus;
+
+	auto itr = data->panels.begin();
+
+	if (data->type == Norma::Combo)
+	{
+		NormaComboText.SpriteDraw();
+	}
+	else if (data->type == Norma::Panels)
+	{
+		status = 0;
+		for (; itr != data->panels.end(); itr++)
+		{
+			if (itr->type != WALL)
+			{
+				status++;
+			}
+		}
+		NormaPanelsTextSetPos(false);
+		NormaPanelsText.SpriteDraw();
+	}
+	else if (data->type == Norma::Score)
+	{
+		NormaScoreText.SpriteDraw();
+	}
+	if (data->subNormaFlag)
+	{
+		NormaPanelsText.SpriteDraw();
+	}
+
+	CountDraw(status);
+}
+
+void OthelloManager::CountDraw(int count)
+{
+	vector<int>degit;
+	while (count >= 10)
+	{
+		int tmp = count % 10;
+		degit.push_back(tmp);
+		count /= 10;
+	}
+	degit.push_back(count);
+
+	auto itr = degit.begin();
+	for (int i = degit.size(); i > 0; i--)
+	{
+		int num = (i * 10) + *itr;
+		normaCountTex[num].SpriteDraw();
+		itr++;
+	}
 }
 
 void OthelloManager::SetModeSelectPanel()
 {
 	AllDeadPanel();
+	bool stageEnd = false;
 	for (int y = 0; y < 7; y++)
 	{
 		for (int x = 0; x < 8; x++)
 		{
+			stageEnd = ((y * 8) + x) >= NormaStageCount - 1;
+			if (stageEnd)
+			{
+				break;
+			}
 			SetSpawnPanel(x, y, false, STOP, false);
+		}
+		if (stageEnd)
+		{
+			break;
 		}
 	}
 	//SetSpawnPanel(normaMode.x, normaMode.y, true, STOP, false);
@@ -1233,6 +1349,84 @@ void OthelloManager::SetModeSelectPanel()
 	SetSpawnPlayer(7, 7);
 }
 
+
+void OthelloManager::SetCountPos(bool isNormaMode)
+{
+	XMVECTOR movePos = moveTextPos;
+	if (!isNormaMode)
+	{
+		movePos *= 0;
+	}
+	for (int i = 0; i < 5; i++)
+	{
+		for (int j = 0; j < 10; j++)
+		{
+			int count = (i * 10) + j;
+			normaCountTex[count].position = XMVECTOR{ static_cast<float>(window_width / 2 - 10 + (i * 50) + 20), 10.0f, 0, 0 };
+			normaCountTex[count].position += movePos;
+		}
+	}
+}
+
+void OthelloManager::NormaComboTextSetPos(bool isNormaMode)
+{
+	XMVECTOR movePos = moveTextPos;
+	if (!isNormaMode)
+	{
+		movePos *= 0;
+	}
+	float changeScale = 0.5f;
+	NormaComboText.position = XMVECTOR{ 640 - (219 * changeScale / 2) - 100,  (72 * changeScale - 5), 0, 0 };
+	NormaComboText.position += movePos;
+}
+
+void OthelloManager::NormaPanelsTextSetPos(bool isNormaMode)
+{
+	XMVECTOR movePos = moveTextPos;
+	if (!isNormaMode)
+	{
+		movePos *= 0;
+	}
+	float changeScale = 0.5f;
+
+	NormaPanelsText.position = XMVECTOR{ 640 - (444 * changeScale / 2) - 150,  (72 * changeScale - 5), 0, 0 };
+	NormaPanelsText.position += movePos;
+}
+
+void OthelloManager::NormaScoreTextSetPos(bool isNormaMode)
+{
+	XMVECTOR movePos = moveTextPos;
+	if (!isNormaMode)
+	{
+		movePos *= 0;
+	}
+	float changeScale = 0.5f;
+
+	NormaScoreText.position = XMVECTOR{ 640 - (221 * changeScale / 2) - 100,  (68 * changeScale - 5), 0, 0 };
+	NormaScoreText.position += movePos;
+}
+
+
+void OthelloManager::SubNormaTextPos(bool isNormaMode)
+{
+	XMVECTOR movePos = moveSubTextPos;
+	if (!isNormaMode)
+	{
+		movePos *= 0;
+	}
+	float changeScale = 0.5f;
+
+	NormaPanelsText.position = XMVECTOR{ 640 - (444 * changeScale / 2) - 150,  (72 * changeScale - 5), 0, 0 };
+	NormaPanelsText.position += moveTextPos;
+	NormaPanelsText.position += movePos;
+}
+void OthelloManager::SetTextPos(bool isNormaMode)
+{
+	NormaComboTextSetPos(isNormaMode);
+	NormaScoreTextSetPos(isNormaMode);
+	SetCountPos(isNormaMode);
+	SubNormaTextPos(isNormaMode);
+}
 void OthelloManager::RemovePlayer()
 {
 	auto itr = othellos.begin();
@@ -2395,7 +2589,7 @@ void OthelloManager::whyStepSpawn()
 
 }
 
-void OthelloManager::SetSpawnPanel(int x, int y, bool Front, OthelloType type,bool isRockDraw)
+void OthelloManager::SetSpawnPanel(int x, int y, bool Front, OthelloType type, bool isRockDraw)
 {
 	Othello data;
 	if (type == WALL)
@@ -2542,6 +2736,20 @@ void OthelloManager::StartNormaMode(int stageNum)
 	normaChecker.Reset();
 	StartNormaField(stageNum);
 	isNormaMode = true;
+}
+
+list<NormaModeFieldData>::iterator OthelloManager::GetNormaStage(int num)
+{
+	auto itr = NormaStartOthellos.begin();
+
+	if (NormaStartOthellos.size() > num)
+	{
+		for (int i = 1; i < num; i++)
+		{
+			itr++;
+		}
+	}
+	return itr;
 }
 
 void OthelloManager::StartNormaField(int stageNum)

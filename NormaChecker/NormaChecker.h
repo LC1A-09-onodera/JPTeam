@@ -53,6 +53,9 @@ public:
 	bool GetClear();
 	bool GetFailed();
 	bool isClear = false;
+
+	int GetStatus();
+	int GetLestStatus();
 private:
 	std::list<Norma::FieldStatus> preField;
 	Norma::NormaType nowType = Norma::Combo;
