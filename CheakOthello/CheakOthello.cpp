@@ -21,6 +21,8 @@ CheakOthello::CheakOthello()
 
 	isCombos = false;		//
 	isCombosCheck = false;	//
+
+	isSand = false;
 }
 
 CheakOthello::~CheakOthello()
@@ -65,6 +67,7 @@ void CheakOthello::SoundInit()
 	SoundLoad("Resource/Sound/reverse_13_.wav", comboSound[13]);
 	SoundLoad("Resource/Sound/reverse_14_.wav", comboSound[14]);
 	//SoundLoad("Resource/Sound/reverse_4_.wav", comboSound);
+	SoundLoad("Resource/Sound/menuDecisionSE_.wav", missSound);
 }
 
 void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData, bool isCheck)
@@ -82,6 +85,7 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData, bo
 		if (!checkOthello) { break; }
 
 		isAddScore = false;
+		isSand = false;
 
 		//全方位チェック
 		/*-----左-----*/
@@ -104,6 +108,12 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData, bo
 
 		if (totalDeleteOthello > 1) { AddScore(); }
 		if (isCombosCheck) { ChangeScoreAndCombo(); }
+
+		if (!isSand)
+		{
+			SoundStopWave(missSound);
+			SoundPlayOnce(missSound);
+		}
 
 		//ResetAddScore();
 	}
@@ -356,6 +366,9 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y, int last_x, in
 				//ひっくり返せる場合
 				if (isActiveOthello)
 				{
+					//挟めたらtrue
+					isSand = true;
+
 					//スコア加算されたフラグ
 					isAddScore = true;
 
@@ -444,9 +457,9 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y, int last_x, in
 						{
 							for (int j = 0; j < OthelloConstData::fieldSize; j++)
 							{
-								if (othelloDatas[i][j].chainName != chainName) { continue; }
+								if (othelloDatas[i][j].chainName != random) { continue; }
 								//othelloDatas[i][j].chainName = random;
-								othelloDatas[i][j].chainName = random;
+								othelloDatas[i][j].chainName = chainName;
 							}
 						}
 					}

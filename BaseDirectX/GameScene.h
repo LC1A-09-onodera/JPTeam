@@ -200,9 +200,9 @@ public://シーンで使うもの
 	//Timer管理用
 	const int CHANGE_TIMER_SECOND = 100;	//-1の値から振動開始
 	const int MAX_COUNT = 10;				//何フレームかけて拡縮するか（偶数必須）
-	const float ADD_SIZE = 4.0f;			//1フレームで拡縮するサイズ
-	const float MAX_SIZE_X = 48.0f;			//初期の画像サイズ_X
-	const float MAX_SIZE_Y = 64.0f;			//初期の画像サイズ_Y
+	const float ADD_SIZE = 0.05f;			//1フレームで拡縮するサイズ
+	const float MAX_SIZE_X = 0.3f;			//初期の画像サイズ_X
+	const float MAX_SIZE_Y = 0.3f;			//初期の画像サイズ_Y
 
 	bool isChanged = false;
 	int timerCount = 0;
@@ -213,6 +213,7 @@ public://シーンで使うもの
 
 	float flagss;
 	Model numbersObject[10];
+	Model sNumbersObject[10];
 	Model reverseObject;
 	Model scoreObject;
 
@@ -220,4 +221,10 @@ public://シーンで使うもの
 	EachInfo timerEach[2];
 	EachInfo scoreEach[6];
 	bool isTipsOk = false;
+	
+	static const int tipsCount = 5;
+	Sprite tipsSprite[tipsCount];
+
+	int tipsNumber;
+	list<pair<int, int>> tipsNumAndTexCount;
 };

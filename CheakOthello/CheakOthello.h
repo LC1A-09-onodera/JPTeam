@@ -26,6 +26,7 @@ private:
 
 private:
 	SoundData comboSound[15];
+	SoundData missSound;
 
 private:
 	const int CHAIN_NAME = 100;
@@ -61,6 +62,8 @@ private:
 	bool isCombos;
 	bool isCombosCheck;
 
+	bool isSand;
+
 public:
 	CheakOthello();
 	~CheakOthello();
@@ -82,6 +85,7 @@ public:
 	const int GetCombo() { return combo; }
 	const bool IsAddScore() { return isAddScore; }
 	const vector<pair<int, int>> GetNameAndCombos() { return nameAndCombos; }
+	const bool IsSand() { return isSand; }
 
 private:
 	//盤面チェック
