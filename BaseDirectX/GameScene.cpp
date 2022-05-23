@@ -512,15 +512,6 @@ void GameScene::GameUpdate()
 			othelloManager.Controll();
 			//セレクト画面のアップデート
 			othelloManager.ModeSelectUpdate();
-
-			//モード変更する！フラグ(現在はキー入力があった場合)
-			//othelloManager.InMode();
-
-			//選択したモードを返す(場所参照)
-			//othelloManager.GetEnterModeType();
-			//ステージ番号を受け取る
-			//othelloManager.GetEnterNormaStage();
-
 			//使用例
 #pragma region example
 			//スコアアタックを選択した
@@ -1095,14 +1086,16 @@ void GameScene::GameDraw()
 				numbersObject[addComboint % 10].Update(&reversEach[0]);
 				Draw3DObject(numbersObject[addComboint % 10]);
 				reversEach[1].position = ConvertXMFLOAT3toXMVECTOR(OthlloPlayer::GetPosition());
-				reversEach[1].position.m128_f32[0] -= 0.0f;
-				reversEach[1].position.m128_f32[1] += 3.0f;
+				reversEach[1].position.m128_f32[0] -= 1.0f;
+				reversEach[1].position.m128_f32[1] += 1.5f;
 				reversEach[1].scale = { 0.2f, 0.2f, 0.2f };
 				reversEach[1].rotation.x = -30.0f;
 				numbersObject[addComboint / 10 % 10].Update(&reversEach[1]);
-				Draw3DObject(numbersObject[addComboint % 10]);
-				reverseObject.each.position = { 5.0f, 13.0f, -0.5f, 1.0f };
-				reverseObject.each.scale = { 0.5f, 0.5f, 0.5f };
+				Draw3DObject(numbersObject[addComboint / 10 % 10]);
+				reverseObject.each.position = ConvertXMFLOAT3toXMVECTOR(OthlloPlayer::GetPosition());
+				reverseObject.each.position.m128_f32[0] += 2.0f;
+				reverseObject.each.position.m128_f32[1] += 2.0f;
+				reverseObject.each.scale = { 0.1f, 0.1f, 0.1f };
 				reverseObject.each.rotation.x = -30.0f;
 				reverseObject.Update();
 				Draw3DObject(reverseObject);
@@ -1332,7 +1325,7 @@ void GameScene::ResultDraw()
 	float wid = 40;
 	float widPuls = 45;
 	nowScore = checkObject.GetScore();
-	scoreNum[nowScore % 10].ChangeSize(wid, 60);
+	/*scoreNum[nowScore % 10].ChangeSize(wid, 60);
 	scoreNum[nowScore % 10].position.m128_f32[0] = window_width / 2 - 180 + widPuls * 9;
 	scoreNum[nowScore % 10].position.m128_f32[1] = window_height / 2 - 40;
 	scoreNum[nowScore % 10].SpriteDraw();
@@ -1355,7 +1348,7 @@ void GameScene::ResultDraw()
 	scoreNum[nowScore / 100000 % 10 + 50].ChangeSize(wid, 60);
 	scoreNum[nowScore / 100000 % 10 + 50].position.m128_f32[0] = window_width / 2 - 180 + widPuls * 4;
 	scoreNum[nowScore / 100000 % 10 + 50].position.m128_f32[1] = window_height / 2 - 40;
-	scoreNum[nowScore / 100000 % 10 + 50].SpriteDraw();
+	scoreNum[nowScore / 100000 % 10 + 50].SpriteDraw();*/
 	spaceBack.position.m128_f32[0] = 0;
 	spaceBack.position.m128_f32[1] = 560;
 	spaceBack.SpriteDraw();
@@ -1658,7 +1651,6 @@ void GameScene::ToGame4Update()
 	{
 		opOthelloItr->scale = ShlomonMath::EaseInQuad(XMFLOAT3(0.01f, 0.01f, 0.01f), XMFLOAT3(1.5f, 1.5f, 1.0f), eyeEaseTime);
 		opOthelloItr->rotation = ShlomonMath::EaseInQuad(XMFLOAT3(0, 0, 0), XMFLOAT3(0, 0, 90), eyeEaseTime);
-		//opOthelloItr->rotation.y = 180;
 	}
 	if (eyeEaseTime >= 1.0f)
 	{
@@ -1669,22 +1661,20 @@ void GameScene::ToGame4Update()
 		{
 			opOthelloItr->scale = ShlomonMath::EaseInQuad(XMFLOAT3(0.01f, 0.01f, 0.01f), XMFLOAT3(1.5f, 1.5f, 1.0f), eyeEaseTime);
 			opOthelloItr->rotation = ShlomonMath::EaseInQuad(XMFLOAT3(0, 0, 0), XMFLOAT3(0, 0, 90), eyeEaseTime);
-			//opOthelloItr->rotation.y = 180;
 		}
 		if (sceneChangeDiray2 >= 180)
 		{
 			if (Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01))
-			{
-				isTipsOk = true;
-				if (!selectMode)
+			{	
+				if (!selectMode && !isTipsOk)
 				{
 					othelloManager.StartSetPos();
 				}
-				if (flagss)
+				if (flagss && !isTipsOk)
 				{
 					othelloManager.StartNormaMode(selectStageNum);
 				}
-				//othelloManager.StartNormaMode(selectStageNum);
+				isTipsOk = true;
 			}
 			if (isTipsOk)
 			{
@@ -1693,7 +1683,6 @@ void GameScene::ToGame4Update()
 				{
 					opOthelloItr->scale = ShlomonMath::EaseInQuad(XMFLOAT3(1.5f, 1.5f, 1.5f), XMFLOAT3(0.01f, 0.01f, 0.01f), sceneChangeAfterTime);
 					opOthelloItr->rotation = ShlomonMath::EaseInQuad(XMFLOAT3(0, 0, 90), XMFLOAT3(0, 0, 0), sceneChangeAfterTime);
-					//opOthelloItr->rotation.y = 180;
 				}
 			}
 		}
@@ -1716,16 +1705,8 @@ void GameScene::ToGame4Update()
 				else
 				{
 					gameTime = gameMaxTime;
-					if (!selectMode)
-					{
-						//othelloManager.StartSetPos();
-					}
 					SoundStopWave(countdDownSound);
 					SoundPlayOnce(countdDownSound);
-					if (flagss)
-					{
-						//othelloManager.StartNormaMode(selectStageNum);
-					}
 				}
 			}
 		}
@@ -1750,16 +1731,8 @@ void GameScene::ToGame4Update()
 				else
 				{
 					gameTime = gameMaxTime;
-					/*if (!selectMode)
-					{
-						othelloManager.StartSetPos();
-					}*/
 					SoundStopWave(countdDownSound);
 					SoundPlayOnce(countdDownSound);
-					/*if (flagss)
-					{
-						othelloManager.StartNormaMode(selectStageNum);
-					}*/
 				}
 			}
 		}
@@ -1776,7 +1749,6 @@ void GameScene::ToModeSelectUpdate()
 	{
 		opOthelloItr->scale = ShlomonMath::EaseInQuad(XMFLOAT3(0.01f, 0.01f, 0.01f), XMFLOAT3(1.5f, 1.5f, 1.0f), eyeEaseTime);
 		opOthelloItr->rotation = ShlomonMath::EaseInQuad(XMFLOAT3(0, 0, 0), XMFLOAT3(0, 0, 90), eyeEaseTime);
-		//opOthelloItr->rotation.y = 180;
 	}
 	if (eyeEaseTime >= 1.0f)
 	{
@@ -1787,14 +1759,13 @@ void GameScene::ToModeSelectUpdate()
 		{
 			opOthelloItr->scale = ShlomonMath::EaseInQuad(XMFLOAT3(0.01f, 0.01f, 0.01f), XMFLOAT3(1.5f, 1.5f, 1.0f), eyeEaseTime);
 			opOthelloItr->rotation = ShlomonMath::EaseInQuad(XMFLOAT3(0, 0, 0), XMFLOAT3(0, 0, 90), eyeEaseTime);
-			//opOthelloItr->rotation.y = 180;
 		}
 		if (sceneChangeDiray2 >= 180)
 		{
 			if (Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01))
 			{
+				if (!isTipsOk)othelloManager.ModeSelectStart();
 				isTipsOk = true;
-				othelloManager.ModeSelectStart();
 			}
 			if (isTipsOk)
 			{
@@ -1805,11 +1776,6 @@ void GameScene::ToModeSelectUpdate()
 					opOthelloItr->rotation = ShlomonMath::EaseInQuad(XMFLOAT3(0, 0, 90), XMFLOAT3(0, 0, 0), sceneChangeAfterTime);
 				}
 			}
-
-			/*if (goToGameTime >= 1.0f)
-			{
-				othelloManager.ModeSelectStart();
-			}*/
 		}
 		if (sceneChangeAfterTime >= 0.8f && sceneChangeAfterTime < 1.0f)
 		{
@@ -1817,14 +1783,12 @@ void GameScene::ToModeSelectUpdate()
 			{
 				opOthelloItr->scale = ShlomonMath::EaseInQuad(XMFLOAT3(1.5f, 1.5f, 1.5f), XMFLOAT3(0.01f, 0.01f, 0.01f), sceneChangeAfterTime);
 				opOthelloItr->rotation = ShlomonMath::EaseInQuad(XMFLOAT3(0, 0, 90), XMFLOAT3(0, 0, 0), sceneChangeAfterTime);
-				//opOthelloItr->rotation.y = 180;
 			}
 			goToGameTime += 0.02f;
 			Camera::eye.v = ShlomonMath::EaseInQuad(eyeStart, eyeEnd, goToGameTime);
 			if (goToGameTime >= 1.0f)
 			{
 				isSceneChange = false;
-				//othelloManager.ModeSelectStart();
 			}
 		}
 		//ゲーム画面」に移行し、カウントダウン開始
@@ -1835,7 +1799,6 @@ void GameScene::ToModeSelectUpdate()
 			{
 				opOthelloItr->scale = ShlomonMath::EaseInQuad(XMFLOAT3(1.5f, 1.5f, 1.5f), XMFLOAT3(0.01f, 0.01f, 0.01f), sceneChangeAfterTime);
 				opOthelloItr->rotation = ShlomonMath::EaseInQuad(XMFLOAT3(0, 0, 90), XMFLOAT3(0, 0, 0), sceneChangeAfterTime);
-				//opOthelloItr->rotation.y = 180;
 			}
 			goToGameTime += 0.02f;
 			Camera::eye.v = ShlomonMath::EaseInQuad(eyeStart, eyeEnd, goToGameTime);
@@ -1845,7 +1808,6 @@ void GameScene::ToModeSelectUpdate()
 
 				OthlloPlayer::isReverse = true;
 				OthlloPlayer::playerReverseObject->PlayAnimation();
-				//othelloManager.ModeSelectStart();
 			}
 		}
 	}
