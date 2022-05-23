@@ -98,5 +98,71 @@ float4 main(VSOutput input) : SV_TARGET
 	result.r += 0.3f;
 	result.g += 0.3f;
 	result.b += 0.3f;
-	return result;
+    if (colorType == 0)
+    {
+        result.x = 0.0f;
+        result.y = 0.0f;
+        result.z = 0.0f;
+    }
+	if (colorType == 1)
+	{
+        result.x = 0.78f;
+        result.y = 0.0f;
+        result.z = 0.04f;
+    }
+	if (colorType == 2)
+	{
+        result.x = 0.82f;
+        result.y = 0.51f;
+        result.z = 0.0f;
+    }
+	if (colorType == 3)
+	{
+        result.x = 0.87f;
+        result.y = 0.82f;
+        result.z = 0.0f;
+    }
+    if (colorType == 4)
+    {
+        result.x = 0.48f;
+        result.y = 0.67f;
+        result.z = 0.09f;
+    }
+	if (colorType == 5)
+    {
+        result.x = 0.0f;
+        result.y = 0.53f;
+        result.z = 0.24f;
+    }
+	if (colorType == 6)
+    {
+        result.x = 0.0f;
+        result.y = 0.54f;
+        result.z = 0.51f;
+    }
+	if (colorType == 7)
+    {
+        result.x = 0.0f;
+        result.y = 0.55f;
+        result.z = 0.80f;
+    }
+    if (colorType == 8)
+    {
+        result.x = 0.42f;
+        result.y = 0.61f;
+        result.z = 0.682f;
+    }
+	if (colorType == 9)
+    {
+        result.x = 0.47f;
+        result.y = 0.42f;
+        result.z = 0.69f;
+    }
+	if (colorType >= 10)
+    {
+        result.x = 0.73f;
+        result.y = 0.47f;
+        result.z = 0.69f;
+    }
+    return result;
 }

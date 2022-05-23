@@ -9,6 +9,8 @@
 #include "../Oserro/Oserro.h"
 #include "../CheakOthello/CheakOthello.h"
 #include "../Sound/Sound.h"
+#include "../3DObjectParticle/3DObjectParticle.h"
+
 enum GameSceneName { TITLE, SELECT, GAME, END, RESULT };
 
 class GameScene
@@ -31,7 +33,16 @@ private:
 	void ToGame();
 	void ToGame2();
 	void ToGame3();
+	void ToGame4(bool flags = false);
 
+	void ToGame1Update();
+	void ToGame2Update();
+	void ToGame3Update();
+	void ToGame4Update();
+	void ToModeSelectUpdate();
+	void ToModeSelect();
+
+	void ToResult();
 public:
 	GameScene();
 	~GameScene();
@@ -178,8 +189,13 @@ public://シーンで使うもの
 	int sceneChangeDiray2 = 0;
 	float sceneChangeAfterTime = 0.0f;
 	bool isSceneChangeRady = false;
+	XMFLOAT3 camTargetStart;
+	XMFLOAT3 camTargetEnd;
 
-	list<EachInfo> opOthellos;
+	bool isStageDisplay = false;
+	float goToGameTime = 0.0f;
+
+	list<FrameEach> opOthellos;
 
 	//Timer管理用
 	const int CHANGE_TIMER_SECOND = 100;	//-1の値から振動開始
@@ -192,6 +208,16 @@ public://シーンで使うもの
 	int timerCount = 0;
 	float size_x = MAX_SIZE_X;
 	float size_y = MAX_SIZE_Y;
+	//ステージ選択の画面に行く
+	bool isModeSelect = false;
 
-	//Sprite number;
+	float flagss;
+	Model numbersObject[10];
+	Model reverseObject;
+	Model scoreObject;
+
+	EachInfo reversEach[2];
+	EachInfo timerEach[2];
+	EachInfo scoreEach[6];
+	bool isTipsOk = false;
 };

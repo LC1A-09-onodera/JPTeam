@@ -408,6 +408,7 @@
     <FxCompile Include="Resource\HLSL\OBJHS.hlsl" />
     <FxCompile Include="Resource\HLSL\SamplePS.hlsl" />
     <FxCompile Include="Resource\HLSL\SampleVS.hlsl" />
+    <FxCompile Include="Resource\HLSL\FramePS.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resource\HLSL\BSH.hlsli" />

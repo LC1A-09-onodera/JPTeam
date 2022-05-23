@@ -11,6 +11,13 @@ enum OthelloType
 	STOP,
 	NONE,
 };
+
+enum GameMode
+{
+	None,
+	NormaMode,
+	ScoreAttack,
+};
 namespace
 {
 	struct panelPos
@@ -30,10 +37,13 @@ namespace
 		panelPos playerPos;
 		Norma::NormaType type = Norma::Panels;
 		int normaStatus = 0;
+		bool subNormaFlag = false;
+		int subNormaPanels = 0;
 		int normaMoveCount = 0;
 	};
 }
 
+bool operator ==(const panelPos &a, const panelPos &b);
 namespace TutorialSceneFlow
 {
 	enum TutorialScene
@@ -146,7 +156,7 @@ namespace OthelloConstData
 	const int spawnTimerMAx = 300;
 	const int spawnMoveCount = 100;
 	const int spawnPanelCount = 2;
-	const int minPanelCount = 20;
+	const int minPanelCount = 25;
 	const int chainRepairTime = 0;
 	const int saveTimerLimit = 180;
 	const int tutorialTimerLimit = 180;
@@ -160,12 +170,22 @@ namespace OthelloConstData
 
 	const int NormaStageCount = 11;
 	//アニメーション
-	const int vanishTimerMax = 600;
+	const int vanishTimerMax = 1200;
+	const int vanishAnimation = 180;
+	const int vanishWaitTimer = vanishTimerMax - vanishAnimation;
 	const int animationTimerMax = 30;
 	const int waitTimerMax = 30;
 	const int JumpTimerMax = waitTimerMax / 2;
 	const int SpawnAnimationTimerMax = 120;
 	const int downStepTimerMax = 60;
+
+	namespace Breath
+	{
+		const int breathSpan = 10;
+		const int breathLevelTimerMax = 60;
+	};
+	const panelPos normaMode = { 0, 0 };
+	const panelPos scoreAttack = { 0, 7 };
 }
 
 class OthelloEachInfo : public EachInfo
@@ -204,14 +224,16 @@ private:
 	float endAngle;
 	float time;
 	bool isEase;
+	bool isRockDraw = true;
 	OthelloData data;
 public:
 	OthelloData *GetGameData() { return &data; }
 	bool GetIsEase() { return isEase; }
 	XMFLOAT3 GetPosition() { return ConvertXMVECTORtoXMFLOAT3(each.position); }
 	void SetIsEase(bool isEase) { this->isEase = isEase; }
+	void SetIsRockDraw(bool isRockDraw) {this->isRockDraw = isRockDraw;}
 	void SetPosition(XMFLOAT3 &position) { this->each.position = ConvertXMFLOAT3toXMVECTOR(position); }
-	void SetScale(XMFLOAT3 &scale){this->each.scale = scale;}
+	void SetScale(XMFLOAT3 &scale) { this->each.scale = scale; }
 public:
 	void Init(OthelloModel *model, OthelloModel *chainModel);
 	void Update(int combo);
@@ -235,6 +257,13 @@ public:
 	bool GetIsActive();
 
 	void SpawnUpdate();
+private://アニメーション
+	void SinkAnimation();
+	void BreathAnimation();
+	bool BreathAnimationFlag = true;
+	int breathTimer = 5;//初期値
+	int breathLevelTimer = 0;
+	int breathLevel = 0;
 private:
 	void ReversUpdate(int combo);
 	void LeftRevers();
@@ -279,7 +308,7 @@ public:
 	const vector<vector<SendOthelloData>> &Send();
 	void Receive(const vector<vector<SendOthelloData>> &data);
 
-	void MinSpawn();
+	void MinSpawn(bool inGame);
 	static list<Othello> othellos;
 	static list<NormaModeFieldData> NormaStartOthellos;
 
@@ -314,8 +343,8 @@ public://ノルマモード用関数
 	bool GetIsNormaClear();
 	bool GetIsNormaFailed();
 	bool isNormaMode = false;
-
-	void SetScore(const int score){nowScore = score;}
+	NormaChecker normaChecker;
+	void SetScore(const int score) { nowScore = score; }
 
 	void NormaTextDraw();
 	int GetNormaStagesCount();
@@ -324,6 +353,25 @@ private://ノルマモード用内部処理関数
 	void TestStage();
 	void LoadNormaStage(std::string stage);
 	void LoadAllStage();
+
+public://モードセレクト用外部関数
+	//モード選択開始時
+	void ModeSelectStart();
+
+	void ModeSelectControll();
+	//モード選択中
+	void ModeSelectUpdate();
+	//モード選択決定した瞬間
+	bool InMode();
+	//モード選択内容(ゲームモード)
+	GameMode GetEnterModeType();
+	//モード選択内容(ノルマステージ)
+	int GetEnterNormaStage();
+	//何かしら描画があるなら
+	void ModeSelectDraw();
+private://モードセレクト用変数
+private://モードセレクト用内部関数
+	void SetModeSelectPanel();
 private:
 	void SetPlayer();
 
@@ -394,7 +442,7 @@ private:
 	void SetSpawnPlayer(int x, int y);
 
 	//特定のマスにパネルを配置する
-	void SetSpawnPanel(int x, int y, bool Front,OthelloType type = NORMAL);
+	void SetSpawnPanel(int x, int y, bool Front, OthelloType type = NORMAL, bool isRockDraw = true);
 
 private:
 	panelPos playerPanelPos;
@@ -440,6 +488,6 @@ private:
 	int textChangeTimer = 0;
 	bool textChange = false;
 
-	NormaChecker normaChecker;
+	
 	std::list<XMFLOAT3> pressPos;
 };
