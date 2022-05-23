@@ -167,22 +167,22 @@ void OthlloPlayer::Move()
 		playerRunNowObject->PlayAnimation();
 		runSTime = MaxSTime;
 
-		if ((D || padD) && each.position.m128_f32[0] < 6.0f)
+		if ((D || padD) && playerFbxObj->position.x < 6.0f)
 		{
 			endPos.x += MaxMoveAmount;
 			rotation.z = -90;
 		}
-		else if ((A || padA) && each.position.m128_f32[0] > -8.0f)
+		else if ((A || padA) && playerFbxObj->position.x > -8.0f)
 		{
 			endPos.x -= MaxMoveAmount;
 			rotation.z = 90;
 		}
-		else if ((S || padS) && each.position.m128_f32[1] > -6.0f)
+		else if ((S || padS) && playerFbxObj->position.y > -6.0f)
 		{
 			endPos.y -= MaxMoveAmount;
 			rotation.z = 180;
 		}
-		else if ((W || padW) && each.position.m128_f32[1] < 8.0f)
+		else if ((W || padW) && playerFbxObj->position.y < 8.0f)
 		{
 			endPos.y += MaxMoveAmount;
 			rotation.z = 0;
