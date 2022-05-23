@@ -1000,25 +1000,65 @@ void GameScene::GameDraw()
 			Draw3DObject(ObjectParticles::othello2.object);
 		}
 	}
+	float sizeX = size_x;
+	float sizeY = size_y;
 	if (gameTime > 0 && countDown <= 0)
 	{
-		int hoge1 = gameTime / 600 % 10;
+		if (gameTime / 60 >= CHANGE_TIMER_SECOND)
+		{
+			numbers[gameTime / 60 % 10].ChangeSize(48, 64);
+			numbers[gameTime / 600 % 10 + 10].ChangeSize(48, 64);
+		}
+		if (gameTime / 60 <= CHANGE_TIMER_SECOND)
+		{
+			if (gameTime % 60 == 0)
+			{
+				isChanged = true;
+			}
+			if (isChanged)
+			{
+				if (timerCount < MAX_COUNT / 2)
+				{
+					size_x += ADD_SIZE;
+					size_y += ADD_SIZE;
+				}
+				else if (timerCount < MAX_COUNT)
+				{
+					size_x -= ADD_SIZE;
+					size_y -= ADD_SIZE;
+				}
+
+				if (timerCount > 10)
+				{
+					size_x = MAX_SIZE_X;
+					size_y = MAX_SIZE_Y;
+					timerCount = 0;
+					isChanged = false;
+				}
+
+				numbers[gameTime / 60 % 10].ChangeSize(size_x, size_y);
+				numbers[gameTime / 600 % 10 + 10].ChangeSize(size_x, size_y);
+
+				timerCount++;
+			}
+		}
+		int zyunokurai = gameTime / 600 % 10;
 		timerEach[0].position.m128_f32[0] = -1.0f;
 		timerEach[0].position.m128_f32[1] = 18.0f;
 		timerEach[0].position.m128_f32[2] = -1.0f;
-		timerEach[0].scale = { 0.3f, 0.3f, 0.3f };
+		timerEach[0].scale = { size_x, size_x, size_x };
 		timerEach[0].rotation.x = -30.0f;
-		numbersObject[hoge1].Update(&timerEach[0]);
-		Draw3DObject(numbersObject[hoge1]);
+		numbersObject[zyunokurai].Update(&timerEach[0]);
+		Draw3DObject(numbersObject[zyunokurai]);
 
-		int hoge2 = gameTime / 60 % 10;
+		int ichinokurai = gameTime / 60 % 10;
 		timerEach[1].position.m128_f32[0] = 1.0f;
 		timerEach[1].position.m128_f32[1] = 18.0f;
 		timerEach[1].position.m128_f32[2] = -1.0f;
-		timerEach[1].scale = { 0.3f, 0.3f, 0.3f };
+		timerEach[1].scale = { size_x, size_x, size_x };
 		timerEach[1].rotation.x = -30.0f;
-		numbersObject[hoge2].Update(&timerEach[1]);
-		Draw3DObject(numbersObject[hoge2]);
+		numbersObject[ichinokurai].Update(&timerEach[1]);
+		Draw3DObject(numbersObject[ichinokurai]);
 
 		oldDisplay = nowScore;
 		oldScore = nowScore;
