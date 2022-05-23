@@ -1023,11 +1023,11 @@ void GameScene::GameDraw()
 	//titleSprite.SpriteDraw();
 	if (selectMode)
 	{
-		othelloManager.NormaTextDraw(selectStageNum);
+		othelloManager.NormaTextDraw(selectStageNum, true);
 	}
 	if (isModeSelect)
 	{
-		othelloManager.ModeSelectDraw();
+		othelloManager.ModeSelectDraw(true);
 	}
 	if (countDown > 0 && isSceneChange == false && isModeSelect == false)
 	{

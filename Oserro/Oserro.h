@@ -348,7 +348,7 @@ public://ノルマモード用関数
 	NormaChecker normaChecker;
 	void SetScore(const int score) { nowScore = score; }
 
-	void NormaTextDraw(int stageNum);
+	void NormaTextDraw(int stageNum, bool isDraw);
 	int GetNormaStagesCount();
 	list<NormaModeFieldData>::iterator GetNormaStage(int num);
 private://ノルマモード用内部処理関数
@@ -371,7 +371,7 @@ public://モードセレクト用外部関数
 	//モード選択内容(ノルマステージ)
 	int GetEnterNormaStage();
 	//何かしら描画があるなら
-	void ModeSelectDraw();
+	void ModeSelectDraw(bool isDraw);
 private://モードセレクト用変数
 private://モードセレクト用内部関数
 	void SetModeSelectPanel();

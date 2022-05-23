@@ -1017,35 +1017,36 @@ void OthelloManager::ChanceDraw()
 	}
 }
 
-void OthelloManager::NormaTextDraw(int stageNum)
+void OthelloManager::NormaTextDraw(int stageNum, bool isDraw)
 {
 	SetTextPos(true);
 
-	list<NormaModeFieldData>::iterator data = GetNormaStage(stageNum);
+	if (isDraw)
+	{
+		list<NormaModeFieldData>::iterator data = GetNormaStage(stageNum);
 
-	int status = data->normaStatus;
-	if (data->type == Norma::Combo)
-	{
-		NormaComboText.SpriteDraw();
+		int status = data->normaStatus;
+		if (data->type == Norma::Combo)
+		{
+			NormaComboText.SpriteDraw();
+		}
+		else if (data->type == Norma::Panels)
+		{
+			NormaPanelsTextSetPos(true);
+			NormaPanelsText.SpriteDraw();
+			status = data->panels.size();
+		}
+		else if (data->type == Norma::Score)
+		{
+			NormaScoreText.SpriteDraw();
+		}
+		if (data->subNormaFlag)
+		{
+			NormaPanelsText.SpriteDraw();
+		}
+		CountDraw(status);
+		normaChecker.Draw();
 	}
-	else if (data->type == Norma::Panels)
-	{
-		NormaPanelsTextSetPos(true);
-		NormaPanelsText.SpriteDraw();
-		status = data->panels.size();
-	}
-	else if (data->type == Norma::Score)
-	{
-		NormaScoreText.SpriteDraw();
-	}
-	if (data->subNormaFlag)
-	{
-		NormaPanelsText.SpriteDraw();
-	}
-	CountDraw(status);
-
-
-	normaChecker.Draw();
 }
 
 void OthelloManager::Finalize()
@@ -1265,43 +1266,46 @@ int OthelloManager::GetEnterNormaStage()
 	return stageNum;
 }
 
-void OthelloManager::ModeSelectDraw()
+void OthelloManager::ModeSelectDraw(bool isDraw)
 {
 	SetTextPos(false);
 
-	if (GetEnterModeType() != GameMode::NormaMode) { return; }
-	list<NormaModeFieldData>::iterator data = GetNormaStage(GetEnterNormaStage());
-	int status = data->normaStatus;
-
-	auto itr = data->panels.begin();
-
-	if (data->type == Norma::Combo)
+	if (isDraw)
 	{
-		NormaComboText.SpriteDraw();
-	}
-	else if (data->type == Norma::Panels)
-	{
-		status = 0;
-		for (; itr != data->panels.end(); itr++)
+		if (GetEnterModeType() != GameMode::NormaMode) { return; }
+		list<NormaModeFieldData>::iterator data = GetNormaStage(GetEnterNormaStage());
+		int status = data->normaStatus;
+
+		auto itr = data->panels.begin();
+
+		if (data->type == Norma::Combo)
 		{
-			if (itr->type != WALL)
-			{
-				status++;
-			}
+			NormaComboText.SpriteDraw();
 		}
-		NormaPanelsTextSetPos(false);
-		NormaPanelsText.SpriteDraw();
-	}
-	else if (data->type == Norma::Score)
-	{
-		NormaScoreText.SpriteDraw();
-	}
-	if (data->subNormaFlag)
-	{
-		NormaPanelsText.SpriteDraw();
-	}
+		else if (data->type == Norma::Panels)
+		{
+			status = 0;
+			for (; itr != data->panels.end(); itr++)
+			{
+				if (itr->type != WALL)
+				{
+					status++;
+				}
+			}
+			NormaPanelsTextSetPos(false);
+			NormaPanelsText.SpriteDraw();
+		}
+		else if (data->type == Norma::Score)
+		{
+			NormaScoreText.SpriteDraw();
+		}
+		if (data->subNormaFlag)
+		{
+			NormaPanelsText.SpriteDraw();
+		}
 
-	CountDraw(status);
+		CountDraw(status);
+	}
 }
 
 void OthelloManager::CountDraw(int count)
