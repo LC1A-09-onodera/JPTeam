@@ -104,54 +104,26 @@ void OthlloPlayer::Update()
 
 void OthlloPlayer::Draw()
 {
-	//player.Update(&each);
+	MotionUpdate();
+
 	if (isRunStart)
 	{
-		playerRunStartObject->position = playerFbxObj->position;
-		//playerRunStartObject->rotation = playerFbxObj->rotation;
-		playerRunStartObject->rotation = rotation;
-		playerRunStartObject->scale = playerFbxObj->scale;
-		playerRunStartObject->Update(); 
 		playerRunStartObject->Draw(BaseDirectX::cmdList.Get());
 	}
 	else if (isRunNow)
 	{
-		playerRunNowObject->position = playerFbxObj->position;
-		//playerRunNowObject->rotation = playerFbxObj->rotation;
-		playerRunNowObject->rotation = rotation;
-		playerRunNowObject->scale = playerFbxObj->scale;
-		playerRunNowObject->Update();
 		playerRunNowObject->Draw(BaseDirectX::cmdList.Get());
 	}
 	else if (isRunEnd)
 	{
-		playerRunEndObject->position = playerFbxObj->position;
-		//playerRunEndObject->rotation = playerFbxObj->rotation;
-		playerRunEndObject->rotation = rotation;
-		playerRunEndObject->scale = playerFbxObj->scale;
-		playerRunEndObject->Update();
 		playerRunEndObject->Draw(BaseDirectX::cmdList.Get());
 	}
 	else if (isReverse)
 	{
-		playerReverseObject->position = playerFbxObj->position;
-		//playerReverseObject->rotation = playerFbxObj->rotation;
-		playerReverseObject->rotation = rotation;
-		playerReverseObject->scale = playerFbxObj->scale;
-		playerReverseObject->Update();
 		playerReverseObject->Draw(BaseDirectX::cmdList.Get());
 	}
 	else
 	{
-		playerStayObject->position = playerFbxObj->position;
-		//playerStayObject->rotation = playerFbxObj->rotation;
-		playerStayObject->rotation = rotation;
-		playerStayObject->scale = playerFbxObj->scale;
-		if (!playerStayObject->GetPlay())
-		{
-			playerStayObject->PlayAnimation();
-		}
-		playerStayObject->Update();
 		playerStayObject->Draw(BaseDirectX::cmdList.Get());
 	}
 	//playerFbxObj->Update();
@@ -195,22 +167,22 @@ void OthlloPlayer::Move()
 		playerRunNowObject->PlayAnimation();
 		runSTime = MaxSTime;
 
-		if ((D || padD) && each.position.m128_f32[0] < 6.0f)
+		if ((D || padD) && playerFbxObj->position.x < 6.0f)
 		{
 			endPos.x += MaxMoveAmount;
 			rotation.z = -90;
 		}
-		else if ((A || padA) && each.position.m128_f32[0] > -8.0f)
+		else if ((A || padA) && playerFbxObj->position.x > -8.0f)
 		{
 			endPos.x -= MaxMoveAmount;
 			rotation.z = 90;
 		}
-		else if ((S || padS) && each.position.m128_f32[1] > -6.0f)
+		else if ((S || padS) && playerFbxObj->position.y > -6.0f)
 		{
 			endPos.y -= MaxMoveAmount;
 			rotation.z = 180;
 		}
-		else if ((W || padW) && each.position.m128_f32[1] < 8.0f)
+		else if ((W || padW) && playerFbxObj->position.y < 8.0f)
 		{
 			endPos.y += MaxMoveAmount;
 			rotation.z = 0;
@@ -276,6 +248,45 @@ void OthlloPlayer::EaseUpdate()
 	each.position = ConvertXMFLOAT3toXMVECTOR(ShlomonMath::EaseInQuad(startPos, endPos, easeTime));
 	playerFbxObj->position = ShlomonMath::EaseInQuad(startPos, endPos, easeTime);
 	//playerFbxObj->rotation.y = 90;
+}
+
+void OthlloPlayer::MotionUpdate()
+{
+	playerRunStartObject->position = playerFbxObj->position;
+	//playerRunStartObject->rotation = playerFbxObj->rotation;
+	playerRunStartObject->rotation = rotation;
+	playerRunStartObject->scale = playerFbxObj->scale;
+	playerRunStartObject->Update();
+	//player.Update(&each);
+
+
+	playerRunNowObject->position = playerFbxObj->position;
+	//playerRunNowObject->rotation = playerFbxObj->rotation;
+	playerRunNowObject->rotation = rotation;
+	playerRunNowObject->scale = playerFbxObj->scale;
+	playerRunNowObject->Update();
+
+	playerRunEndObject->position = playerFbxObj->position;
+	//playerRunEndObject->rotation = playerFbxObj->rotation;
+	playerRunEndObject->rotation = rotation;
+	playerRunEndObject->scale = playerFbxObj->scale;
+	playerRunEndObject->Update();
+
+	playerReverseObject->position = playerFbxObj->position;
+	//playerReverseObject->rotation = playerFbxObj->rotation;
+	playerReverseObject->rotation = rotation;
+	playerReverseObject->scale = playerFbxObj->scale;
+	playerReverseObject->Update();
+
+	playerStayObject->position = playerFbxObj->position;
+	//playerStayObject->rotation = playerFbxObj->rotation;
+	playerStayObject->rotation = rotation;
+	playerStayObject->scale = playerFbxObj->scale;
+	if (!playerStayObject->GetPlay())
+	{
+		playerStayObject->PlayAnimation();
+	}
+	playerStayObject->Update();
 }
 
 void OthlloPlayer::MoveCancel()

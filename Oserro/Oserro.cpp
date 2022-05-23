@@ -1194,11 +1194,6 @@ void OthelloManager::ModeSelectUpdate()
 {
 	//éÄÇ 
 	DeadPanel();
-
-	//MinSpawn(true);
-	////ê∂ê¨
-	//RandumSetPanel();
-
 	//çXêV
 	auto itr = othellos.begin();
 
@@ -1216,7 +1211,6 @@ void OthelloManager::ModeSelectUpdate()
 	}
 
 
-	//SaveSpawn();
 
 }
 

@@ -18,6 +18,7 @@ class OthlloPlayer
 	static bool isMoveEnd;
 	static void Move();
 	static void EaseUpdate();
+	static void MotionUpdate();
 public:
 	static XMFLOAT3 GetPosition(){ return playerFbxObj->position; }
 	static void SetPosition(XMFLOAT3 position) { playerFbxObj->position = position; }
