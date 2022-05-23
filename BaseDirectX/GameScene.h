@@ -213,6 +213,7 @@ public://シーンで使うもの
 
 	float flagss;
 	Model numbersObject[10];
+	Model sNumbersObject[10];
 	Model reverseObject;
 	Model scoreObject;
 
@@ -220,4 +221,9 @@ public://シーンで使うもの
 	EachInfo timerEach[2];
 	EachInfo scoreEach[6];
 	bool isTipsOk = false;
+	
+	static const int tipsCount = 5;
+	Sprite tipsSprite[tipsCount];
+
+	int tipsNumber;
 };

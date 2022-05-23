@@ -148,32 +148,6 @@ void GameScene::Init()
 		scoreNum[i + 8].CreateSprite(num[8], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
 		scoreNum[i + 9].CreateSprite(num[9], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
 	}
-	for (int i = 0; i < 60; i += 10)
-	{
-		addScoreNum[i + 0].CreateSprite(num[0], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-		addScoreNum[i + 1].CreateSprite(num[1], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-		addScoreNum[i + 2].CreateSprite(num[2], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-		addScoreNum[i + 3].CreateSprite(num[3], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-		addScoreNum[i + 4].CreateSprite(num[4], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-		addScoreNum[i + 5].CreateSprite(num[5], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-		addScoreNum[i + 6].CreateSprite(num[6], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-		addScoreNum[i + 7].CreateSprite(num[7], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-		addScoreNum[i + 8].CreateSprite(num[8], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-		addScoreNum[i + 9].CreateSprite(num[9], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-	}
-	for (int i = 0; i < 30; i += 10)
-	{
-		addConbo[i + 0].CreateSprite(num[0], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-		addConbo[i + 1].CreateSprite(num[1], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-		addConbo[i + 2].CreateSprite(num[2], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-		addConbo[i + 3].CreateSprite(num[3], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-		addConbo[i + 4].CreateSprite(num[4], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-		addConbo[i + 5].CreateSprite(num[5], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-		addConbo[i + 6].CreateSprite(num[6], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-		addConbo[i + 7].CreateSprite(num[7], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-		addConbo[i + 8].CreateSprite(num[8], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-		addConbo[i + 9].CreateSprite(num[9], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-	}
 
 	//selectStageNumSprite[0].CreateSprite(num[0], XMFLOAT3(window_width / 2 - 30,                            window_height / 2 + 50, 0));
 	selectStageNumSprite[1].CreateSprite(num[1], XMFLOAT3(window_width / 2 - 30 + selectNumDistance * 0.0f, window_height / 2 + 50, 0));
@@ -261,6 +235,16 @@ void GameScene::Init()
 	numbersObject[7].CreateModel("number7", ShaderManager::playerShader);
 	numbersObject[8].CreateModel("number8", ShaderManager::playerShader);
 	numbersObject[9].CreateModel("number9", ShaderManager::playerShader);
+	sNumbersObject[0].CreateModel("number0s", ShaderManager::playerShader);
+	sNumbersObject[1].CreateModel("number1s", ShaderManager::playerShader);
+	sNumbersObject[2].CreateModel("number2s", ShaderManager::playerShader);
+	sNumbersObject[3].CreateModel("number3s", ShaderManager::playerShader);
+	sNumbersObject[4].CreateModel("number4s", ShaderManager::playerShader);
+	sNumbersObject[5].CreateModel("number5s", ShaderManager::playerShader);
+	sNumbersObject[6].CreateModel("number6s", ShaderManager::playerShader);
+	sNumbersObject[7].CreateModel("number7s", ShaderManager::playerShader);
+	sNumbersObject[8].CreateModel("number8s", ShaderManager::playerShader);
+	sNumbersObject[9].CreateModel("number9s", ShaderManager::playerShader);
 	reverseObject.CreateModel("reverse", ShaderManager::playerShader);
 
 	scoreObject.CreateModel("score", ShaderManager::playerShader);
@@ -277,6 +261,11 @@ void GameScene::Init()
 		scoreEach[i].CreateConstBuff0();
 		scoreEach[i].CreateConstBuff1();
 	}
+	/*tipsSprite[0].CreateSprite(L"", XMFLOAT3(0, 0, 0));
+	tipsSprite[1].CreateSprite(L"", XMFLOAT3(0, 0, 0));
+	tipsSprite[2].CreateSprite(L"", XMFLOAT3(0, 0, 0));
+	tipsSprite[3].CreateSprite(L"", XMFLOAT3(0, 0, 0));
+	tipsSprite[4].CreateSprite(L"", XMFLOAT3(0, 0, 0));*/
 }
 
 void GameScene::TitleUpdate()
@@ -1034,55 +1023,9 @@ void GameScene::GameDraw()
 			numbers[countDown / 60].SpriteDraw();
 		}
 	}
-	if (isSceneChange == true && sceneChageType == 2)
-	{
-		sceneChangeSprite2.ChangeSize(1280, 720);
-		//sceneChangeSprite2.rotation = 0.1f;
-		sceneChangeSprite2.SpriteDraw();
-	}
+
 	if (gameTime > 0 && countDown <= 0)
 	{
-		if (gameTime / 60 >= CHANGE_TIMER_SECOND)
-		{
-			numbers[gameTime / 60 % 10].ChangeSize(48, 64);
-			numbers[gameTime / 600 % 10 + 10].ChangeSize(48, 64);
-		}
-		if (gameTime / 60 <= CHANGE_TIMER_SECOND)
-		{
-			if (gameTime % 60 == 0)
-			{
-				isChanged = true;
-			}
-			if (isChanged)
-			{
-				if (timerCount < MAX_COUNT / 2)
-				{
-					size_x += ADD_SIZE;
-					size_y += ADD_SIZE;
-				}
-				else if (timerCount < MAX_COUNT)
-				{
-					size_x -= ADD_SIZE;
-					size_y -= ADD_SIZE;
-				}
-
-				if (timerCount > 10)
-				{
-					size_x = MAX_SIZE_X;
-					size_y = MAX_SIZE_Y;
-					//numbers[gameTime / 60 % 10].ChangeSize(size_x, size_y);
-					//numbers[gameTime / 600 % 10].ChangeSize(size_x, size_y);
-					timerCount = 0;
-					isChanged = false;
-				}
-
-				numbers[gameTime / 60 % 10].ChangeSize(size_x, size_y);
-				numbers[gameTime / 600 % 10 + 10].ChangeSize(size_x, size_y);
-
-				timerCount++;
-			}
-		}
-
 		int hoge1 = gameTime / 600 % 10;
 		timerEach[0].position.m128_f32[0] = -1.0f;
 		timerEach[0].position.m128_f32[1] = 18.0f;
@@ -1238,38 +1181,38 @@ void GameScene::GameDraw()
 		scoreEach[0].position = { scoreBaseX - scoreDirection * 0, 18.0f, -1.0f, 1.0f};
 		scoreEach[0].scale = scoreScale;
 		scoreEach[0].rotation.x = -30.0f;
-		numbersObject[displayScore % 10].Update(&scoreEach[0]);
-		Draw3DObject(numbersObject[displayScore % 10]);
+		sNumbersObject[displayScore % 10].Update(&scoreEach[0]);
+		Draw3DObject(sNumbersObject[displayScore % 10]);
 
 		scoreEach[1].position = { scoreBaseX - scoreDirection * 1, 18.0f, -1.0f, 1.0f };
 		scoreEach[1].scale = scoreScale;
 		scoreEach[1].rotation.x = -30.0f;
-		numbersObject[displayScore / 10 % 10].Update(&scoreEach[1]);
-		Draw3DObject(numbersObject[displayScore / 10 % 10]);
+		sNumbersObject[displayScore / 10 % 10].Update(&scoreEach[1]);
+		Draw3DObject(sNumbersObject[displayScore / 10 % 10]);
 
 		scoreEach[2].position = { scoreBaseX - scoreDirection * 2, 18.0f, -1.0f, 1.0f };
 		scoreEach[2].scale = scoreScale;
 		scoreEach[2].rotation.x = -30.0f;
-		numbersObject[displayScore / 100 % 10].Update(&scoreEach[2]);
-		Draw3DObject(numbersObject[displayScore / 100 % 10]);
+		sNumbersObject[displayScore / 100 % 10].Update(&scoreEach[2]);
+		Draw3DObject(sNumbersObject[displayScore / 100 % 10]);
 
 		scoreEach[3].position = { scoreBaseX - scoreDirection * 3, 18.0f, -1.0f, 1.0f };
 		scoreEach[3].scale = scoreScale;
 		scoreEach[3].rotation.x = -30.0f;
-		numbersObject[displayScore / 1000 % 10].Update(&scoreEach[3]);
-		Draw3DObject(numbersObject[displayScore / 1000 % 10]);
+		sNumbersObject[displayScore / 1000 % 10].Update(&scoreEach[3]);
+		Draw3DObject(sNumbersObject[displayScore / 1000 % 10]);
 
 		scoreEach[4].position = { scoreBaseX - scoreDirection * 4, 18.0f, -1.0f, 1.0f };
 		scoreEach[4].scale = scoreScale;
 		scoreEach[4].rotation.x = -30.0f;
-		numbersObject[displayScore / 10000 % 10].Update(&scoreEach[4]);
-		Draw3DObject(numbersObject[displayScore / 10000 % 10]);
+		sNumbersObject[displayScore / 10000 % 10].Update(&scoreEach[4]);
+		Draw3DObject(sNumbersObject[displayScore / 10000 % 10]);
 
 		scoreEach[5].position = { scoreBaseX - scoreDirection * 5, 18.0f, -1.0f, 1.0f };
 		scoreEach[5].scale = scoreScale;
 		scoreEach[5].rotation.x = -30.0f;
-		numbersObject[displayScore / 100000 % 10].Update(&scoreEach[5]);
-		Draw3DObject(numbersObject[displayScore / 100000 % 10]);
+		sNumbersObject[displayScore / 100000 % 10].Update(&scoreEach[5]);
+		Draw3DObject(sNumbersObject[displayScore / 100000 % 10]);
 
 		scoreObject.each.position = { scoreBaseX - 2.0f - scoreDirection * 7, 18.0f, -1.0f, 1.0f };
 		scoreObject.each.scale = scoreScale;
@@ -1565,6 +1508,8 @@ void GameScene::ToGame4(bool flags)
 
 	ObjectParticles::othello.DeleteAllParticle();
 	flagss = flags;
+
+	tipsNumber = rand() % GameScene::tipsCount;
 }
 
 void GameScene::ToGame1Update()
@@ -1920,6 +1865,8 @@ void GameScene::ToModeSelect()
 	select = true;
 	selectStage = false;
 	selectMode = false;
+	
+	tipsNumber = rand() % GameScene::tipsCount;
 }
 
 void GameScene::ToResult()
