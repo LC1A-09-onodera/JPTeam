@@ -226,4 +226,5 @@ public://ƒV[ƒ“‚Åg‚¤‚à‚Ì
 	Sprite tipsSprite[tipsCount];
 
 	int tipsNumber;
+	list<pair<int, int>> tipsNumAndTexCount;
 };

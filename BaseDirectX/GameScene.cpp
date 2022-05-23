@@ -263,11 +263,12 @@ void GameScene::Init()
 		scoreEach[i].CreateConstBuff0();
 		scoreEach[i].CreateConstBuff1();
 	}
-	/*tipsSprite[0].CreateSprite(L"", XMFLOAT3(0, 0, 0));
-	tipsSprite[1].CreateSprite(L"", XMFLOAT3(0, 0, 0));
-	tipsSprite[2].CreateSprite(L"", XMFLOAT3(0, 0, 0));
-	tipsSprite[3].CreateSprite(L"", XMFLOAT3(0, 0, 0));
-	tipsSprite[4].CreateSprite(L"", XMFLOAT3(0, 0, 0));*/
+	tipsSprite[0].CreateSprite(L"Resource/Img/tips/ex1.png", XMFLOAT3(0, 0, 0));
+	tipsSprite[1].CreateSprite(L"Resource/Img/tips/ex2.png", XMFLOAT3(0, 0, 0));
+	tipsSprite[2].CreateSprite(L"Resource/Img/tips/ex3.png", XMFLOAT3(0, 0, 0));
+	tipsSprite[3].CreateSprite(L"Resource/Img/tips/ex4.png", XMFLOAT3(0, 0, 0));
+
+	tipsNumAndTexCount.push_back({0, 4});
 }
 
 void GameScene::TitleUpdate()
@@ -999,42 +1000,6 @@ void GameScene::GameDraw()
 			Draw3DObject(ObjectParticles::othello2.object);
 		}
 	}
-	if (!isSceneChange)
-	{
-		OthlloPlayer::Draw();
-	}
-	ObjectParticles::Draw();
-	ParticleControl::Draw();
-	othelloManager.Draw();
-	Lights::Draw();
-
-	//スプライトの描画-------------------------
-	//titleSprite.SpriteDraw();
-	if (selectMode)
-	{
-		othelloManager.NormaTextDraw(selectStageNum, true);
-	}
-	if (isModeSelect)
-	{
-		othelloManager.ModeSelectDraw(true);
-	}
-	if (countDown > 0 && isSceneChange == false && isModeSelect == false)
-	{
-		if (countDown < 59)
-		{
-			startSprite.ChangeSize(232, 63);
-			startSprite.position.m128_f32[0] = window_width / 2 - 100;
-			startSprite.position.m128_f32[1] = window_height / 2 - 10;
-			startSprite.SpriteDraw();
-		}
-		else
-		{
-			numbers[countDown / 60].position.m128_f32[0] = window_width / 2 - 10;
-			numbers[countDown / 60].position.m128_f32[1] = window_height / 2 - 5;
-			numbers[countDown / 60].SpriteDraw();
-		}
-	}
-
 	if (gameTime > 0 && countDown <= 0)
 	{
 		int hoge1 = gameTime / 600 % 10;
@@ -1082,17 +1047,17 @@ void GameScene::GameDraw()
 			}
 			else if (addComboint < 100)
 			{
-				reversEach[0].position.m128_f32[0] = -3.0f;
-				reversEach[0].position.m128_f32[1] = 13.0f;
-				reversEach[0].position.m128_f32[2] = -0.5f;
-				reversEach[0].scale = { 0.5f, 0.5f, 0.5f };
+				reversEach[0].position = ConvertXMFLOAT3toXMVECTOR(OthlloPlayer::GetPosition());
+				reversEach[0].position.m128_f32[0] -= 0.0f;
+				reversEach[0].position.m128_f32[1] += 1.5f;
+				reversEach[0].scale = { 0.2f, 0.2f, 0.2f };
 				reversEach[0].rotation.x = -30.0f;
 				numbersObject[addComboint % 10].Update(&reversEach[0]);
 				Draw3DObject(numbersObject[addComboint % 10]);
-				reversEach[1].position.m128_f32[0] = -6.0f;
-				reversEach[1].position.m128_f32[1] = 13.0f;
-				reversEach[1].position.m128_f32[2] = -0.5f;
-				reversEach[1].scale = { 0.5f, 0.5f, 0.5f };
+				reversEach[0].position = ConvertXMFLOAT3toXMVECTOR(OthlloPlayer::GetPosition());
+				reversEach[0].position.m128_f32[0] -= 0.0f;
+				reversEach[0].position.m128_f32[1] += 3.0f;
+				reversEach[1].scale = { 0.2f, 0.2f, 0.2f };
 				reversEach[1].rotation.x = -30.0f;
 				numbersObject[addComboint / 10 % 10].Update(&reversEach[1]);
 				Draw3DObject(numbersObject[addComboint % 10]);
@@ -1155,41 +1120,10 @@ void GameScene::GameDraw()
 			}
 		}
 
-		/*float wid = 35;
-		float widPuls = 40;
-		float hi = 50;
-		scoreSprite.position.m128_f32[0] = 0;
-		scoreSprite.position.m128_f32[1] = 15;
-		scoreSprite.ChangeSize(150, 50);
-		scoreSprite.SpriteDraw();
-		scoreNum[displayScore % 10].ChangeSize(wid, hi);
-		scoreNum[displayScore % 10].position.m128_f32[0] = widPuls * 9;
-		scoreNum[displayScore % 10].position.m128_f32[1] = 10;
-		scoreNum[displayScore % 10].SpriteDraw();
-		scoreNum[displayScore / 10 % 10 + 10].ChangeSize(wid, hi);
-		scoreNum[displayScore / 10 % 10 + 10].position.m128_f32[0] = widPuls * 8;
-		scoreNum[displayScore / 10 % 10 + 10].position.m128_f32[1] = 10;
-		scoreNum[displayScore / 10 % 10 + 10].SpriteDraw();
-		scoreNum[displayScore / 100 % 10 + 20].ChangeSize(wid, hi);
-		scoreNum[displayScore / 100 % 10 + 20].position.m128_f32[0] = widPuls * 7;
-		scoreNum[displayScore / 100 % 10 + 20].position.m128_f32[1] = 10;
-		scoreNum[displayScore / 100 % 10 + 20].SpriteDraw();
-		scoreNum[displayScore / 1000 % 10 + 30].ChangeSize(wid, hi);
-		scoreNum[displayScore / 1000 % 10 + 30].position.m128_f32[0] = widPuls * 6;
-		scoreNum[displayScore / 1000 % 10 + 30].position.m128_f32[1] = 10;
-		scoreNum[displayScore / 1000 % 10 + 30].SpriteDraw();
-		scoreNum[displayScore / 10000 % 10 + 40].ChangeSize(wid, hi);
-		scoreNum[displayScore / 10000 % 10 + 40].position.m128_f32[0] = widPuls * 5;
-		scoreNum[displayScore / 10000 % 10 + 40].position.m128_f32[1] = 10;
-		scoreNum[displayScore / 10000 % 10 + 40].SpriteDraw();
-		scoreNum[displayScore / 100000 % 10 + 50].ChangeSize(wid, hi);
-		scoreNum[displayScore / 100000 % 10 + 50].position.m128_f32[0] = widPuls * 4;
-		scoreNum[displayScore / 100000 % 10 + 50].position.m128_f32[1] = 10;
-		scoreNum[displayScore / 100000 % 10 + 50].SpriteDraw();*/
-		XMFLOAT3 scoreScale = {0.4f, 0.4f, 0.4f};
+		XMFLOAT3 scoreScale = { 0.4f, 0.4f, 0.4f };
 		float scoreDirection = 2.0f;
 		float scoreBaseX = -8.0f;
-		scoreEach[0].position = { scoreBaseX - scoreDirection * 0, 18.0f, -1.0f, 1.0f};
+		scoreEach[0].position = { scoreBaseX - scoreDirection * 0, 18.0f, -1.0f, 1.0f };
 		scoreEach[0].scale = scoreScale;
 		scoreEach[0].rotation.x = -30.0f;
 		sNumbersObject[displayScore % 10].Update(&scoreEach[0]);
@@ -1231,16 +1165,43 @@ void GameScene::GameDraw()
 		scoreObject.Update();
 		Draw3DObject(scoreObject);
 
-		/*moveSprite.position.m128_f32[0] = 950;
-		moveSprite.position.m128_f32[1] = 10;
-		float sizeSp = 0.6f;
-		moveSprite.ChangeSize(382 * sizeSp, 433 * sizeSp);
-		moveSprite.SpriteDraw();*/
-		//othelloManager.TutorialRetryText.SpriteDraw();
-
 		if (isTutorial)
 		{
 			othelloManager.TutorialTextDraw();
+		}
+	}
+	if (!isSceneChange)
+	{
+		OthlloPlayer::Draw();
+	}
+	ObjectParticles::Draw();
+	ParticleControl::Draw();
+	othelloManager.Draw();
+	Lights::Draw();
+
+	//スプライトの描画-------------------------
+	if (selectMode)
+	{
+		othelloManager.NormaTextDraw(selectStageNum, true);
+	}
+	if (isModeSelect)
+	{
+		othelloManager.ModeSelectDraw(true);
+	}
+	if (countDown > 0 && isSceneChange == false && isModeSelect == false)
+	{
+		if (countDown < 59)
+		{
+			startSprite.ChangeSize(232, 63);
+			startSprite.position.m128_f32[0] = window_width / 2 - 100;
+			startSprite.position.m128_f32[1] = window_height / 2 - 10;
+			startSprite.SpriteDraw();
+		}
+		else
+		{
+			numbers[countDown / 60].position.m128_f32[0] = window_width / 2 - 10;
+			numbers[countDown / 60].position.m128_f32[1] = window_height / 2 - 5;
+			numbers[countDown / 60].SpriteDraw();
 		}
 	}
 	if (isPouse)
