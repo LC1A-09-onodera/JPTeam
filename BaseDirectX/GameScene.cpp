@@ -1325,7 +1325,7 @@ void GameScene::ResultDraw()
 	float wid = 40;
 	float widPuls = 45;
 	nowScore = checkObject.GetScore();
-	scoreNum[nowScore % 10].ChangeSize(wid, 60);
+	/*scoreNum[nowScore % 10].ChangeSize(wid, 60);
 	scoreNum[nowScore % 10].position.m128_f32[0] = window_width / 2 - 180 + widPuls * 9;
 	scoreNum[nowScore % 10].position.m128_f32[1] = window_height / 2 - 40;
 	scoreNum[nowScore % 10].SpriteDraw();
@@ -1348,7 +1348,7 @@ void GameScene::ResultDraw()
 	scoreNum[nowScore / 100000 % 10 + 50].ChangeSize(wid, 60);
 	scoreNum[nowScore / 100000 % 10 + 50].position.m128_f32[0] = window_width / 2 - 180 + widPuls * 4;
 	scoreNum[nowScore / 100000 % 10 + 50].position.m128_f32[1] = window_height / 2 - 40;
-	scoreNum[nowScore / 100000 % 10 + 50].SpriteDraw();
+	scoreNum[nowScore / 100000 % 10 + 50].SpriteDraw();*/
 	spaceBack.position.m128_f32[0] = 0;
 	spaceBack.position.m128_f32[1] = 560;
 	spaceBack.SpriteDraw();
