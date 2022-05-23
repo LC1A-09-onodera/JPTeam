@@ -216,7 +216,7 @@ void GameScene::Init()
 			each.rotation.x = 0;
 			each.position.m128_f32[0] = -(20 / 2.0f * OthelloR) + (i * OthelloR);
 			each.position.m128_f32[1] = -(12 / 2.0f * OthelloR) + (j * OthelloR);
-			each.position.m128_f32[2] = 0;
+			each.position.m128_f32[2] = -0.5f;
 			each.scale = { 0.01f, 0.01f, 0.01f };
 			opOthellos.push_back(each);
 		}
@@ -1094,9 +1094,9 @@ void GameScene::GameDraw()
 				reversEach[0].rotation.x = -30.0f;
 				numbersObject[addComboint % 10].Update(&reversEach[0]);
 				Draw3DObject(numbersObject[addComboint % 10]);
-				reversEach[0].position = ConvertXMFLOAT3toXMVECTOR(OthlloPlayer::GetPosition());
-				reversEach[0].position.m128_f32[0] -= 0.0f;
-				reversEach[0].position.m128_f32[1] += 3.0f;
+				reversEach[1].position = ConvertXMFLOAT3toXMVECTOR(OthlloPlayer::GetPosition());
+				reversEach[1].position.m128_f32[0] -= 0.0f;
+				reversEach[1].position.m128_f32[1] += 3.0f;
 				reversEach[1].scale = { 0.2f, 0.2f, 0.2f };
 				reversEach[1].rotation.x = -30.0f;
 				numbersObject[addComboint / 10 % 10].Update(&reversEach[1]);
@@ -1676,6 +1676,15 @@ void GameScene::ToGame4Update()
 			if (Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01))
 			{
 				isTipsOk = true;
+				if (!selectMode)
+				{
+					othelloManager.StartSetPos();
+				}
+				if (flagss)
+				{
+					othelloManager.StartNormaMode(selectStageNum);
+				}
+				//othelloManager.StartNormaMode(selectStageNum);
 			}
 			if (isTipsOk)
 			{
@@ -1709,13 +1718,13 @@ void GameScene::ToGame4Update()
 					gameTime = gameMaxTime;
 					if (!selectMode)
 					{
-						othelloManager.StartSetPos();
+						//othelloManager.StartSetPos();
 					}
 					SoundStopWave(countdDownSound);
 					SoundPlayOnce(countdDownSound);
 					if (flagss)
 					{
-						othelloManager.StartNormaMode(selectStageNum);
+						//othelloManager.StartNormaMode(selectStageNum);
 					}
 				}
 			}
@@ -1741,16 +1750,16 @@ void GameScene::ToGame4Update()
 				else
 				{
 					gameTime = gameMaxTime;
-					if (!selectMode)
+					/*if (!selectMode)
 					{
 						othelloManager.StartSetPos();
-					}
+					}*/
 					SoundStopWave(countdDownSound);
 					SoundPlayOnce(countdDownSound);
-					if (flagss)
+					/*if (flagss)
 					{
 						othelloManager.StartNormaMode(selectStageNum);
-					}
+					}*/
 				}
 			}
 		}
@@ -1785,6 +1794,7 @@ void GameScene::ToModeSelectUpdate()
 			if (Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01))
 			{
 				isTipsOk = true;
+				othelloManager.ModeSelectStart();
 			}
 			if (isTipsOk)
 			{
@@ -1795,6 +1805,11 @@ void GameScene::ToModeSelectUpdate()
 					opOthelloItr->rotation = ShlomonMath::EaseInQuad(XMFLOAT3(0, 0, 90), XMFLOAT3(0, 0, 0), sceneChangeAfterTime);
 				}
 			}
+
+			/*if (goToGameTime >= 1.0f)
+			{
+				othelloManager.ModeSelectStart();
+			}*/
 		}
 		if (sceneChangeAfterTime >= 0.8f && sceneChangeAfterTime < 1.0f)
 		{
@@ -1809,7 +1824,7 @@ void GameScene::ToModeSelectUpdate()
 			if (goToGameTime >= 1.0f)
 			{
 				isSceneChange = false;
-				othelloManager.ModeSelectStart();
+				//othelloManager.ModeSelectStart();
 			}
 		}
 		//ゲーム画面」に移行し、カウントダウン開始
@@ -1827,7 +1842,10 @@ void GameScene::ToModeSelectUpdate()
 			if (goToGameTime >= 1.0f)
 			{
 				isSceneChange = false;
-				othelloManager.ModeSelectStart();
+
+				OthlloPlayer::isReverse = true;
+				OthlloPlayer::playerReverseObject->PlayAnimation();
+				//othelloManager.ModeSelectStart();
 			}
 		}
 	}
