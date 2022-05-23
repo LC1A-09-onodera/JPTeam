@@ -192,4 +192,6 @@ public://ƒV[ƒ“‚Åg‚¤‚à‚Ì
 	int timerCount = 0;
 	float size_x = MAX_SIZE_X;
 	float size_y = MAX_SIZE_Y;
+
+	//Sprite number;
 };
