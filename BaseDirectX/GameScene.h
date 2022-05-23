@@ -91,7 +91,7 @@ public://シーンで使うもの
 	bool isCountDownEnd;
 	int countDownFrame;
 	const int countMax = 239;
-	Sprite numbers[30];
+	//Sprite numbers[30];
 	//gameシーンからリザルトから使う
 	bool isResultSceneChange;
 	int resultSceneWindowSize;
@@ -106,18 +106,15 @@ public://シーンで使うもの
 	float eyeEaseTime;
 
 	int resultForTime;
-	const int gameMaxTime = 5999;
+	const int gameMaxTime = 59;
 
 	//スコア用
-	Sprite scoreNum[60];
+	//Sprite scoreNum[60];
 	Sprite scoreSprite;
 	Sprite timeUp;
 	Sprite startSprite;
 	Tex num[10];
 
-	Sprite addScoreNum[60];
-	Sprite addReverse;
-	Sprite addConbo[30];
 
 	Model sky;
 	Model othelloStage;

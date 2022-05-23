@@ -121,7 +121,7 @@ void GameScene::Init()
 	num[7].LoadGraph(L"Resource/Img/number_7.png");
 	num[8].LoadGraph(L"Resource/Img/number_8.png");
 	num[9].LoadGraph(L"Resource/Img/number_9.png");
-	for (int i = 0; i < 30; i += 10)
+	/*for (int i = 0; i < 30; i += 10)
 	{
 		numbers[i + 0].CreateSprite(num[0], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
 		numbers[i + 1].CreateSprite(num[1], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
@@ -133,8 +133,8 @@ void GameScene::Init()
 		numbers[i + 7].CreateSprite(num[7], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
 		numbers[i + 8].CreateSprite(num[8], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
 		numbers[i + 9].CreateSprite(num[9], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-	}
-	for (int i = 0; i < 60; i += 10)
+	}*/
+	/*for (int i = 0; i < 60; i += 10)
 	{
 		scoreNum[i + 0].CreateSprite(num[0], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
 		scoreNum[i + 1].CreateSprite(num[1], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
@@ -146,7 +146,7 @@ void GameScene::Init()
 		scoreNum[i + 7].CreateSprite(num[7], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
 		scoreNum[i + 8].CreateSprite(num[8], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
 		scoreNum[i + 9].CreateSprite(num[9], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-	}
+	}*/
 
 	//selectStageNumSprite[0].CreateSprite(num[0], XMFLOAT3(window_width / 2 - 30,                            window_height / 2 + 50, 0));
 	selectStageNumSprite[1].CreateSprite(num[1], XMFLOAT3(window_width / 2 - 30 + selectNumDistance * 0.0f, window_height / 2 + 50, 0));
@@ -159,7 +159,7 @@ void GameScene::Init()
 	selectStageNumSprite[8].CreateSprite(num[8], XMFLOAT3(window_width / 2 - 30 + selectNumDistance * 7.0f, window_height / 2 + 50, 0));
 	selectStageNumSprite[9].CreateSprite(num[9], XMFLOAT3(window_width / 2 - 30 + selectNumDistance * 8.0f, window_height / 2 + 50, 0));
 	selectStageNumSprite[10].CreateSprite(L"Resource/Img/number_10.png", XMFLOAT3(window_width / 2 - 30 + selectNumDistance * 9.0f, window_height / 2 + 50, 0));
-	addReverse.CreateSprite(L"Resource/Img/combo.png", XMFLOAT3(0, 0, 0));
+	//addReverse.CreateSprite(L"Resource/Img/combo.png", XMFLOAT3(0, 0, 0));
 	scoreSprite.CreateSprite(L"Resource/Img/score.png", XMFLOAT3(0, 0, 0));
 	timeUp.CreateSprite(L"Resource/Img/time_up.png", XMFLOAT3(0, 0, 0));
 	startSprite.CreateSprite(L"Resource/Img/START.png", XMFLOAT3(0, 0, 0));
@@ -995,11 +995,6 @@ void GameScene::GameDraw()
 	float sizeY = size_y;
 	if (gameTime > 0 && countDown <= 0)
 	{
-		if (gameTime / 60 >= CHANGE_TIMER_SECOND)
-		{
-			numbers[gameTime / 60 % 10].ChangeSize(48, 64);
-			numbers[gameTime / 600 % 10 + 10].ChangeSize(48, 64);
-		}
 		if (gameTime / 60 <= CHANGE_TIMER_SECOND)
 		{
 			if (gameTime % 60 == 0)
@@ -1026,10 +1021,6 @@ void GameScene::GameDraw()
 					timerCount = 0;
 					isChanged = false;
 				}
-
-				numbers[gameTime / 60 % 10].ChangeSize(size_x, size_y);
-				numbers[gameTime / 600 % 10 + 10].ChangeSize(size_x, size_y);
-
 				timerCount++;
 			}
 		}
@@ -1232,9 +1223,9 @@ void GameScene::GameDraw()
 		}
 		else
 		{
-			numbers[countDown / 60].position.m128_f32[0] = window_width / 2 - 10;
+			/*numbers[countDown / 60].position.m128_f32[0] = window_width / 2 - 10;
 			numbers[countDown / 60].position.m128_f32[1] = window_height / 2 - 5;
-			numbers[countDown / 60].SpriteDraw();
+			numbers[countDown / 60].SpriteDraw();*/
 		}
 	}
 	if (isPouse)
@@ -1294,65 +1285,59 @@ void GameScene::GameDraw()
 
 void GameScene::ResultDraw()
 {
-	//PostEffectのPreDraw
-	//postEffect.PreDraw();
-
-	//Player::GetPlayer()->Draw();
-
-	//PostEffectのPostDraw
-	//postEffect.PostDraw();
-
 	BaseDirectX::clearColor[0] = 0.0f;
 	BaseDirectX::clearColor[1] = 0.0f;
 	BaseDirectX::clearColor[2] = 0.0f;
 	BaseDirectX::clearColor[3] = 0.0f;
 	BaseDirectX::UpdateFront();
-	//PostEffectのDraw
-	//postEffect.Draw();
-	//OthlloPlayer::Draw();
 	Draw3DObject(sky);
 	Draw3DObject(othelloStage);
-	//スプライトの描画-------------------------
-	//titleSprite.SpriteDraw();
-
-	titleBack.position.m128_f32[0] = 0;
-	titleBack.position.m128_f32[1] = window_height / 2 - 55;
-	titleBack.ChangeSize(1280, 100);
-	titleBack.SpriteDraw();
-	scoreSprite.position.m128_f32[0] = window_width / 2 - 180;
-	scoreSprite.position.m128_f32[1] = window_height / 2 - 30;
-	scoreSprite.SpriteDraw();
-	float wid = 40;
-	float widPuls = 45;
 	nowScore = checkObject.GetScore();
-	/*scoreNum[nowScore % 10].ChangeSize(wid, 60);
-	scoreNum[nowScore % 10].position.m128_f32[0] = window_width / 2 - 180 + widPuls * 9;
-	scoreNum[nowScore % 10].position.m128_f32[1] = window_height / 2 - 40;
-	scoreNum[nowScore % 10].SpriteDraw();
-	scoreNum[nowScore / 10 % 10 + 10].ChangeSize(wid, 60);
-	scoreNum[nowScore / 10 % 10 + 10].position.m128_f32[0] = window_width / 2 - 180 + widPuls * 8;
-	scoreNum[nowScore / 10 % 10 + 10].position.m128_f32[1] = window_height / 2 - 40;
-	scoreNum[nowScore / 10 % 10 + 10].SpriteDraw();
-	scoreNum[nowScore / 100 % 10 + 20].ChangeSize(wid, 60);
-	scoreNum[nowScore / 100 % 10 + 20].position.m128_f32[0] = window_width / 2 - 180 + widPuls * 7;
-	scoreNum[nowScore / 100 % 10 + 20].position.m128_f32[1] = window_height / 2 - 40;
-	scoreNum[nowScore / 100 % 10 + 20].SpriteDraw();
-	scoreNum[nowScore / 1000 % 10 + 30].ChangeSize(wid, 60);
-	scoreNum[nowScore / 1000 % 10 + 30].position.m128_f32[0] = window_width / 2 - 180 + widPuls * 6;
-	scoreNum[nowScore / 1000 % 10 + 30].position.m128_f32[1] = window_height / 2 - 40;
-	scoreNum[nowScore / 1000 % 10 + 30].SpriteDraw();
-	scoreNum[nowScore / 10000 % 10 + 40].ChangeSize(wid, 60);
-	scoreNum[nowScore / 10000 % 10 + 40].position.m128_f32[0] = window_width / 2 - 180 + widPuls * 5;
-	scoreNum[nowScore / 10000 % 10 + 40].position.m128_f32[1] = window_height / 2 - 40;
-	scoreNum[nowScore / 10000 % 10 + 40].SpriteDraw();
-	scoreNum[nowScore / 100000 % 10 + 50].ChangeSize(wid, 60);
-	scoreNum[nowScore / 100000 % 10 + 50].position.m128_f32[0] = window_width / 2 - 180 + widPuls * 4;
-	scoreNum[nowScore / 100000 % 10 + 50].position.m128_f32[1] = window_height / 2 - 40;
-	scoreNum[nowScore / 100000 % 10 + 50].SpriteDraw();*/
+	float scoreNum = 2.0f;
+	scoreEach[0].position = { 1.0f + scoreNum * 5, 20.0f, -12.0f, 1.0f };
+	scoreEach[0].scale = {0.4f, 0.4f, 0.4f};
+	scoreEach[0].rotation.x = -70.0f;
+	sNumbersObject[nowScore % 10].Update(&scoreEach[0]);
+	Draw3DObject(sNumbersObject[nowScore % 10]);
+	scoreEach[1].position = { 1.0f + scoreNum * 4, 20.0f, -12.0f, 1.0f };
+	scoreEach[1].scale = { 0.4f, 0.4f, 0.4f };
+	scoreEach[1].rotation.x = -70.0f;
+	sNumbersObject[nowScore / 10 % 10].Update(&scoreEach[1]);
+	Draw3DObject(sNumbersObject[nowScore / 10 % 10]);
+	scoreEach[2].position = { 1.0f + scoreNum * 3, 20.0f, -12.0f, 1.0f };
+	scoreEach[2].scale = { 0.4f, 0.4f, 0.4f };
+	scoreEach[2].rotation.x = -70.0f;
+	sNumbersObject[nowScore / 100 % 10].Update(&scoreEach[2]);
+	Draw3DObject(sNumbersObject[nowScore / 100 % 10]);
+	scoreEach[3].position = { 1.0f + scoreNum * 2, 20.0f, -12.0f, 1.0f };
+	scoreEach[3].scale = { 0.4f, 0.4f, 0.4f };
+	scoreEach[3].rotation.x = -70.0f;
+	sNumbersObject[nowScore / 1000 % 10].Update(&scoreEach[3]);
+	Draw3DObject(sNumbersObject[nowScore / 100 % 10]);
+	scoreEach[4].position = { 1.0f + scoreNum * 1, 20.0f, -12.0f, 1.0f };
+	scoreEach[4].scale = { 0.4f, 0.4f, 0.4f };
+	scoreEach[4].rotation.x = -70.0f;
+	sNumbersObject[nowScore / 10000 % 10].Update(&scoreEach[4]);
+	Draw3DObject(sNumbersObject[nowScore / 100 % 10]);
+	scoreEach[5].position = { 1.0f + scoreNum * 0, 20.0f, -12.0f, 1.0f };
+	scoreEach[5].scale = { 0.4f, 0.4f, 0.4f };
+	scoreEach[5].rotation.x = -70.0f;
+	sNumbersObject[nowScore / 100000 % 10].Update(&scoreEach[5]);
+	Draw3DObject(sNumbersObject[nowScore / 100 % 10]);
+	scoreObject.each.position = { -5.0f, 20.0f, -12.0f, 1.0f };
+	scoreObject.each.scale = { 0.4f, 0.4f, 0.4f };
+	scoreObject.each.rotation.x = -70.0f;
+	scoreObject.Update();
+	Draw3DObject(scoreObject);
+
+	//スプライトの描画-------------------------
 	spaceBack.position.m128_f32[0] = 0;
 	spaceBack.position.m128_f32[1] = 560;
 	spaceBack.SpriteDraw();
 	space.SpriteDraw();
+
+	Imgui::DrawImGui();
+
 	//描画コマンドここまで
 	BaseDirectX::UpdateBack();
 }
