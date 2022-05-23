@@ -26,6 +26,7 @@ private:
 
 private:
 	SoundData comboSound[15];
+	SoundData missSound;
 
 private:
 	const int CHAIN_NAME = 100;
