@@ -20,14 +20,14 @@ void NormaChecker::Init()
 void NormaChecker::Update(std::list<Othello> panels, int score,int combo)
 {
 	PanelUpdate(panels);
-
+	nowScore = score;
 	switch (nowType)
 	{
 	case Norma::Combo:
 		isClear = combo >= normaComboCount;
 		break;
 	case Norma::Score:
-		isClear = score >= normaScore;
+		isClear = nowScore >= normaScore;
 		break;
 	case Norma::ComboScore:
 		//isClear = nowComboCount >= normaComboCount;
@@ -203,6 +203,42 @@ bool NormaChecker::GetClear()
 bool NormaChecker::GetFailed()
 {
 	return isFailed;
+}
+
+int NormaChecker::GetStatus()
+{
+	switch (nowType)
+	{
+	case Norma::Combo:
+	return nowComboCount;
+	case Norma::Score:
+		return nowScore;
+	case Norma::ComboScore:
+		//isClear = nowComboCount >= normaComboCount;
+		break;
+	case Norma::Panels:
+	return nowPanelCount;
+	default:
+		break;
+	}
+}
+
+int NormaChecker::GetLestStatus()
+{
+	switch (nowType)
+	{
+	case Norma::Combo:
+		return normaComboCount - nowComboCount;
+	case Norma::Score:
+		return normaScore - nowScore;
+	case Norma::ComboScore:
+		//isClear = nowComboCount >= normaComboCount;
+		break;
+	case Norma::Panels:
+		return nowPanelCount - normaPanelCount ;
+	default:
+		break;
+	}
 }
 
 
