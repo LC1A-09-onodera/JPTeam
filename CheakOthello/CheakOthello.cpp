@@ -21,6 +21,8 @@ CheakOthello::CheakOthello()
 
 	isCombos = false;		//
 	isCombosCheck = false;	//
+
+	isSand = false;
 }
 
 CheakOthello::~CheakOthello()
@@ -82,6 +84,7 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData, bo
 		if (!checkOthello) { break; }
 
 		isAddScore = false;
+		isSand = false;
 
 		//全方位チェック
 		/*-----左-----*/
@@ -356,6 +359,9 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y, int last_x, in
 				//ひっくり返せる場合
 				if (isActiveOthello)
 				{
+					//挟めたらtrue
+					isSand = true;
+
 					//スコア加算されたフラグ
 					isAddScore = true;
 
@@ -444,9 +450,9 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y, int last_x, in
 						{
 							for (int j = 0; j < OthelloConstData::fieldSize; j++)
 							{
-								if (othelloDatas[i][j].chainName != chainName) { continue; }
+								if (othelloDatas[i][j].chainName != random) { continue; }
 								//othelloDatas[i][j].chainName = random;
-								othelloDatas[i][j].chainName = random;
+								othelloDatas[i][j].chainName = chainName;
 							}
 						}
 					}
