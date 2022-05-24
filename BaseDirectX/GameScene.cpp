@@ -1489,7 +1489,7 @@ void GameScene::ToGame4(bool flags)
 	isSceneChange = true;
 	//シーンの種類を決める
 	sceneChageType = 4;
-
+	isTipsDraw = false;
 	isPouse = false;
 	SceneNum = GAME;
 	//カメラの終点を決める
@@ -1533,7 +1533,7 @@ void GameScene::ToTutorial()
 	isSceneChange = true;
 	//シーンの種類を決める
 	sceneChageType = 6;
-
+	isTipsDraw = false;
 	isPouse = false;
 	SceneNum = GAME;
 	//カメラの終点を決める
@@ -1718,6 +1718,7 @@ void GameScene::ToGame4Update()
 		}
 		if (sceneChangeDiray2 >= MaxSceneChangeOk)
 		{
+			isTipsDraw = true;
 			if (Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01))
 			{
 				if (!selectMode && !isTipsOk)
@@ -1732,6 +1733,7 @@ void GameScene::ToGame4Update()
 			}
 			if (isTipsOk)
 			{
+				isTipsDraw = false;
 				sceneChangeAfterTime += 0.01f;
 				for (auto opOthelloItr = opOthellos.begin(); opOthelloItr != opOthellos.end(); ++opOthelloItr)
 				{
@@ -1816,6 +1818,7 @@ void GameScene::ToModeSelectUpdate()
 		}
 		if (sceneChangeDiray2 >= MaxSceneChangeOk)
 		{
+			isTipsDraw = true;
 			if (Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01))
 			{
 				if (!isTipsOk)othelloManager.ModeSelectStart();
@@ -1823,6 +1826,7 @@ void GameScene::ToModeSelectUpdate()
 			}
 			if (isTipsOk)
 			{
+				isTipsDraw = false;
 				sceneChangeAfterTime += 0.01f;
 				for (auto opOthelloItr = opOthellos.begin(); opOthelloItr != opOthellos.end(); ++opOthelloItr)
 				{
