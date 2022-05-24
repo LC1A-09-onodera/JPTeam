@@ -276,13 +276,15 @@ void GameScene::Init()
 
 	tips_cont.CreateSprite(L"Resource/Img/tips/tips_1.png", XMFLOAT3(0, 0, 0));
 
-	tips_ss[0].CreateSprite(L"Resource/Img/tips/tips_ss1.png", XMFLOAT3(57, 206, 0));
-	tips_ss[1].CreateSprite(L"Resource/Img/tips/tips_ss2.png", XMFLOAT3(0, 0, 0));
-	tips_ss[2].CreateSprite(L"Resource/Img/tips/tips_ss3.png", XMFLOAT3(0, 0, 0));
-	tips_ss[3].CreateSprite(L"Resource/Img/tips/tips_ss4.png", XMFLOAT3(0, 0, 0));
+	tips_ss[0].CreateSprite(L"Resource/Img/tips/tips_ss1.png", XMFLOAT3(START_X, START_Y, 0));
+	tips_ss[1].CreateSprite(L"Resource/Img/tips/tips_ss2.png", XMFLOAT3(START_X - SIZE_X, START_Y, 0));
+	tips_ss[2].CreateSprite(L"Resource/Img/tips/tips_ss3.png", XMFLOAT3(START_X - SIZE_X * 2, START_Y, 0));
+	tips_ss[3].CreateSprite(L"Resource/Img/tips/tips_ss4.png", XMFLOAT3(START_X - SIZE_X * 3, START_Y, 0));
 
 	tipsCounts = 0;
 	changeTimerFrame = 0;
+	tips_easeTimer = 0;
+	isTipsDrawTrigger = false;
 }
 
 void GameScene::TitleUpdate()
@@ -855,6 +857,20 @@ void GameScene::GameUpdate()
 	Lights::Add(checkObject);
 	Lights::Update();
 	ParticleControl::Update();
+
+	//tips—p
+	if (isTipsDraw)
+	{
+		XMFLOAT3 ssPos0 = ConvertXMVECTORtoXMFLOAT3(tips_ss[0].position);
+		XMFLOAT3 ssPos1 = ConvertXMVECTORtoXMFLOAT3(tips_ss[1].position);
+		XMFLOAT3 ssPos2 = ConvertXMVECTORtoXMFLOAT3(tips_ss[2].position);
+		XMFLOAT3 ssPos3 = ConvertXMVECTORtoXMFLOAT3(tips_ss[3].position);
+
+		tips_ss[0].position = ConvertXMFLOAT3toXMVECTOR(ssPos0);
+		tips_ss[1].position = ConvertXMFLOAT3toXMVECTOR(ssPos1);
+		tips_ss[2].position = ConvertXMFLOAT3toXMVECTOR(ssPos2);
+		tips_ss[3].position = ConvertXMFLOAT3toXMVECTOR(ssPos3);
+	}
 }
 
 void GameScene::ResultUpdate()
@@ -1366,6 +1382,9 @@ void GameScene::GameDraw()
 		isTipsDrawTrigger = true;
 
 		tips_ss[0].SpriteDraw();
+		tips_ss[1].SpriteDraw();
+		tips_ss[2].SpriteDraw();
+		tips_ss[3].SpriteDraw();
 		tips[tipsCounts].SpriteDraw();
 	}
 	if (!isTipsDraw && isTipsDrawTrigger) { tipsCounts++; isTipsDrawTrigger = false; }
