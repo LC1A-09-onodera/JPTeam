@@ -276,7 +276,13 @@ void GameScene::Init()
 
 	tips_cont.CreateSprite(L"Resource/Img/tips/tips_1.png", XMFLOAT3(0, 0, 0));
 
+	tips_ss[0].CreateSprite(L"Resource/Img/tips/tips_ss1.png", XMFLOAT3(57, 206, 0));
+	tips_ss[1].CreateSprite(L"Resource/Img/tips/tips_ss2.png", XMFLOAT3(0, 0, 0));
+	tips_ss[2].CreateSprite(L"Resource/Img/tips/tips_ss3.png", XMFLOAT3(0, 0, 0));
+	tips_ss[3].CreateSprite(L"Resource/Img/tips/tips_ss4.png", XMFLOAT3(0, 0, 0));
+
 	tipsCounts = 0;
+	changeTimerFrame = 0;
 }
 
 void GameScene::TitleUpdate()
@@ -1359,6 +1365,7 @@ void GameScene::GameDraw()
 	{
 		isTipsDrawTrigger = true;
 
+		tips_ss[0].SpriteDraw();
 		tips[tipsCounts].SpriteDraw();
 	}
 	if (!isTipsDraw && isTipsDrawTrigger) { tipsCounts++; isTipsDrawTrigger = false; }
