@@ -30,7 +30,7 @@ private:
 
 private:
 	const int CHAIN_NAME = 100;
-	const float OTHELLO_BONUS = 1.2f;
+	const float OTHELLO_BONUS = 1.5f;
 
 private:
 	std::vector<std::pair<int, int>> comboOthelloDataPos;

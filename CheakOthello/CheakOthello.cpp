@@ -424,7 +424,14 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y, int last_x, in
 						checkScoreData.push_back(make_pair(pair_y, pair_x));
 						othelloDatas[pair_y][pair_x].comboCount = comboCount;
 						othelloDatas[pair_y][pair_x].maxComboCount = maxComboCount;
-						othelloDatas[pair_y][pair_x].score = (baseScore + (loop * (loop + 2) * maxComboCount));
+						if (maxComboCount <= 1)
+						{
+							othelloDatas[pair_y][pair_x].score = (baseScore + (loop * (loop + 2) * 10));
+						}
+						else
+						{
+							othelloDatas[pair_y][pair_x].score = (baseScore + (loop * (loop + 2) * 10 * powf(1.2f, maxComboCount)));
+						}
 						if (maxScore < othelloDatas[pair_y][pair_x].score)
 						{
 							maxScore = othelloDatas[pair_y][pair_x].score;
