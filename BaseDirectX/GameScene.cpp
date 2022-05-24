@@ -173,7 +173,7 @@ void GameScene::Init()
 	selectGameType = 1;
 	SoundPlayLoop(BGMSound);
 
-	
+
 	const float OthelloR = 1.8f;
 	for (int i = 0; i < 20; i++)
 	{
@@ -290,222 +290,222 @@ void GameScene::TitleUpdate()
 
 #pragma region 俺以外の処理
 		//オセロのパーティクルを出していく
-		static int particleTime = 0;
-		//シーンチェンジ開始前
-		if (!isSceneChange)
+	static int particleTime = 0;
+	//シーンチェンジ開始前
+	if (!isSceneChange)
+	{
+		//パーティクルをだす
+		particleTime++;
+		if (particleTime % 5 == 4)
 		{
-			//パーティクルをだす
-			particleTime++;
-			if (particleTime % 5 == 4)
+			ObjectParticles::othello.Init(XMFLOAT3(0, 0, -15), 1, ParticleType::TITLE);
+			particleTime = 0;
+		}
+		if (!select)
+		{
+			//チュートリアルかどうかを選択する
+			if (Input::KeyTrigger(DIK_A) || directInput->IsButtonPush(directInput->LeftButton))
 			{
-				ObjectParticles::othello.Init(XMFLOAT3(0, 0, -15), 1, ParticleType::TITLE);
-				particleTime = 0;
-			}
-			if (!select)
-			{
-				//チュートリアルかどうかを選択する
-				if (Input::KeyTrigger(DIK_A) || directInput->IsButtonPush(directInput->LeftButton))
+				SoundStopWave(selectSound);
+				SoundPlayOnce(selectSound);
+				if (titleSelectNum == 0)
 				{
-					SoundStopWave(selectSound);
-					SoundPlayOnce(selectSound);
-					if (titleSelectNum == 0)
-					{
-						titleSelectNum = 1;
-					}
-				}
-				if (Input::KeyTrigger(DIK_D) || directInput->IsButtonPush(directInput->RightButton))
-				{
-					SoundStopWave(selectSound);
-					SoundPlayOnce(selectSound);
-					if (titleSelectNum == 1)
-					{
-						titleSelectNum = 0;
-					}
-				}
-				//チュートリアルに飛ぶ
-				if ((Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01)) && !isPouse)
-				{
-					if (titleSelectNum == 1)
-					{
-						SoundStopWave(enterSound);
-						SoundPlayOnce(enterSound);
-
-						ToTutorial();
-
-						isTutorial = true;
-						titleSelectNum = 0;
-						//othelloManager.whySandwichSpawn();
-						gameTime = 60;
-					}
-					//ここでモード選択に飛ぶ
-					else
-					{
-						gameTime = 1;
-						ToModeSelect();
-						/*select = true;
-						selectStage = false;
-						selectMode = false;*/
-					}
+					titleSelectNum = 1;
 				}
 			}
-			else if (select)
+			if (Input::KeyTrigger(DIK_D) || directInput->IsButtonPush(directInput->RightButton))
 			{
-				//スコアアタックかどうかの選択を行う
-				if (Input::KeyTrigger(DIK_A) || directInput->IsButtonPush(directInput->LeftButton))
+				SoundStopWave(selectSound);
+				SoundPlayOnce(selectSound);
+				if (titleSelectNum == 1)
 				{
-					SoundStopWave(selectSound);
-					SoundPlayOnce(selectSound);
-					if (!selectStage)
-					{
-						selectMode = true;
-					}
-					else if (selectStage && 1 < selectStageNum && !selectEase)
-					{
-						selectEaseDirection = true;
-						selectEase = true;
-						selectStageFarstStartPos = ConvertXMVECTORtoXMFLOAT3(selectStageNumSprite[1].position);
-						selectStageFarstEndPos = selectStageFarstStartPos;
-						selectStageFarstEndPos.x += selectNumDistance;
-						selectStageNum--;
-					}
+					titleSelectNum = 0;
 				}
-				if (Input::KeyTrigger(DIK_D) || directInput->IsButtonPush(directInput->RightButton))
+			}
+			//チュートリアルに飛ぶ
+			if ((Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01)) && !isPouse)
+			{
+				if (titleSelectNum == 1)
 				{
-					SoundStopWave(selectSound);
-					SoundPlayOnce(selectSound);
-					if (!selectStage)
-					{
-						selectMode = false;
-					}
-					else if (selectStageNum < othelloManager.GetNormaStagesCount() && selectStage && !selectEase)
-					{
-						selectEaseDirection = false;
-						selectEase = true;
-						selectStageFarstStartPos = ConvertXMVECTORtoXMFLOAT3(selectStageNumSprite[1].position);
-						selectStageFarstEndPos = selectStageFarstStartPos;
-						selectStageFarstEndPos.x -= selectNumDistance;
-						selectStageNum++;
-					}
-				}
-				if ((Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01)) && !isPouse)
-				{
-
 					SoundStopWave(enterSound);
 					SoundPlayOnce(enterSound);
 
-					//スコアアタック
-					if (!selectMode)
+					ToTutorial();
+
+					isTutorial = true;
+					titleSelectNum = 0;
+					//othelloManager.whySandwichSpawn();
+					gameTime = 60;
+				}
+				//ここでモード選択に飛ぶ
+				else
+				{
+					gameTime = 1;
+					ToModeSelect();
+					/*select = true;
+					selectStage = false;
+					selectMode = false;*/
+				}
+			}
+		}
+		else if (select)
+		{
+			//スコアアタックかどうかの選択を行う
+			if (Input::KeyTrigger(DIK_A) || directInput->IsButtonPush(directInput->LeftButton))
+			{
+				SoundStopWave(selectSound);
+				SoundPlayOnce(selectSound);
+				if (!selectStage)
+				{
+					selectMode = true;
+				}
+				else if (selectStage && 1 < selectStageNum && !selectEase)
+				{
+					selectEaseDirection = true;
+					selectEase = true;
+					selectStageFarstStartPos = ConvertXMVECTORtoXMFLOAT3(selectStageNumSprite[1].position);
+					selectStageFarstEndPos = selectStageFarstStartPos;
+					selectStageFarstEndPos.x += selectNumDistance;
+					selectStageNum--;
+				}
+			}
+			if (Input::KeyTrigger(DIK_D) || directInput->IsButtonPush(directInput->RightButton))
+			{
+				SoundStopWave(selectSound);
+				SoundPlayOnce(selectSound);
+				if (!selectStage)
+				{
+					selectMode = false;
+				}
+				else if (selectStageNum < othelloManager.GetNormaStagesCount() && selectStage && !selectEase)
+				{
+					selectEaseDirection = false;
+					selectEase = true;
+					selectStageFarstStartPos = ConvertXMVECTORtoXMFLOAT3(selectStageNumSprite[1].position);
+					selectStageFarstEndPos = selectStageFarstStartPos;
+					selectStageFarstEndPos.x -= selectNumDistance;
+					selectStageNum++;
+				}
+			}
+			if ((Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01)) && !isPouse)
+			{
+
+				SoundStopWave(enterSound);
+				SoundPlayOnce(enterSound);
+
+				//スコアアタック
+				if (!selectMode)
+				{
+					gameTime = gameMaxTime;
+					isTutorial = false;
+					ToGame4();
+					titleSelectNum = 0;
+				}
+				//ノルマモード
+				else
+				{
+					if (selectStage)
 					{
 						gameTime = gameMaxTime;
 						isTutorial = false;
-						ToGame4();
+						ToGame4(true);
 						titleSelectNum = 0;
 					}
-					//ノルマモード
 					else
 					{
-						if (selectStage)
-						{
-							gameTime = gameMaxTime;
-							isTutorial = false;
-							ToGame4(true);
-							titleSelectNum = 0;
-						}
-						else
-						{
-							selectStage = true;
-						}
+						selectStage = true;
 					}
 				}
 			}
 		}
-		if (selectEase)
+	}
+	if (selectEase)
+	{
+		selectStageNumSprite[1].position = ConvertXMFLOAT3toXMVECTOR(ShlomonMath::EaseInQuad(selectStageFarstStartPos, selectStageFarstEndPos, selectEaseTime));
+		for (int i = 2; i < othelloManager.GetNormaStagesCount(); i++)
 		{
-			selectStageNumSprite[1].position = ConvertXMFLOAT3toXMVECTOR(ShlomonMath::EaseInQuad(selectStageFarstStartPos, selectStageFarstEndPos, selectEaseTime));
+			selectStageNumSprite[i].position.m128_f32[0] = selectStageNumSprite[1].position.m128_f32[0] + (selectNumDistance * (i - 1));
+		}
+		selectEaseTime += 0.1f;
+		if (selectEaseTime > 1.0f)
+		{
+			selectStageNumSprite[1].position = ConvertXMFLOAT3toXMVECTOR(ShlomonMath::EaseInQuad(selectStageFarstStartPos, selectStageFarstEndPos, 1.0));
 			for (int i = 2; i < othelloManager.GetNormaStagesCount(); i++)
 			{
 				selectStageNumSprite[i].position.m128_f32[0] = selectStageNumSprite[1].position.m128_f32[0] + (selectNumDistance * (i - 1));
 			}
-			selectEaseTime += 0.1f;
-			if (selectEaseTime > 1.0f)
+			selectEase = false;
+			selectEaseTime = 0;
+		}
+	}
+	//ポーズ画面に移行する
+	if (!isPouse && (Input::KeyTrigger(DIK_ESCAPE) || directInput->IsButtonPush(directInput->ButtonPouse)))
+	{
+		isPouse = true;
+		selectPouse = 0;
+	}
+	//ポーズ中の処理
+	else if (isPouse)
+	{
+		if (Input::KeyTrigger(DIK_W) || directInput->IsButtonPush(directInput->UpButton))
+		{
+			SoundStopWave(selectSound);
+			SoundPlayOnce(selectSound);
+			if (selectPouse == 0)
 			{
-				selectStageNumSprite[1].position = ConvertXMFLOAT3toXMVECTOR(ShlomonMath::EaseInQuad(selectStageFarstStartPos, selectStageFarstEndPos, 1.0));
-				for (int i = 2; i < othelloManager.GetNormaStagesCount(); i++)
-				{
-					selectStageNumSprite[i].position.m128_f32[0] = selectStageNumSprite[1].position.m128_f32[0] + (selectNumDistance * (i - 1));
-				}
-				selectEase = false;
-				selectEaseTime = 0;
+				selectPouse = selectMaxPouse;
+			}
+			else
+			{
+				selectPouse--;
 			}
 		}
-		//ポーズ画面に移行する
-		if (!isPouse && (Input::KeyTrigger(DIK_ESCAPE) || directInput->IsButtonPush(directInput->ButtonPouse)))
+		else if (Input::KeyTrigger(DIK_S) || directInput->IsButtonPush(directInput->DownButton))
 		{
-			isPouse = true;
-			selectPouse = 0;
+			SoundStopWave(selectSound);
+			SoundPlayOnce(selectSound);
+			if (selectPouse == selectMaxPouse)
+			{
+				selectPouse = 0;
+			}
+			else
+			{
+				selectPouse++;
+			}
 		}
-		//ポーズ中の処理
-		else if (isPouse)
+		if (Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01))
 		{
-			if (Input::KeyTrigger(DIK_W) || directInput->IsButtonPush(directInput->UpButton))
-			{
-				SoundStopWave(selectSound);
-				SoundPlayOnce(selectSound);
-				if (selectPouse == 0)
-				{
-					selectPouse = selectMaxPouse;
-				}
-				else
-				{
-					selectPouse--;
-				}
-			}
-			else if (Input::KeyTrigger(DIK_S) || directInput->IsButtonPush(directInput->DownButton))
-			{
-				SoundStopWave(selectSound);
-				SoundPlayOnce(selectSound);
-				if (selectPouse == selectMaxPouse)
-				{
-					selectPouse = 0;
-				}
-				else
-				{
-					selectPouse++;
-				}
-			}
-			if (Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01))
-			{
-				//リザルトに戻る
-				if (selectPouse == 0)
-				{
-					isPouse = false;
-				}
-				else if (selectPouse == 1)
-				{
-					gameTime = 0;
-					isPouse = false;
-					select = false;
-					checkObject.Init();
-				}
-				else if (selectPouse == 2)
-				{
-					isGameEnd = true;
-					checkObject.Init();
-				}
-			}
-			if (Input::KeyTrigger(DIK_ESCAPE) || directInput->IsButtonPush(directInput->ButtonPouse))
+			//リザルトに戻る
+			if (selectPouse == 0)
 			{
 				isPouse = false;
 			}
+			else if (selectPouse == 1)
+			{
+				gameTime = 0;
+				isPouse = false;
+				select = false;
+				checkObject.Init();
+			}
+			else if (selectPouse == 2)
+			{
+				isGameEnd = true;
+				checkObject.Init();
+			}
 		}
-		ObjectParticles::Update(othelloManager.GetPressPanellPos(), checkObject.GetCombo());
-		light->SetLightDir(XMFLOAT3(Camera::GetTargetDirection()));
-		LightUpdate();
-		sky.Update();
-		//othelloStage.Update();
-#pragma endregion
+		if (Input::KeyTrigger(DIK_ESCAPE) || directInput->IsButtonPush(directInput->ButtonPouse))
+		{
+			isPouse = false;
+		}
 	}
+	ObjectParticles::Update(othelloManager.GetPressPanellPos(), checkObject.GetCombo());
+	light->SetLightDir(XMFLOAT3(Camera::GetTargetDirection()));
+	LightUpdate();
+	sky.Update();
+	//othelloStage.Update();
+#pragma endregion
 }
+
 
 void GameScene::SelectUpdate()
 {
@@ -862,7 +862,7 @@ void GameScene::TitleDraw()
 			pushSpace.each.rotation = { 0, 0, 0 };
 			pushSpace.Update();
 			Draw3DObject(pushSpace);
-
+		}
 		if (titleSelectNum == 0)
 		{
 			kakko[1].each.position = { -1 + 10.5f, -2.0f, 0, 1.0f };
@@ -1344,58 +1344,58 @@ void GameScene::ResultDraw()
 	scoreObject.Update();
 	Draw3DObject(scoreObject);
 
-		XMFLOAT3 scale = { 0.4f, 0.4f, 0.4f };
-		titleObject.each.position = { -1, 3, 0, 1.0f };
-		titleObject.each.scale = scale;
-		titleObject.Update();
-		Draw3DObject(titleObject);
-		backGroundEach[0].position = { -1, 4.5f, 4.0f, 1.0f };
-		backGroundEach[0].scale = { 20.0f, 4.0f, 1.0f };
-		backGround.Update(&backGroundEach[0]);
-		Draw3DObject(backGround);
-		backGroundEach[1].position = { -1, -6.5f, 4.0f, 1.0f };
-		backGroundEach[1].scale = { 23.0f, 1.5f, 1.0f };
-		backGround.Update(&backGroundEach[1]);
-		Draw3DObject(backGround);
-		XMFLOAT3 scale2 = { 0.3f, 0.3f, 0.3f };
-		startModel.each.position = { -1 + 5.0f, -2.0f, 0, 1.0f };
-		startModel.each.scale = scale2;
-		startModel.Update();
-		Draw3DObject(startModel);
-		XMFLOAT3 scale3 = { 0.3f, 0.3f, 0.3f };
-		tutorialObject.each.position = { -1 - 5.0f, -2.0f, 0, 1.0f };
-		tutorialObject.each.scale = scale2;
-		tutorialObject.Update();
-		Draw3DObject(tutorialObject);
-		XMFLOAT3 scale4 = { 0.3f, 0.3f, 0.3f };
-		pushSpace.each.position = { -1 + 6.0f, -5.0f, 0, 1.0f };
-		pushSpace.each.scale = scale4;
-		pushSpace.Update();
-		Draw3DObject(pushSpace);
+	XMFLOAT3 scale = { 0.4f, 0.4f, 0.4f };
+	titleObject.each.position = { -1, 3, 0, 1.0f };
+	titleObject.each.scale = scale;
+	titleObject.Update();
+	Draw3DObject(titleObject);
+	backGroundEach[0].position = { -1, 4.5f, 4.0f, 1.0f };
+	backGroundEach[0].scale = { 20.0f, 4.0f, 1.0f };
+	backGround.Update(&backGroundEach[0]);
+	Draw3DObject(backGround);
+	backGroundEach[1].position = { -1, -6.5f, 4.0f, 1.0f };
+	backGroundEach[1].scale = { 23.0f, 1.5f, 1.0f };
+	backGround.Update(&backGroundEach[1]);
+	Draw3DObject(backGround);
+	XMFLOAT3 scale2 = { 0.3f, 0.3f, 0.3f };
+	startModel.each.position = { -1 + 5.0f, -2.0f, 0, 1.0f };
+	startModel.each.scale = scale2;
+	startModel.Update();
+	Draw3DObject(startModel);
+	XMFLOAT3 scale3 = { 0.3f, 0.3f, 0.3f };
+	tutorialObject.each.position = { -1 - 5.0f, -2.0f, 0, 1.0f };
+	tutorialObject.each.scale = scale2;
+	tutorialObject.Update();
+	Draw3DObject(tutorialObject);
+	XMFLOAT3 scale4 = { 0.3f, 0.3f, 0.3f };
+	pushSpace.each.position = { -1 + 6.0f, -5.0f, 0, 1.0f };
+	pushSpace.each.scale = scale4;
+	pushSpace.Update();
+	Draw3DObject(pushSpace);
 
-		/*if (titleSelectNum == 0)
-		{
-			kagikakkoStartSprite.ChangeSize(30, 70);
-			kagikakkoStartSprite.position.m128_f32[0] = window_width / 2 + 60;
-			kagikakkoStartSprite.position.m128_f32[1] = 410;
-			kagikakkoStartSprite.SpriteDraw();
-			kagikakkoEndSprite.ChangeSize(30, 70);
-			kagikakkoEndSprite.position.m128_f32[0] = window_width / 2 + 390;
-			kagikakkoEndSprite.position.m128_f32[1] = 410;
-			kagikakkoEndSprite.SpriteDraw();
-		}
-		else
-		{
-			kagikakkoStartSprite.ChangeSize(30, 70);
-			kagikakkoStartSprite.position.m128_f32[0] = window_width / 2 - 440;
-			kagikakkoStartSprite.position.m128_f32[1] = 410;
-			kagikakkoStartSprite.SpriteDraw();
-			kagikakkoEndSprite.ChangeSize(30, 70);
-			kagikakkoEndSprite.position.m128_f32[0] = window_width / 2 - 10;
-			kagikakkoEndSprite.position.m128_f32[1] = 410;
-			kagikakkoEndSprite.SpriteDraw();
-		}*/
-	
+	/*if (titleSelectNum == 0)
+	{
+		kagikakkoStartSprite.ChangeSize(30, 70);
+		kagikakkoStartSprite.position.m128_f32[0] = window_width / 2 + 60;
+		kagikakkoStartSprite.position.m128_f32[1] = 410;
+		kagikakkoStartSprite.SpriteDraw();
+		kagikakkoEndSprite.ChangeSize(30, 70);
+		kagikakkoEndSprite.position.m128_f32[0] = window_width / 2 + 390;
+		kagikakkoEndSprite.position.m128_f32[1] = 410;
+		kagikakkoEndSprite.SpriteDraw();
+	}
+	else
+	{
+		kagikakkoStartSprite.ChangeSize(30, 70);
+		kagikakkoStartSprite.position.m128_f32[0] = window_width / 2 - 440;
+		kagikakkoStartSprite.position.m128_f32[1] = 410;
+		kagikakkoStartSprite.SpriteDraw();
+		kagikakkoEndSprite.ChangeSize(30, 70);
+		kagikakkoEndSprite.position.m128_f32[0] = window_width / 2 - 10;
+		kagikakkoEndSprite.position.m128_f32[1] = 410;
+		kagikakkoEndSprite.SpriteDraw();
+	}*/
+
 
 	//スプライトの描画-------------------------
 	/*if (isTipsOk)
