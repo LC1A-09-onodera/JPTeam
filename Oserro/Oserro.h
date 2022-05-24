@@ -317,7 +317,7 @@ public:
 	void MinSpawn(bool inGame);
 	static list<Othello> othellos;
 	static list<NormaModeFieldData> NormaStartOthellos;
-
+	void SpawnChances(const vector<pair<int, int>> &pos);
 	static list<ChanceObject> chances;
 	void DeadPanel();
 
@@ -417,6 +417,8 @@ private:
 	void playerNotMove();
 
 	void OthelloDraw();
+
+	void EraseChanceObject();
 private://チャンスオブジェクト
 
 	void SetChanceObject(int x, int y, bool Front);

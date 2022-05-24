@@ -1019,7 +1019,7 @@ void OthelloManager::NormaUpdate(int combo)
 void OthelloManager::Draw()
 {
 	OthelloDraw();
-	//ChanceDraw();
+	ChanceDraw();
 }
 
 void OthelloManager::OthelloDraw()
@@ -2592,6 +2592,8 @@ void OthelloManager::AllDeadPanel()
 	}
 
 	DeadPanel();
+
+	EraseChanceObject();
 }
 
 void OthelloManager::DownStep(list<Othello>::iterator playerItr)
@@ -2801,6 +2803,38 @@ void OthelloManager::whyChainSpawn()
 	TutorialTimer = 0;
 	isTutorialClear = false;
 
+}
+
+void OthelloManager::EraseChanceObject()
+{
+	if (chances.size() <= 0)
+	{
+		return;
+	}
+
+	chances.clear();
+}
+
+void OthelloManager::SpawnChances(const vector<pair<int, int>> &pos)
+{
+	EraseChanceObject();
+	int posC = pos.size();
+	bool isNothing = (pos.size() <= 0);
+	if (isNothing)
+	{
+		return;
+	}
+	auto posItr = pos.begin();
+
+	bool isNotEnd = true;
+	while (isNotEnd)
+	{
+
+		SetChanceObject(posItr->second, posItr->first, true);
+
+		posItr++;
+		isNotEnd = (posItr != pos.end());
+	}
 }
 
 void OthelloManager::whyStepSpawn()
