@@ -185,6 +185,7 @@ void CheakOthello::CheckLastMove(const vector<vector<SendOthelloData>>& othelloD
 	nameAndCombos.clear();
 
 	reachData.clear();
+	reachPos.clear();
 
 	//その場にオセロが存在するかつ、最後に動かしてたかを判定（←ちょっと効率悪そう）
 	for (int i = 0; i < MAX_SIZE_Y; i++)
@@ -787,7 +788,7 @@ void CheakOthello::CheckReachOthello(int direction_x, int direction_y, int last_
 				if (!reachCheck[lastY][lastX])
 				{
 					reachCheck[lastY][lastX] = true;
-					reachData.push_back(make_pair(lastY, lastX));
+					reachPos.push_back(make_pair(lastY, lastX));
 				}
 				break;
 			}

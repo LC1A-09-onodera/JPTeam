@@ -85,7 +85,7 @@ public:
 	void SetScore(int score) { totalScore = score; }
 
 	const int GetAddScore() { return addScore; }
-	const vector<pair<int, int>>& GetReachDatas() { return reachData; }	//リーチの場所
+	const vector<pair<int, int>>& GetReachDatas() { return reachPos; }	//リーチの場所
 	//const vector<bool>& GetReachSides() { return reachSide; }			//リーチの場所の表裏
 	const int GetCombo() { return combo; }
 	const bool IsAddScore() { return isAddScore; }
@@ -106,7 +106,7 @@ private:
 	//複数挟んだ時のスコアとコンボカウントを変更
 	void ChangeScoreAndCombo();
 	//リーチの目を検索
-	void CheckReachOthello(int direction_x, int direction_y,int last_x,int last_y);
+	void CheckReachOthello(int direction_x, int direction_y, int last_x, int last_y);
 
 private:
 	//Vectorの中身を判定
