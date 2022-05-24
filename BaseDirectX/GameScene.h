@@ -257,10 +257,15 @@ public://シーンで使うもの
 
 	//tips用
 	const int CHANGE_TIMER_FRAME = 60;
+	const int SIZE_X = 800;
+	const int SIZE_Y = 450;
+	const int START_X = 57;
+	const int START_Y = 206;
 	Sprite tips[8];
 	Sprite tips_cont;
 	Sprite tips_ss[4];
 	int tipsCounts;
 	int changeTimerFrame;
+	float tips_easeTimer;
 	bool isTipsDrawTrigger;
 };
