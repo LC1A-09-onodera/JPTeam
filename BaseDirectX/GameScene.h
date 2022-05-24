@@ -242,4 +242,6 @@ public://ƒV[ƒ“‚Åg‚¤‚à‚Ì
 	bool isResultOrTitle = false;
 
 	bool isResultStart = false;
+
+	bool isTipsDraw = false;
 };
