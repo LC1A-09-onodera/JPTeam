@@ -106,7 +106,7 @@ private:
 	//複数挟んだ時のスコアとコンボカウントを変更
 	void ChangeScoreAndCombo();
 	//リーチの目を検索
-	void CheckReachOthello(int direction_x, int direction_y);
+	void CheckReachOthello(int direction_x, int direction_y,int last_x,int last_y);
 
 private:
 	//Vectorの中身を判定
