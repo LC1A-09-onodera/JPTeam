@@ -121,7 +121,7 @@ public://シーンで使うもの
 
 	Model sky;
 	Model othelloStage;
-	
+
 	SoundData selectSound;
 	SoundData timeUpSound;
 	SoundData enterSound;
@@ -229,7 +229,7 @@ public://シーンで使うもの
 	EachInfo timerEach[2];
 	EachInfo scoreEach[7];
 	bool isTipsOk = false;
-	
+
 	static const int tipsCount = 5;
 	Sprite tipsSprite[tipsCount];
 
@@ -244,4 +244,19 @@ public://シーンで使うもの
 	bool isResultStart = false;
 
 	bool isTipsDraw = false;
+
+
+	//タイトル演出用
+	const float EASE_TIMER_COUNT = 0.02f;
+	Sprite titleLogo[4];
+	XMFLOAT3 logoSize;
+	int logoNum;
+	float easeTimer;
+	bool isDrawLogo;
+
+	//tips用
+	Sprite tips[8];
+	Sprite tips_cont;
+	int tipsCounts;
+	bool isTipsDrawTrigger;
 };
