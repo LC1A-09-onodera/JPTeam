@@ -15,6 +15,8 @@ CheakOthello::CheakOthello()
 	collectiveCount = 0;	//まとまりの数
 	addScore = 0;			//加算されるスコア
 	combo = 0;				//コンボ
+	totalReverceCount = 0;	//消した合計数
+	maxCombo = 0;
 	side = 0;				//表裏保存
 	checkOthello = 0;		//
 	isAddScore = 0;			//
@@ -40,7 +42,9 @@ void CheakOthello::Init()
 	collectiveCount = 0;	//まとまりの数
 	addScore = 0;			//加算されるスコア
 	combo = 0;				//コンボ
-	synchroCount = 0;
+	//synchroCount = 0;
+	totalReverceCount = 0;
+	maxCombo = 0;
 	side = 0;				//表裏保存
 	checkOthello = 0;		//
 	isAddScore = 0;			//
@@ -366,6 +370,9 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y, int last_x, in
 				//ひっくり返せる場合
 				if (isActiveOthello)
 				{
+					//消した合計数
+					totalReverceCount += loop + 1;
+
 					//挟めたらtrue
 					isSand = true;
 
@@ -387,6 +394,9 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y, int last_x, in
 					//maxComboCountを加算
 					maxComboCount++;
 					comboCount++;
+
+					//最大コンボ数を判定
+					if (maxCombo < maxComboCount) { maxCombo = maxComboCount; }
 
 					//使用する乱数を定義
 					int random = std::rand();
@@ -595,7 +605,7 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y, int last_x, in
 
 			//周回したよ（こいつで何個挟んだか判定できる）
 			loop++;
-			synchroCount++;
+			//synchroCount++;
 		}
 
 		else

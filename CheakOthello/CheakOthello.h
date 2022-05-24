@@ -54,7 +54,9 @@ private:
 	int collectiveCount;	//まとまりの数
 	int addScore;			//加算されるスコア
 	int combo;
-	int synchroCount;		//同時消しを考慮するカウント
+	//int synchroCount;		//同時消しを考慮するカウント
+	int totalReverceCount;	//消した合計数
+	int maxCombo;
 	bool side;				//表裏保存
 	bool checkOthello;
 	bool isAddScore;
@@ -86,6 +88,8 @@ public:
 	const bool IsAddScore() { return isAddScore; }
 	const vector<pair<int, int>> GetNameAndCombos() { return nameAndCombos; }
 	const bool IsSand() { return isSand; }
+	const int GetMaxCombo() { return maxCombo; }
+	const int GetTotalReverceCount() { return totalReverceCount; }
 
 private:
 	//盤面チェック
