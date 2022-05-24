@@ -1279,7 +1279,7 @@ void GameScene::ResultDraw()
 	scoreEach[4].scale = { 0.4f, 0.4f, 0.4f };
 	scoreEach[4].rotation.x = -70.0f;
 	sNumbersObject[nowScore / 10000 % 10].Update(&scoreEach[4]);
-	Draw3DObject(sNumbersObject[nowScore / 100000 % 10]);
+	Draw3DObject(sNumbersObject[nowScore / 10000 % 10]);
 	scoreEach[5].position = { 1.0f + scoreNum * 1, 20.0f, -12.0f, 1.0f };
 	scoreEach[5].scale = { 0.4f, 0.4f, 0.4f };
 	scoreEach[5].rotation.x = -70.0f;
