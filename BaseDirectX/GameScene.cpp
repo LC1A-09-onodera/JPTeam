@@ -246,6 +246,8 @@ void GameScene::Init()
 	pushSpace.CreateModel("push_space", ShaderManager::playerShader);
 	titleObject.CreateModel("title", ShaderManager::playerShader);
 	backGround.CreateModel("background", ShaderManager::half);
+	kakko[0].CreateModel("arrow_0", ShaderManager::playerShader);
+	kakko[1].CreateModel("arrow_1", ShaderManager::playerShader);
 	for (int i = 0; i < 2; i++)
 	{
 		backGroundEach[i].CreateConstBuff0();
@@ -821,25 +823,41 @@ void GameScene::TitleDraw()
 
 		if (titleSelectNum == 0)
 		{
-			kagikakkoStartSprite.ChangeSize(30, 70);
+			/*kagikakkoStartSprite.ChangeSize(30, 70);
 			kagikakkoStartSprite.position.m128_f32[0] = window_width / 2 + 60;
 			kagikakkoStartSprite.position.m128_f32[1] = 410;
 			kagikakkoStartSprite.SpriteDraw();
 			kagikakkoEndSprite.ChangeSize(30, 70);
 			kagikakkoEndSprite.position.m128_f32[0] = window_width / 2 + 390;
 			kagikakkoEndSprite.position.m128_f32[1] = 410;
-			kagikakkoEndSprite.SpriteDraw();
+			kagikakkoEndSprite.SpriteDraw();*/
+			kakko[0].each.position = { -1 + 7.0f, -2.0f, 0, 1.0f };
+			kakko[0].each.rotation.x += 1.0f;
+			kakko[0].Update();
+			Draw3DObject(kakko[0]);
+			kakko[1].each.position = { -1 + 3.0f, -2.0f, 0, 1.0f };
+			kakko[1].each.rotation.x += 1.0f;
+			kakko[1].Update();
+			Draw3DObject(kakko[1]);
 		}
 		else
 		{
-			kagikakkoStartSprite.ChangeSize(30, 70);
+			/*kagikakkoStartSprite.ChangeSize(30, 70);
 			kagikakkoStartSprite.position.m128_f32[0] = window_width / 2 - 440;
 			kagikakkoStartSprite.position.m128_f32[1] = 410;
 			kagikakkoStartSprite.SpriteDraw();
 			kagikakkoEndSprite.ChangeSize(30, 70);
 			kagikakkoEndSprite.position.m128_f32[0] = window_width / 2 - 10;
 			kagikakkoEndSprite.position.m128_f32[1] = 410;
-			kagikakkoEndSprite.SpriteDraw();
+			kagikakkoEndSprite.SpriteDraw();*/
+			kakko[0].each.position = { -1 - 5.0f, -2.0f, 0, 1.0f };
+			kakko[0].each.rotation.x += 1.0f;
+			kakko[0].Update();
+			Draw3DObject(kakko[0]);
+			kakko[1].each.position = { -1 - 9.0f, -2.0f, 0, 1.0f };
+			kakko[1].each.rotation.x += 1.0f;
+			kakko[1].Update();
+			Draw3DObject(kakko[1]);
 		}
 	}
 	if (isPouse)

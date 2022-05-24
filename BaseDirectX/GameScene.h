@@ -223,6 +223,7 @@ public://ÉVÅ[ÉìÇ≈égÇ§Ç‡ÇÃ
 	Model tutorialObject;
 	Model titleObject;
 	Model backGround;
+	Model kakko[2];
 	EachInfo backGroundEach[2];
 
 	EachInfo reversEach[2];
