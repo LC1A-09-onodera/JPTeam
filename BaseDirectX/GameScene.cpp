@@ -1212,17 +1212,18 @@ void GameScene::GameDraw()
 	ObjectParticles::Draw();
 	ParticleControl::Draw();
 	othelloManager.Draw();
-	Lights::Draw();
-
-	//スプライトの描画-------------------------
 	if (selectMode && !isSceneChange)
 	{
-		othelloManager.NormaTextDraw(selectStageNum, true);
+		othelloManager.NormaTextModelDraw(selectStageNum, true);
 	}
 	if (isModeSelect && !isSceneChange)
 	{
-		othelloManager.ModeSelectDraw(true);
+		othelloManager.ModeSelectModelDraw(true);
 	}
+	Lights::Draw();
+
+	//スプライトの描画-------------------------
+
 	if (countDown > 0 && isSceneChange == false && isModeSelect == false)
 	{
 		if (countDown < 59)
