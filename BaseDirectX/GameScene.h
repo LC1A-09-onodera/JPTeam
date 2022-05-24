@@ -247,7 +247,7 @@ public://シーンで使うもの
 
 
 	//タイトル演出用
-	const float EASE_TIMER_COUNT = 0.02f;
+	const float EASE_TIMER_COUNT = 0.1f;
 	Sprite titleLogo[4];
 	XMFLOAT3 logoSize;
 	int logoNum;

@@ -329,6 +329,7 @@ void GameScene::TitleUpdate()
 		if (easeTimer == 1.0f) { easeTimer = 0; logoNum++; }
 	}
 
+	/*-----この中にregion入ってるのでこの中で処理書いてください-----*/
 	if (isDrawLogo)
 	{
 		//タイトル演出用
@@ -338,15 +339,15 @@ void GameScene::TitleUpdate()
 			easeTimer += EASE_TIMER_COUNT / 5.0f;
 			if (easeTimer > 1.0f) { easeTimer = 1.0f; }
 			logoSize = ShlomonMath::EaseInQuad(logoSize, titleLogoSizeGoal, easeTimer);
-			//titleLogo[0].ChangeSizeOther(logoSize.x, logoSize.y);
-			//titleLogo[1].ChangeSizeOther(logoSize.x, logoSize.y);
-			//titleLogo[2].ChangeSizeOther(logoSize.x, logoSize.y);
-			//titleLogo[3].ChangeSizeOther(logoSize.x, logoSize.y);
+			titleLogo[0].ChangeSizeOther(logoSize.x, logoSize.y);
+			titleLogo[1].ChangeSizeOther(logoSize.x, logoSize.y);
+			titleLogo[2].ChangeSizeOther(logoSize.x, logoSize.y);
+			titleLogo[3].ChangeSizeOther(logoSize.x, logoSize.y);
 
-			titleLogo[0].ChangeSize(logoSize.x, logoSize.y);
+			/*titleLogo[0].ChangeSize(logoSize.x, logoSize.y);
 			titleLogo[1].ChangeSize(logoSize.x, logoSize.y);
 			titleLogo[2].ChangeSize(logoSize.x, logoSize.y);
-			titleLogo[3].ChangeSize(logoSize.x, logoSize.y);
+			titleLogo[3].ChangeSize(logoSize.x, logoSize.y);*/
 
 			titleLogo[0].position = ConvertXMFLOAT3toXMVECTOR(XMFLOAT3(320, 180, 0));
 			titleLogo[1].position = ConvertXMFLOAT3toXMVECTOR(XMFLOAT3(960, 180, 0));
@@ -885,6 +886,7 @@ void GameScene::TitleDraw()
 	BaseDirectX::clearColor[3] = 0.0f;
 	BaseDirectX::UpdateFront();
 
+	/*-----この中で処理書いてください-----*/
 	if (isDrawLogo)
 	{
 		Draw3DObject(sky);
@@ -1841,7 +1843,7 @@ void GameScene::ToGame4Update()
 		}
 		if (sceneChangeDiray2 >= MaxSceneChangeOk)
 		{
-			
+
 			if (Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01))
 			{
 				if (!selectMode && !isTipsOk)
@@ -1942,7 +1944,7 @@ void GameScene::ToModeSelectUpdate()
 		}
 		if (sceneChangeDiray2 >= MaxSceneChangeOk)
 		{
-			
+
 			if (Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01))
 			{
 				if (!isTipsOk)othelloManager.ModeSelectStart();
