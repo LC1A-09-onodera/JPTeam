@@ -88,6 +88,7 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData, bo
 		pair<int, int> last = GetCheckOthello();
 		if (!checkOthello) { break; }
 
+		totalDeleteOthello = 0;
 		isAddScore = false;
 		isSand = false;
 
@@ -145,20 +146,29 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData, bo
 		OthelloCheck(Direction_X::EAST, Direction_Y::SOUTH, pPos.first, pPos.second, isCheck);
 	}
 
-	/*while (!sandwichData.empty())
+	if (!reachData.empty())
 	{
-		CheckReachOthello(Direction_X::WEST, NONE_DIRECTION);
-		CheckReachOthello(Direction_X::EAST, NONE_DIRECTION);
-		CheckReachOthello(NONE_DIRECTION, Direction_Y::SOUTH);
-		CheckReachOthello(NONE_DIRECTION, Direction_Y::NOUTH);
-		CheckReachOthello(Direction_X::WEST, Direction_Y::NOUTH);
-		CheckReachOthello(Direction_X::WEST, Direction_Y::SOUTH);
-		CheckReachOthello(Direction_X::EAST, Direction_Y::NOUTH);
-		CheckReachOthello(Direction_X::EAST, Direction_Y::SOUTH);
+		for (int i = 0; i < 8; i++)
+		{
+			for (int j = 0; j < 8; j++)
+			{
+				reachCheck[i][j] = false;
+			}
+		}
 
-		sandwichData.erase(sandwichData.begin());
-		sandwichSide.erase(sandwichSide.begin());
-	}*/
+		for (auto itr = reachData.begin(); itr != reachData.end(); ++itr)
+		{
+			CheckReachOthello(Direction_X::WEST, NONE_DIRECTION);
+			CheckReachOthello(Direction_X::EAST, NONE_DIRECTION);
+			CheckReachOthello(NONE_DIRECTION, Direction_Y::SOUTH);
+			CheckReachOthello(NONE_DIRECTION, Direction_Y::NOUTH);
+			CheckReachOthello(Direction_X::WEST, Direction_Y::NOUTH);
+			CheckReachOthello(Direction_X::WEST, Direction_Y::SOUTH);
+			CheckReachOthello(Direction_X::EAST, Direction_Y::NOUTH);
+			CheckReachOthello(Direction_X::EAST, Direction_Y::SOUTH);
+		}
+		reachData.clear();
+	}
 }
 
 void CheakOthello::CheckLastMove(const vector<vector<SendOthelloData>>& othelloData)
@@ -170,6 +180,8 @@ void CheakOthello::CheckLastMove(const vector<vector<SendOthelloData>>& othelloD
 	vector<int> chainName;
 
 	nameAndCombos.clear();
+
+	reachData.clear();
 
 	//その場にオセロが存在するかつ、最後に動かしてたかを判定（←ちょっと効率悪そう）
 	for (int i = 0; i < MAX_SIZE_Y; i++)
@@ -189,6 +201,12 @@ void CheakOthello::CheckLastMove(const vector<vector<SendOthelloData>>& othelloD
 
 			//その場所が空
 			if (othelloDatas[i][j].type == NONE) { continue; }
+
+			//リーチ検索用
+			else if (othelloDatas[i][j].type == NORMAL || othelloDatas[i][j].type == WALL)
+			{
+				reachData.push_back(make_pair(j, i));
+			}
 
 			//ChainNameチェック
 			if (othelloDatas[i][j].chainName != 0)
@@ -268,7 +286,7 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y, int last_x, in
 	{
 		if (!isCheck)
 		{
-			totalDeleteOthello = 0;
+			//totalDeleteOthello = 0;
 
 			//次のマス
 			count_x += direction_x;
@@ -294,6 +312,7 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y, int last_x, in
 				int comboCount = 0;
 				int baseScore = 0;
 				int maxChainNameCount = 0;
+				int isSandWichCount = 0;
 				vector<int> maxChainName;
 				bool isActiveOthello = false;
 
@@ -329,9 +348,13 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y, int last_x, in
 					//空だったらそのまま保存
 					else { othelloDatas[pair_y][pair_x].SandwichLength.push_back(loop + 2); }
 
+					if (othelloDatas[pair_y][pair_x].isSandwich) { isSandWichCount++; }
+
 					pair_x += direction_x;
 					pair_y += direction_y;
 				}
+
+				totalReverceCount += loop + 2 - isSandWichCount;
 
 				//初期化
 				pair_x = last_x;
@@ -370,9 +393,6 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y, int last_x, in
 				//ひっくり返せる場合
 				if (isActiveOthello)
 				{
-					//消した合計数
-					totalReverceCount += loop + 1;
-
 					//挟めたらtrue
 					isSand = true;
 
@@ -428,9 +448,13 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y, int last_x, in
 						{
 							othelloDatas[pair_y][pair_x].score = (baseScore + (loop * (loop + 2) * 10));
 						}
+						else if (maxComboCount <= 10)
+						{
+							othelloDatas[pair_y][pair_x].score = (baseScore + (loop * (loop + 2) * 10 * powf(1.1f, maxComboCount)));
+						}
 						else
 						{
-							othelloDatas[pair_y][pair_x].score = (baseScore + (loop * (loop + 2) * 10 * powf(1.2f, maxComboCount)));
+							othelloDatas[pair_y][pair_x].score = (baseScore + (loop * (loop + 2) * 10 * powf(1.1f, 10)));
 						}
 						if (maxScore < othelloDatas[pair_y][pair_x].score)
 						{
@@ -728,38 +752,42 @@ void CheakOthello::ChangeScoreAndCombo()
 	checkScoreData.clear();
 }
 
-//void CheakOthello::CheckReachOthello(int direction_x, int direction_y)
-//{
-//	if (sandwichData.empty()) { return; }
-//
-//	int lastX = sandwichData.front().second;
-//	int lastY = sandwichData.front().first;
-//	bool side = sandwichSide.front();
-//	bool isReach = false;
-//
-//	while (1)
-//	{
-//		lastX += direction_x;
-//		lastY += direction_y;
-//
-//		if (lastX < 0 || lastX > OthelloConstData::fieldSize - 1) { break; }
-//		if (lastY < 0 || lastY > OthelloConstData::fieldSize - 1) { break; }
-//
-//		if (isReach)
-//		{
-//			if (othelloDatas[lastY][lastX].isFront == side) { continue; }
-//			else
-//			{
-//				reachData.push_back(make_pair(lastY, lastX));
-//				reachSide.push_back(side);
-//				break;
-//			}
-//		}
-//
-//		else if (!isReach)
-//		{
-//			if (othelloDatas[lastY][lastX].isFront == side) { break; }
-//			else { isReach = true; }
-//		}
-//	}
-//}
+void CheakOthello::CheckReachOthello(int direction_x, int direction_y)
+{
+	int lastX = reachData.front().first;
+	int lastY = reachData.front().second;
+	bool side = othelloDatas[lastY][lastX].isFront;
+	bool isReach = false;
+	bool sandCheck = false;
+
+	while (1)
+	{
+		lastX += direction_x;
+		lastY += direction_y;
+
+		if (lastX < 0 || lastX > OthelloConstData::fieldSize - 1) { break; }
+		if (lastY < 0 || lastY > OthelloConstData::fieldSize - 1) { break; }
+
+		if (!isReach)
+		{
+			if (!othelloDatas[lastY][lastX].isSandwich) { sandCheck = true; }
+			if (othelloDatas[lastY][lastX].isFront == side) { break; }
+			if (othelloDatas[lastY][lastX].type == NONE) { break; }
+			else { isReach = true; }
+		}
+
+		else if (isReach && sandCheck)
+		{
+			if (othelloDatas[lastY][lastX].isFront != side) { continue; }
+			else if (othelloDatas[lastY][lastX].type == NONE)
+			{
+				if (!reachCheck[lastY][lastX])
+				{
+					reachCheck[lastY][lastX] = true;
+					reachData.push_back(make_pair(lastY, lastX));
+				}
+				break;
+			}
+		}
+	}
+}

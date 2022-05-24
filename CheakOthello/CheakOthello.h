@@ -30,7 +30,7 @@ private:
 
 private:
 	const int CHAIN_NAME = 100;
-	const float OTHELLO_BONUS = 1.5f;
+	const float OTHELLO_BONUS = 1.05f;
 
 private:
 	std::vector<std::pair<int, int>> comboOthelloDataPos;
@@ -41,8 +41,9 @@ private:
 	std::vector<pair<int, int>> checkScoreData;				//同時消しを考慮
 	std::vector<pair<int, int>> sandwichData;
 	std::vector<bool> sandwichSide;
-	//std::vector<pair<int, int>> reachData;
-	//std::vector<bool> reachSide;
+	std::vector<pair<int, int>> reachData;
+	std::vector<bool> reachSide;
+	std::vector<pair<int, int>> reachPos;
 	std::vector<pair<int, int>> nameAndCombos;				//名前とコンボ数
 	std::vector<int> chainNames;
 
@@ -66,6 +67,8 @@ private:
 
 	bool isSand;
 
+	bool reachCheck[8][8] = { false };
+
 public:
 	CheakOthello();
 	~CheakOthello();
@@ -82,7 +85,7 @@ public:
 	void SetScore(int score) { totalScore = score; }
 
 	const int GetAddScore() { return addScore; }
-	//const vector<pair<int, int>>& GetReachDatas() { return reachData; }	//リーチの場所
+	const vector<pair<int, int>>& GetReachDatas() { return reachData; }	//リーチの場所
 	//const vector<bool>& GetReachSides() { return reachSide; }			//リーチの場所の表裏
 	const int GetCombo() { return combo; }
 	const bool IsAddScore() { return isAddScore; }
@@ -103,7 +106,7 @@ private:
 	//複数挟んだ時のスコアとコンボカウントを変更
 	void ChangeScoreAndCombo();
 	//リーチの目を検索
-	//void CheckReachOthello(int direction_x, int direction_y);
+	void CheckReachOthello(int direction_x, int direction_y);
 
 private:
 	//Vectorの中身を判定
