@@ -175,7 +175,7 @@ void GameScene::Init()
 	selectGameType = 1;
 	SoundPlayLoop(BGMSound);
 
-	othelloManager.Init(num);
+	othelloManager.Init(num, numbersObject);
 	othelloManager.AddPanel();
 	const float OthelloR = 1.8f;
 	for (int i = 0; i < 20; i++)
@@ -554,6 +554,14 @@ void GameScene::GameUpdate()
 			{
 				checkObject.Update(othelloManager.Send(), othelloManager.GetIsSendDataUpdate());
 				othelloManager.Receive(checkObject.GetOthelloDatas());
+				//vector<pair<int, int>> testPos;
+				//for (int i = 0; i < 8; i++)
+				//{
+				//	pair<int, int> tmp(i, i);
+				//	testPos.push_back(tmp);
+				//}
+				othelloManager.SpawnChances(checkObject.GetReachDatas());
+				//othelloManager.SpawnChances(testPos);
 			}
 			if (!isTutorial && !selectMode)
 			{
@@ -916,6 +924,7 @@ void GameScene::SelectDraw()
 
 void GameScene::GameDraw()
 {
+
 	BaseDirectX::clearColor[0] = 0.0f;
 	BaseDirectX::clearColor[1] = 0.0f;
 	BaseDirectX::clearColor[2] = 0.0f;

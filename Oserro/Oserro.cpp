@@ -14,6 +14,9 @@ list<ChanceObject> OthelloManager::chances;
 OthelloModel OthelloManager::oserroModel;
 OthelloModel OthelloManager::stopOserroModel;
 OthelloModel OthelloManager::wallOserroModel;
+Model OthelloManager::PanelTextModel;
+Model OthelloManager::ComboTextModel;
+Model OthelloManager::ScoreTextModel;
 ChanceModel OthelloManager::chanceModelBlue;
 ChanceModel OthelloManager::chanceModelOrange;
 vector<vector<SendOthelloData>> OthelloManager::sendDatas;
@@ -170,16 +173,16 @@ void Othello::Sandwich()
 void Othello::SpawnUpdate()
 {
 
-	if (data.spawnTimer >= SpawnAnimationTimerMax)
+	if (data.spawnTimer >= spawnAnimationTimerMax)
 	{
 		data.isSpawn = false;
 	}
 
-	float nowScale = static_cast<float>(data.spawnTimer) / SpawnAnimationTimerMax;
+	float nowScale = static_cast<float>(data.spawnTimer) / spawnAnimationTimerMax;
 	data.isHarf = (nowScale >= 0.5f);
 	each.scale = { nowScale , nowScale , 1 };//í èÌägèk
 	//each.scale = { 1.0f , 1.0f ,  PanelSize * nowScale };
-	if (data.spawnDerayTimer <= SpawnDerayTimerMax)
+	if (data.spawnDerayTimer <= spawnDerayTimerMax)
 	{
 		data.spawnDerayTimer++;
 	}
@@ -228,7 +231,7 @@ void Othello::ReversUpdate(int combo)
 	const float jumpMax = 3.0f + (1 * count);
 
 
-	//float jumpRate = static_cast<float>(data.JumpTimer) / JumpTimerMax;
+	//float jumpRate = static_cast<float>(data.JumpTimer) / jumpTimerMax;
 	//float jumpEaseRate = 0.0f;
 	//if (data.isJumpUp)
 	//{
@@ -236,7 +239,7 @@ void Othello::ReversUpdate(int combo)
 
 	//	float hight = pow(jumpEaseRate, count);
 	//	each.position.m128_f32[2] = -jumpMax * hight;
-	//	if (data.JumpTimer >= JumpTimerMax)
+	//	if (data.JumpTimer >= jumpTimerMax)
 	//	{
 	//		data.isJumpUp = false;
 	//		data.JumpTimer = 0;
@@ -641,7 +644,7 @@ bool Othello::GetIsActive()
 	return (data.isVanish || data.isSandwich);
 }
 
-void OthelloManager::Init(Tex num[10])
+void OthelloManager::Init(Tex num[10], Model numModel[10])
 {
 	oserroModel.CreateModel("newOserro4", ShaderManager::othelloShader);
 	stopOserroModel.CreateModel("rock_othello", ShaderManager::othelloShader);
@@ -650,6 +653,10 @@ void OthelloManager::Init(Tex num[10])
 	chanceModelOrange.CreateModel("chance", ShaderManager::othelloShader);
 	sendDatas.resize(fieldSize);
 
+
+	PanelTextModel.CreateModel("all_clear", ShaderManager::playerShader);
+	ComboTextModel.CreateModel("combo", ShaderManager::playerShader);
+	ScoreTextModel.CreateModel("score_kana", ShaderManager::playerShader);
 	auto itr = sendDatas.begin();
 	for (; itr != sendDatas.end(); itr++)
 	{
@@ -696,14 +703,32 @@ void OthelloManager::Init(Tex num[10])
 	NormaComboText.position = XMVECTOR{ 640 - (219 * changeScale / 2),  (72 * changeScale - 5), 0, 0 };
 	NormaScoreText.position = XMVECTOR{ 640 - (221 * changeScale / 2),  (68 * changeScale - 5), 0, 0 };
 
-
-
-	//TutorialRetryText.position = XMVECTOR{ 990, 300, 0, 0 };
 	normaChecker.Init();
-	//TestStage();
-	//LoadNormaStage("test");
+
+	NormaDrawData.position = comboScoreModelPos;
+	NormaDrawData.scale = { 0.3f, 0.3f, 0.3f };
+	NormaDrawData.rotation.x = -30.0f;
+	NormaDrawData.CreateConstBuff0();
+	NormaDrawData.CreateConstBuff1();
+	SubNormaDrawData.position = XMVECTOR{ 4.0f, 18.0f, -1.0f ,0 };
+	SubNormaDrawData.scale = { 0.3f, 0.3f, 0.3f };
+	SubNormaDrawData.rotation.x = -30.0f;
+	SubNormaDrawData.CreateConstBuff0();
+	SubNormaDrawData.CreateConstBuff1();
+	CountDrawData.resize(5);
+	numberModel.resize(10);
+	for (int i = 0; i < 10; i++)
+	{
+		numberModel[i] = &numModel[i];
+	}
 	for (int i = 0; i < 5; i++)
 	{
+		CountDrawData[i].position = XMVECTOR{ 1.0f + (i * 1.0f), 18.0f, -1.0f ,0 };
+		CountDrawData[i].scale = { 0.3f, 0.3f, 0.3f };
+		CountDrawData[i].rotation.x = -30.0f;
+		CountDrawData[i].CreateConstBuff0();
+		CountDrawData[i].CreateConstBuff1();
+
 		for (int j = 0; j < 10; j++)
 		{
 			int count = (i * 10) + j;
@@ -946,7 +971,7 @@ void OthelloManager::TutorialTextDraw()
 			{
 				TutorialText4.SpriteDraw();
 			}
-			if (TutorialEndTextCount >= TutorialEndTextTimer)
+			if (TutorialEndTextCount >= tutorialEndTextTimer)
 			{
 				TutorialText6.SpriteDraw();
 			}
@@ -994,7 +1019,7 @@ void OthelloManager::NormaUpdate(int combo)
 void OthelloManager::Draw()
 {
 	OthelloDraw();
-	//ChanceDraw();
+	ChanceDraw();
 }
 
 void OthelloManager::OthelloDraw()
@@ -1046,11 +1071,56 @@ void OthelloManager::NormaTextDraw(int stageNum, bool isDraw)
 		{
 			NormaPanelsText.SpriteDraw();
 		}
-		CountDraw(status);
+		CountTextDraw(status);
 		normaChecker.Draw();
 	}
 }
 
+void OthelloManager::NormaTextModelDraw(int stageNum, bool isDraw)
+{
+	SetTextPos(true, stageNum);
+
+	if (isDraw)
+	{
+		list<NormaModeFieldData>::iterator data = GetNormaStage(stageNum);
+		//list<NormaModeFieldData>::iterator data = GetNormaStage(GetEnterNormaStage());
+
+		int status = data->normaStatus;
+
+		auto itr = data->panels.begin();
+
+		if (data->type == Norma::Combo)
+		{
+			ComboTextModel.Update(&NormaDrawData);
+			Draw3DObject(ComboTextModel);
+		}
+		else if (data->type == Norma::Panels)
+		{
+			status = 0;
+			for (; itr != data->panels.end(); itr++)
+			{
+				if (itr->type != WALL)
+				{
+					status++;
+				}
+			}
+			PanelTextModel.Update(&NormaDrawData);
+			Draw3DObject(PanelTextModel);
+		}
+		else if (data->type == Norma::Score)
+		{
+			ScoreTextModel.Update(&NormaDrawData);
+			Draw3DObject(ScoreTextModel);
+		}
+		if (data->subNormaFlag)
+		{
+			PanelTextModel.Update(&SubNormaDrawData);
+			Draw3DObject(PanelTextModel);
+		}
+
+		CountModelDraw(status);
+	}
+}
 void OthelloManager::Finalize()
 {
 	auto itr = othellos.begin();
@@ -1262,6 +1332,50 @@ int OthelloManager::GetEnterNormaStage()
 	return stageNum;
 }
 
+void OthelloManager::ModeSelectModelDraw(bool isDraw)
+{
+	SetTextPos(false);
+
+	if (isDraw)
+	{
+		if (GetEnterModeType() != GameMode::NormaMode) { return; }
+		list<NormaModeFieldData>::iterator data = GetNormaStage(GetEnterNormaStage());
+		int status = data->normaStatus;
+
+		auto itr = data->panels.begin();
+
+		if (data->type == Norma::Combo)
+		{
+			ComboTextModel.Update(&NormaDrawData);
+			Draw3DObject(ComboTextModel);
+		}
+		else if (data->type == Norma::Panels)
+		{
+			status = 0;
+			for (; itr != data->panels.end(); itr++)
+			{
+				if (itr->type != WALL)
+				{
+					status++;
+				}
+			}
+			PanelTextModel.Update(&NormaDrawData);
+			Draw3DObject(PanelTextModel);
+		}
+		else if (data->type == Norma::Score)
+		{
+			ScoreTextModel.Update(&NormaDrawData);
+			Draw3DObject(ScoreTextModel);
+		}
+		if (data->subNormaFlag)
+		{
+			PanelTextModel.Update(&SubNormaDrawData);
+			Draw3DObject(PanelTextModel);
+		}
+		CountModelDraw(status);
+
+	}
+}
 void OthelloManager::ModeSelectDraw(bool isDraw)
 {
 	SetTextPos(false);
@@ -1300,11 +1414,11 @@ void OthelloManager::ModeSelectDraw(bool isDraw)
 			NormaPanelsText.SpriteDraw();
 		}
 
-		CountDraw(status);
+		CountTextDraw(status);
 	}
 }
 
-void OthelloManager::CountDraw(int count)
+void OthelloManager::CountTextDraw(int count)
 {
 	vector<int>degit;
 	while (count >= 10)
@@ -1320,6 +1434,28 @@ void OthelloManager::CountDraw(int count)
 	{
 		int num = (i * 10) + *itr;
 		normaCountTex[num].SpriteDraw();
+
+		numberModel[*itr]->Update(&CountDrawData[i]);
+		itr++;
+	}
+}
+
+void OthelloManager::CountModelDraw(int count)
+{
+	vector<int>degit;
+	while (count >= 10)
+	{
+		int tmp = count % 10;
+		degit.push_back(tmp);
+		count /= 10;
+	}
+	degit.push_back(count);
+
+	auto itr = degit.begin();
+	for (int i = degit.size(); i > 0; i--)
+	{
+		numberModel[*itr]->Update(&CountDrawData[i]);
+		Draw3DObject(*numberModel[*itr]);
 		itr++;
 	}
 }
@@ -1420,12 +1556,106 @@ void OthelloManager::SubNormaTextPos(bool isNormaMode)
 	NormaPanelsText.position += moveTextPos;
 	NormaPanelsText.position += movePos;
 }
-void OthelloManager::SetTextPos(bool isNormaMode)
+void OthelloManager::SetTextPos(bool isNormaMode, int stageNum)
 {
 	NormaComboTextSetPos(isNormaMode);
 	NormaScoreTextSetPos(isNormaMode);
 	SetCountPos(isNormaMode);
 	SubNormaTextPos(isNormaMode);
+
+
+	list<NormaModeFieldData>::iterator data;
+	if (isNormaMode)
+	{
+		data = GetNormaStage(stageNum);
+	}
+	else
+	{
+		data = GetNormaStage(GetEnterNormaStage());
+	}
+	if (data->type == Norma::Combo)
+	{
+		NormaComboModelSetPos(isNormaMode);
+	}
+	else if (data->type == Norma::Panels)
+	{
+		NormaPanelsModelSetPos(isNormaMode);
+	}
+	else if (data->type == Norma::Score)
+	{
+		NormaScoreModelSetPos(isNormaMode);
+	}
+
+	SetCountModelPos(isNormaMode);
+	SubNormaModelPos(isNormaMode);
+}
+
+void OthelloManager::NormaComboModelSetPos(bool isNormaMode)
+{
+	XMVECTOR movePos = moveTextModelPos;
+	if (!isNormaMode)
+	{
+		movePos *= 0;
+	}
+	float changeScale = 0.5f;
+
+	NormaDrawData.position = comboScoreModelPos;
+	NormaDrawData.position += movePos;
+
+}
+void OthelloManager::NormaPanelsModelSetPos(bool isNormaMode)
+{
+	XMVECTOR movePos = moveTextModelPos;
+	if (!isNormaMode)
+	{
+		movePos *= 0;
+	}
+	float changeScale = 0.5f;
+
+	NormaDrawData.position = allDeleteModelPos;
+	NormaDrawData.position += movePos;
+
+}
+void OthelloManager::NormaScoreModelSetPos(bool isNormaMode)
+{
+	XMVECTOR movePos = moveTextModelPos;
+	if (!isNormaMode)
+	{
+		movePos *= 0;
+	}
+	float changeScale = 0.5f;
+
+	NormaDrawData.position = comboScoreModelPos;
+	NormaDrawData.position += movePos;
+}
+void OthelloManager::SetCountModelPos(bool isNormaMode)
+{
+	XMVECTOR movePos = moveTextModelPos;
+	if (!isNormaMode)
+	{
+		movePos *= 0;
+	}
+	CountDrawData;
+	for (int i = 0; i < 5; i++)
+	{
+		CountDrawData[i].position = XMVECTOR{ 1.0f + (i * 1.0f), 18.0f, -1.0f ,0 };
+		CountDrawData[i].position += movePos;
+	}
+}
+void OthelloManager::SubNormaModelPos(bool isNormaMode)
+{
+	XMVECTOR movePos = moveSubTextModelPos;
+	if (!isNormaMode)
+	{
+		movePos *= 0;
+	}
+	float changeScale = 0.5f;
+
+	SubNormaDrawData.position = allDeleteModelPos;
+	SubNormaDrawData.position += moveTextModelPos;
+	SubNormaDrawData.position += movePos;
+
+
 }
 void OthelloManager::RemovePlayer()
 {
@@ -2209,10 +2439,10 @@ void OthelloManager::TypeXI(list<Othello>::iterator playerItr, list<Othello>::it
 		}
 		if (nextItr->GetGameData()->isSpawn)
 		{
-			nextStep = 1.0f - (static_cast<float>(nextItr->GetGameData()->spawnTimer) / SpawnAnimationTimerMax);
+			nextStep = 1.0f - (static_cast<float>(nextItr->GetGameData()->spawnTimer) / spawnAnimationTimerMax);
 			if (OnPlayer)
 			{
-				nowStep = 1.0f - static_cast<float>(playerItr->GetGameData()->spawnTimer) / SpawnAnimationTimerMax;
+				nowStep = 1.0f - static_cast<float>(playerItr->GetGameData()->spawnTimer) / spawnAnimationTimerMax;
 			}
 		}
 		if (nextItr->GetGameData()->isVanish)
@@ -2273,7 +2503,7 @@ void OthelloManager::TypeUp(list<Othello>::iterator playerItr, list<Othello>::it
 		if (nextItr->GetGameData()->isSpawn)
 		{
 			int a = nextItr->GetGameData()->spawnTimer;
-			float nowScale = static_cast<float>(a) / SpawnAnimationTimerMax;
+			float nowScale = static_cast<float>(a) / spawnAnimationTimerMax;
 			isSpawnPanel = nowScale >= 0.6f;
 		}
 	}
@@ -2362,6 +2592,8 @@ void OthelloManager::AllDeadPanel()
 	}
 
 	DeadPanel();
+
+	EraseChanceObject();
 }
 
 void OthelloManager::DownStep(list<Othello>::iterator playerItr)
@@ -2571,6 +2803,38 @@ void OthelloManager::whyChainSpawn()
 	TutorialTimer = 0;
 	isTutorialClear = false;
 
+}
+
+void OthelloManager::EraseChanceObject()
+{
+	if (chances.size() <= 0)
+	{
+		return;
+	}
+
+	chances.clear();
+}
+
+void OthelloManager::SpawnChances(const vector<pair<int, int>> &pos)
+{
+	EraseChanceObject();
+	int posC = pos.size();
+	bool isNothing = (pos.size() <= 0);
+	if (isNothing)
+	{
+		return;
+	}
+	auto posItr = pos.begin();
+
+	bool isNotEnd = true;
+	while (isNotEnd)
+	{
+
+		SetChanceObject(posItr->second, posItr->first, true);
+
+		posItr++;
+		isNotEnd = (posItr != pos.end());
+	}
 }
 
 void OthelloManager::whyStepSpawn()
