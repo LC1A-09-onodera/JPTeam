@@ -121,34 +121,6 @@ void GameScene::Init()
 	num[7].LoadGraph(L"Resource/Img/number_7.png");
 	num[8].LoadGraph(L"Resource/Img/number_8.png");
 	num[9].LoadGraph(L"Resource/Img/number_9.png");
-	/*for (int i = 0; i < 30; i += 10)
-	{
-		numbers[i + 0].CreateSprite(num[0], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-		numbers[i + 1].CreateSprite(num[1], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-		numbers[i + 2].CreateSprite(num[2], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-		numbers[i + 3].CreateSprite(num[3], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-		numbers[i + 4].CreateSprite(num[4], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-		numbers[i + 5].CreateSprite(num[5], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-		numbers[i + 6].CreateSprite(num[6], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-		numbers[i + 7].CreateSprite(num[7], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-		numbers[i + 8].CreateSprite(num[8], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-		numbers[i + 9].CreateSprite(num[9], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-	}*/
-	/*for (int i = 0; i < 60; i += 10)
-	{
-		scoreNum[i + 0].CreateSprite(num[0], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-		scoreNum[i + 1].CreateSprite(num[1], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-		scoreNum[i + 2].CreateSprite(num[2], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-		scoreNum[i + 3].CreateSprite(num[3], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-		scoreNum[i + 4].CreateSprite(num[4], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-		scoreNum[i + 5].CreateSprite(num[5], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-		scoreNum[i + 6].CreateSprite(num[6], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-		scoreNum[i + 7].CreateSprite(num[7], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-		scoreNum[i + 8].CreateSprite(num[8], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-		scoreNum[i + 9].CreateSprite(num[9], XMFLOAT3(window_width / 2 - 10, window_height / 2 - 10, 0));
-	}*/
-
-	//selectStageNumSprite[0].CreateSprite(num[0], XMFLOAT3(window_width / 2 - 30,                            window_height / 2 + 50, 0));
 	selectStageNumSprite[1].CreateSprite(num[1], XMFLOAT3(window_width / 2 - 30 + selectNumDistance * 0.0f, window_height / 2 + 50, 0));
 	selectStageNumSprite[2].CreateSprite(num[2], XMFLOAT3(window_width / 2 - 30 + selectNumDistance * 1.0f, window_height / 2 + 50, 0));
 	selectStageNumSprite[3].CreateSprite(num[3], XMFLOAT3(window_width / 2 - 30 + selectNumDistance * 2.0f, window_height / 2 + 50, 0));
@@ -258,7 +230,7 @@ void GameScene::Init()
 		timerEach[i].CreateConstBuff0();
 		timerEach[i].CreateConstBuff1();
 	}
-	for (int i = 0; i < 6; i++)
+	for (int i = 0; i < 7; i++)
 	{
 		scoreEach[i].CreateConstBuff0();
 		scoreEach[i].CreateConstBuff1();
@@ -268,7 +240,19 @@ void GameScene::Init()
 	tipsSprite[2].CreateSprite(L"Resource/Img/tips/ex3.png", XMFLOAT3(0, 0, 0));
 	tipsSprite[3].CreateSprite(L"Resource/Img/tips/ex4.png", XMFLOAT3(0, 0, 0));
 
-	tipsNumAndTexCount.push_back({0, 4});
+	startModel.CreateModel("start", ShaderManager::playerShader);
+	AButton.CreateModel("A", ShaderManager::playerShader);
+	tutorialObject.CreateModel("tutorial", ShaderManager::playerShader);
+	pushSpace.CreateModel("push_space", ShaderManager::playerShader);
+	titleObject.CreateModel("title", ShaderManager::playerShader);
+	backGround.CreateModel("background", ShaderManager::half);
+	for (int i = 0; i < 2; i++)
+	{
+		backGroundEach[i].CreateConstBuff0();
+		backGroundEach[i].CreateConstBuff1();
+	}
+
+	tipsNumAndTexCount.push_back({ 0, 4 });
 }
 
 void GameScene::TitleUpdate()
@@ -774,8 +758,13 @@ void GameScene::ResultUpdate()
 		SoundPlayOnce(enterSound);
 		OthlloPlayer::SetPosition(XMFLOAT3(0, 0, -2));
 		SoundPlayLoop(BGMSound);
-		SceneNum = TITLE;
-		isSceneChange = false;
+		//SceneNum = TITLE;
+		//isSceneChange = false;
+		ToTitle();
+	}
+	if (isResultStart)
+	{
+		ToTitleUpdate();
 	}
 }
 
@@ -790,117 +779,75 @@ void GameScene::EndUpdate()
 
 void GameScene::TitleDraw()
 {
-	//PostEffectのPreDraw
-	//postEffect.PreDraw();
-
-	//Draw3DObject(sample);
 	BaseDirectX::clearColor[0] = 0.0f;
 	BaseDirectX::clearColor[1] = 0.0f;
 	BaseDirectX::clearColor[2] = 0.0f;
 	BaseDirectX::clearColor[3] = 0.0f;
 	BaseDirectX::UpdateFront();
-	//PostEffectのDraw
-	//postEffect.Draw();
 	Draw3DObject(sky);
 	Draw3DObject(othelloStage);
-	//if (!isSceneChange) OthlloPlayer::Draw();
-
 	ParticleControl::Draw();
 	ObjectParticles::Draw();
 	Lights::Draw();
 	//スプライトの描画-------------------------
 	if (isSceneChange == false)
 	{
-		titleBack.ChangeSize(1280, 125 * 2);
-		titleBack.position.m128_f32[0] = 0;
-		titleBack.position.m128_f32[1] = 100;
-		titleBack.SpriteDraw();
-		title.SpriteDraw();
-		spaceBack.position.m128_f32[0] = 0;
-		spaceBack.position.m128_f32[1] = 560;
-		spaceBack.SpriteDraw();
-		space.SpriteDraw();
-		float spsize = 1.2f;
-		if (!select)
+		XMFLOAT3 scale = { 0.4f, 0.4f, 0.4f };
+		titleObject.each.position = { -1, 3, 0, 1.0f };
+		titleObject.each.scale = scale;
+		titleObject.each.rotation = {0, 0, 0};
+		titleObject.Update();
+		Draw3DObject(titleObject);
+		backGroundEach[0].position = { -1, 4.5f, 4.0f, 1.0f };
+		backGroundEach[0].scale = { 20.0f, 4.0f, 1.0f };
+		backGroundEach[0].rotation = { 0, 0, 0 };
+		backGround.Update(&backGroundEach[0]);
+		Draw3DObject(backGround);
+		backGroundEach[1].position = { -1, -6.5f, 4.0f, 1.0f };
+		backGroundEach[1].scale = { 23.0f, 1.5f, 1.0f };
+		backGroundEach[1].rotation = { 0, 0, 0 };
+		backGround.Update(&backGroundEach[1]);
+		Draw3DObject(backGround);
+		XMFLOAT3 scale2 = { 0.3f, 0.3f, 0.3f };
+		startModel.each.position = { -1 + 5.0f, -2.0f, 0, 1.0f };
+		startModel.each.scale = scale2;
+		startModel.each.rotation = { 0, 0, 0 };
+		startModel.Update();
+		Draw3DObject(startModel);
+		XMFLOAT3 scale3 = { 0.3f, 0.3f, 0.3f };
+		tutorialObject.each.position = { -1 - 5.0f, -2.0f, 0, 1.0f };
+		tutorialObject.each.scale = scale2;
+		tutorialObject.each.rotation = { 0, 0, 0 };
+		tutorialObject.Update();
+		Draw3DObject(tutorialObject);
+		XMFLOAT3 scale4 = { 0.3f, 0.3f, 0.3f };
+		pushSpace.each.position = { -1 + 6.0f, -5.0f, 0, 1.0f };
+		pushSpace.each.scale = scale4;
+		pushSpace.each.rotation = { 0, 0, 0 };
+		pushSpace.Update();
+		Draw3DObject(pushSpace);
+
+		if (titleSelectNum == 0)
 		{
-			startSprite.ChangeSize(232 * spsize, 63 * spsize);
-			startSprite.position.m128_f32[0] = window_width / 2 + 100;
-			startSprite.position.m128_f32[1] = 400;
-			startSprite.SpriteDraw();
-			tutorialSprite.position.m128_f32[0] = window_width / 2 - 400;
-			tutorialSprite.position.m128_f32[1] = 400;
-			tutorialSprite.SpriteDraw();
-			if (titleSelectNum == 0)
-			{
-				kagikakkoStartSprite.ChangeSize(30, 70);
-				kagikakkoStartSprite.position.m128_f32[0] = window_width / 2 + 60;
-				kagikakkoStartSprite.position.m128_f32[1] = 410;
-				kagikakkoStartSprite.SpriteDraw();
-				kagikakkoEndSprite.ChangeSize(30, 70);
-				kagikakkoEndSprite.position.m128_f32[0] = window_width / 2 + 390;
-				kagikakkoEndSprite.position.m128_f32[1] = 410;
-				kagikakkoEndSprite.SpriteDraw();
-			}
-			else
-			{
-				kagikakkoStartSprite.ChangeSize(30, 70);
-				kagikakkoStartSprite.position.m128_f32[0] = window_width / 2 - 440;
-				kagikakkoStartSprite.position.m128_f32[1] = 410;
-				kagikakkoStartSprite.SpriteDraw();
-				kagikakkoEndSprite.ChangeSize(30, 70);
-				kagikakkoEndSprite.position.m128_f32[0] = window_width / 2 - 10;
-				kagikakkoEndSprite.position.m128_f32[1] = 410;
-				kagikakkoEndSprite.SpriteDraw();
-			}
-		}
-		else if (!selectStage)
-		{
-			gameScoreAttackSprite.ChangeSize(232 * spsize, 63 * spsize);
-			gameScoreAttackSprite.position.m128_f32[0] = window_width / 2 + 110;
-			gameScoreAttackSprite.position.m128_f32[1] = 400;
-			gameScoreAttackSprite.SpriteDraw();
-			gameNormaSprite.ChangeSize(282 * spsize, 63 * spsize);
-			gameNormaSprite.position.m128_f32[0] = window_width / 2 - 400;
-			gameNormaSprite.position.m128_f32[1] = 400;
-			gameNormaSprite.SpriteDraw();
-			if (!selectMode)
-			{
-				kagikakkoStartSprite.ChangeSize(30, 70);
-				kagikakkoStartSprite.position.m128_f32[0] = window_width / 2 + 75;
-				kagikakkoStartSprite.position.m128_f32[1] = 410;
-				kagikakkoStartSprite.SpriteDraw();
-				kagikakkoEndSprite.ChangeSize(30, 70);
-				kagikakkoEndSprite.position.m128_f32[0] = window_width / 2 + 400;
-				kagikakkoEndSprite.position.m128_f32[1] = 410;
-				kagikakkoEndSprite.SpriteDraw();
-			}
-			else
-			{
-				kagikakkoStartSprite.ChangeSize(30, 70);
-				kagikakkoStartSprite.position.m128_f32[0] = window_width / 2 - 430;
-				kagikakkoStartSprite.position.m128_f32[1] = 410;
-				kagikakkoStartSprite.SpriteDraw();
-				kagikakkoEndSprite.ChangeSize(30, 70);
-				kagikakkoEndSprite.position.m128_f32[0] = window_width / 2 - 50;
-				kagikakkoEndSprite.position.m128_f32[1] = 410;
-				kagikakkoEndSprite.SpriteDraw();
-			}
+			kagikakkoStartSprite.ChangeSize(30, 70);
+			kagikakkoStartSprite.position.m128_f32[0] = window_width / 2 + 60;
+			kagikakkoStartSprite.position.m128_f32[1] = 410;
+			kagikakkoStartSprite.SpriteDraw();
+			kagikakkoEndSprite.ChangeSize(30, 70);
+			kagikakkoEndSprite.position.m128_f32[0] = window_width / 2 + 390;
+			kagikakkoEndSprite.position.m128_f32[1] = 410;
+			kagikakkoEndSprite.SpriteDraw();
 		}
 		else
 		{
-			//selectStageNumSprite[0].SpriteDraw();
-			for (int i = 1; i < othelloManager.GetNormaStagesCount(); i++)
-			{
-				selectStageNumSprite[i].SpriteDraw();
-
-			}
-
-			kagikakkoSelectStartSprite.position.m128_f32[0] = 520;
-			kagikakkoSelectStartSprite.position.m128_f32[1] = 410;
-			kagikakkoSelectEndSprite.position.m128_f32[0] = 700;
-			kagikakkoSelectEndSprite.position.m128_f32[1] = 410;
-			kagikakkoSelectStartSprite.SpriteDraw();
-			kagikakkoSelectEndSprite.SpriteDraw();
+			kagikakkoStartSprite.ChangeSize(30, 70);
+			kagikakkoStartSprite.position.m128_f32[0] = window_width / 2 - 440;
+			kagikakkoStartSprite.position.m128_f32[1] = 410;
+			kagikakkoStartSprite.SpriteDraw();
+			kagikakkoEndSprite.ChangeSize(30, 70);
+			kagikakkoEndSprite.position.m128_f32[0] = window_width / 2 - 10;
+			kagikakkoEndSprite.position.m128_f32[1] = 410;
+			kagikakkoEndSprite.SpriteDraw();
 		}
 	}
 	if (isPouse)
@@ -952,7 +899,7 @@ void GameScene::TitleDraw()
 			kagikakkoEndSprite.SpriteDraw();
 		}
 	}
-	Imgui::DrawImGui();
+	//Imgui::DrawImGui();
 	//描画コマンドここまで
 	BaseDirectX::UpdateBack();
 }
@@ -977,10 +924,6 @@ void GameScene::SelectDraw()
 
 void GameScene::GameDraw()
 {
-	//PostEffectのPreDraw
-	//PostEffects::PreDraw();
-
-	//Draw3DObject(sample);
 	BaseDirectX::clearColor[0] = 0.0f;
 	BaseDirectX::clearColor[1] = 0.0f;
 	BaseDirectX::clearColor[2] = 0.0f;
@@ -1157,7 +1100,7 @@ void GameScene::GameDraw()
 
 		XMFLOAT3 scoreScale = { 0.4f, 0.4f, 0.4f };
 		float scoreDirection = 2.0f;
-		float scoreBaseX = -8.0f;
+		float scoreBaseX = -6.0f;
 		scoreEach[0].position = { scoreBaseX - scoreDirection * 0, 18.0f, -1.0f, 1.0f };
 		scoreEach[0].scale = scoreScale;
 		scoreEach[0].rotation.x = -30.0f;
@@ -1194,7 +1137,13 @@ void GameScene::GameDraw()
 		sNumbersObject[displayScore / 100000 % 10].Update(&scoreEach[5]);
 		Draw3DObject(sNumbersObject[displayScore / 100000 % 10]);
 
-		scoreObject.each.position = { scoreBaseX - 2.0f - scoreDirection * 7, 18.0f, -1.0f, 1.0f };
+		scoreEach[6].position = { scoreBaseX - scoreDirection * 6, 18.0f, -1.0f, 1.0f };
+		scoreEach[6].scale = scoreScale;
+		scoreEach[6].rotation.x = -30.0f;
+		sNumbersObject[displayScore / 1000000 % 10].Update(&scoreEach[6]);
+		Draw3DObject(sNumbersObject[displayScore / 1000000 % 10]);
+
+		scoreObject.each.position = { scoreBaseX - 2.0f - scoreDirection * 8, 18.0f, -1.0f, 1.0f };
 		scoreObject.each.scale = scoreScale;
 		scoreObject.each.rotation.x = -30.0f;
 		scoreObject.Update();
@@ -1203,6 +1152,26 @@ void GameScene::GameDraw()
 		if (isTutorial)
 		{
 			othelloManager.TutorialTextDraw();
+		}
+	}
+	if (countDown > 0 && isSceneChange == false && isModeSelect == false)
+	{
+		XMFLOAT3 scale = { 0.7f, 0.7f, 0.7f };
+		if (countDown < 59)
+		{
+			startModel.each.position = { -1, 5.0f, -2.0f, 1.0f, };
+			startModel.each.scale = scale;
+			startModel.each.rotation.x = -30.0f;
+			startModel.Update();
+			Draw3DObject(startModel);
+		}
+		else
+		{
+			scoreEach[0].position = { -1, 5.0f, -2.0f, 1.0f };
+			scoreEach[0].scale = scale;
+			scoreEach[0].rotation.x = -30.0f;
+			sNumbersObject[countDown / 60].Update(&scoreEach[0]);
+			Draw3DObject(sNumbersObject[countDown / 60]);
 		}
 	}
 	if (!isSceneChange)
@@ -1219,26 +1188,6 @@ void GameScene::GameDraw()
 	if (isModeSelect && !isSceneChange)
 	{
 		othelloManager.ModeSelectModelDraw(true);
-	}
-	Lights::Draw();
-
-	//スプライトの描画-------------------------
-
-	if (countDown > 0 && isSceneChange == false && isModeSelect == false)
-	{
-		if (countDown < 59)
-		{
-			startSprite.ChangeSize(232, 63);
-			startSprite.position.m128_f32[0] = window_width / 2 - 100;
-			startSprite.position.m128_f32[1] = window_height / 2 - 10;
-			startSprite.SpriteDraw();
-		}
-		else
-		{
-			/*numbers[countDown / 60].position.m128_f32[0] = window_width / 2 - 10;
-			numbers[countDown / 60].position.m128_f32[1] = window_height / 2 - 5;
-			numbers[countDown / 60].SpriteDraw();*/
-		}
 	}
 	if (isPouse)
 	{
@@ -1306,49 +1255,113 @@ void GameScene::ResultDraw()
 	Draw3DObject(othelloStage);
 	nowScore = checkObject.GetScore();
 	float scoreNum = 2.0f;
-	scoreEach[0].position = { 1.0f + scoreNum * 5, 20.0f, -12.0f, 1.0f };
-	scoreEach[0].scale = {0.4f, 0.4f, 0.4f};
+	scoreEach[0].position = { 1.0f + scoreNum * 6, 20.0f, -12.0f, 1.0f };
+	scoreEach[0].scale = { 0.4f, 0.4f, 0.4f };
 	scoreEach[0].rotation.x = -70.0f;
 	sNumbersObject[nowScore % 10].Update(&scoreEach[0]);
 	Draw3DObject(sNumbersObject[nowScore % 10]);
-	scoreEach[1].position = { 1.0f + scoreNum * 4, 20.0f, -12.0f, 1.0f };
+	scoreEach[1].position = { 1.0f + scoreNum * 5, 20.0f, -12.0f, 1.0f };
 	scoreEach[1].scale = { 0.4f, 0.4f, 0.4f };
 	scoreEach[1].rotation.x = -70.0f;
 	sNumbersObject[nowScore / 10 % 10].Update(&scoreEach[1]);
-	Draw3DObject(sNumbersObject[nowScore / 10 % 10]);
-	scoreEach[2].position = { 1.0f + scoreNum * 3, 20.0f, -12.0f, 1.0f };
+	Draw3DObject(sNumbersObject[nowScore / 100 % 10]);
+	scoreEach[2].position = { 1.0f + scoreNum * 4, 20.0f, -12.0f, 1.0f };
 	scoreEach[2].scale = { 0.4f, 0.4f, 0.4f };
 	scoreEach[2].rotation.x = -70.0f;
 	sNumbersObject[nowScore / 100 % 10].Update(&scoreEach[2]);
-	Draw3DObject(sNumbersObject[nowScore / 100 % 10]);
-	scoreEach[3].position = { 1.0f + scoreNum * 2, 20.0f, -12.0f, 1.0f };
+	Draw3DObject(sNumbersObject[nowScore / 1000 % 10]);
+	scoreEach[3].position = { 1.0f + scoreNum * 3, 20.0f, -12.0f, 1.0f };
 	scoreEach[3].scale = { 0.4f, 0.4f, 0.4f };
 	scoreEach[3].rotation.x = -70.0f;
 	sNumbersObject[nowScore / 1000 % 10].Update(&scoreEach[3]);
-	Draw3DObject(sNumbersObject[nowScore / 100 % 10]);
-	scoreEach[4].position = { 1.0f + scoreNum * 1, 20.0f, -12.0f, 1.0f };
+	Draw3DObject(sNumbersObject[nowScore / 10000 % 10]);
+	scoreEach[4].position = { 1.0f + scoreNum * 2, 20.0f, -12.0f, 1.0f };
 	scoreEach[4].scale = { 0.4f, 0.4f, 0.4f };
 	scoreEach[4].rotation.x = -70.0f;
 	sNumbersObject[nowScore / 10000 % 10].Update(&scoreEach[4]);
-	Draw3DObject(sNumbersObject[nowScore / 100 % 10]);
-	scoreEach[5].position = { 1.0f + scoreNum * 0, 20.0f, -12.0f, 1.0f };
+	Draw3DObject(sNumbersObject[nowScore / 100000 % 10]);
+	scoreEach[5].position = { 1.0f + scoreNum * 1, 20.0f, -12.0f, 1.0f };
 	scoreEach[5].scale = { 0.4f, 0.4f, 0.4f };
 	scoreEach[5].rotation.x = -70.0f;
 	sNumbersObject[nowScore / 100000 % 10].Update(&scoreEach[5]);
-	Draw3DObject(sNumbersObject[nowScore / 100 % 10]);
+	Draw3DObject(sNumbersObject[nowScore / 100000 % 10]);
+	scoreEach[6].position = { 1.0f + scoreNum * 0, 20.0f, -12.0f, 1.0f };
+	scoreEach[6].scale = { 0.4f, 0.4f, 0.4f };
+	scoreEach[6].rotation.x = -70.0f;
+	sNumbersObject[nowScore / 1000000 % 10].Update(&scoreEach[6]);
+	Draw3DObject(sNumbersObject[nowScore / 1000000 % 10]);
 	scoreObject.each.position = { -5.0f, 20.0f, -12.0f, 1.0f };
 	scoreObject.each.scale = { 0.4f, 0.4f, 0.4f };
 	scoreObject.each.rotation.x = -70.0f;
 	scoreObject.Update();
 	Draw3DObject(scoreObject);
 
-	//スプライトの描画-------------------------
-	spaceBack.position.m128_f32[0] = 0;
-	spaceBack.position.m128_f32[1] = 560;
-	spaceBack.SpriteDraw();
-	space.SpriteDraw();
+		XMFLOAT3 scale = { 0.4f, 0.4f, 0.4f };
+		titleObject.each.position = { -1, 3, 0, 1.0f };
+		titleObject.each.scale = scale;
+		titleObject.Update();
+		Draw3DObject(titleObject);
+		backGroundEach[0].position = { -1, 4.5f, 4.0f, 1.0f };
+		backGroundEach[0].scale = { 20.0f, 4.0f, 1.0f };
+		backGround.Update(&backGroundEach[0]);
+		Draw3DObject(backGround);
+		backGroundEach[1].position = { -1, -6.5f, 4.0f, 1.0f };
+		backGroundEach[1].scale = { 23.0f, 1.5f, 1.0f };
+		backGround.Update(&backGroundEach[1]);
+		Draw3DObject(backGround);
+		XMFLOAT3 scale2 = { 0.3f, 0.3f, 0.3f };
+		startModel.each.position = { -1 + 5.0f, -2.0f, 0, 1.0f };
+		startModel.each.scale = scale2;
+		startModel.Update();
+		Draw3DObject(startModel);
+		XMFLOAT3 scale3 = { 0.3f, 0.3f, 0.3f };
+		tutorialObject.each.position = { -1 - 5.0f, -2.0f, 0, 1.0f };
+		tutorialObject.each.scale = scale2;
+		tutorialObject.Update();
+		Draw3DObject(tutorialObject);
+		XMFLOAT3 scale4 = { 0.3f, 0.3f, 0.3f };
+		pushSpace.each.position = { -1 + 6.0f, -5.0f, 0, 1.0f };
+		pushSpace.each.scale = scale4;
+		pushSpace.Update();
+		Draw3DObject(pushSpace);
 
-	Imgui::DrawImGui();
+		/*if (titleSelectNum == 0)
+		{
+			kagikakkoStartSprite.ChangeSize(30, 70);
+			kagikakkoStartSprite.position.m128_f32[0] = window_width / 2 + 60;
+			kagikakkoStartSprite.position.m128_f32[1] = 410;
+			kagikakkoStartSprite.SpriteDraw();
+			kagikakkoEndSprite.ChangeSize(30, 70);
+			kagikakkoEndSprite.position.m128_f32[0] = window_width / 2 + 390;
+			kagikakkoEndSprite.position.m128_f32[1] = 410;
+			kagikakkoEndSprite.SpriteDraw();
+		}
+		else
+		{
+			kagikakkoStartSprite.ChangeSize(30, 70);
+			kagikakkoStartSprite.position.m128_f32[0] = window_width / 2 - 440;
+			kagikakkoStartSprite.position.m128_f32[1] = 410;
+			kagikakkoStartSprite.SpriteDraw();
+			kagikakkoEndSprite.ChangeSize(30, 70);
+			kagikakkoEndSprite.position.m128_f32[0] = window_width / 2 - 10;
+			kagikakkoEndSprite.position.m128_f32[1] = 410;
+			kagikakkoEndSprite.SpriteDraw();
+		}*/
+	
+
+	//スプライトの描画-------------------------
+	/*if (isTipsOk)
+	{
+		spaceBack.position.m128_f32[0] = 0;
+		spaceBack.position.m128_f32[1] = 560;
+		spaceBack.SpriteDraw();
+		space.SpriteDraw();
+	}
+	else
+	{
+
+	}*/
+	//Imgui::DrawImGui();
 
 	//描画コマンドここまで
 	BaseDirectX::UpdateBack();
@@ -1706,7 +1719,7 @@ void GameScene::ToGame4Update()
 		if (sceneChangeDiray2 >= MaxSceneChangeOk)
 		{
 			if (Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01))
-			{	
+			{
 				if (!selectMode && !isTipsOk)
 				{
 					othelloManager.StartSetPos();
@@ -1991,8 +2004,37 @@ void GameScene::ToModeSelect()
 	select = true;
 	selectStage = false;
 	selectMode = false;
-	
+
 	tipsNumber = rand() % GameScene::tipsCount;
+}
+
+void GameScene::ToTitle()
+{
+	//シーンの種類を決める
+	sceneChageType = 10;
+	//カメラの終点を決める
+	eyeStart = Camera::target.v;
+	eyeEnd = { -1, 1, 0 };
+	camTargetStart = Camera::eye.v;
+	camTargetEnd = { -1, 1, -15 };
+	eyeEaseTime = 0.0f;
+	isResultStart = true;
+}
+
+void GameScene::ToTitleUpdate()
+{
+	eyeEaseTime += 0.02f;
+	if (eyeEaseTime >= 1.0f)
+	{
+		eyeEaseTime = 1.0f;
+		SceneNum = TITLE;
+		isResultStart = false;
+	}
+	light->SetLightDir(XMFLOAT3(Camera::GetTargetDirection()));
+	LightUpdate();
+	Camera::target.v = ShlomonMath::EaseInQuad(eyeStart, eyeEnd, eyeEaseTime);
+	Camera::eye.v = ShlomonMath::EaseInQuad(camTargetStart, camTargetEnd, eyeEaseTime);
+	Camera::Update();
 }
 
 void GameScene::ToResult()
