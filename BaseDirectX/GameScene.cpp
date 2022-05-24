@@ -203,7 +203,7 @@ void GameScene::Init()
 	selectGameType = 1;
 	SoundPlayLoop(BGMSound);
 
-	othelloManager.Init(num);
+	othelloManager.Init(num, numbersObject);
 	othelloManager.AddPanel();
 	const float OthelloR = 1.8f;
 	for (int i = 0; i < 20; i++)
@@ -969,7 +969,6 @@ void GameScene::GameDraw()
 	//PostEffects::PreDraw();
 
 	//Draw3DObject(sample);
-
 	BaseDirectX::clearColor[0] = 0.0f;
 	BaseDirectX::clearColor[1] = 0.0f;
 	BaseDirectX::clearColor[2] = 0.0f;
@@ -1210,17 +1209,18 @@ void GameScene::GameDraw()
 	ObjectParticles::Draw();
 	ParticleControl::Draw();
 	othelloManager.Draw();
-	Lights::Draw();
-
-	//スプライトの描画-------------------------
 	if (selectMode)
 	{
-		othelloManager.NormaTextDraw(selectStageNum, true);
+		othelloManager.NormaTextModelDraw(selectStageNum, true);
 	}
 	if (isModeSelect)
 	{
-		othelloManager.ModeSelectDraw(true);
+		othelloManager.ModeSelectModelDraw(true);
 	}
+	Lights::Draw();
+
+	//スプライトの描画-------------------------
+
 	if (countDown > 0 && isSceneChange == false && isModeSelect == false)
 	{
 		if (countDown < 59)
