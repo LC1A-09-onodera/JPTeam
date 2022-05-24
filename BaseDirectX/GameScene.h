@@ -34,12 +34,14 @@ private:
 	void ToGame2();
 	void ToGame3();
 	void ToGame4(bool flags = false);
+	void ToTutorial();
 
 	void ToGame1Update();
 	void ToGame2Update();
 	void ToGame3Update();
 	void ToGame4Update();
 	void ToModeSelectUpdate();
+	void ToTutorialUpdate();
 	void ToModeSelect();
 
 	void ToResult();
@@ -91,7 +93,7 @@ public://シーンで使うもの
 	bool isCountDownEnd;
 	int countDownFrame;
 	const int countMax = 239;
-	Sprite numbers[30];
+	//Sprite numbers[30];
 	//gameシーンからリザルトから使う
 	bool isResultSceneChange;
 	int resultSceneWindowSize;
@@ -106,18 +108,15 @@ public://シーンで使うもの
 	float eyeEaseTime;
 
 	int resultForTime;
-	const int gameMaxTime = 5999;
+	const int gameMaxTime = 59;
 
 	//スコア用
-	Sprite scoreNum[60];
+	//Sprite scoreNum[60];
 	Sprite scoreSprite;
 	Sprite timeUp;
 	Sprite startSprite;
 	Tex num[10];
 
-	Sprite addScoreNum[60];
-	Sprite addReverse;
-	Sprite addConbo[30];
 
 	Model sky;
 	Model othelloStage;
@@ -227,4 +226,6 @@ public://シーンで使うもの
 
 	int tipsNumber;
 	list<pair<int, int>> tipsNumAndTexCount;
+
+	const int MaxSceneChangeOk = 120;
 };

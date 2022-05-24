@@ -43,6 +43,7 @@ public:
 	void Update(std::list<Othello> panels, int score, int combo);
 	void Draw();
 	void Finalize();
+	bool isClear = false;
 public:
 	void SetMove(std::list<Othello> panels, int x, int y);
 	void PanelUpdate(std::list<Othello> panels);
@@ -52,7 +53,7 @@ public:
 
 	bool GetClear();
 	bool GetFailed();
-	bool isClear = false;
+	
 
 	int GetStatus();
 	int GetLestStatus();
