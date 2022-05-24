@@ -43,7 +43,8 @@ private:
 	void ToModeSelectUpdate();
 	void ToTutorialUpdate();
 	void ToModeSelect();
-
+	void ToTitle();
+	void ToTitleUpdate();
 	void ToResult();
 public:
 	GameScene();
@@ -120,7 +121,7 @@ public://シーンで使うもの
 
 	Model sky;
 	Model othelloStage;
-
+	
 	SoundData selectSound;
 	SoundData timeUpSound;
 	SoundData enterSound;
@@ -215,10 +216,18 @@ public://シーンで使うもの
 	Model sNumbersObject[10];
 	Model reverseObject;
 	Model scoreObject;
+	Model startModel;
+	Model pushA;
+	Model pushSpace;
+	Model AButton;
+	Model tutorialObject;
+	Model titleObject;
+	Model backGround;
+	EachInfo backGroundEach[2];
 
 	EachInfo reversEach[2];
 	EachInfo timerEach[2];
-	EachInfo scoreEach[6];
+	EachInfo scoreEach[7];
 	bool isTipsOk = false;
 	
 	static const int tipsCount = 5;
@@ -228,4 +237,9 @@ public://シーンで使うもの
 	list<pair<int, int>> tipsNumAndTexCount;
 
 	const int MaxSceneChangeOk = 120;
+
+	//falseはそのままリザルトへ
+	bool isResultOrTitle = false;
+
+	bool isResultStart = false;
 };

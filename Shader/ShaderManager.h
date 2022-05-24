@@ -8,6 +8,7 @@ public:
 	static HLSLShader thunderShader;
 	static HLSLShader othelloShader;
 	static HLSLShader othelloFrame;
+	static HLSLShader half;
 	//static HLSLShader translucentShader;
 
 	static HLSLShader postEffect;
