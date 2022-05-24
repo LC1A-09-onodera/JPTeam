@@ -160,13 +160,13 @@ namespace OthelloConstData
 	const int chainRepairTime = 0;
 	const int saveTimerLimit = 180;
 	const int tutorialTimerLimit = 180;
-	const int SpawnDerayTimerMax = 60;
+	const int spawnDerayTimerMax = 60;
 
 	const float PanelSize = 10.0f;
 
 	const float panelWallRate = 0.0f;
 	const int downStepCountMax = 0;
-	const int TutorialEndTextTimer = 300;
+	const int tutorialEndTextTimer = 300;
 
 	const int NormaStageCount = 11;
 	//アニメーション
@@ -175,8 +175,8 @@ namespace OthelloConstData
 	const int vanishWaitTimer = vanishTimerMax - vanishAnimation;
 	const int animationTimerMax = 30;
 	const int waitTimerMax = 30;
-	const int JumpTimerMax = waitTimerMax / 2;
-	const int SpawnAnimationTimerMax = 120;
+	const int jumpTimerMax = waitTimerMax / 2;
+	const int spawnAnimationTimerMax = 120;
 	const int downStepTimerMax = 60;
 
 	namespace Breath
@@ -188,6 +188,10 @@ namespace OthelloConstData
 	const panelPos scoreAttack = { 0, 7 };
 	const XMVECTOR moveTextPos = { 400, 0, 0,0 };
 	const XMVECTOR moveSubTextPos = { 105, 50, 0,0 };
+	const XMVECTOR comboScoreModelPos{ -2.0f, 18.0f, -1.0f ,0 };
+	const XMVECTOR allDeleteModelPos{ -5.0f, 18.0f, -1.0f ,0 };
+	const XMVECTOR moveTextModelPos{ 13.0f, 0.0f, 0.0f ,0.0f };
+	const XMVECTOR moveSubTextModelPos{ 4.0f, -5.0f, 0.0f ,0.0f };
 }
 
 class OthelloEachInfo : public EachInfo
@@ -299,7 +303,7 @@ private:
 class OthelloManager
 {
 public:
-	void Init(Tex num[10]);
+	void Init(Tex num[10], Model numModel[10]);
 	void Update(int combo);
 	void TutorialUpdate(int combo);
 	void Draw();
@@ -313,7 +317,7 @@ public:
 	void MinSpawn(bool inGame);
 	static list<Othello> othellos;
 	static list<NormaModeFieldData> NormaStartOthellos;
-
+	void SpawnChances(const vector<pair<int, int>> &pos);
 	static list<ChanceObject> chances;
 	void DeadPanel();
 
@@ -349,6 +353,7 @@ public://ノルマモード用関数
 	void SetScore(const int score) { nowScore = score; }
 
 	void NormaTextDraw(int stageNum, bool isDraw);
+	void NormaTextModelDraw(int stageNum, bool isDraw);
 	int GetNormaStagesCount();
 	list<NormaModeFieldData>::iterator GetNormaStage(int num);
 private://ノルマモード用内部処理関数
@@ -356,7 +361,8 @@ private://ノルマモード用内部処理関数
 	void TestStage();
 	void LoadNormaStage(std::string stage);
 	void LoadAllStage();
-	void CountDraw(int count);
+	void CountTextDraw(int count);
+	void CountModelDraw(int count);
 public://モードセレクト用外部関数
 	//モード選択開始時
 	void ModeSelectStart();
@@ -372,6 +378,7 @@ public://モードセレクト用外部関数
 	int GetEnterNormaStage();
 	//何かしら描画があるなら
 	void ModeSelectDraw(bool isDraw);
+	void ModeSelectModelDraw(bool isDraw);
 private://モードセレクト用変数
 private://モードセレクト用内部関数
 	void SetModeSelectPanel();
@@ -379,8 +386,16 @@ private://モードセレクト用内部関数
 	void NormaPanelsTextSetPos(bool isNormaMode);
 	void NormaScoreTextSetPos(bool isNormaMode);
 	void SetCountPos(bool isNormaMode);
-	void SetTextPos(bool isNormaMode);
 	void SubNormaTextPos(bool isNormaMode);
+	void SetTextPos(bool isNormaMode, int stageNum = 1);
+
+
+	void NormaComboModelSetPos(bool isNormaMode);
+	void NormaPanelsModelSetPos(bool isNormaMode);
+	void NormaScoreModelSetPos(bool isNormaMode);
+	void SetCountModelPos(bool isNormaMode);
+	void SubNormaModelPos(bool isNormaMode);
+	void SetModelPos(bool isNormaMode);
 private:
 	void SetPlayer();
 
@@ -402,6 +417,8 @@ private:
 	void playerNotMove();
 
 	void OthelloDraw();
+
+	void EraseChanceObject();
 private://チャンスオブジェクト
 
 	void SetChanceObject(int x, int y, bool Front);
@@ -470,6 +487,10 @@ private:
 	static OthelloModel wallOserroModel;
 	static ChanceModel chanceModelBlue;
 	static ChanceModel chanceModelOrange;
+
+	static Model PanelTextModel;
+	static Model ComboTextModel;
+	static Model ScoreTextModel;
 	static vector<vector<SendOthelloData>> sendDatas;
 
 	bool isOnPanel = true;
@@ -494,6 +515,11 @@ private:
 	Sprite CongraturationText;
 	Sprite back;
 	Sprite normaCountTex[50];
+
+	vector<Model *>numberModel;
+	vector<EachInfo> CountDrawData;
+	EachInfo NormaDrawData;
+	EachInfo SubNormaDrawData;
 
 
 	Sprite NormaPanelsText;

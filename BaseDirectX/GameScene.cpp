@@ -173,8 +173,7 @@ void GameScene::Init()
 	selectGameType = 1;
 	SoundPlayLoop(BGMSound);
 
-	othelloManager.Init(num);
-	othelloManager.AddPanel();
+	
 	const float OthelloR = 1.8f;
 	for (int i = 0; i < 20; i++)
 	{
@@ -253,6 +252,8 @@ void GameScene::Init()
 	}
 
 	tipsNumAndTexCount.push_back({ 0, 4 });
+	othelloManager.Init(num, sNumbersObject);
+	othelloManager.AddPanel();
 }
 
 void GameScene::TitleUpdate()
