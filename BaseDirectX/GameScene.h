@@ -34,12 +34,14 @@ private:
 	void ToGame2();
 	void ToGame3();
 	void ToGame4(bool flags = false);
+	void ToTutorial();
 
 	void ToGame1Update();
 	void ToGame2Update();
 	void ToGame3Update();
 	void ToGame4Update();
 	void ToModeSelectUpdate();
+	void ToTutorialUpdate();
 	void ToModeSelect();
 
 	void ToResult();
@@ -224,4 +226,6 @@ public://ÉVÅ[ÉìÇ≈égÇ§Ç‡ÇÃ
 
 	int tipsNumber;
 	list<pair<int, int>> tipsNumAndTexCount;
+
+	const int MaxSceneChangeOk = 120;
 };

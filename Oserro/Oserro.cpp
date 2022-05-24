@@ -826,6 +826,7 @@ void OthelloManager::TutorialUpdate(int combo)
 		if (TutorialTimer >= tutorialTimerLimit)
 		{
 			scenes = TutorialSceneFlow::StepSpawn;
+			ObjectParticles::othelloFrame.DeleteAllParticle();
 		}
 		if (retry)
 		{
@@ -855,6 +856,7 @@ void OthelloManager::TutorialUpdate(int combo)
 		if (TutorialTimer >= tutorialTimerLimit)
 		{
 			//scenes = TutorialSceneFlow::TutorialEnd;
+			ObjectParticles::othelloFrame.DeleteAllParticle();
 		}
 
 		if (retry)
