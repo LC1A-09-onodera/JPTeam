@@ -158,14 +158,17 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData, bo
 
 		for (auto itr = reachData.begin(); itr != reachData.end(); ++itr)
 		{
-			CheckReachOthello(Direction_X::WEST, NONE_DIRECTION);
-			CheckReachOthello(Direction_X::EAST, NONE_DIRECTION);
-			CheckReachOthello(NONE_DIRECTION, Direction_Y::SOUTH);
-			CheckReachOthello(NONE_DIRECTION, Direction_Y::NOUTH);
-			CheckReachOthello(Direction_X::WEST, Direction_Y::NOUTH);
-			CheckReachOthello(Direction_X::WEST, Direction_Y::SOUTH);
-			CheckReachOthello(Direction_X::EAST, Direction_Y::NOUTH);
-			CheckReachOthello(Direction_X::EAST, Direction_Y::SOUTH);
+			int lastX = itr->first;
+			int lastY = itr->second;
+
+			CheckReachOthello(Direction_X::WEST, NONE_DIRECTION, lastX, lastY);
+			CheckReachOthello(Direction_X::EAST, NONE_DIRECTION, lastX, lastY);
+			CheckReachOthello(NONE_DIRECTION, Direction_Y::SOUTH, lastX, lastY);
+			CheckReachOthello(NONE_DIRECTION, Direction_Y::NOUTH, lastX, lastY);
+			CheckReachOthello(Direction_X::WEST, Direction_Y::NOUTH, lastX, lastY);
+			CheckReachOthello(Direction_X::WEST, Direction_Y::SOUTH, lastX, lastY);
+			CheckReachOthello(Direction_X::EAST, Direction_Y::NOUTH, lastX, lastY);
+			CheckReachOthello(Direction_X::EAST, Direction_Y::SOUTH, lastX, lastY);
 		}
 		reachData.clear();
 	}
@@ -752,10 +755,10 @@ void CheakOthello::ChangeScoreAndCombo()
 	checkScoreData.clear();
 }
 
-void CheakOthello::CheckReachOthello(int direction_x, int direction_y)
+void CheakOthello::CheckReachOthello(int direction_x, int direction_y, int last_x, int last_y)
 {
-	int lastX = reachData.front().first;
-	int lastY = reachData.front().second;
+	int lastX = last_x;
+	int lastY = last_y;
 	bool side = othelloDatas[lastY][lastX].isFront;
 	bool isReach = false;
 	bool sandCheck = false;
