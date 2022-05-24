@@ -90,7 +90,7 @@ void GameScene::Init()
 	Model::SetLight(light);
 
 	//ポストエフェクトの初期化
-	PostEffects::Init();
+	//PostEffects::Init();
 
 	/*model = FbxLoader::GetInstance()->LoadModelFromFile("boneTest");
 	object = new FBXObject;
@@ -103,8 +103,6 @@ void GameScene::Init()
 
 	checkObject.Init();
 	ObjectParticles::LoadModels();
-
-
 
 	title.CreateSprite(L"Resource/Img/titel.png", XMFLOAT3(70, 60 + 50, 0));
 	titleBack.CreateSprite(L"Resource/Img/title_back.png", XMFLOAT3(0, 46 + 50, 0));
@@ -803,13 +801,13 @@ void GameScene::TitleDraw()
 		backGround.Update(&backGroundEach[1]);
 		Draw3DObject(backGround);
 		XMFLOAT3 scale2 = { 0.3f, 0.3f, 0.3f };
-		startModel.each.position = { -1 + 5.0f, -2.0f, 0, 1.0f };
+		startModel.each.position = { -1 + 6.0f, -2.0f, 0, 1.0f };
 		startModel.each.scale = scale2;
 		startModel.each.rotation = { 0, 0, 0 };
 		startModel.Update();
 		Draw3DObject(startModel);
 		XMFLOAT3 scale3 = { 0.3f, 0.3f, 0.3f };
-		tutorialObject.each.position = { -1 - 5.0f, -2.0f, 0, 1.0f };
+		tutorialObject.each.position = { -1 - 6.0f, -2.0f, 0, 1.0f };
 		tutorialObject.each.scale = scale2;
 		tutorialObject.each.rotation = { 0, 0, 0 };
 		tutorialObject.Update();
@@ -823,41 +821,25 @@ void GameScene::TitleDraw()
 
 		if (titleSelectNum == 0)
 		{
-			/*kagikakkoStartSprite.ChangeSize(30, 70);
-			kagikakkoStartSprite.position.m128_f32[0] = window_width / 2 + 60;
-			kagikakkoStartSprite.position.m128_f32[1] = 410;
-			kagikakkoStartSprite.SpriteDraw();
-			kagikakkoEndSprite.ChangeSize(30, 70);
-			kagikakkoEndSprite.position.m128_f32[0] = window_width / 2 + 390;
-			kagikakkoEndSprite.position.m128_f32[1] = 410;
-			kagikakkoEndSprite.SpriteDraw();*/
-			kakko[0].each.position = { -1 + 7.0f, -2.0f, 0, 1.0f };
-			kakko[0].each.rotation.x += 1.0f;
-			kakko[0].Update();
-			Draw3DObject(kakko[0]);
-			kakko[1].each.position = { -1 + 3.0f, -2.0f, 0, 1.0f };
+			kakko[1].each.position = { -1 + 10.5f, -2.0f, 0, 1.0f };
 			kakko[1].each.rotation.x += 1.0f;
 			kakko[1].Update();
 			Draw3DObject(kakko[1]);
+			kakko[0].each.position = { -1 + 1.5f, -2.0f, 0, 1.0f };
+			kakko[0].each.rotation.x += 1.0f;
+			kakko[0].Update();
+			Draw3DObject(kakko[0]);
 		}
 		else
 		{
-			/*kagikakkoStartSprite.ChangeSize(30, 70);
-			kagikakkoStartSprite.position.m128_f32[0] = window_width / 2 - 440;
-			kagikakkoStartSprite.position.m128_f32[1] = 410;
-			kagikakkoStartSprite.SpriteDraw();
-			kagikakkoEndSprite.ChangeSize(30, 70);
-			kagikakkoEndSprite.position.m128_f32[0] = window_width / 2 - 10;
-			kagikakkoEndSprite.position.m128_f32[1] = 410;
-			kagikakkoEndSprite.SpriteDraw();*/
-			kakko[0].each.position = { -1 - 5.0f, -2.0f, 0, 1.0f };
-			kakko[0].each.rotation.x += 1.0f;
-			kakko[0].Update();
-			Draw3DObject(kakko[0]);
-			kakko[1].each.position = { -1 - 9.0f, -2.0f, 0, 1.0f };
+			kakko[1].each.position = { -1 - 0.5f, -2.0f, 0, 1.0f };
 			kakko[1].each.rotation.x += 1.0f;
 			kakko[1].Update();
 			Draw3DObject(kakko[1]);
+			kakko[0].each.position = { -1 - 11.5f, -2.0f, 0, 1.0f };
+			kakko[0].each.rotation.x += 1.0f;
+			kakko[0].Update();
+			Draw3DObject(kakko[0]);
 		}
 	}
 	if (isPouse)
@@ -2088,7 +2070,7 @@ void GameScene::EndDraw()
 	BaseDirectX::clearColor[3] = 0.0f;
 	BaseDirectX::UpdateFront();
 	//PostEffectのDraw
-	postEffect.Draw();
+	//postEffect.Draw();
 
 	//スプライトの描画-------------------------
 	//titleSprite.SpriteDraw();
