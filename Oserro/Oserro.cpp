@@ -1038,7 +1038,6 @@ void OthelloManager::NormaUpdate(int combo)
 	}
 	if (isNormaMode)
 	{
-		bool retry = (Input::KeyTrigger(DIK_R) || directInput->IsButtonPush(directInput->Button03));
 		Undo();
 		normaChecker.Update(othellos, nowScore, nowMaxCombo);
 	}
@@ -1791,7 +1790,7 @@ const vector<vector<SendOthelloData>> &OthelloManager::Send()
 	{
 		OthelloData gameDatas = *itr->GetGameData();
 		SendOthelloData data;
-		if (gameDatas.isPlayer || gameDatas.isSpawn || gameDatas.type == OthelloType::WALL)
+		if (gameDatas.isPlayer || gameDatas.type == OthelloType::WALL)
 		{
 			continue;
 		}
@@ -1858,7 +1857,7 @@ void OthelloManager::Receive(const vector<vector<SendOthelloData>> &data)
 		gameDatas->score = sendDatas[y][x].score;
 		gameDatas->chainName = sendDatas[y][x].chainName;
 		gameDatas->maxComboCount = sendDatas[y][x].maxComboCount;
-		if (sendDatas[y][x].type == NONE)
+		if (sendDatas[y][x].type == NONE || gameDatas->isSpawn)
 		{
 			continue;
 		}
@@ -2659,6 +2658,8 @@ void OthelloManager::AllDeletePanel()
 		return;
 	}
 	othellos.clear();
+	EraseChanceObject();
+
 }
 void OthelloManager::DownStep(list<Othello>::iterator playerItr)
 {
@@ -2935,7 +2936,7 @@ void TextModel::Update(EachInfo *each, XMMATRIX *addRot)
 }
 void OthelloManager::whySandwichSpawn()
 {
-	AllDeadPanel();
+	AllDeletePanel();
 
 	SetPlayerAndPanel(2, 4, false);
 	SetSpawnPanel(4, 4, false);
@@ -2948,7 +2949,7 @@ void OthelloManager::whySandwichSpawn()
 
 void OthelloManager::whyChainSpawn()
 {
-	AllDeadPanel();
+	AllDeletePanel();
 
 	SetSpawnPanel(4, 2, true);
 	SetSpawnPanel(4, 3, false);
@@ -2996,7 +2997,7 @@ void OthelloManager::SpawnChances(const vector<pair<int, int>> &pos)
 
 void OthelloManager::whyStepSpawn()
 {
-	AllDeadPanel();
+	AllDeletePanel();
 
 	SetSpawnPlayer(4, 5);
 	SetSpawnPanel(3, 4, true);

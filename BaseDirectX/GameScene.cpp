@@ -420,7 +420,7 @@ void GameScene::TitleUpdate()
 					}
 				}
 				//チュートリアルに飛ぶ
-				if ((Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01)) && !isPouse && !isSceneChange)
+				if ((Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01)) && !isPouse && !isSceneChange && !isPouseToTiTle)
 				{
 					if (titleSelectNum == 1)
 					{
@@ -440,6 +440,7 @@ void GameScene::TitleUpdate()
 					else
 					{
 						gameTime = 1;
+						isTipsDraw = false;
 						ToModeSelect();
 					}
 				}
@@ -483,12 +484,11 @@ void GameScene::TitleUpdate()
 						selectStageNum++;
 					}
 				}
-				if ((Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01)) && !isPouse)
+				if ((Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01)) && !isPouse && !isPouseToTiTle)
 				{
 
 					SoundStopWave(enterSound);
 					SoundPlayOnce(enterSound);
-
 					//スコアアタック
 					if (!selectMode)
 					{
@@ -2294,6 +2294,7 @@ void GameScene::ToResult()
 void GameScene::PouseToTitle()
 {
 	//gameTime = 0;
+	sceneChageType = 20;
 	isPouseToTiTle = true;
 	isPouse = false;
 	isTutorial = false;
@@ -2334,6 +2335,7 @@ void GameScene::PouseToTitleUpdate()
 			{
 				SceneNum = TITLE;
 				isTipsDraw = false;
+				isSceneChange = false;
 			}
 			Camera::target = { -1, 1, 0 };
 			Camera::eye = { -1, 1, -15 };
