@@ -367,6 +367,7 @@ void GameScene::TitleUpdate()
 
 		if (easeTimer == 1.0f) { easeTimer = 0; logoNum++; }
 	}
+
 #pragma region â¥à»äOÇÃèàóù
 	if (isDrawLogo && !isPouseToTiTle)
 	{
@@ -1524,6 +1525,7 @@ void GameScene::GameDraw()
 		tips_ss[3].SpriteDraw();
 		tips[tipsCounts].SpriteDraw();
 	}
+	else if (!isTipsDraw && isTipsDrawTrigger) { tipsCounts++; isTipsDrawTrigger = false; }
 
 	else if (isCameraModed)
 	{

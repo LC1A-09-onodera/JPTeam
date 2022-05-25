@@ -71,7 +71,7 @@ void CheakOthello::SoundInit()
 	SoundLoad("Resource/Sound/reverse_13_.wav", comboSound[13]);
 	SoundLoad("Resource/Sound/reverse_14_.wav", comboSound[14]);
 	//SoundLoad("Resource/Sound/reverse_4_.wav", comboSound);
-	SoundLoad("Resource/Sound/menuDecisionSE_.wav", missSound);
+	SoundLoad("Resource/Sound/miss.wav", missSound);
 }
 
 void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData, bool isCheck)
