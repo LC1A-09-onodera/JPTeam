@@ -908,7 +908,7 @@ void GameScene::GameUpdate()
 			XMFLOAT3 ssPos0 = ConvertXMVECTORtoXMFLOAT3(tips_ss[tipsDrawNum].position);
 			//‚±‚ê‚©‚ç•`‰æ‚³‚ê‚étips
 			XMFLOAT3 ssPos1 = { 0,0,0 };
-			if (tipsDrawNum >= 3) { ssPos1 = ConvertXMVECTORtoXMFLOAT3(tips_ss[0].position); }
+			if (tipsDrawNum >= USE_TEX_0 - 1) { ssPos1 = ConvertXMVECTORtoXMFLOAT3(tips_ss[0].position); }
 			else { ssPos1 = ConvertXMVECTORtoXMFLOAT3(tips_ss[tipsDrawNum + 1].position); }
 
 			XMFLOAT3 ssPos0_Goal = { START_X + SIZE_X,START_Y,0 };
@@ -921,7 +921,7 @@ void GameScene::GameUpdate()
 			ssPos1 = ShlomonMath::EaseInQuad(ssPos1, ssPos1_Goal, tips_easeTimer);
 
 			tips_ss[tipsDrawNum].position = ConvertXMFLOAT3toXMVECTOR(ssPos0);
-			if (tipsDrawNum >= 3) { tips_ss[0].position = ConvertXMFLOAT3toXMVECTOR(ssPos1); }
+			if (tipsDrawNum >= USE_TEX_0 - 1) { tips_ss[0].position = ConvertXMFLOAT3toXMVECTOR(ssPos1); }
 			else { tips_ss[tipsDrawNum + 1].position = ConvertXMFLOAT3toXMVECTOR(ssPos1); }
 
 			if (tips_easeTimer == 1.0f)
@@ -931,7 +931,7 @@ void GameScene::GameUpdate()
 				);
 
 				tipsDrawNum++;
-				if (tipsDrawNum > 3) { tipsDrawNum = 0; }
+				if (tipsDrawNum > USE_TEX_0 - 1) { tipsDrawNum = 0; }
 				tips_easeTimer = 0;
 				moveTips = false;
 			}
