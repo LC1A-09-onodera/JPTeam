@@ -673,7 +673,7 @@ void OthelloManager::Init(Tex num[10], Model numModel[10])
 		int y = stageCount / fieldSize;
 		e.CreateConstBuff0();
 		e.CreateConstBuff1();
-		SetModeSelectEachInfo(e, { x, y });
+		SetModeSelectEachInfo(e, panelPos{ x, y });
 		stageCount++;
 	}
 	TutorialText1.CreateSprite(L"Resource/Img/string_0.png", XMFLOAT3(0, 0, 0));
@@ -1381,6 +1381,7 @@ void OthelloManager::ModeSelectModelDraw(bool isDraw)
 		{
 			if (i != stageNum)
 			{
+				
 			}
 		}
 		ScoreAttackTextModel.Update(&ScoreAttackDrawData);
