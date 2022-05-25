@@ -2658,6 +2658,8 @@ void OthelloManager::AllDeletePanel()
 		return;
 	}
 	othellos.clear();
+	EraseChanceObject();
+
 }
 void OthelloManager::DownStep(list<Othello>::iterator playerItr)
 {
