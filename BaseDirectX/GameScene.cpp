@@ -708,7 +708,8 @@ void GameScene::GameUpdate()
 			}
 			else if (othelloManager.IsTutorialEnd() && isTutorial)
 			{
-				gameTime--;
+				//gameTime--;
+				PouseToTitle();
 			}
 			countDown--;
 		}
@@ -778,19 +779,18 @@ void GameScene::GameUpdate()
 					SoundPlayLoop(BGMSound);
 					isPouseToTitle = false;
 				}*/
-				if (isTutorial == true)
+				/*if (isTutorial == true)
 				{
 					SceneNum = TITLE;
 					SoundPlayLoop(BGMSound);
 					isTutorial = false;
-				}
-				else
-				{
-					SceneNum = RESULT;
-					resultForTime = 0;
-					isResultSceneChange = false;
-					displayScore = checkObject.GetScore();
-				}
+				}*/
+				if (!isPouseToTitle && !isTutorial)
+				SceneNum = RESULT;
+				resultForTime = 0;
+				isResultSceneChange = false;
+				displayScore = checkObject.GetScore();
+				
 			}
 			Camera::Update();
 		}
@@ -2293,6 +2293,7 @@ void GameScene::PouseToTitle()
 	//gameTime = 0;
 	isPouseToTiTle = true;
 	isPouse = false;
+	isTutorial = false;
 	select = false;
 	pouseToTitleEaseTime1 = 0.0f;
 	isBackGroundOthello = false;
@@ -2301,12 +2302,14 @@ void GameScene::PouseToTitle()
 	ObjectParticles::othelloFrame.DeleteAllParticle();
 	ObjectParticles::six.DeleteAllParticle();
 	ObjectParticles::frame.DeleteAllParticle();
+	othelloManager.AllDeletePanel();
 }
 
 void GameScene::PouseToTitleUpdate()
 {
 	if (isPouseToTiTle)
 	{
+		ObjectParticles::frame.DeleteAllParticle();
 		pouseToTitleEaseTime1 += 0.02f;
 		if (pouseToTitleEaseTime1 >= 1.0f)
 		{
