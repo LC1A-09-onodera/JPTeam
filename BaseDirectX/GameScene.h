@@ -46,6 +46,8 @@ private:
 	void ToTitle();
 	void ToTitleUpdate();
 	void ToResult();
+	void PouseToTitle();
+	void PouseToTitleUpdate();
 public:
 	GameScene();
 	~GameScene();
@@ -196,6 +198,7 @@ public://シーンで使うもの
 	float goToGameTime = 0.0f;
 
 	list<FrameEach> opOthellos;
+	list<FrameEach> pouseOthellos;
 
 	//Timer管理用
 	const int CHANGE_TIMER_SECOND = 100;	//-1の値から振動開始
@@ -270,4 +273,12 @@ public://シーンで使うもの
 	float tips_easeTimer;
 	bool isTipsDrawTrigger;
 	bool moveTips;
+
+	//シーン切り替えをはじめる
+	bool isPouseToTiTle = false;
+	float pouseToTitleEaseTime1;
+	//背景出す
+	bool isBackGroundOthello = false;
+	//ノーマルオセロの捜査を始める
+	bool isNormalOthello = false;
 };
