@@ -970,7 +970,7 @@ void GameScene::GameUpdate()
 	if (green_scale < 0.075f) { green_scale = 0.09f; }
 	green_scale -= 0.0005f;
 
-	pushButton[0].position = { 8.2f, -3.33f, -3.0f, 1.0 };
+	/*pushButton[0].position = { 8.2f, -3.33f, -3.0f, 1.0 };
 	pushButton[0].rotation = { -45, 0, 0 };
 	pushButton[0].scale = { black_scale, black_scale, black_scale };
 
@@ -980,10 +980,10 @@ void GameScene::GameUpdate()
 
 	pushButton[2].position = { 8.7f, -3.83f, -3.0f, 1.0 };
 	pushButton[2].rotation = { -45, 0, 0 };
-	pushButton[2].scale = { black_scale, black_scale, black_scale };
+	pushButton[2].scale = { black_scale, black_scale, black_scale };*/
 
-	pushButton_green.each.position = { 8.2f, -4.33f, -5.0f, 1.0 };
-	pushButton_green.each.scale = { green_scale, green_scale, green_scale };
+	/*pushButton_green.each.position = { 8.2f, -4.33f, -5.0f, 1.0 };
+	pushButton_green.each.scale = { green_scale, green_scale, green_scale };*/
 
 	//pushButton_black.Update();
 	pushButton_green.Update();
@@ -1533,18 +1533,20 @@ void GameScene::GameDraw()
 		tips[tipsCounts].SpriteDraw();
 	}
 
-	Draw3DObject(pushButton_green);
+	if (isCameraModed)
+	{
+		Draw3DObject(pushButton_green);
 
-	XMFLOAT3 rot = pushButton_black.each.rotation;
-	XMFLOAT3 rot2 = pushButton_green.each.rotation;
+		XMFLOAT3 rot = pushButton_black.each.rotation;
+		XMFLOAT3 rot2 = pushButton_green.each.rotation;
 
-	pushButton_black.Update(&pushButton[0]);
-	Draw3DObject(pushButton_black);
-	pushButton_black.Update(&pushButton[1]);
-	Draw3DObject(pushButton_black);
-	pushButton_black.Update(&pushButton[2]);
-	Draw3DObject(pushButton_black);
-
+		pushButton_black.Update(&pushButton[0]);
+		Draw3DObject(pushButton_black);
+		pushButton_black.Update(&pushButton[1]);
+		Draw3DObject(pushButton_black);
+		pushButton_black.Update(&pushButton[2]);
+		Draw3DObject(pushButton_black);
+	}
 	//Imgui::DrawImGui();
 	//描画コマンドここまで
 	BaseDirectX::UpdateBack();
@@ -1778,7 +1780,7 @@ void GameScene::ToGame4(bool flags)
 	gameTime = gameMaxTime;
 
 	isTipsOk = false;
-
+	isCameraModed = false;
 	isStageDisplay = false;
 	goToGameTime = 0.0f;
 	sceneChangeDiray2 = 0;
@@ -1822,7 +1824,7 @@ void GameScene::ToTutorial()
 	gameTime = gameMaxTime;
 
 	isTipsOk = false;
-
+	isCameraModed = false;
 	isStageDisplay = false;
 	goToGameTime = 0.0f;
 	sceneChangeDiray2 = 0;
@@ -2027,6 +2029,7 @@ void GameScene::ToGame4Update()
 			if (goToGameTime >= 1.0f)
 			{
 				isSceneChange = false;
+				isCameraModed = true;
 				if (isTutorial)
 				{
 					gameTime = 1;
@@ -2053,6 +2056,7 @@ void GameScene::ToGame4Update()
 			if (goToGameTime >= 1.0f)
 			{
 				isSceneChange = false;
+				isCameraModed = true;
 				if (isTutorial)
 				{
 					gameTime = 1;
@@ -2121,6 +2125,7 @@ void GameScene::ToModeSelectUpdate()
 			if (goToGameTime >= 1.0f)
 			{
 				isSceneChange = false;
+				isCameraModed = true;
 			}
 		}
 		//ゲーム画面」に移行し、カウントダウン開始
@@ -2137,7 +2142,7 @@ void GameScene::ToModeSelectUpdate()
 			if (goToGameTime >= 1.0f)
 			{
 				isSceneChange = false;
-
+				isCameraModed = true;
 				OthlloPlayer::isReverse = true;
 				OthlloPlayer::playerReverseObject->PlayAnimation();
 			}
@@ -2200,6 +2205,7 @@ void GameScene::ToTutorialUpdate()
 			if (goToGameTime >= 1.0f)
 			{
 				isSceneChange = false;
+				isCameraModed = true;
 				if (isTutorial)
 				{
 					gameTime = 1;
@@ -2266,7 +2272,6 @@ void GameScene::ToModeSelect()
 	isModeSelect = true;
 
 	isTipsOk = false;
-
 	isStageDisplay = false;
 	goToGameTime = 0.0f;
 	sceneChangeDiray2 = 0;
@@ -2289,6 +2294,8 @@ void GameScene::ToModeSelect()
 	othelloManager.EraseChanceObject();
 
 	tipsNumber = rand() % GameScene::tipsCount;
+
+	isCameraModed = false;
 }
 
 void GameScene::ToTitle()
@@ -2383,7 +2390,6 @@ void GameScene::PouseToTitleUpdate()
 		}
 		else
 		{
-
 			if (Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01))
 			{
 				SceneNum = TITLE;
