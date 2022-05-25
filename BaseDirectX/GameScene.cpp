@@ -923,7 +923,7 @@ void GameScene::GameUpdate()
 		pushButton_green.each.scale = { green_scale, green_scale, green_scale };
 
 		//pushButton_black.Update();
-		pushButton_green.Update();
+		//pushButton_green.Update();
 
 		if (!moveTips)
 		{
@@ -966,26 +966,16 @@ void GameScene::GameUpdate()
 		}
 	}
 
-	const float black_scale = 0.085f;
-	if (green_scale < 0.075f) { green_scale = 0.09f; }
-	green_scale -= 0.0005f;
+	else if (isCameraModed)
+	{
+		const float black_scale = 0.085f;
+		if (green_scale < 0.075f) { green_scale = 0.09f; }
+		green_scale -= 0.0005f;
 
-	/*pushButton[0].position = { 8.2f, -3.33f, -3.0f, 1.0 };
-	pushButton[0].rotation = { -45, 0, 0 };
-	pushButton[0].scale = { black_scale, black_scale, black_scale };
+		//pushButton_green.each.position = { 8.2f, -4.33f, -5.0f, 1.0 };
+		pushButton_green.each.scale = { green_scale, green_scale, green_scale };
+	}
 
-	pushButton[1].position = { 7.7f, -3.83f, -3.0f, 1.0 };
-	pushButton[1].rotation = { -45, 0, 0 };
-	pushButton[1].scale = { black_scale, black_scale, black_scale };
-
-	pushButton[2].position = { 8.7f, -3.83f, -3.0f, 1.0 };
-	pushButton[2].rotation = { -45, 0, 0 };
-	pushButton[2].scale = { black_scale, black_scale, black_scale };*/
-
-	/*pushButton_green.each.position = { 8.2f, -4.33f, -5.0f, 1.0 };
-	pushButton_green.each.scale = { green_scale, green_scale, green_scale };*/
-
-	//pushButton_black.Update();
 	pushButton_green.Update();
 }
 
@@ -1533,12 +1523,12 @@ void GameScene::GameDraw()
 		tips[tipsCounts].SpriteDraw();
 	}
 
-	if (isCameraModed)
+	else if (isCameraModed)
 	{
 		Draw3DObject(pushButton_green);
 
-		XMFLOAT3 rot = pushButton_black.each.rotation;
-		XMFLOAT3 rot2 = pushButton_green.each.rotation;
+		//XMFLOAT3 rot = pushButton_black.each.rotation;
+		//XMFLOAT3 rot2 = pushButton_green.each.rotation;
 
 		pushButton_black.Update(&pushButton[0]);
 		Draw3DObject(pushButton_black);
