@@ -255,8 +255,18 @@ public://シーンで使うもの
 	bool isDrawLogo;
 
 	//tips用
+	const int CHANGE_TIMER_FRAME = 90;
+	const float SIZE_X = 800;
+	const float SIZE_Y = 450;
+	const float START_X = 57;
+	const float START_Y = 206;
 	Sprite tips[8];
 	Sprite tips_cont;
+	Sprite tips_ss[4];
 	int tipsCounts;
+	int tipsDrawNum;
+	int changeTimerFrame;
+	float tips_easeTimer;
 	bool isTipsDrawTrigger;
+	bool moveTips;
 };

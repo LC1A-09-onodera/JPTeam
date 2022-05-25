@@ -276,7 +276,17 @@ void GameScene::Init()
 
 	tips_cont.CreateSprite(L"Resource/Img/tips/tips_1.png", XMFLOAT3(0, 0, 0));
 
+	tips_ss[0].CreateSprite(L"Resource/Img/tips/tips_ss1.png", XMFLOAT3(START_X, START_Y, 0));
+	tips_ss[1].CreateSprite(L"Resource/Img/tips/tips_ss2.png", XMFLOAT3(START_X - SIZE_X, START_Y, 0));
+	tips_ss[2].CreateSprite(L"Resource/Img/tips/tips_ss3.png", XMFLOAT3(START_X - SIZE_X, START_Y, 0));
+	tips_ss[3].CreateSprite(L"Resource/Img/tips/tips_ss4.png", XMFLOAT3(START_X - SIZE_X, START_Y, 0));
+
 	tipsCounts = 0;
+	changeTimerFrame = 0;
+	tipsDrawNum = 0;
+	tips_easeTimer = 0;
+	isTipsDrawTrigger = false;
+	moveTips = false;
 }
 
 void GameScene::TitleUpdate()
@@ -849,6 +859,50 @@ void GameScene::GameUpdate()
 	Lights::Add(checkObject);
 	Lights::Update();
 	ParticleControl::Update();
+
+	//tips—p
+	if (isTipsDraw)
+	{
+		if (!moveTips)
+		{
+			if (changeTimerFrame < CHANGE_TIMER_FRAME) { changeTimerFrame++; }
+			else { changeTimerFrame = 0; moveTips = true; }
+		}
+		else
+		{
+			//Œ»Ý•`‰æ‚³‚ê‚Ä‚étips
+			XMFLOAT3 ssPos0 = ConvertXMVECTORtoXMFLOAT3(tips_ss[tipsDrawNum].position);
+			//‚±‚ê‚©‚ç•`‰æ‚³‚ê‚étips
+			XMFLOAT3 ssPos1 = { 0,0,0 };
+			if (tipsDrawNum >= 3) { ssPos1 = ConvertXMVECTORtoXMFLOAT3(tips_ss[0].position); }
+			else { ssPos1 = ConvertXMVECTORtoXMFLOAT3(tips_ss[tipsDrawNum + 1].position); }
+
+			XMFLOAT3 ssPos0_Goal = { START_X + SIZE_X,START_Y,0 };
+			XMFLOAT3 ssPos1_Goal = { START_X,START_Y,0 };
+
+			if (tips_easeTimer < 1.0f) { tips_easeTimer += 0.01; }
+			if (tips_easeTimer > 1.0f) { tips_easeTimer = 1.0f; }
+
+			ssPos0 = ShlomonMath::EaseInQuad(ssPos0, ssPos0_Goal, tips_easeTimer);
+			ssPos1 = ShlomonMath::EaseInQuad(ssPos1, ssPos1_Goal, tips_easeTimer);
+
+			tips_ss[tipsDrawNum].position = ConvertXMFLOAT3toXMVECTOR(ssPos0);
+			if (tipsDrawNum >= 3) { tips_ss[0].position = ConvertXMFLOAT3toXMVECTOR(ssPos1); }
+			else { tips_ss[tipsDrawNum + 1].position = ConvertXMFLOAT3toXMVECTOR(ssPos1); }
+
+			if (tips_easeTimer == 1.0f)
+			{
+				tips_ss[tipsDrawNum].position = ConvertXMFLOAT3toXMVECTOR(
+					XMFLOAT3(START_X - SIZE_X, START_Y, 0)
+				);
+
+				tipsDrawNum++;
+				if (tipsDrawNum > 3) { tipsDrawNum = 0; }
+				tips_easeTimer = 0;
+				moveTips = false;
+			}
+		}
+	}
 }
 
 void GameScene::ResultUpdate()
@@ -1356,6 +1410,10 @@ void GameScene::GameDraw()
 	{
 		isTipsDrawTrigger = true;
 
+		tips_ss[0].SpriteDraw();
+		tips_ss[1].SpriteDraw();
+		tips_ss[2].SpriteDraw();
+		tips_ss[3].SpriteDraw();
 		tips[tipsCounts].SpriteDraw();
 	}
 	if (!isTipsDraw && isTipsDrawTrigger) { tipsCounts++; isTipsDrawTrigger = false; }
