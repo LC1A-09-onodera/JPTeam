@@ -872,10 +872,10 @@ void GameScene::GameUpdate()
 	}
 	if (!isSceneChange && !isResultSceneChange && !isPouse)
 	{
-		if (Input::KeyTrigger(DIK_U) || directInput->IsButtonPush(directInput->Button03) && !isTutorial)
-		{
-			ReStart();
-		}
+		//if (Input::KeyTrigger(DIK_U) || directInput->IsButtonPush(directInput->Button03) && !isTutorial)
+		//{
+		//	ReStart();
+		//}
 	}
 
 	sky.Update();
