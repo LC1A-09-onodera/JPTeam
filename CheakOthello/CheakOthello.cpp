@@ -307,9 +307,6 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y, int last_x, in
 			//挟んだ場合
 			else if (othelloDatas[count_y][count_x].isFront == side && loop != 0)
 			{
-				if (isCombos) { isCombosCheck = true; }
-				isCombos = true;
-				totalDeleteOthello += loop;
 				//全部探索リストに入れる（自分と挟んだ駒まで）←sandwichArrayが同じかも参照する
 				//挟んだやつの最大のconboCountを取得→それ+1したのをコンボしたオセロにセット
 				int maxComboCount = 0;
@@ -319,50 +316,6 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y, int last_x, in
 				int isSandWichCount = 0;
 				vector<int> maxChainName;
 				bool isActiveOthello = false;
-
-				for (int i = 0; i <= loop + 1; i++)
-				{
-					//そのオセロのコンボ数を取得、そのオセロが何コンボ目かを調べる
-					if (maxComboCount < othelloDatas[pair_y][pair_x].maxComboCount)
-					{
-						maxComboCount = othelloDatas[pair_y][pair_x].maxComboCount;
-					}
-
-					//そのオセロのコンボ数を取得、そのオセロが何コンボ目かを調べる
-					if (comboCount <= othelloDatas[pair_y][pair_x].comboCount)
-					{
-						comboCount = othelloDatas[pair_y][pair_x].comboCount;
-					}
-
-					//そのオセロのスコアを取得、そのオセロのスコアを調べる
-					if (baseScore < othelloDatas[pair_y][pair_x].score)
-					{
-						baseScore += othelloDatas[pair_y][pair_x].score;
-					}
-
-					//何個で挟んだかを保存、違う数で挟んだ場合push_back
-					if (!othelloDatas[pair_y][pair_x].SandwichLength.empty())
-					{
-						//数字が見つからなかったら保存
-						if (!VectorFinder(othelloDatas[pair_y][pair_x].SandwichLength, loop + 2))
-						{
-							othelloDatas[pair_y][pair_x].SandwichLength.push_back(loop + 2);
-						}
-					}
-					//空だったらそのまま保存
-					else { othelloDatas[pair_y][pair_x].SandwichLength.push_back(loop + 2); }
-
-					if (othelloDatas[pair_y][pair_x].isSandwich) { isSandWichCount++; }
-
-					pair_x += direction_x;
-					pair_y += direction_y;
-				}
-
-				totalReverceCount += loop + 2 - isSandWichCount;
-
-				//初期化
-				pair_x = last_x;
-				pair_y = last_y;
 
 				//まだ挟まれてないオセロがあったらコンボを加算できる状態に変更
 				for (int i = 1; i <= loop; i++)
@@ -380,23 +333,71 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y, int last_x, in
 				pair_x = last_x;
 				pair_y = last_y;
 
-				//isSandwichをチェック
-				for (int i = 0; i <= loop + 1; i++)
-				{
-					//挟む、挟まれるオセロを挟んだ状態に変更
-					othelloDatas[pair_y][pair_x].isSandwich = true;
-
-					pair_x += direction_x;
-					pair_y += direction_y;
-				}
-
-				//初期化
-				pair_x = last_x;
-				pair_y = last_y;
-
 				//ひっくり返せる場合
 				if (isActiveOthello)
 				{
+					if (isCombos) { isCombosCheck = true; }
+					isCombos = true;
+					totalDeleteOthello += loop;
+
+					for (int i = 0; i <= loop + 1; i++)
+					{
+						//そのオセロのコンボ数を取得、そのオセロが何コンボ目かを調べる
+						if (maxComboCount < othelloDatas[pair_y][pair_x].maxComboCount)
+						{
+							maxComboCount = othelloDatas[pair_y][pair_x].maxComboCount;
+						}
+
+						//そのオセロのコンボ数を取得、そのオセロが何コンボ目かを調べる
+						if (comboCount <= othelloDatas[pair_y][pair_x].comboCount)
+						{
+							comboCount = othelloDatas[pair_y][pair_x].comboCount;
+						}
+
+						//そのオセロのスコアを取得、そのオセロのスコアを調べる
+						if (baseScore < othelloDatas[pair_y][pair_x].score)
+						{
+							baseScore += othelloDatas[pair_y][pair_x].score;
+						}
+
+						//何個で挟んだかを保存、違う数で挟んだ場合push_back
+						if (!othelloDatas[pair_y][pair_x].SandwichLength.empty())
+						{
+							//数字が見つからなかったら保存
+							if (!VectorFinder(othelloDatas[pair_y][pair_x].SandwichLength, loop + 2))
+							{
+								othelloDatas[pair_y][pair_x].SandwichLength.push_back(loop + 2);
+							}
+						}
+						//空だったらそのまま保存
+						else { othelloDatas[pair_y][pair_x].SandwichLength.push_back(loop + 2); }
+
+						if (othelloDatas[pair_y][pair_x].isSandwich) { isSandWichCount++; }
+
+						pair_x += direction_x;
+						pair_y += direction_y;
+					}
+
+					totalReverceCount += loop + 2 - isSandWichCount;
+
+					//初期化
+					pair_x = last_x;
+					pair_y = last_y;
+
+					//isSandwichをチェック
+					for (int i = 0; i <= loop + 1; i++)
+					{
+						//挟む、挟まれるオセロを挟んだ状態に変更
+						othelloDatas[pair_y][pair_x].isSandwich = true;
+
+						pair_x += direction_x;
+						pair_y += direction_y;
+					}
+
+					//初期化
+					pair_x = last_x;
+					pair_y = last_y;
+
 					//挟めたらtrue
 					isSand = true;
 

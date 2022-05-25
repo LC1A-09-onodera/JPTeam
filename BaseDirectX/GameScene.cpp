@@ -970,13 +970,16 @@ void GameScene::GameUpdate()
 	if (green_scale < 0.075f) { green_scale = 0.09f; }
 	green_scale -= 0.0005f;
 
-	pushButton[0].position = { 8.2f, -3.33f, -5.0f, 1.0 };
+	pushButton[0].position = { 8.2f, -3.33f, -3.0f, 1.0 };
+	pushButton[0].rotation = { -45, 0, 0 };
 	pushButton[0].scale = { black_scale, black_scale, black_scale };
 
-	pushButton[1].position = { 7.7f, -3.83f, -5.0f, 1.0 };
+	pushButton[1].position = { 7.7f, -3.83f, -3.0f, 1.0 };
+	pushButton[1].rotation = { -45, 0, 0 };
 	pushButton[1].scale = { black_scale, black_scale, black_scale };
 
-	pushButton[2].position = { 8.7f, -3.83f, -5.0f, 1.0 };
+	pushButton[2].position = { 8.7f, -3.83f, -3.0f, 1.0 };
+	pushButton[2].rotation = { -45, 0, 0 };
 	pushButton[2].scale = { black_scale, black_scale, black_scale };
 
 	pushButton_green.each.position = { 8.2f, -4.33f, -5.0f, 1.0 };
