@@ -1023,6 +1023,7 @@ void OthelloManager::NormaUpdate(int combo)
 	}
 	if (isNormaMode)
 	{
+		bool retry = (Input::KeyTrigger(DIK_R) || directInput->IsButtonPush(directInput->Button03));
 		Undo();
 		normaChecker.Update(othellos, nowScore, nowMaxCombo);
 	}
@@ -1476,7 +1477,7 @@ void OthelloManager::CountModelDraw(int count)
 
 void OthelloManager::SetModeSelectPanel()
 {
-	AllDeadPanel();
+	AllDeletePanel();
 	bool stageEnd = false;
 	for (int y = 0; y < 7; y++)
 	{
@@ -1583,7 +1584,7 @@ void OthelloManager::SetTextPos(bool isNormaMode, int stageNum)
 	}
 	else
 	{
-		SetModeSelectEachInfo(ScoreAttackDrawData, panelPos{0, 7});
+		SetModeSelectEachInfo(ScoreAttackDrawData, panelPos{ 0, 7 });
 	}
 	list<NormaModeFieldData>::iterator data;
 	if (isNormaMode)
@@ -1662,7 +1663,7 @@ void OthelloManager::SetModeSelectEachInfo(EachInfo &data, panelPos &pos)
 	panelData.Spawn(NORMAL, pos.x, pos.y);
 	data.position = ConvertXMFLOAT3toXMVECTOR(panelData.GetPosition());
 	data.position.m128_f32[2] += -1.0f;
-	data.scale = {0.2,0.2 ,0.2 };
+	data.scale = { 0.2,0.2 ,0.2 };
 	data.rotation = { -30, 0, 0 };
 }
 
@@ -1696,8 +1697,6 @@ void OthelloManager::SubNormaModelPos(bool isNormaMode)
 	SubNormaDrawData.position = allDeleteModelPos;
 	SubNormaDrawData.position += moveTextModelPos;
 	SubNormaDrawData.position += movePos;
-
-
 }
 void OthelloManager::RemovePlayer()
 {
@@ -2638,6 +2637,14 @@ void OthelloManager::AllDeadPanel()
 	EraseChanceObject();
 }
 
+void OthelloManager::AllDeletePanel()
+{
+	if (othellos.size() <= 0)
+	{
+		return;
+	}
+	othellos.clear();
+}
 void OthelloManager::DownStep(list<Othello>::iterator playerItr)
 {
 	playerNotMove();

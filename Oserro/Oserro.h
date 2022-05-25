@@ -331,6 +331,7 @@ public:
 
 	void StartSetPos();
 	void AllDeadPanel();
+	void AllDeletePanel();
 	bool GetIsSendDataUpdate();
 public:
 	//挟むチュートリアルでーす

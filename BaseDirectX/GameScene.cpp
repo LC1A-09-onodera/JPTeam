@@ -614,12 +614,12 @@ void GameScene::GameUpdate()
 			{
 				isTutorial = false;
 				ToGame4();
-				othelloManager.AllDeadPanel();
+				othelloManager.AllDeletePanel();
 			}
 			//ノルマモードを選択した
 			if (othelloManager.InMode() && othelloManager.GetEnterModeType() == GameMode::NormaMode)
 			{//内部でステージ数を検索(中身は適当です)
-				othelloManager.AllDeadPanel();
+				othelloManager.AllDeletePanel();
 				gameTime = gameMaxTime;
 				isTutorial = false;
 				selectMode = true;
