@@ -665,7 +665,17 @@ void OthelloManager::Init(Tex num[10], Model numModel[10])
 	{
 		itr->resize(fieldSize);
 	}
-
+	fieldDrawText.resize(NormaStageCount);
+	int stageCount = 0;
+	for (auto &e : fieldDrawText)
+	{
+		int x = stageCount % fieldSize;
+		int y = stageCount / fieldSize;
+		e.CreateConstBuff0();
+		e.CreateConstBuff1();
+		SetModeSelectEachInfo(e, { x, y });
+		stageCount++;
+	}
 	TutorialText1.CreateSprite(L"Resource/Img/string_0.png", XMFLOAT3(0, 0, 0));
 	TutorialText2.CreateSprite(L"Resource/Img/string_01.png", XMFLOAT3(0, 0, 0));
 	TutorialText3.CreateSprite(L"Resource/Img/string_02.png", XMFLOAT3(0, 0, 0));
@@ -1279,10 +1289,10 @@ void OthelloManager::ModeSelectStart()
 
 	playerPanelPos = { x, y };
 
-	//for (int i = 0; i < 8; i++)
+	//for (int stageCount = 0; stageCount < 8; stageCount++)
 	//{
-	//	SetChanceObject(i, i, true);
-	//	SetChanceObject(i, 7 - i, false);
+	//	SetChanceObject(stageCount, stageCount, true);
+	//	SetChanceObject(stageCount, 7 - stageCount, false);
 	//}
 	//MinSpawn(false);
 	SetModeSelectPanel();
@@ -1364,6 +1374,15 @@ void OthelloManager::ModeSelectModelDraw(bool isDraw)
 
 	if (isDraw)
 	{
+		int stageNum = playerPanelPos.x;
+		stageNum += playerPanelPos.y * 8;
+		int i = 0 ;
+		for (auto &e : fieldDrawText)
+		{
+			if (i != stageNum)
+			{
+			}
+		}
 		ScoreAttackTextModel.Update(&ScoreAttackDrawData);
 		Draw3DObject(ScoreAttackTextModel);
 
@@ -1469,7 +1488,7 @@ void OthelloManager::CountTextDraw(int count)
 	}
 }
 
-void OthelloManager::CountModelDraw(int count)
+void OthelloManager::CountModelDraw(int count, EachInfo *data)
 {
 	vector<int>degit;
 	while (count >= 10)

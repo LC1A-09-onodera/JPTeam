@@ -333,6 +333,7 @@ public:
 	void AllDeadPanel();
 	void AllDeletePanel();
 	bool GetIsSendDataUpdate();
+	void EraseChanceObject();
 public:
 	//挟むチュートリアルでーす
 	void whySandwichSpawn();
@@ -371,7 +372,7 @@ private://ノルマモード用内部処理関数
 	void LoadNormaStage(std::string stage);
 	void LoadAllStage();
 	void CountTextDraw(int count);
-	void CountModelDraw(int count);
+	void CountModelDraw(int count, EachInfo *data = nullptr);
 public://モードセレクト用外部関数
 	//モード選択開始時
 	void ModeSelectStart();
@@ -388,7 +389,8 @@ public://モードセレクト用外部関数
 	//何かしら描画があるなら
 	void ModeSelectDraw(bool isDraw);
 	void ModeSelectModelDraw(bool isDraw);
-private://モードセレクト用変数
+private://モードセレクト用変数:
+	vector<EachInfo> fieldDrawText;
 private://モードセレクト用内部関数
 	void SetModeSelectPanel();
 	void NormaComboTextSetPos(bool isNormaMode);
@@ -431,7 +433,6 @@ private:
 
 	void OthelloDraw();
 
-	void EraseChanceObject();
 private://チャンスオブジェクト
 
 	void SetChanceObject(int x, int y, bool Front);
