@@ -14,9 +14,11 @@ list<ChanceObject> OthelloManager::chances;
 OthelloModel OthelloManager::oserroModel;
 OthelloModel OthelloManager::stopOserroModel;
 OthelloModel OthelloManager::wallOserroModel;
-Model OthelloManager::PanelTextModel;
-Model OthelloManager::ComboTextModel;
-Model OthelloManager::ScoreTextModel;
+TextModel OthelloManager::PanelTextModel;
+TextModel OthelloManager::ComboTextModel;
+TextModel OthelloManager::ScoreTextModel;
+TextModel OthelloManager::ScoreAttackTextModel;
+
 ChanceModel OthelloManager::chanceModelBlue;
 ChanceModel OthelloManager::chanceModelOrange;
 vector<vector<SendOthelloData>> OthelloManager::sendDatas;
@@ -657,12 +659,23 @@ void OthelloManager::Init(Tex num[10], Model numModel[10])
 	PanelTextModel.CreateModel("all_clear", ShaderManager::playerShader);
 	ComboTextModel.CreateModel("combo", ShaderManager::playerShader);
 	ScoreTextModel.CreateModel("score_kana", ShaderManager::playerShader);
+	ScoreAttackTextModel.CreateModel("score_attack", ShaderManager::playerShader);
 	auto itr = sendDatas.begin();
 	for (; itr != sendDatas.end(); itr++)
 	{
 		itr->resize(fieldSize);
 	}
-
+	fieldDrawText.resize(NormaStageCount);
+	int stageCount = 0;
+	for (auto &e : fieldDrawText)
+	{
+		int x = stageCount % fieldSize;
+		int y = stageCount / fieldSize;
+		e.CreateConstBuff0();
+		e.CreateConstBuff1();
+		SetModeSelectEachInfo(e, panelPos{ x, y });
+		stageCount++;
+	}
 	TutorialText1.CreateSprite(L"Resource/Img/string_0.png", XMFLOAT3(0, 0, 0));
 	TutorialText2.CreateSprite(L"Resource/Img/string_01.png", XMFLOAT3(0, 0, 0));
 	TutorialText3.CreateSprite(L"Resource/Img/string_02.png", XMFLOAT3(0, 0, 0));
@@ -670,7 +683,7 @@ void OthelloManager::Init(Tex num[10], Model numModel[10])
 	TutorialText5.CreateSprite(L"Resource/Img/string_04.png", XMFLOAT3(0, 0, 0));
 	TutorialText6.CreateSprite(L"Resource/Img/string_05.png", XMFLOAT3(0, 0, 0));
 	CongraturationText.CreateSprite(L"Resource/Img/excellent.png", XMFLOAT3(0, 0, 0));
-	//TutorialRetryText.CreateSprite(L"Resource/Img/reset.png", XMFLOAT3(0, 0, 0));
+	exselent.CreateModel("excellent", ShaderManager::playerShader);
 	back.CreateSprite(L"Resource/Img/title_back_80.png", XMFLOAT3(0, 0, 0));
 	NormaPanelsText.CreateSprite(L"Resource/Img/all_delete_UI.png", XMFLOAT3(0, 0, 0));
 	NormaComboText.CreateSprite(L"Resource/Img/combo_UI.png", XMFLOAT3(0, 0, 0));
@@ -706,15 +719,23 @@ void OthelloManager::Init(Tex num[10], Model numModel[10])
 	normaChecker.Init();
 
 	NormaDrawData.position = comboScoreModelPos;
-	NormaDrawData.scale = { 0.3f, 0.3f, 0.3f };
+	NormaDrawData.scale = { textBaseScale, textBaseScale, textBaseScale };
 	NormaDrawData.rotation.x = -30.0f;
 	NormaDrawData.CreateConstBuff0();
 	NormaDrawData.CreateConstBuff1();
-	SubNormaDrawData.position = XMVECTOR{ 4.0f, 18.0f, -1.0f ,0 };
-	SubNormaDrawData.scale = { 0.3f, 0.3f, 0.3f };
+
+	ScoreAttackDrawData.position = comboScoreModelPos;
+	ScoreAttackDrawData.scale = { textBaseScale, textBaseScale, textBaseScale };
+	ScoreAttackDrawData.rotation = { -90, 0, 0 };
+	ScoreAttackDrawData.CreateConstBuff0();
+	ScoreAttackDrawData.CreateConstBuff1();
+
+	SubNormaDrawData.position = XMVECTOR{ 4.0f, 15.0f, -1.0f ,0 };
+	SubNormaDrawData.scale = { textBaseScale, textBaseScale, textBaseScale };
 	SubNormaDrawData.rotation.x = -30.0f;
 	SubNormaDrawData.CreateConstBuff0();
 	SubNormaDrawData.CreateConstBuff1();
+
 	CountDrawData.resize(5);
 	numberModel.resize(10);
 	for (int i = 0; i < 10; i++)
@@ -723,8 +744,8 @@ void OthelloManager::Init(Tex num[10], Model numModel[10])
 	}
 	for (int i = 0; i < 5; i++)
 	{
-		CountDrawData[i].position = XMVECTOR{ 1.0f + (i * 1.0f), 18.0f, -1.0f ,0 };
-		CountDrawData[i].scale = { 0.3f, 0.3f, 0.3f };
+		CountDrawData[i].position = XMVECTOR{};
+		CountDrawData[i].scale = { textBaseScale, textBaseScale, textBaseScale };
 		CountDrawData[i].rotation.x = -30.0f;
 		CountDrawData[i].CreateConstBuff0();
 		CountDrawData[i].CreateConstBuff1();
@@ -917,7 +938,12 @@ void OthelloManager::TutorialTextDraw()
 		back.SpriteDraw();
 		if (isTutorialClear)
 		{
-			CongraturationText.SpriteDraw();
+			//CongraturationText.SpriteDraw();
+			exselent.each.position = { -1.0f, 1.00f, -2.0f, 0 };
+			exselent.each.scale = { 0.5f, 0.5f, 0.5f };
+			exselent.each.rotation.x = -30.0f;
+			exselent.Update();
+			Draw3DObject(exselent);
 		}
 		else
 		{
@@ -935,7 +961,12 @@ void OthelloManager::TutorialTextDraw()
 		back.SpriteDraw();
 		if (isTutorialClear)
 		{
-			CongraturationText.SpriteDraw();
+			//CongraturationText.SpriteDraw();
+			exselent.each.position = { -1.0f, 1.00f, -2.0f, 0 };
+			exselent.each.scale = { 0.5f, 0.5f, 0.5f };
+			exselent.each.rotation.x = -30.0f;
+			exselent.Update();
+			Draw3DObject(exselent);
 		}
 		else
 		{
@@ -958,7 +989,12 @@ void OthelloManager::TutorialTextDraw()
 		back.SpriteDraw();
 		if (isTutorialClear)
 		{
-			CongraturationText.SpriteDraw();
+			//CongraturationText.SpriteDraw();
+			exselent.each.position = { -1.0f, 1.00f, -2.0f, 0 };
+			exselent.each.scale = { 0.4f, 0.4f, 0.4f };
+			exselent.each.rotation.x = -30.0f;
+			exselent.Update();
+			Draw3DObject(exselent);
 		}
 		else
 		{
@@ -1117,8 +1153,8 @@ void OthelloManager::NormaTextModelDraw(int stageNum, bool isDraw)
 			PanelTextModel.Update(&SubNormaDrawData);
 			Draw3DObject(PanelTextModel);
 		}
-
 		CountModelDraw(status);
+		normaChecker.Draw();
 	}
 }
 void OthelloManager::Finalize()
@@ -1128,12 +1164,10 @@ void OthelloManager::Finalize()
 	{
 		itr->Finalize();
 	}
-
 }
 
 void OthelloManager::Controll()
 {
-	//MauseControll();
 	PlayerControll();
 }
 
@@ -1253,10 +1287,10 @@ void OthelloManager::ModeSelectStart()
 
 	playerPanelPos = { x, y };
 
-	//for (int i = 0; i < 8; i++)
+	//for (int stageCount = 0; stageCount < 8; stageCount++)
 	//{
-	//	SetChanceObject(i, i, true);
-	//	SetChanceObject(i, 7 - i, false);
+	//	SetChanceObject(stageCount, stageCount, true);
+	//	SetChanceObject(stageCount, 7 - stageCount, false);
 	//}
 	//MinSpawn(false);
 	SetModeSelectPanel();
@@ -1305,7 +1339,7 @@ void OthelloManager::ModeSelectControll()
 
 bool OthelloManager::InMode()
 {
-	return Input::KeyTrigger(DIK_SPACE);
+	return (Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01));
 }
 
 GameMode OthelloManager::GetEnterModeType()
@@ -1313,7 +1347,7 @@ GameMode OthelloManager::GetEnterModeType()
 	GameMode now = GameMode::None;
 
 	int stageNum = (playerPanelPos.y * 8) + playerPanelPos.x + 1;
-	if (stageNum < NormaStageCount)
+	if (stageNum <= NormaStageCount)
 	{
 		now = GameMode::NormaMode;
 	}
@@ -1338,6 +1372,20 @@ void OthelloManager::ModeSelectModelDraw(bool isDraw)
 
 	if (isDraw)
 	{
+		int stageNum = playerPanelPos.x + 1;
+		stageNum += playerPanelPos.y * 8;
+		int i = 1;
+		for (auto &e : fieldDrawText)
+		{
+			if (i != stageNum)
+			{
+				CountModelDraw(i, &e);
+			}
+			i++;
+		}
+		ScoreAttackTextModel.Update(&ScoreAttackDrawData);
+		Draw3DObject(ScoreAttackTextModel);
+
 		if (GetEnterModeType() != GameMode::NormaMode) { return; }
 		list<NormaModeFieldData>::iterator data = GetNormaStage(GetEnterNormaStage());
 		int status = data->normaStatus;
@@ -1440,7 +1488,7 @@ void OthelloManager::CountTextDraw(int count)
 	}
 }
 
-void OthelloManager::CountModelDraw(int count)
+void OthelloManager::CountModelDraw(int count, EachInfo *data)
 {
 	vector<int>degit;
 	while (count >= 10)
@@ -1454,21 +1502,31 @@ void OthelloManager::CountModelDraw(int count)
 	auto itr = degit.begin();
 	for (int i = degit.size(); i > 0; i--)
 	{
-		numberModel[*itr]->Update(&CountDrawData[i]);
-		Draw3DObject(*numberModel[*itr]);
-		itr++;
+		if (data != nullptr)
+		{
+
+			numberModel[*itr]->Update(data);
+			Draw3DObject(*numberModel[*itr]);
+			itr++;
+		}
+		else
+		{
+			numberModel[*itr]->Update(&CountDrawData[i]);
+			Draw3DObject(*numberModel[*itr]);
+			itr++;
+		}
 	}
 }
 
 void OthelloManager::SetModeSelectPanel()
 {
-	AllDeadPanel();
+	AllDeletePanel();
 	bool stageEnd = false;
 	for (int y = 0; y < 7; y++)
 	{
 		for (int x = 0; x < 8; x++)
 		{
-			stageEnd = ((y * 8) + x) >= NormaStageCount - 1;
+			stageEnd = ((y * 8) + x) >= NormaStageCount;
 			if (stageEnd)
 			{
 				break;
@@ -1563,7 +1621,14 @@ void OthelloManager::SetTextPos(bool isNormaMode, int stageNum)
 	SetCountPos(isNormaMode);
 	SubNormaTextPos(isNormaMode);
 
-
+	if (GetEnterModeType() == GameMode::ScoreAttack)
+	{
+		SetScoreAttackTextPos();
+	}
+	else
+	{
+		SetModeSelectEachInfo(ScoreAttackDrawData, panelPos{ 0, 7 });
+	}
 	list<NormaModeFieldData>::iterator data;
 	if (isNormaMode)
 	{
@@ -1611,7 +1676,6 @@ void OthelloManager::NormaPanelsModelSetPos(bool isNormaMode)
 		movePos *= 0;
 	}
 	float changeScale = 0.5f;
-
 	NormaDrawData.position = allDeleteModelPos;
 	NormaDrawData.position += movePos;
 
@@ -1623,11 +1687,34 @@ void OthelloManager::NormaScoreModelSetPos(bool isNormaMode)
 	{
 		movePos *= 0;
 	}
-	float changeScale = 0.5f;
-
 	NormaDrawData.position = comboScoreModelPos;
 	NormaDrawData.position += movePos;
 }
+
+
+void OthelloManager::SetScoreAttackTextPos()
+{
+	ScoreAttackDrawData.position = scoreAttackTextPos;
+	SetPickupModeEachInfo(ScoreAttackDrawData);
+	ScoreAttackDrawData.scale = { 0.5f,0.5f ,0.5f };
+
+}
+
+void OthelloManager::SetModeSelectEachInfo(EachInfo &data, panelPos &pos)
+{
+	Othello panelData;
+	panelData.Spawn(NORMAL, pos.x, pos.y);
+	data.position = ConvertXMFLOAT3toXMVECTOR(panelData.GetPosition());
+	data.position.m128_f32[2] += -1.0f;
+	data.scale = { 0.2,0.2 ,0.2 };
+	data.rotation = { -30, 0, 0 };
+}
+
+void OthelloManager::SetPickupModeEachInfo(EachInfo &data)
+{
+	data.rotation = { -30, 0, 0 };
+}
+
 void OthelloManager::SetCountModelPos(bool isNormaMode)
 {
 	XMVECTOR movePos = moveTextModelPos;
@@ -1635,10 +1722,9 @@ void OthelloManager::SetCountModelPos(bool isNormaMode)
 	{
 		movePos *= 0;
 	}
-	CountDrawData;
 	for (int i = 0; i < 5; i++)
 	{
-		CountDrawData[i].position = XMVECTOR{ 1.0f + (i * 1.0f), 18.0f, -1.0f ,0 };
+		CountDrawData[i].position = XMVECTOR{ -0.3f + (i * 1.5f), 15.0f, -1.0f ,0 };
 		CountDrawData[i].position += movePos;
 	}
 }
@@ -1654,8 +1740,6 @@ void OthelloManager::SubNormaModelPos(bool isNormaMode)
 	SubNormaDrawData.position = allDeleteModelPos;
 	SubNormaDrawData.position += moveTextModelPos;
 	SubNormaDrawData.position += movePos;
-
-
 }
 void OthelloManager::RemovePlayer()
 {
@@ -1735,7 +1819,7 @@ const vector<vector<SendOthelloData>> &OthelloManager::Send()
 	{
 		OthelloData gameDatas = *itr->GetGameData();
 		SendOthelloData data;
-		if (gameDatas.isPlayer || gameDatas.isSpawn || gameDatas.type == OthelloType::WALL)
+		if (gameDatas.isPlayer || gameDatas.type == OthelloType::WALL)
 		{
 			continue;
 		}
@@ -1802,7 +1886,7 @@ void OthelloManager::Receive(const vector<vector<SendOthelloData>> &data)
 		gameDatas->score = sendDatas[y][x].score;
 		gameDatas->chainName = sendDatas[y][x].chainName;
 		gameDatas->maxComboCount = sendDatas[y][x].maxComboCount;
-		if (sendDatas[y][x].type == NONE)
+		if (sendDatas[y][x].type == NONE || gameDatas->isSpawn)
 		{
 			continue;
 		}
@@ -2596,6 +2680,16 @@ void OthelloManager::AllDeadPanel()
 	EraseChanceObject();
 }
 
+void OthelloManager::AllDeletePanel()
+{
+	if (othellos.size() <= 0)
+	{
+		return;
+	}
+	othellos.clear();
+	EraseChanceObject();
+
+}
 void OthelloManager::DownStep(list<Othello>::iterator playerItr)
 {
 	playerNotMove();
@@ -2776,9 +2870,102 @@ void OthelloModel::Update(OthelloEachInfo *each)
 	}
 }
 
+void TextModel::Update(EachInfo *each, XMMATRIX *addRot)
+{
+	if (each != nullptr)
+	{
+		this->each = *each;
+		XMMATRIX matScale, matRot, matTrans;
+		const XMFLOAT3 &cameraPos = Camera::eye.v;
+		matScale = XMMatrixScaling(this->each.scale.x, this->each.scale.y, this->each.scale.z);
+		matRot = XMMatrixIdentity();
+		matRot *= XMMatrixRotationZ(XMConvertToRadians(this->each.rotation.z));
+		matRot *= XMMatrixRotationX(XMConvertToRadians(this->each.rotation.x));
+		matRot *= XMMatrixRotationY(XMConvertToRadians(this->each.rotation.y));
+		if (addRot != nullptr)
+		{
+			matRot *= *addRot;
+		}
+		matTrans = XMMatrixTranslation(this->each.position.m128_f32[0], this->each.position.m128_f32[1], this->each.position.m128_f32[2]);
+		matWorld = XMMatrixIdentity();
+
+		matWorld *= matScale;
+		matWorld *= matRot;
+		matWorld *= matTrans;
+
+		Vertex *vertMap = nullptr;
+		BaseDirectX::result = mesh.vertBuff->Map(0, nullptr, (void **)&vertMap);
+		if (SUCCEEDED(BaseDirectX::result))
+		{
+			copy(mesh.vertices.begin(), mesh.vertices.end(), vertMap);
+			mesh.vertBuff->Unmap(0, nullptr);    // マップを解除
+		}
+
+		ConstBufferDataB0 *constMap0 = nullptr;
+		if (SUCCEEDED(this->each.constBuff0->Map(0, nullptr, (void **)&constMap0)))
+		{
+			//constMap0->mat = matWorld * Camera::matView * BaseDirectX::matProjection;
+			constMap0->viewproj = Camera::matView * BaseDirectX::matProjection;
+			constMap0->world = matWorld;
+			constMap0->cameraPos = cameraPos;
+			this->each.constBuff0->Unmap(0, nullptr);
+		}
+
+		ConstBufferDataB1 *constMap1 = nullptr;
+		BaseDirectX::result = this->each.constBuff1->Map(0, nullptr, (void **)&constMap1);
+		constMap1->ambient = material.ambient;
+		constMap1->diffuse = material.diffuse;
+		constMap1->specular = material.specular;
+		constMap1->alpha = material.alpha;
+		this->each.constBuff1->Unmap(0, nullptr);
+	}
+	else
+	{
+		XMMATRIX matScale, matRot, matTrans;
+		const XMFLOAT3 &cameraPos = Camera::eye.v;
+		matScale = XMMatrixScaling(this->each.scale.x, this->each.scale.y, this->each.scale.z);
+		matRot = XMMatrixIdentity();
+		matRot *= XMMatrixRotationZ(XMConvertToRadians(this->each.rotation.z));
+		matRot *= XMMatrixRotationX(XMConvertToRadians(this->each.rotation.x));
+		matRot *= XMMatrixRotationY(XMConvertToRadians(this->each.rotation.y));
+		matTrans = XMMatrixTranslation(this->each.position.m128_f32[0], this->each.position.m128_f32[1], this->each.position.m128_f32[2]);
+		matWorld = XMMatrixIdentity();
+
+		matWorld *= matScale;
+		matWorld *= matRot;
+		matWorld *= matTrans;
+
+		Vertex *vertMap = nullptr;
+		BaseDirectX::result = mesh.vertBuff->Map(0, nullptr, (void **)&vertMap);
+		if (SUCCEEDED(BaseDirectX::result))
+		{
+			copy(mesh.vertices.begin(), mesh.vertices.end(), vertMap);
+			mesh.vertBuff->Unmap(0, nullptr);    // マップを解除
+		}
+
+		ConstBufferDataB0 *constMap0 = nullptr;
+		if (SUCCEEDED(this->each.constBuff0->Map(0, nullptr, (void **)&constMap0)))
+		{
+			//constMap0->mat = matWorld * Camera::matView * BaseDirectX::matProjection;
+			constMap0->viewproj = Camera::matView * BaseDirectX::matProjection;
+			constMap0->world = matWorld;
+			constMap0->cameraPos = cameraPos;
+			this->each.constBuff0->Unmap(0, nullptr);
+		}
+
+		ConstBufferDataB1 *constMap1 = nullptr;
+		BaseDirectX::result = this->each.constBuff1->Map(0, nullptr, (void **)&constMap1);
+		constMap1->ambient = material.ambient;
+		constMap1->diffuse = material.diffuse;
+		constMap1->specular = material.specular;
+		constMap1->alpha = material.alpha;
+		this->each.constBuff1->Unmap(0, nullptr);
+	}
+
+}
 void OthelloManager::whySandwichSpawn()
 {
-	AllDeadPanel();
+	AllDeletePanel();
 
 	SetPlayerAndPanel(2, 4, false);
 	SetSpawnPanel(4, 4, false);
@@ -2791,7 +2978,7 @@ void OthelloManager::whySandwichSpawn()
 
 void OthelloManager::whyChainSpawn()
 {
-	AllDeadPanel();
+	AllDeletePanel();
 
 	SetSpawnPanel(4, 2, true);
 	SetSpawnPanel(4, 3, false);
@@ -2839,7 +3026,7 @@ void OthelloManager::SpawnChances(const vector<pair<int, int>> &pos)
 
 void OthelloManager::whyStepSpawn()
 {
-	AllDeadPanel();
+	AllDeletePanel();
 
 	SetSpawnPlayer(4, 5);
 	SetSpawnPanel(3, 4, true);
@@ -2950,9 +3137,9 @@ void ChanceObject::Spawn(int x, int y, bool isFront)
 	float posY = -(y * cellScale * 2);
 
 	each.position = XMVECTOR{ posX, posY ,0, 0 };
-	each.scale = { 1.0f , 1.0f ,  1.0f };
+	each.scale = { 1.0f , 1.0f ,  0.1f };
 	each.position += ConvertXMFLOAT3toXMVECTOR(stageLeftTop);
-	each.alpha = 0.4f;
+	each.alpha = 0.5f;
 	if (isFront)
 	{
 		each.rotation.y = 0;
@@ -2967,7 +3154,7 @@ void ChanceObject::Spawn(int x, int y, bool isFront)
 
 void OthelloManager::Undo()
 {
-	if (Input::KeyTrigger(DIK_Z) || directInput->IsButtonPush(directInput->Button01))
+	if (Input::KeyTrigger(DIK_Z) || directInput->IsButtonPush(directInput->Button02))
 	{
 		Norma::FieldStatus data = normaChecker.Undo();
 
@@ -3246,7 +3433,7 @@ void OthelloManager::LoadAllStage()
 	//LoadNormaStage("test");
 
 	string baseName = "stage";
-	for (int i = 0; i < NormaStageCount; i++)
+	for (int i = 0; i <= NormaStageCount; i++)
 	{
 		string count = to_string(i + 1);
 		LoadNormaStage(baseName + count);

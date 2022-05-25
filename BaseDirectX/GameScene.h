@@ -46,6 +46,8 @@ private:
 	void ToTitle();
 	void ToTitleUpdate();
 	void ToResult();
+	void PouseToTitle();
+	void PouseToTitleUpdate();
 public:
 	GameScene();
 	~GameScene();
@@ -76,7 +78,7 @@ public://シーンで使うもの
 	float circleShadowAtten[3] = { 0.5f, 0.6f, 0.0f };
 	float circleShadowFactorAngle[2] = { 0.0f, 0.0f };
 
-	PostEffect postEffect;
+	//PostEffect postEffect;
 	Model sample;
 	OthelloManager othelloManager;
 	CheakOthello checkObject;
@@ -109,7 +111,7 @@ public://シーンで使うもの
 	float eyeEaseTime;
 
 	int resultForTime;
-	const int gameMaxTime = 5999;
+	const int gameMaxTime = 5999 ;
 
 	//スコア用
 	//Sprite scoreNum[60];
@@ -196,6 +198,7 @@ public://シーンで使うもの
 	float goToGameTime = 0.0f;
 
 	list<FrameEach> opOthellos;
+	list<FrameEach> pouseOthellos;
 
 	//Timer管理用
 	const int CHANGE_TIMER_SECOND = 100;	//-1の値から振動開始
@@ -223,6 +226,7 @@ public://シーンで使うもの
 	Model tutorialObject;
 	Model titleObject;
 	Model backGround;
+	Model kakko[2];
 	EachInfo backGroundEach[2];
 
 	EachInfo reversEach[2];
@@ -274,4 +278,15 @@ public://シーンで使うもの
 	float green_scale;
 	bool isTipsDrawTrigger;
 	bool moveTips;
+
+	//シーン切り替えをはじめる
+	bool isPouseToTiTle = false;
+	float pouseToTitleEaseTime1;
+	//背景出す
+	bool isBackGroundOthello = false;
+	//ノーマルオセロの捜査を始める
+	bool isNormalOthello = false;
+	float titleScaleEaseTime = 0.0f;
+
+	bool isCameraModed = false;
 };

@@ -1,5 +1,7 @@
 #include "NormaChecker.h"
 #include "../Oserro/Oserro.h"
+#include "../Shader/ShaderManager.h"
+
 #include <algorithm>
 using namespace Norma;
 NormaChecker::NormaChecker()
@@ -11,6 +13,7 @@ NormaChecker::~NormaChecker()
 void NormaChecker::Init()
 {
 	clearText.CreateSprite(L"Resource/Img/genius.png", XMFLOAT3(0, 0, 0));
+	genius.CreateModel("genius", ShaderManager::playerShader);
 	float changeScale = 0.5f;
 	clearText.ChangeSize(318 * changeScale, 101 * changeScale);
 	clearText.position = XMVECTOR{ 640 - (318 * changeScale / 2), 360 - (101 * changeScale), 0, 0 };
@@ -61,7 +64,11 @@ void NormaChecker::Draw()
 {
 	if (isClear)
 	{
-		clearText.SpriteDraw();
+		genius.each.position = {-1.0f, 1.00f, -2.0f, 0};
+		genius.each.scale = {0.5f, 0.5f, 0.5f};
+		genius.each.rotation.x = -30.0f;
+		genius.Update();
+		Draw3DObject(genius);
 	}
 }
 
@@ -240,5 +247,3 @@ int NormaChecker::GetLestStatus()
 		break;
 	}
 }
-
-
