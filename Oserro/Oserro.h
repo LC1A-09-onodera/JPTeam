@@ -190,7 +190,7 @@ namespace OthelloConstData
 	const XMVECTOR moveSubTextPos = { 105, 50, 0,0 };
 	const XMVECTOR comboScoreModelPos{ -2.0f, 15.0f, -1.0f ,0 };
 	const XMVECTOR allDeleteModelPos{ -5.0f, 15.0f, -1.0f ,0 };
-	const XMVECTOR moveTextModelPos{ 13.0f, 0.0f, 0.0f ,0.0f };
+	const XMVECTOR moveTextModelPos{ 15.0f, 0.0f, 0.0f ,0.0f };
 	const XMVECTOR moveSubTextModelPos{ 4.0f, -5.0f, 0.0f ,0.0f };
 	const XMVECTOR scoreAttackTextPos{ 0.0f, 15.0f, -1.0f ,0 };
 	const float textBaseScale = 0.3f;
