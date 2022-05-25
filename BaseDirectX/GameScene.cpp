@@ -701,17 +701,19 @@ void GameScene::GameUpdate()
 					//PouseToTitle();
 				}
 			}
+			checkObject.Update(othelloManager.Send(), othelloManager.GetIsSendDataUpdate());
+			othelloManager.Receive(checkObject.GetOthelloDatas());
+			othelloManager.SpawnChances(checkObject.GetReachDatas());
+
 			if (othelloManager.GetIsSendDataUpdate())
 			{
-				checkObject.Update(othelloManager.Send(), othelloManager.GetIsSendDataUpdate());
-				othelloManager.Receive(checkObject.GetOthelloDatas());
+
 				//vector<pair<int, int>> testPos;
 				//for (int i = 0; i < 8; i++)
 				//{
 				//	pair<int, int> tmp(i, i);
 				//	testPos.push_back(tmp);
 				//}
-				othelloManager.SpawnChances(checkObject.GetReachDatas());
 				//othelloManager.SpawnChances(testPos);
 			}
 			if (!isTutorial && !selectMode)

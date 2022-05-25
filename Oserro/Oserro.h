@@ -187,6 +187,7 @@ namespace OthelloConstData
 	const panelPos normaMode = { 0, 0 };
 	const panelPos scoreAttack = { 0, 7 };
 	const XMVECTOR moveTextPos = { 400, 0, 0,0 };
+	const XMVECTOR moveAllDeleteCountPos{5.0f, 0.0f, 0.0f , 0.0f };
 	const XMVECTOR moveSubTextPos = { 105, 50, 0,0 };
 	const XMVECTOR comboScoreModelPos{ -3.0f, 15.0f, -1.0f ,0 };
 	const XMVECTOR allDeleteModelPos{ -5.0f, 15.0f, -1.0f ,0 };
