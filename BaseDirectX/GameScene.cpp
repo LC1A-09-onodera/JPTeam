@@ -430,6 +430,8 @@ void GameScene::TitleUpdate()
 						ToTutorial();
 
 						isTutorial = true;
+						isTipsDraw = false;
+						othelloManager.AllDeletePanel();
 						titleSelectNum = 0;
 						//othelloManager.whySandwichSpawn();
 						gameTime = 60;
@@ -870,13 +872,13 @@ void GameScene::GameUpdate()
 	{
 		tornadoTime = 0;
 	}
-	if (!isSceneChange && !isResultSceneChange && !isPouse)
+	/*if (!isSceneChange && !isResultSceneChange && !isPouse)
 	{
 		if (Input::KeyTrigger(DIK_U) || directInput->IsButtonPush(directInput->Button03) && !isTutorial)
 		{
 			ReStart();
 		}
-	}
+	}*/
 
 	sky.Update();
 	othelloStage.Update();
@@ -1507,6 +1509,7 @@ void GameScene::ResultDraw()
 	BaseDirectX::clearColor[2] = 0.0f;
 	BaseDirectX::clearColor[3] = 0.0f;
 	BaseDirectX::UpdateFront();
+	sky.each.rotation.y += 1.0f;
 	Draw3DObject(sky);
 	Draw3DObject(othelloStage);
 	nowScore = checkObject.GetScore();
