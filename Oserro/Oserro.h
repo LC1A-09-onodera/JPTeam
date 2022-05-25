@@ -168,7 +168,7 @@ namespace OthelloConstData
 	const int downStepCountMax = 0;
 	const int tutorialEndTextTimer = 300;
 
-	const int NormaStageCount = 11;
+	const int NormaStageCount = 9;
 	//アニメーション
 	const int vanishTimerMax = 1200;
 	const int vanishAnimation = 180;
@@ -188,7 +188,7 @@ namespace OthelloConstData
 	const panelPos scoreAttack = { 0, 7 };
 	const XMVECTOR moveTextPos = { 400, 0, 0,0 };
 	const XMVECTOR moveSubTextPos = { 105, 50, 0,0 };
-	const XMVECTOR comboScoreModelPos{ -2.0f, 15.0f, -1.0f ,0 };
+	const XMVECTOR comboScoreModelPos{ -3.0f, 15.0f, -1.0f ,0 };
 	const XMVECTOR allDeleteModelPos{ -5.0f, 15.0f, -1.0f ,0 };
 	const XMVECTOR moveTextModelPos{ 15.0f, 0.0f, 0.0f ,0.0f };
 	const XMVECTOR moveSubTextModelPos{ 4.0f, -5.0f, 0.0f ,0.0f };

@@ -1349,7 +1349,7 @@ GameMode OthelloManager::GetEnterModeType()
 	GameMode now = GameMode::None;
 
 	int stageNum = (playerPanelPos.y * 8) + playerPanelPos.x + 1;
-	if (stageNum < NormaStageCount)
+	if (stageNum <= NormaStageCount)
 	{
 		now = GameMode::NormaMode;
 	}
@@ -1374,15 +1374,16 @@ void OthelloManager::ModeSelectModelDraw(bool isDraw)
 
 	if (isDraw)
 	{
-		int stageNum = playerPanelPos.x;
+		int stageNum = playerPanelPos.x + 1;
 		stageNum += playerPanelPos.y * 8;
-		int i = 0 ;
+		int i = 1;
 		for (auto &e : fieldDrawText)
 		{
 			if (i != stageNum)
 			{
-				
+				CountModelDraw(i, &e);
 			}
+			i++;
 		}
 		ScoreAttackTextModel.Update(&ScoreAttackDrawData);
 		Draw3DObject(ScoreAttackTextModel);
@@ -1503,9 +1504,19 @@ void OthelloManager::CountModelDraw(int count, EachInfo *data)
 	auto itr = degit.begin();
 	for (int i = degit.size(); i > 0; i--)
 	{
-		numberModel[*itr]->Update(&CountDrawData[i]);
-		Draw3DObject(*numberModel[*itr]);
-		itr++;
+		if (data != nullptr)
+		{
+
+			numberModel[*itr]->Update(data);
+			Draw3DObject(*numberModel[*itr]);
+			itr++;
+		}
+		else
+		{
+			numberModel[*itr]->Update(&CountDrawData[i]);
+			Draw3DObject(*numberModel[*itr]);
+			itr++;
+		}
 	}
 }
 
@@ -1517,7 +1528,7 @@ void OthelloManager::SetModeSelectPanel()
 	{
 		for (int x = 0; x < 8; x++)
 		{
-			stageEnd = ((y * 8) + x) >= NormaStageCount - 1;
+			stageEnd = ((y * 8) + x) >= NormaStageCount;
 			if (stageEnd)
 			{
 				break;
@@ -3424,7 +3435,7 @@ void OthelloManager::LoadAllStage()
 	//LoadNormaStage("test");
 
 	string baseName = "stage";
-	for (int i = 0; i < NormaStageCount; i++)
+	for (int i = 0; i <= NormaStageCount; i++)
 	{
 		string count = to_string(i + 1);
 		LoadNormaStage(baseName + count);
