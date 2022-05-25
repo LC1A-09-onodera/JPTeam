@@ -259,18 +259,23 @@ public://シーンで使うもの
 	bool isDrawLogo;
 
 	//tips用
-	const int CHANGE_TIMER_FRAME = 90;
-	const float SIZE_X = 800;
-	const float SIZE_Y = 450;
-	const float START_X = 57;
-	const float START_Y = 206;
-	Sprite tips[8];
-	Sprite tips_cont;
-	Sprite tips_ss[4];
+	const int CHANGE_TIMER_FRAME = 90;	//tipsの中身が切り替わるフレーム
+	const int USE_TEX_0 = 4;			//tips_0で使うテクスチャの数
+	const float SIZE_X = 768;			//tipsの中身の画像サイズ_X
+	const float SIZE_Y = 432;			//tipsの中身の画像サイズ_Y
+	const float START_X = 61;			//tipsの中身の画像位置_X
+	const float START_Y = 179;			//tipsの中身の画像位置_Y
+	Model pushButton_black;
+	EachInfo pushButton[3];				//ボタン黒
+	Model pushButton_green;				//ボタン緑
+	Sprite tips[8];						//tips外枠
+	Sprite tips_cont;					//tipsコントローラー用
+	Sprite tips_ss[4];					//tips_0中身
 	int tipsCounts;
 	int tipsDrawNum;
 	int changeTimerFrame;
-	float tips_easeTimer;
+	float tips_easeTimer;				//タイトルと同じ速さ
+	float green_scale;
 	bool isTipsDrawTrigger;
 	bool moveTips;
 
