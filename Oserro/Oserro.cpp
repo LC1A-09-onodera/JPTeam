@@ -1038,7 +1038,6 @@ void OthelloManager::NormaUpdate(int combo)
 	}
 	if (isNormaMode)
 	{
-		bool retry = (Input::KeyTrigger(DIK_R) || directInput->IsButtonPush(directInput->Button03));
 		Undo();
 		normaChecker.Update(othellos, nowScore, nowMaxCombo);
 	}
@@ -2935,7 +2934,7 @@ void TextModel::Update(EachInfo *each, XMMATRIX *addRot)
 }
 void OthelloManager::whySandwichSpawn()
 {
-	AllDeadPanel();
+	AllDeletePanel();
 
 	SetPlayerAndPanel(2, 4, false);
 	SetSpawnPanel(4, 4, false);
@@ -2948,7 +2947,7 @@ void OthelloManager::whySandwichSpawn()
 
 void OthelloManager::whyChainSpawn()
 {
-	AllDeadPanel();
+	AllDeletePanel();
 
 	SetSpawnPanel(4, 2, true);
 	SetSpawnPanel(4, 3, false);
@@ -2996,7 +2995,7 @@ void OthelloManager::SpawnChances(const vector<pair<int, int>> &pos)
 
 void OthelloManager::whyStepSpawn()
 {
-	AllDeadPanel();
+	AllDeletePanel();
 
 	SetSpawnPlayer(4, 5);
 	SetSpawnPanel(3, 4, true);
