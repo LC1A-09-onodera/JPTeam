@@ -265,6 +265,16 @@ void GameScene::Init()
 	isDrawLogo = false;
 
 	//tips—p
+	pushButton_black.CreateModel("push_button_black", ShaderManager::playerShader);
+	pushButton_green.CreateModel("push_button_green", ShaderManager::playerShader);
+
+	pushButton[0].CreateConstBuff0();
+	pushButton[0].CreateConstBuff1();
+	pushButton[1].CreateConstBuff0();
+	pushButton[1].CreateConstBuff1();
+	pushButton[2].CreateConstBuff0();
+	pushButton[2].CreateConstBuff1();
+
 	tips[0].CreateSprite(L"Resource/Img/tips/tips_0.png", XMFLOAT3(0, 0, 0));
 	tips[1].CreateSprite(L"Resource/Img/tips/tips_2.png", XMFLOAT3(0, 0, 0));
 	tips[2].CreateSprite(L"Resource/Img/tips/tips_3.png", XMFLOAT3(0, 0, 0));
@@ -285,6 +295,7 @@ void GameScene::Init()
 	changeTimerFrame = 0;
 	tipsDrawNum = 0;
 	tips_easeTimer = 0;
+	green_scale = 0.09f;
 	isTipsDrawTrigger = false;
 	moveTips = false;
 }
@@ -581,7 +592,7 @@ void GameScene::TitleUpdate()
 		light->SetLightDir(XMFLOAT3(Camera::GetTargetDirection()));
 		LightUpdate();
 		sky.Update();
-		//othelloStage.Update();
+		othelloStage.Update();
 #pragma endregion
 	}
 }
@@ -863,6 +874,29 @@ void GameScene::GameUpdate()
 	//tips—p
 	if (isTipsDraw)
 	{
+		//ButtonUpdate
+		//pushButton_black.each.position = { 5.0f, -4.0f, -5.0f, 1.0 };
+		//pushButton_black.each.scale = { 0.1f, 0.1f, 0.1f };
+
+		const float black_scale = 0.085f;
+		if (green_scale < 0.075f) { green_scale = 0.09f; }
+		green_scale -= 0.0005f;
+
+		pushButton[0].position = { 8.2f, -3.33f, -5.0f, 1.0 };
+		pushButton[0].scale = { black_scale, black_scale, black_scale };
+
+		pushButton[1].position = { 7.7f, -3.83f, -5.0f, 1.0 };
+		pushButton[1].scale = { black_scale, black_scale, black_scale };
+
+		pushButton[2].position = { 8.7f, -3.83f, -5.0f, 1.0 };
+		pushButton[2].scale = { black_scale, black_scale, black_scale };
+
+		pushButton_green.each.position = { 8.2f, -4.33f, -5.0f, 1.0 };
+		pushButton_green.each.scale = { green_scale, green_scale, green_scale };
+
+		//pushButton_black.Update();
+		pushButton_green.Update();
+
 		if (!moveTips)
 		{
 			if (changeTimerFrame < CHANGE_TIMER_FRAME) { changeTimerFrame++; }
@@ -944,7 +978,7 @@ void GameScene::TitleDraw()
 	if (isDrawLogo)
 	{
 		Draw3DObject(sky);
-		Draw3DObject(othelloStage);
+		//Draw3DObject(othelloStage);
 		ParticleControl::Draw();
 		ObjectParticles::Draw();
 		Lights::Draw();
@@ -1412,6 +1446,15 @@ void GameScene::GameDraw()
 	if (isTipsDraw)
 	{
 		isTipsDrawTrigger = true;
+
+		Draw3DObject(pushButton_green);
+
+		pushButton_black.Update(&pushButton[0]);
+		Draw3DObject(pushButton_black);
+		pushButton_black.Update(&pushButton[1]);
+		Draw3DObject(pushButton_black);
+		pushButton_black.Update(&pushButton[2]);
+		Draw3DObject(pushButton_black);
 
 		tips_ss[0].SpriteDraw();
 		tips_ss[1].SpriteDraw();

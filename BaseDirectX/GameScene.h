@@ -256,10 +256,13 @@ public://シーンで使うもの
 
 	//tips用
 	const int CHANGE_TIMER_FRAME = 90;
-	const float SIZE_X = 800;
-	const float SIZE_Y = 450;
-	const float START_X = 57;
-	const float START_Y = 206;
+	const float SIZE_X = 768;
+	const float SIZE_Y = 432;
+	const float START_X = 61;
+	const float START_Y = 179;
+	Model pushButton_black;
+	EachInfo pushButton[3];
+	Model pushButton_green;
 	Sprite tips[8];
 	Sprite tips_cont;
 	Sprite tips_ss[4];
@@ -267,6 +270,7 @@ public://シーンで使うもの
 	int tipsDrawNum;
 	int changeTimerFrame;
 	float tips_easeTimer;
+	float green_scale;
 	bool isTipsDrawTrigger;
 	bool moveTips;
 };
