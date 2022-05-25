@@ -301,6 +301,36 @@ void GameScene::Init()
 	tips[6].CreateSprite(L"Resource/Img/tips/tips_7.png", XMFLOAT3(0, 0, 0));
 	tips[7].CreateSprite(L"Resource/Img/tips/tips_8.png", XMFLOAT3(0, 0, 0));
 
+	tips_frame.CreateSprite(L"Resource/Img/tips/tips_frame.png", XMFLOAT3(0, 0, 0));
+
+	/*----------新tips用----------*/
+	tips_name[0].CreateSprite(L"Resource/Img/tips/othello_move.png", XMFLOAT3(NAME_START_X, NAME_START_Y, 0));
+	tips_name[1].CreateSprite(L"Resource/Img/tips/othello_move.png", XMFLOAT3(NAME_START_X, NAME_START_Y, 0));
+	tips_name[2].CreateSprite(L"Resource/Img/tips/othello_move.png", XMFLOAT3(NAME_START_X, NAME_START_Y, 0));
+	tips_name[3].CreateSprite(L"Resource/Img/tips/othello_move.png", XMFLOAT3(NAME_START_X, NAME_START_Y, 0));
+	tips_name[4].CreateSprite(L"Resource/Img/tips/othello_move.png", XMFLOAT3(NAME_START_X, NAME_START_Y, 0));
+	tips_name[5].CreateSprite(L"Resource/Img/tips/othello_move.png", XMFLOAT3(NAME_START_X, NAME_START_Y, 0));
+	tips_name[6].CreateSprite(L"Resource/Img/tips/othello_move.png", XMFLOAT3(NAME_START_X, NAME_START_Y, 0));
+	tips_name[7].CreateSprite(L"Resource/Img/tips/othello_move.png", XMFLOAT3(NAME_START_X, NAME_START_Y, 0));
+
+	tips_system[0].CreateSprite(L"Resource/Img/tips/system.png", XMFLOAT3(SYSTEM_START_X, SYSTEM_START_Y, 0));
+	tips_system[1].CreateSprite(L"Resource/Img/tips/system.png", XMFLOAT3(SYSTEM_START_X, SYSTEM_START_Y, 0));
+
+	tips_bar.CreateSprite(L"Resource/Img/tips/tips_bar.png", XMFLOAT3(BAR_START_X, BAR_START_Y, 0));
+
+	tips_text[0].CreateSprite(L"Resource/Img/tips/othello_move_text.png", XMFLOAT3(TEXT_START_X, TEXT_START_Y, 0));
+	tips_text[1].CreateSprite(L"Resource/Img/tips/othello_move_text.png", XMFLOAT3(TEXT_START_X, TEXT_START_Y, 0));
+	tips_text[2].CreateSprite(L"Resource/Img/tips/othello_move_text.png", XMFLOAT3(TEXT_START_X, TEXT_START_Y, 0));
+	tips_text[3].CreateSprite(L"Resource/Img/tips/othello_move_text.png", XMFLOAT3(TEXT_START_X, TEXT_START_Y, 0));
+	tips_text[4].CreateSprite(L"Resource/Img/tips/othello_move_text.png", XMFLOAT3(TEXT_START_X, TEXT_START_Y, 0));
+	tips_text[5].CreateSprite(L"Resource/Img/tips/othello_move_text.png", XMFLOAT3(TEXT_START_X, TEXT_START_Y, 0));
+	tips_text[6].CreateSprite(L"Resource/Img/tips/othello_move_text.png", XMFLOAT3(TEXT_START_X, TEXT_START_Y, 0));
+	tips_text[7].CreateSprite(L"Resource/Img/tips/othello_move_text.png", XMFLOAT3(TEXT_START_X, TEXT_START_Y, 0));
+	isInit = false;
+	newTips_easeTimer = 0;
+	/*----------新tips用----------*/
+
+
 	tips_cont.CreateSprite(L"Resource/Img/tips/tips_1.png", XMFLOAT3(0, 0, 0));
 
 	tips_ss[0].CreateSprite(L"Resource/Img/tips/tips_ss1.png", XMFLOAT3(START_X, START_Y, 0));
@@ -928,6 +958,40 @@ void GameScene::GameUpdate()
 		//pushButton_black.Update();
 		//pushButton_green.Update();
 
+		//外の情報の移動
+		isInit = true;
+		XMFLOAT3 name = ConvertXMVECTORtoXMFLOAT3(tips_name[tipsCounts].position);
+		XMFLOAT3 system = { 0,0,0 };
+		if (tipsCounts < 5) { system = ConvertXMVECTORtoXMFLOAT3(tips_system[0].position); }
+		else { system = ConvertXMVECTORtoXMFLOAT3(tips_system[1].position); }
+		XMFLOAT3 bar = ConvertXMVECTORtoXMFLOAT3(tips_bar.position);
+		XMFLOAT3 text = ConvertXMVECTORtoXMFLOAT3(tips_text[tipsCounts].position);
+
+		XMFLOAT3 name_Goal = { NAME_X,NAME_Y,0 };
+		XMFLOAT3 system_Goal = { SYSTEM_X,SYSTEM_Y,0 };
+		XMFLOAT3 bar_Goal = { BAR_X,BAR_Y,0 };
+		XMFLOAT3 text_Goal = { TEXT_X,TEXT_Y,0 };
+
+		if (newTips_easeTimer < 1.0f) { newTips_easeTimer += 0.01; }
+		if (newTips_easeTimer > 1.0f) { newTips_easeTimer = 1.0f; }
+
+		float tips_Timers[3];
+		tips_Timers[0] = newTips_easeTimer - EASE_DELAY;
+		tips_Timers[1] = newTips_easeTimer - EASE_DELAY * 2;
+		tips_Timers[2] = newTips_easeTimer - EASE_DELAY * 3;
+
+		name = ShlomonMath::EaseInQuad(name, name_Goal, newTips_easeTimer);
+		if (tips_Timers[0] >= 0.0f) { system = ShlomonMath::EaseInQuad(system, system_Goal, tips_Timers[0]); }
+		if (tips_Timers[1] >= 0.0f) { bar = ShlomonMath::EaseInQuad(bar, bar_Goal, tips_Timers[1]); }
+		if (tips_Timers[2] >= 0.0f) { text = ShlomonMath::EaseInQuad(text, text_Goal, tips_Timers[2]); }
+
+		tips_name[tipsCounts].position = ConvertXMFLOAT3toXMVECTOR(name);
+		if (tipsCounts < 5) { tips_system[0].position = ConvertXMFLOAT3toXMVECTOR(system); }
+		else { tips_system[1].position = ConvertXMFLOAT3toXMVECTOR(system); }
+		tips_bar.position = ConvertXMFLOAT3toXMVECTOR(bar);
+		tips_text[tipsCounts].position = ConvertXMFLOAT3toXMVECTOR(text);
+
+		//中身の移動
 		if (!moveTips)
 		{
 			if (changeTimerFrame < CHANGE_TIMER_FRAME) { changeTimerFrame++; }
@@ -977,6 +1041,21 @@ void GameScene::GameUpdate()
 
 		//pushButton_green.each.position = { 8.2f, -4.33f, -5.0f, 1.0 };
 		pushButton_green.each.scale = { green_scale, green_scale, green_scale };
+	}
+
+	if (!isTipsDraw)
+	{
+		if (isInit)
+		{
+			newTips_easeTimer = 0.0f;
+			tips_name[tipsCounts].position = { NAME_START_X,NAME_START_Y,0,0 };
+			if (tipsCounts < 5) { tips_system[0].position = { SYSTEM_START_X,SYSTEM_START_Y,0,0 }; }
+			else { tips_system[1].position = { SYSTEM_START_X,SYSTEM_START_Y,0,0 }; }
+			tips_bar.position = { BAR_START_X,BAR_START_Y,0,0 };
+			tips_text[tipsCounts].position = { TEXT_START_X,TEXT_START_Y,0,0 };
+
+			isInit = false;
+		}
 	}
 
 	pushButton_green.Update();
@@ -1523,7 +1602,14 @@ void GameScene::GameDraw()
 		tips_ss[1].SpriteDraw();
 		tips_ss[2].SpriteDraw();
 		tips_ss[3].SpriteDraw();
-		tips[tipsCounts].SpriteDraw();
+		//tips[tipsCounts].SpriteDraw();
+
+		tips_frame.SpriteDraw();
+		tips_name[tipsCounts].SpriteDraw();
+		if (tipsCounts < 5) { tips_system[0].SpriteDraw(); }
+		else { tips_system[1].SpriteDraw(); }
+		tips_bar.SpriteDraw();
+		tips_text[tipsCounts].SpriteDraw();
 	}
 	else if (!isTipsDraw && isTipsDrawTrigger) { tipsCounts++; isTipsDrawTrigger = false; }
 
