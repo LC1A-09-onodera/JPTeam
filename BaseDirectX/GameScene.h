@@ -111,7 +111,7 @@ public://シーンで使うもの
 	float eyeEaseTime;
 
 	int resultForTime;
-	const int gameMaxTime = 5999 ;
+	const int gameMaxTime = 5999;
 
 	//スコア用
 	//Sprite scoreNum[60];
@@ -268,8 +268,39 @@ public://シーンで使うもの
 	Model pushButton_black;
 	EachInfo pushButton[3];				//ボタン黒
 	Model pushButton_green;				//ボタン緑
-	Sprite tips[8];						//tips外枠
-	Sprite tips_cont;					//tipsコントローラー用
+	Sprite tips[8];						//tips枠
+	/*----------新tips用----------*/
+	const float EASE_DELAY = 0.2f;
+
+	const float NAME_X = 50;					//ゴール_X
+	const float NAME_Y = 50;					//ゴール_Y
+	const float NAME_START_X = -412;			//スタート_X
+	const float NAME_START_Y = 50;				//スタート_Y
+
+	const float SYSTEM_X = 1110;				//ゴール_X
+	const float SYSTEM_Y = 178;					//ゴール_Y
+	const float SYSTEM_START_X = 1280 + 118;	//スタート_X
+	const float SYSTEM_START_Y = 178;			//スタート_Y
+
+	const float BAR_X = 869;					//ゴール_X
+	const float BAR_Y = 216;					//ゴール_Y
+	const float BAR_START_X = 1280 + 361;		//スタート_X
+	const float BAR_START_Y = 216;				//スタート_Y
+
+	const float TEXT_X = 856;					//ゴール_X
+	const float TEXT_Y = 278;					//ゴール_Y
+	const float TEXT_START_X = 1280 + 377;		//スタート_X
+	const float TEXT_START_Y = 278;				//スタート_Y
+
+	Sprite tips_frame;					//tips枠
+	Sprite tips_name[8];				//tips名前
+	Sprite tips_system[2];				//tipsシステム
+	Sprite tips_bar;					//tipsバー
+	Sprite tips_text[8];				//tipsテキスト
+	bool isInit;
+	float newTips_easeTimer;
+	/*----------新tips用----------*/
+	Sprite tips_cont;					//tipsコントローラー用（用修正）
 	Sprite tips_ss[4];					//tips_0中身
 	int tipsCounts;
 	int tipsDrawNum;
