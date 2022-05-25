@@ -18,7 +18,7 @@ TextModel OthelloManager::PanelTextModel;
 TextModel OthelloManager::ComboTextModel;
 TextModel OthelloManager::ScoreTextModel;
 TextModel OthelloManager::ScoreAttackTextModel;
-
+TextModel OthelloManager::NormaModeTextModel;
 ChanceModel OthelloManager::chanceModelBlue;
 ChanceModel OthelloManager::chanceModelOrange;
 vector<vector<SendOthelloData>> OthelloManager::sendDatas;
@@ -660,6 +660,7 @@ void OthelloManager::Init(Tex num[10], Model numModel[10])
 	ComboTextModel.CreateModel("combo", ShaderManager::playerShader);
 	ScoreTextModel.CreateModel("score_kana", ShaderManager::playerShader);
 	ScoreAttackTextModel.CreateModel("score_attack", ShaderManager::playerShader);
+	NormaModeTextModel.CreateModel("norma", ShaderManager::playerShader);
 	auto itr = sendDatas.begin();
 	for (; itr != sendDatas.end(); itr++)
 	{
@@ -688,7 +689,7 @@ void OthelloManager::Init(Tex num[10], Model numModel[10])
 	NormaPanelsText.CreateSprite(L"Resource/Img/all_delete_UI.png", XMFLOAT3(0, 0, 0));
 	NormaComboText.CreateSprite(L"Resource/Img/combo_UI.png", XMFLOAT3(0, 0, 0));
 	NormaScoreText.CreateSprite(L"Resource/Img/score_UI.png", XMFLOAT3(0, 0, 0));
-
+	
 	float changeScale = 0.5f;
 
 	TutorialText1.ChangeSize(1227 * changeScale, 332 * changeScale);
@@ -735,6 +736,12 @@ void OthelloManager::Init(Tex num[10], Model numModel[10])
 	SubNormaDrawData.rotation.x = -30.0f;
 	SubNormaDrawData.CreateConstBuff0();
 	SubNormaDrawData.CreateConstBuff1();
+
+	NormaModeTextDrawData.position = XMVECTOR{ 0.0f, 18.0f, -1.0f ,0 };
+	NormaModeTextDrawData.scale = { textBaseScale, textBaseScale, textBaseScale };
+	NormaModeTextDrawData.rotation.x = -30.0f;
+	NormaModeTextDrawData.CreateConstBuff0();
+	NormaModeTextDrawData.CreateConstBuff1();
 
 	CountDrawData.resize(5);
 	numberModel.resize(10);
@@ -1387,9 +1394,11 @@ void OthelloManager::ModeSelectModelDraw(bool isDraw)
 		Draw3DObject(ScoreAttackTextModel);
 
 		if (GetEnterModeType() != GameMode::NormaMode) { return; }
+
+		NormaModeTextModel.Update(&NormaModeTextDrawData);
+		Draw3DObject(NormaModeTextModel);
 		list<NormaModeFieldData>::iterator data = GetNormaStage(GetEnterNormaStage());
 		int status = data->normaStatus;
-
 		auto itr = data->panels.begin();
 
 		if (data->type == Norma::Combo)
@@ -1726,7 +1735,7 @@ void OthelloManager::SetCountModelPos(bool isNormaMode)
 	moveAllDeleteCountPos;
 	for (int i = 0; i < 5; i++)
 	{
-		CountDrawData[i].position = XMVECTOR{ -0.3f + (i * 1.5f), 15.0f, -1.0f ,0 };
+		CountDrawData[i].position = XMVECTOR{ -0.3f + (i * 1.5f), 13.0f, -1.0f ,0 };
 		CountDrawData[i].position += movePos;
 	}
 }

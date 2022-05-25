@@ -186,14 +186,16 @@ namespace OthelloConstData
 	};
 	const panelPos normaMode = { 0, 0 };
 	const panelPos scoreAttack = { 0, 7 };
+	//テキストの表示箇所2D
 	const XMVECTOR moveTextPos = { 400, 0, 0,0 };
 	const XMVECTOR moveAllDeleteCountPos{5.0f, 0.0f, 0.0f , 0.0f };
 	const XMVECTOR moveSubTextPos = { 105, 50, 0,0 };
-	const XMVECTOR comboScoreModelPos{ -3.0f, 15.0f, -1.0f ,0 };
-	const XMVECTOR allDeleteModelPos{ -5.0f, 15.0f, -1.0f ,0 };
-	const XMVECTOR moveTextModelPos{ 15.0f, 0.0f, 0.0f ,0.0f };
-	const XMVECTOR moveSubTextModelPos{ 4.0f, -5.0f, 0.0f ,0.0f };
-	const XMVECTOR scoreAttackTextPos{ 0.0f, 15.0f, -1.0f ,0 };
+	//テキストの表示箇所3D
+	const XMVECTOR comboScoreModelPos{ -3.0f, 13.0f, -1.0f ,0 };//コンボとスコアの文字の基準位置
+	const XMVECTOR allDeleteModelPos{ -5.0f, 13.0f, -1.0f ,0 };//ゼンブハサムの文字の基準位置
+	const XMVECTOR moveTextModelPos{ 15.0f, 0.0f, 0.0f ,0.0f };//ノルマモードに入る際の移動量
+	const XMVECTOR moveSubTextModelPos{ 4.0f, -5.0f, 0.0f ,0.0f };//サブノルマの移動量
+	const XMVECTOR scoreAttackTextPos{ 0.0f, 15.0f, -1.0f ,0 };//スコアアタックの文字の基準位置
 	const float textBaseScale = 0.3f;
 }
 
@@ -507,6 +509,7 @@ private:
 	static TextModel ComboTextModel;
 	static TextModel ScoreTextModel;
 	static TextModel ScoreAttackTextModel;
+	static TextModel NormaModeTextModel;
 	static vector<vector<SendOthelloData>> sendDatas;
 
 	bool isOnPanel = true;
@@ -539,7 +542,7 @@ private:
 	EachInfo NormaDrawData;
 	EachInfo SubNormaDrawData;
 	EachInfo ScoreAttackDrawData;
-
+	EachInfo NormaModeTextDrawData;
 	Sprite NormaPanelsText;
 	Sprite NormaComboText;
 	Sprite NormaScoreText;
