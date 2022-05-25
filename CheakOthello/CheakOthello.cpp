@@ -783,7 +783,11 @@ void CheakOthello::CheckReachOthello(int direction_x, int direction_y, int last_
 
 		else if (isReach && sandCheck)
 		{
-			if (othelloDatas[lastY][lastX].isFront != side) { continue; }
+			if (othelloDatas[lastY][lastX].type != NONE)
+			{
+				if (othelloDatas[lastY][lastX].isFront != side) { continue; }
+				else { break; }
+			}
 			else if (othelloDatas[lastY][lastX].type == NONE)
 			{
 				if (!reachCheck[lastY][lastX])
