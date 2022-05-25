@@ -1724,6 +1724,8 @@ void OthelloManager::SetCountModelPos(bool isNormaMode)
 	{
 		movePos *= 0;
 	}
+	if(GetEnterNormaStage() == GameMode::ScoreAttack)
+	moveAllDeleteCountPos;
 	for (int i = 0; i < 5; i++)
 	{
 		CountDrawData[i].position = XMVECTOR{ -0.3f + (i * 1.5f), 15.0f, -1.0f ,0 };
