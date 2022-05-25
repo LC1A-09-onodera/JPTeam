@@ -278,13 +278,15 @@ void GameScene::Init()
 
 	tips_ss[0].CreateSprite(L"Resource/Img/tips/tips_ss1.png", XMFLOAT3(START_X, START_Y, 0));
 	tips_ss[1].CreateSprite(L"Resource/Img/tips/tips_ss2.png", XMFLOAT3(START_X - SIZE_X, START_Y, 0));
-	tips_ss[2].CreateSprite(L"Resource/Img/tips/tips_ss3.png", XMFLOAT3(START_X - SIZE_X * 2, START_Y, 0));
-	tips_ss[3].CreateSprite(L"Resource/Img/tips/tips_ss4.png", XMFLOAT3(START_X - SIZE_X * 3, START_Y, 0));
+	tips_ss[2].CreateSprite(L"Resource/Img/tips/tips_ss3.png", XMFLOAT3(START_X - SIZE_X, START_Y, 0));
+	tips_ss[3].CreateSprite(L"Resource/Img/tips/tips_ss4.png", XMFLOAT3(START_X - SIZE_X, START_Y, 0));
 
 	tipsCounts = 0;
 	changeTimerFrame = 0;
+	tipsDrawNum = 0;
 	tips_easeTimer = 0;
 	isTipsDrawTrigger = false;
+	moveTips = false;
 }
 
 void GameScene::TitleUpdate()
@@ -851,15 +853,45 @@ void GameScene::GameUpdate()
 	//tips—p
 	if (isTipsDraw)
 	{
-		XMFLOAT3 ssPos0 = ConvertXMVECTORtoXMFLOAT3(tips_ss[0].position);
-		XMFLOAT3 ssPos1 = ConvertXMVECTORtoXMFLOAT3(tips_ss[1].position);
-		XMFLOAT3 ssPos2 = ConvertXMVECTORtoXMFLOAT3(tips_ss[2].position);
-		XMFLOAT3 ssPos3 = ConvertXMVECTORtoXMFLOAT3(tips_ss[3].position);
+		if (!moveTips)
+		{
+			if (changeTimerFrame < CHANGE_TIMER_FRAME) { changeTimerFrame++; }
+			else { changeTimerFrame = 0; moveTips = true; }
+		}
+		else
+		{
+			//Œ»Ý•`‰æ‚³‚ê‚Ä‚étips
+			XMFLOAT3 ssPos0 = ConvertXMVECTORtoXMFLOAT3(tips_ss[tipsDrawNum].position);
+			//‚±‚ê‚©‚ç•`‰æ‚³‚ê‚étips
+			XMFLOAT3 ssPos1 = { 0,0,0 };
+			if (tipsDrawNum >= 3) { ssPos1 = ConvertXMVECTORtoXMFLOAT3(tips_ss[0].position); }
+			else { ssPos1 = ConvertXMVECTORtoXMFLOAT3(tips_ss[tipsDrawNum + 1].position); }
 
-		tips_ss[0].position = ConvertXMFLOAT3toXMVECTOR(ssPos0);
-		tips_ss[1].position = ConvertXMFLOAT3toXMVECTOR(ssPos1);
-		tips_ss[2].position = ConvertXMFLOAT3toXMVECTOR(ssPos2);
-		tips_ss[3].position = ConvertXMFLOAT3toXMVECTOR(ssPos3);
+			XMFLOAT3 ssPos0_Goal = { START_X + SIZE_X,START_Y,0 };
+			XMFLOAT3 ssPos1_Goal = { START_X,START_Y,0 };
+
+			if (tips_easeTimer < 1.0f) { tips_easeTimer += 0.01; }
+			if (tips_easeTimer > 1.0f) { tips_easeTimer = 1.0f; }
+
+			ssPos0 = ShlomonMath::EaseInQuad(ssPos0, ssPos0_Goal, tips_easeTimer);
+			ssPos1 = ShlomonMath::EaseInQuad(ssPos1, ssPos1_Goal, tips_easeTimer);
+
+			tips_ss[tipsDrawNum].position = ConvertXMFLOAT3toXMVECTOR(ssPos0);
+			if (tipsDrawNum >= 3) { tips_ss[0].position = ConvertXMFLOAT3toXMVECTOR(ssPos1); }
+			else { tips_ss[tipsDrawNum + 1].position = ConvertXMFLOAT3toXMVECTOR(ssPos1); }
+
+			if (tips_easeTimer == 1.0f)
+			{
+				tips_ss[tipsDrawNum].position = ConvertXMFLOAT3toXMVECTOR(
+					XMFLOAT3(START_X - SIZE_X, START_Y, 0)
+				);
+
+				tipsDrawNum++;
+				if (tipsDrawNum > 3) { tipsDrawNum = 0; }
+				tips_easeTimer = 0;
+				moveTips = false;
+			}
+		}
 	}
 }
 
@@ -1401,22 +1433,22 @@ void GameScene::ResultDraw()
 	scoreEach[1].scale = { 0.4f, 0.4f, 0.4f };
 	scoreEach[1].rotation.x = -70.0f;
 	sNumbersObject[nowScore / 10 % 10].Update(&scoreEach[1]);
-	Draw3DObject(sNumbersObject[nowScore / 100 % 10]);
+	Draw3DObject(sNumbersObject[nowScore / 10 % 10]);
 	scoreEach[2].position = { 1.0f + scoreNum * 4, 20.0f, -12.0f, 1.0f };
 	scoreEach[2].scale = { 0.4f, 0.4f, 0.4f };
 	scoreEach[2].rotation.x = -70.0f;
 	sNumbersObject[nowScore / 100 % 10].Update(&scoreEach[2]);
-	Draw3DObject(sNumbersObject[nowScore / 1000 % 10]);
+	Draw3DObject(sNumbersObject[nowScore / 100 % 10]);
 	scoreEach[3].position = { 1.0f + scoreNum * 3, 20.0f, -12.0f, 1.0f };
 	scoreEach[3].scale = { 0.4f, 0.4f, 0.4f };
 	scoreEach[3].rotation.x = -70.0f;
 	sNumbersObject[nowScore / 1000 % 10].Update(&scoreEach[3]);
-	Draw3DObject(sNumbersObject[nowScore / 10000 % 10]);
+	Draw3DObject(sNumbersObject[nowScore / 1000 % 10]);
 	scoreEach[4].position = { 1.0f + scoreNum * 2, 20.0f, -12.0f, 1.0f };
 	scoreEach[4].scale = { 0.4f, 0.4f, 0.4f };
 	scoreEach[4].rotation.x = -70.0f;
 	sNumbersObject[nowScore / 10000 % 10].Update(&scoreEach[4]);
-	Draw3DObject(sNumbersObject[nowScore / 100000 % 10]);
+	Draw3DObject(sNumbersObject[nowScore / 10000 % 10]);
 	scoreEach[5].position = { 1.0f + scoreNum * 1, 20.0f, -12.0f, 1.0f };
 	scoreEach[5].scale = { 0.4f, 0.4f, 0.4f };
 	scoreEach[5].rotation.x = -70.0f;

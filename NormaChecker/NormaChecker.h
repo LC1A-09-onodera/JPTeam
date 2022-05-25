@@ -75,5 +75,6 @@ private:
 	
 	bool isFailed = false;
 	Sprite clearText;
+	Model genius;
 };
 
