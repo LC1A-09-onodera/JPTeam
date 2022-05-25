@@ -3119,7 +3119,7 @@ void ChanceObject::Spawn(int x, int y, bool isFront)
 
 void OthelloManager::Undo()
 {
-	if (Input::KeyTrigger(DIK_Z) || directInput->IsButtonPush(directInput->Button01))
+	if (Input::KeyTrigger(DIK_Z) || directInput->IsButtonPush(directInput->Button02))
 	{
 		Norma::FieldStatus data = normaChecker.Undo();
 
