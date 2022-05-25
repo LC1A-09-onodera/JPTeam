@@ -1510,7 +1510,7 @@ void GameScene::GameDraw()
 		isTipsDrawTrigger = true;
 
 		//pushButton_green.Update();
-		//Draw3DObject(pushButton_green);
+		Draw3DObject(pushButton_green);
 
 		pushButton_black.Update(&pushButton[0]);
 		Draw3DObject(pushButton_black);
