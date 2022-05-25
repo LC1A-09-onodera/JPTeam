@@ -673,7 +673,7 @@ void OthelloManager::Init(Tex num[10], Model numModel[10])
 	TutorialText5.CreateSprite(L"Resource/Img/string_04.png", XMFLOAT3(0, 0, 0));
 	TutorialText6.CreateSprite(L"Resource/Img/string_05.png", XMFLOAT3(0, 0, 0));
 	CongraturationText.CreateSprite(L"Resource/Img/excellent.png", XMFLOAT3(0, 0, 0));
-	//TutorialRetryText.CreateSprite(L"Resource/Img/reset.png", XMFLOAT3(0, 0, 0));
+	exselent.CreateModel("excellent", ShaderManager::playerShader);
 	back.CreateSprite(L"Resource/Img/title_back_80.png", XMFLOAT3(0, 0, 0));
 	NormaPanelsText.CreateSprite(L"Resource/Img/all_delete_UI.png", XMFLOAT3(0, 0, 0));
 	NormaComboText.CreateSprite(L"Resource/Img/combo_UI.png", XMFLOAT3(0, 0, 0));
@@ -928,7 +928,12 @@ void OthelloManager::TutorialTextDraw()
 		back.SpriteDraw();
 		if (isTutorialClear)
 		{
-			CongraturationText.SpriteDraw();
+			//CongraturationText.SpriteDraw();
+			exselent.each.position = { -1.0f, 1.00f, -2.0f, 0 };
+			exselent.each.scale = { 0.5f, 0.5f, 0.5f };
+			exselent.each.rotation.x = -30.0f;
+			exselent.Update();
+			Draw3DObject(exselent);
 		}
 		else
 		{
@@ -946,7 +951,12 @@ void OthelloManager::TutorialTextDraw()
 		back.SpriteDraw();
 		if (isTutorialClear)
 		{
-			CongraturationText.SpriteDraw();
+			//CongraturationText.SpriteDraw();
+			exselent.each.position = { -1.0f, 1.00f, -2.0f, 0 };
+			exselent.each.scale = { 0.5f, 0.5f, 0.5f };
+			exselent.each.rotation.x = -30.0f;
+			exselent.Update();
+			Draw3DObject(exselent);
 		}
 		else
 		{
@@ -969,7 +979,12 @@ void OthelloManager::TutorialTextDraw()
 		back.SpriteDraw();
 		if (isTutorialClear)
 		{
-			CongraturationText.SpriteDraw();
+			//CongraturationText.SpriteDraw();
+			exselent.each.position = { -1.0f, 1.00f, -2.0f, 0 };
+			exselent.each.scale = { 0.4f, 0.4f, 0.4f };
+			exselent.each.rotation.x = -30.0f;
+			exselent.Update();
+			Draw3DObject(exselent);
 		}
 		else
 		{

@@ -527,6 +527,7 @@ private:
 	Sprite TutorialText5;
 	Sprite TutorialText6;
 	Sprite CongraturationText;
+	Model exselent;
 	Sprite back;
 	Sprite normaCountTex[50];
 
