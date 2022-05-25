@@ -111,7 +111,7 @@ public://シーンで使うもの
 	float eyeEaseTime;
 
 	int resultForTime;
-	const int gameMaxTime = 59 ;
+	const int gameMaxTime = 5999 ;
 
 	//スコア用
 	//Sprite scoreNum[60];
@@ -281,4 +281,5 @@ public://シーンで使うもの
 	bool isBackGroundOthello = false;
 	//ノーマルオセロの捜査を始める
 	bool isNormalOthello = false;
+	float titleScaleEaseTime = 0.0f;
 };

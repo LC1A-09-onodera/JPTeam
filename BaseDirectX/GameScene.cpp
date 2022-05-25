@@ -190,7 +190,8 @@ void GameScene::Init()
 			opOthellos.push_back(each);
 		}
 	}
-	for (int i = 0; i < 20; i++)
+	const float OthelloR2 = 1.5f;
+	for (int i = 0; i < 25; i++)
 	{
 		for (int j = 0; j < 12; j++)
 		{
@@ -200,9 +201,9 @@ void GameScene::Init()
 			each.rotation.x = 0;
 			each.position.m128_f32[0] = -(20 / 2.0f * OthelloR) + (i * OthelloR);
 			each.position.m128_f32[1] = -(12 / 2.0f * OthelloR) + (j * OthelloR);
-			each.position.m128_f32[2] = -0.5f;
+			each.position.m128_f32[2] = 2.0f - j * 1.0f;
 			each.scale = { 0.01f, 0.01f, 0.01f };
-			each.rotation.x = -30.0f;
+			each.rotation.x = -33.0f;
 			pouseOthellos.push_back(each);
 		}
 	}
@@ -356,7 +357,7 @@ void GameScene::TitleUpdate()
 		if (easeTimer == 1.0f) { easeTimer = 0; logoNum++; }
 	}
 #pragma region 俺以外の処理
-	if (isDrawLogo)
+	if (isDrawLogo && !isPouseToTiTle)
 	{
 		if (easeTimer < 1.0f)
 		{
@@ -501,6 +502,14 @@ void GameScene::TitleUpdate()
 				}
 			}
 		}
+		if (isBackGroundOthello)
+		{
+			for (auto opOthelloItr = opOthellos.begin(); opOthelloItr != opOthellos.end(); ++opOthelloItr)
+			{
+				ObjectParticles::othello2.object.Update(&(*opOthelloItr));
+				Draw3DObject(ObjectParticles::othello2.object);
+			}
+		}
 		if (selectEase)
 		{
 			selectStageNumSprite[1].position = ConvertXMFLOAT3toXMVECTOR(ShlomonMath::EaseInQuad(selectStageFarstStartPos, selectStageFarstEndPos, selectEaseTime));
@@ -583,8 +592,13 @@ void GameScene::TitleUpdate()
 		ObjectParticles::Update(othelloManager.GetPressPanellPos(), checkObject.GetCombo());
 		light->SetLightDir(XMFLOAT3(Camera::GetTargetDirection()));
 		LightUpdate();
+		sky.each.rotation.y += 1.0f;
 		sky.Update();
 		//othelloStage.Update();
+	}
+	if (isPouseToTiTle)
+	{
+		PouseToTitleUpdate();
 	}
 #pragma endregion
 }
@@ -952,7 +966,15 @@ void GameScene::TitleDraw()
 	if (isDrawLogo)
 	{
 		Draw3DObject(sky);
-		Draw3DObject(othelloStage);
+		//Draw3DObject(othelloStage);
+		if (isPouseToTiTle)
+		{
+			for (auto opOthelloItr = opOthellos.begin(); opOthelloItr != opOthellos.end(); ++opOthelloItr)
+			{
+				ObjectParticles::othello2.object.Update(&(*opOthelloItr));
+				Draw3DObject(ObjectParticles::othello2.object);
+			}
+		}
 		ParticleControl::Draw();
 		ObjectParticles::Draw();
 		Lights::Draw();
@@ -994,27 +1016,30 @@ void GameScene::TitleDraw()
 			pushSpace.Update();
 			Draw3DObject(pushSpace);
 		}
-		if (titleSelectNum == 0)
+		if (!isPouseToTiTle)
 		{
-			kakko[1].each.position = { -1 + 10.5f, -2.0f, 0, 1.0f };
-			kakko[1].each.rotation.x += 1.0f;
-			kakko[1].Update();
-			Draw3DObject(kakko[1]);
-			kakko[0].each.position = { -1 + 1.5f, -2.0f, 0, 1.0f };
-			kakko[0].each.rotation.x += 1.0f;
-			kakko[0].Update();
-			Draw3DObject(kakko[0]);
-		}
-		else
-		{
-			kakko[1].each.position = { -1 - 0.5f, -2.0f, 0, 1.0f };
-			kakko[1].each.rotation.x += 1.0f;
-			kakko[1].Update();
-			Draw3DObject(kakko[1]);
-			kakko[0].each.position = { -1 - 11.5f, -2.0f, 0, 1.0f };
-			kakko[0].each.rotation.x += 1.0f;
-			kakko[0].Update();
-			Draw3DObject(kakko[0]);
+			if (titleSelectNum == 0)
+			{
+				kakko[1].each.position = { -1 + 10.5f, -2.0f, 0, 1.0f };
+				kakko[1].each.rotation.x += 1.0f;
+				kakko[1].Update();
+				Draw3DObject(kakko[1]);
+				kakko[0].each.position = { -1 + 1.5f, -2.0f, 0, 1.0f };
+				kakko[0].each.rotation.x += 1.0f;
+				kakko[0].Update();
+				Draw3DObject(kakko[0]);
+			}
+			else
+			{
+				kakko[1].each.position = { -1 - 0.5f, -2.0f, 0, 1.0f };
+				kakko[1].each.rotation.x += 1.0f;
+				kakko[1].Update();
+				Draw3DObject(kakko[1]);
+				kakko[0].each.position = { -1 - 11.5f, -2.0f, 0, 1.0f };
+				kakko[0].each.rotation.x += 1.0f;
+				kakko[0].Update();
+				Draw3DObject(kakko[0]);
+			}
 		}
 	}
 	if (isPouse)
@@ -1101,7 +1126,7 @@ void GameScene::GameDraw()
 
 	//PostEffectのPostDraw
 	//PostEffects::PostDraw();
-	sky.each.rotation.x += 1.0f;
+	sky.each.rotation.y += 1.0f;
 	Draw3DObject(sky);
 	othelloStage.each.position.m128_f32[2] = 8.0f;
 	if (isStageDisplay)Draw3DObject(othelloStage);
@@ -1177,7 +1202,7 @@ void GameScene::GameDraw()
 		nowScore = checkObject.GetScore();
 
 		//playerの頭上にスコアを出す
-		if (checkObject.IsAddScore() && !isTutorial)
+		if (checkObject.IsAddScore() && !isTutorial && !isPouseToTiTle)
 		{
 			int addComboint = checkObject.GetCombo();
 			if (addComboint < 10 && addComboint >= 1)
@@ -1350,18 +1375,18 @@ void GameScene::GameDraw()
 			Draw3DObject(sNumbersObject[countDown / 60]);
 		}
 	}
-	if (!isSceneChange)
+	if (!isSceneChange && !isPouseToTiTle)
 	{
 		OthlloPlayer::Draw();
 	}
 	ObjectParticles::Draw();
 	ParticleControl::Draw();
-	othelloManager.Draw();
-	if (selectMode && !isSceneChange)
+	if (!isPouseToTiTle)othelloManager.Draw();
+	if (selectMode && !isSceneChange && !isPouseToTiTle)
 	{
 		othelloManager.NormaTextModelDraw(selectStageNum, true);
 	}
-	if (isModeSelect && !isSceneChange)
+	if (isModeSelect && !isSceneChange && !isPouseToTiTle)
 	{
 		othelloManager.ModeSelectModelDraw(true);
 	}
@@ -2222,14 +2247,16 @@ void GameScene::ToResult()
 
 void GameScene::PouseToTitle()
 {
-	gameTime = 0;
-	isPouseToTitle = true;
+	//gameTime = 0;
+	isPouseToTiTle = true;
 	isPouse = false;
 	select = false;
-	isPouseToTiTle = true;
 	pouseToTitleEaseTime1 = 0.0f;
 	isBackGroundOthello = false;
 	isSceneChange = true;
+	titleScaleEaseTime = 0.0f;
+	ObjectParticles::othelloFrame.DeleteAllParticle();
+	ObjectParticles::six.DeleteAllParticle();
 }
 
 void GameScene::PouseToTitleUpdate()
@@ -2241,6 +2268,7 @@ void GameScene::PouseToTitleUpdate()
 		{
 			pouseToTitleEaseTime1 = 1.0f;
 			isBackGroundOthello = true;
+			isTipsDraw = true;
 		}
 		if (!isBackGroundOthello)
 		{
@@ -2251,12 +2279,34 @@ void GameScene::PouseToTitleUpdate()
 		}
 		else
 		{
+			
+			if (Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01))
+			{
+				SceneNum = TITLE;
+				isTipsDraw = false;
+			}
 			Camera::target = { -1, 1, 0 };
 			Camera::eye = { -1, 1, -15 };
 			Camera::Update();
-			for (auto pouseOthelloItr = pouseOthellos.begin(); pouseOthelloItr != pouseOthellos.end(); ++pouseOthelloItr)
+			if (SceneNum != TITLE)
 			{
-				pouseOthelloItr->scale = ShlomonMath::EaseInQuad(XMFLOAT3(1.5f, 1.5f, 1.0f), XMFLOAT3(0.01f, 0.01f, 0.01f), 0.0f);
+				for (auto pouseOthelloItr = opOthellos.begin(); pouseOthelloItr != opOthellos.end(); ++pouseOthelloItr)
+				{
+					pouseOthelloItr->scale = ShlomonMath::EaseInQuad(XMFLOAT3(1.5f, 1.5f, 1.0f), XMFLOAT3(0.01f, 0.01f, 0.01f), 0.0f);
+				}
+			}
+			else
+			{
+				titleScaleEaseTime += 0.02f;
+				if (titleScaleEaseTime >= 1.0f)
+				{
+					titleScaleEaseTime = 1.0f;
+					isPouseToTiTle = false;
+				}
+				for (auto pouseOthelloItr = opOthellos.begin(); pouseOthelloItr != opOthellos.end(); ++pouseOthelloItr)
+				{
+					pouseOthelloItr->scale = ShlomonMath::EaseInQuad(XMFLOAT3(1.5f, 1.5f, 1.0f), XMFLOAT3(0.01f, 0.01f, 0.01f), titleScaleEaseTime);
+				}
 			}
 		}
 	}
