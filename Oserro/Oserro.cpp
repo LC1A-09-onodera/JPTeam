@@ -14,9 +14,11 @@ list<ChanceObject> OthelloManager::chances;
 OthelloModel OthelloManager::oserroModel;
 OthelloModel OthelloManager::stopOserroModel;
 OthelloModel OthelloManager::wallOserroModel;
-Model OthelloManager::PanelTextModel;
-Model OthelloManager::ComboTextModel;
-Model OthelloManager::ScoreTextModel;
+TextModel OthelloManager::PanelTextModel;
+TextModel OthelloManager::ComboTextModel;
+TextModel OthelloManager::ScoreTextModel;
+TextModel OthelloManager::ScoreAttackTextModel;
+
 ChanceModel OthelloManager::chanceModelBlue;
 ChanceModel OthelloManager::chanceModelOrange;
 vector<vector<SendOthelloData>> OthelloManager::sendDatas;
@@ -657,6 +659,7 @@ void OthelloManager::Init(Tex num[10], Model numModel[10])
 	PanelTextModel.CreateModel("all_clear", ShaderManager::playerShader);
 	ComboTextModel.CreateModel("combo", ShaderManager::playerShader);
 	ScoreTextModel.CreateModel("score_kana", ShaderManager::playerShader);
+	ScoreAttackTextModel.CreateModel("score_attack", ShaderManager::playerShader);
 	auto itr = sendDatas.begin();
 	for (; itr != sendDatas.end(); itr++)
 	{
@@ -706,15 +709,23 @@ void OthelloManager::Init(Tex num[10], Model numModel[10])
 	normaChecker.Init();
 
 	NormaDrawData.position = comboScoreModelPos;
-	NormaDrawData.scale = { 0.3f, 0.3f, 0.3f };
+	NormaDrawData.scale = { textBaseScale, textBaseScale, textBaseScale };
 	NormaDrawData.rotation.x = -30.0f;
 	NormaDrawData.CreateConstBuff0();
 	NormaDrawData.CreateConstBuff1();
-	SubNormaDrawData.position = XMVECTOR{ 4.0f, 18.0f, -1.0f ,0 };
-	SubNormaDrawData.scale = { 0.3f, 0.3f, 0.3f };
+
+	ScoreAttackDrawData.position = comboScoreModelPos;
+	ScoreAttackDrawData.scale = { textBaseScale, textBaseScale, textBaseScale };
+	ScoreAttackDrawData.rotation = { -90, 0, 0 };
+	ScoreAttackDrawData.CreateConstBuff0();
+	ScoreAttackDrawData.CreateConstBuff1();
+
+	SubNormaDrawData.position = XMVECTOR{ 4.0f, 15.0f, -1.0f ,0 };
+	SubNormaDrawData.scale = { textBaseScale, textBaseScale, textBaseScale };
 	SubNormaDrawData.rotation.x = -30.0f;
 	SubNormaDrawData.CreateConstBuff0();
 	SubNormaDrawData.CreateConstBuff1();
+
 	CountDrawData.resize(5);
 	numberModel.resize(10);
 	for (int i = 0; i < 10; i++)
@@ -723,8 +734,8 @@ void OthelloManager::Init(Tex num[10], Model numModel[10])
 	}
 	for (int i = 0; i < 5; i++)
 	{
-		CountDrawData[i].position = XMVECTOR{ 1.0f + (i * 1.0f), 18.0f, -1.0f ,0 };
-		CountDrawData[i].scale = { 0.3f, 0.3f, 0.3f };
+		CountDrawData[i].position = XMVECTOR{ 1.0f + (i * 2.0f), 15.0f, -1.0f ,0 };
+		CountDrawData[i].scale = { textBaseScale, textBaseScale, textBaseScale };
 		CountDrawData[i].rotation.x = -30.0f;
 		CountDrawData[i].CreateConstBuff0();
 		CountDrawData[i].CreateConstBuff1();
@@ -1320,7 +1331,7 @@ void OthelloManager::ModeSelectControll()
 
 bool OthelloManager::InMode()
 {
-	return Input::KeyTrigger(DIK_SPACE);
+	return (Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01));
 }
 
 GameMode OthelloManager::GetEnterModeType()
@@ -1353,6 +1364,9 @@ void OthelloManager::ModeSelectModelDraw(bool isDraw)
 
 	if (isDraw)
 	{
+		ScoreAttackTextModel.Update(&ScoreAttackDrawData);
+		Draw3DObject(ScoreAttackTextModel);
+
 		if (GetEnterModeType() != GameMode::NormaMode) { return; }
 		list<NormaModeFieldData>::iterator data = GetNormaStage(GetEnterNormaStage());
 		int status = data->normaStatus;
@@ -1578,7 +1592,14 @@ void OthelloManager::SetTextPos(bool isNormaMode, int stageNum)
 	SetCountPos(isNormaMode);
 	SubNormaTextPos(isNormaMode);
 
-
+	if (GetEnterModeType() == GameMode::ScoreAttack)
+	{
+		SetScoreAttackTextPos();
+	}
+	else
+	{
+		SetModeSelectEachInfo(ScoreAttackDrawData, panelPos{0, 7});
+	}
 	list<NormaModeFieldData>::iterator data;
 	if (isNormaMode)
 	{
@@ -1638,11 +1659,34 @@ void OthelloManager::NormaScoreModelSetPos(bool isNormaMode)
 	{
 		movePos *= 0;
 	}
-	float changeScale = 0.5f;
-
 	NormaDrawData.position = comboScoreModelPos;
 	NormaDrawData.position += movePos;
 }
+
+
+void OthelloManager::SetScoreAttackTextPos()
+{
+	ScoreAttackDrawData.position = scoreAttackTextPos;
+	SetPickupModeEachInfo(ScoreAttackDrawData);
+	ScoreAttackDrawData.scale = { 0.5f,0.5f ,0.5f };
+
+}
+
+void OthelloManager::SetModeSelectEachInfo(EachInfo &data, panelPos &pos)
+{
+	Othello panelData;
+	panelData.Spawn(NORMAL, pos.x, pos.y);
+	data.position = ConvertXMFLOAT3toXMVECTOR(panelData.GetPosition());
+	data.position.m128_f32[2] += -1.0f;
+	data.scale = {0.1,0.1 ,0.1 };
+	data.rotation = { -90, 0, 0 };
+}
+
+void OthelloManager::SetPickupModeEachInfo(EachInfo &data)
+{
+	data.rotation = { -30, 0, 0 };
+}
+
 void OthelloManager::SetCountModelPos(bool isNormaMode)
 {
 	XMVECTOR movePos = moveTextModelPos;
@@ -1653,7 +1697,7 @@ void OthelloManager::SetCountModelPos(bool isNormaMode)
 	CountDrawData;
 	for (int i = 0; i < 5; i++)
 	{
-		CountDrawData[i].position = XMVECTOR{ 1.0f + (i * 1.0f), 18.0f, -1.0f ,0 };
+		CountDrawData[i].position = XMVECTOR{ 1.0f + (i * 2.0f), 15.0f, -1.0f ,0 };
 		CountDrawData[i].position += movePos;
 	}
 }
@@ -2791,6 +2835,99 @@ void OthelloModel::Update(OthelloEachInfo *each)
 	}
 }
 
+void TextModel::Update(EachInfo *each, XMMATRIX *addRot)
+{
+	if (each != nullptr)
+	{
+		this->each = *each;
+		XMMATRIX matScale, matRot, matTrans;
+		const XMFLOAT3 &cameraPos = Camera::eye.v;
+		matScale = XMMatrixScaling(this->each.scale.x, this->each.scale.y, this->each.scale.z);
+		matRot = XMMatrixIdentity();
+		matRot *= XMMatrixRotationZ(XMConvertToRadians(this->each.rotation.z));
+		matRot *= XMMatrixRotationX(XMConvertToRadians(this->each.rotation.x));
+		matRot *= XMMatrixRotationY(XMConvertToRadians(this->each.rotation.y));
+		if (addRot != nullptr)
+		{
+			matRot *= *addRot;
+		}
+		matTrans = XMMatrixTranslation(this->each.position.m128_f32[0], this->each.position.m128_f32[1], this->each.position.m128_f32[2]);
+		matWorld = XMMatrixIdentity();
+
+		matWorld *= matScale;
+		matWorld *= matRot;
+		matWorld *= matTrans;
+
+		Vertex *vertMap = nullptr;
+		BaseDirectX::result = mesh.vertBuff->Map(0, nullptr, (void **)&vertMap);
+		if (SUCCEEDED(BaseDirectX::result))
+		{
+			copy(mesh.vertices.begin(), mesh.vertices.end(), vertMap);
+			mesh.vertBuff->Unmap(0, nullptr);    // マップを解除
+		}
+
+		ConstBufferDataB0 *constMap0 = nullptr;
+		if (SUCCEEDED(this->each.constBuff0->Map(0, nullptr, (void **)&constMap0)))
+		{
+			//constMap0->mat = matWorld * Camera::matView * BaseDirectX::matProjection;
+			constMap0->viewproj = Camera::matView * BaseDirectX::matProjection;
+			constMap0->world = matWorld;
+			constMap0->cameraPos = cameraPos;
+			this->each.constBuff0->Unmap(0, nullptr);
+		}
+
+		ConstBufferDataB1 *constMap1 = nullptr;
+		BaseDirectX::result = this->each.constBuff1->Map(0, nullptr, (void **)&constMap1);
+		constMap1->ambient = material.ambient;
+		constMap1->diffuse = material.diffuse;
+		constMap1->specular = material.specular;
+		constMap1->alpha = material.alpha;
+		this->each.constBuff1->Unmap(0, nullptr);
+	}
+	else
+	{
+		XMMATRIX matScale, matRot, matTrans;
+		const XMFLOAT3 &cameraPos = Camera::eye.v;
+		matScale = XMMatrixScaling(this->each.scale.x, this->each.scale.y, this->each.scale.z);
+		matRot = XMMatrixIdentity();
+		matRot *= XMMatrixRotationZ(XMConvertToRadians(this->each.rotation.z));
+		matRot *= XMMatrixRotationX(XMConvertToRadians(this->each.rotation.x));
+		matRot *= XMMatrixRotationY(XMConvertToRadians(this->each.rotation.y));
+		matTrans = XMMatrixTranslation(this->each.position.m128_f32[0], this->each.position.m128_f32[1], this->each.position.m128_f32[2]);
+		matWorld = XMMatrixIdentity();
+
+		matWorld *= matScale;
+		matWorld *= matRot;
+		matWorld *= matTrans;
+
+		Vertex *vertMap = nullptr;
+		BaseDirectX::result = mesh.vertBuff->Map(0, nullptr, (void **)&vertMap);
+		if (SUCCEEDED(BaseDirectX::result))
+		{
+			copy(mesh.vertices.begin(), mesh.vertices.end(), vertMap);
+			mesh.vertBuff->Unmap(0, nullptr);    // マップを解除
+		}
+
+		ConstBufferDataB0 *constMap0 = nullptr;
+		if (SUCCEEDED(this->each.constBuff0->Map(0, nullptr, (void **)&constMap0)))
+		{
+			//constMap0->mat = matWorld * Camera::matView * BaseDirectX::matProjection;
+			constMap0->viewproj = Camera::matView * BaseDirectX::matProjection;
+			constMap0->world = matWorld;
+			constMap0->cameraPos = cameraPos;
+			this->each.constBuff0->Unmap(0, nullptr);
+		}
+
+		ConstBufferDataB1 *constMap1 = nullptr;
+		BaseDirectX::result = this->each.constBuff1->Map(0, nullptr, (void **)&constMap1);
+		constMap1->ambient = material.ambient;
+		constMap1->diffuse = material.diffuse;
+		constMap1->specular = material.specular;
+		constMap1->alpha = material.alpha;
+		this->each.constBuff1->Unmap(0, nullptr);
+	}
+
+}
 void OthelloManager::whySandwichSpawn()
 {
 	AllDeadPanel();
@@ -2965,9 +3102,9 @@ void ChanceObject::Spawn(int x, int y, bool isFront)
 	float posY = -(y * cellScale * 2);
 
 	each.position = XMVECTOR{ posX, posY ,0, 0 };
-	each.scale = { 1.0f , 1.0f ,  1.0f };
+	each.scale = { 1.0f , 1.0f ,  0.1f };
 	each.position += ConvertXMFLOAT3toXMVECTOR(stageLeftTop);
-	each.alpha = 0.4f;
+	each.alpha = 0.5f;
 	if (isFront)
 	{
 		each.rotation.y = 0;

@@ -188,10 +188,12 @@ namespace OthelloConstData
 	const panelPos scoreAttack = { 0, 7 };
 	const XMVECTOR moveTextPos = { 400, 0, 0,0 };
 	const XMVECTOR moveSubTextPos = { 105, 50, 0,0 };
-	const XMVECTOR comboScoreModelPos{ -2.0f, 18.0f, -1.0f ,0 };
-	const XMVECTOR allDeleteModelPos{ -5.0f, 18.0f, -1.0f ,0 };
+	const XMVECTOR comboScoreModelPos{ -2.0f, 15.0f, -1.0f ,0 };
+	const XMVECTOR allDeleteModelPos{ -5.0f, 15.0f, -1.0f ,0 };
 	const XMVECTOR moveTextModelPos{ 13.0f, 0.0f, 0.0f ,0.0f };
 	const XMVECTOR moveSubTextModelPos{ 4.0f, -5.0f, 0.0f ,0.0f };
+	const XMVECTOR scoreAttackTextPos{ 0.0f, 15.0f, -1.0f ,0 };
+	const float textBaseScale = 0.3f;
 }
 
 class OthelloEachInfo : public EachInfo
@@ -205,6 +207,12 @@ class OthelloModel : public Model
 {
 public:
 	void Update(OthelloEachInfo *each);
+};
+
+class TextModel : public Model
+{
+public:
+	void Update(EachInfo *each, XMMATRIX *addRot = nullptr);
 };
 
 class OthelloConstBuffer
@@ -394,8 +402,12 @@ private://モードセレクト用内部関数
 	void NormaPanelsModelSetPos(bool isNormaMode);
 	void NormaScoreModelSetPos(bool isNormaMode);
 	void SetCountModelPos(bool isNormaMode);
+	void SetScoreAttackTextPos();
 	void SubNormaModelPos(bool isNormaMode);
 	void SetModelPos(bool isNormaMode);
+
+	void SetModeSelectEachInfo(EachInfo &data, panelPos &pos);
+	void SetPickupModeEachInfo(EachInfo &data);
 private:
 	void SetPlayer();
 
@@ -488,9 +500,10 @@ private:
 	static ChanceModel chanceModelBlue;
 	static ChanceModel chanceModelOrange;
 
-	static Model PanelTextModel;
-	static Model ComboTextModel;
-	static Model ScoreTextModel;
+	static TextModel PanelTextModel;
+	static TextModel ComboTextModel;
+	static TextModel ScoreTextModel;
+	static TextModel ScoreAttackTextModel;
 	static vector<vector<SendOthelloData>> sendDatas;
 
 	bool isOnPanel = true;
@@ -518,10 +531,11 @@ private:
 	Sprite normaCountTex[50];
 
 	vector<Model *>numberModel;
+
 	vector<EachInfo> CountDrawData;
 	EachInfo NormaDrawData;
 	EachInfo SubNormaDrawData;
-
+	EachInfo ScoreAttackDrawData;
 
 	Sprite NormaPanelsText;
 	Sprite NormaComboText;
