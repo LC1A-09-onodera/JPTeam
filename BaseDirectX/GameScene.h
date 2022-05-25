@@ -287,4 +287,6 @@ public://シーンで使うもの
 	//ノーマルオセロの捜査を始める
 	bool isNormalOthello = false;
 	float titleScaleEaseTime = 0.0f;
+
+	bool isCameraModed = false;
 };
