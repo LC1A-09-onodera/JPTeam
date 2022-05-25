@@ -734,7 +734,7 @@ void OthelloManager::Init(Tex num[10], Model numModel[10])
 	}
 	for (int i = 0; i < 5; i++)
 	{
-		CountDrawData[i].position = XMVECTOR{ 1.0f + (i * 2.0f), 15.0f, -1.0f ,0 };
+		CountDrawData[i].position = XMVECTOR{};
 		CountDrawData[i].scale = { textBaseScale, textBaseScale, textBaseScale };
 		CountDrawData[i].rotation.x = -30.0f;
 		CountDrawData[i].CreateConstBuff0();
@@ -1038,6 +1038,7 @@ void OthelloManager::NormaUpdate(int combo)
 	}
 	if (isNormaMode)
 	{
+		bool retry = (Input::KeyTrigger(DIK_R) || directInput->IsButtonPush(directInput->Button03));
 		Undo();
 		normaChecker.Update(othellos, nowScore, nowMaxCombo);
 	}
@@ -1491,7 +1492,7 @@ void OthelloManager::CountModelDraw(int count)
 
 void OthelloManager::SetModeSelectPanel()
 {
-	AllDeadPanel();
+	AllDeletePanel();
 	bool stageEnd = false;
 	for (int y = 0; y < 7; y++)
 	{
@@ -1598,7 +1599,7 @@ void OthelloManager::SetTextPos(bool isNormaMode, int stageNum)
 	}
 	else
 	{
-		SetModeSelectEachInfo(ScoreAttackDrawData, panelPos{0, 7});
+		SetModeSelectEachInfo(ScoreAttackDrawData, panelPos{ 0, 7 });
 	}
 	list<NormaModeFieldData>::iterator data;
 	if (isNormaMode)
@@ -1647,7 +1648,6 @@ void OthelloManager::NormaPanelsModelSetPos(bool isNormaMode)
 		movePos *= 0;
 	}
 	float changeScale = 0.5f;
-
 	NormaDrawData.position = allDeleteModelPos;
 	NormaDrawData.position += movePos;
 
@@ -1678,8 +1678,8 @@ void OthelloManager::SetModeSelectEachInfo(EachInfo &data, panelPos &pos)
 	panelData.Spawn(NORMAL, pos.x, pos.y);
 	data.position = ConvertXMFLOAT3toXMVECTOR(panelData.GetPosition());
 	data.position.m128_f32[2] += -1.0f;
-	data.scale = {0.1,0.1 ,0.1 };
-	data.rotation = { -90, 0, 0 };
+	data.scale = { 0.2,0.2 ,0.2 };
+	data.rotation = { -30, 0, 0 };
 }
 
 void OthelloManager::SetPickupModeEachInfo(EachInfo &data)
@@ -1694,10 +1694,9 @@ void OthelloManager::SetCountModelPos(bool isNormaMode)
 	{
 		movePos *= 0;
 	}
-	CountDrawData;
 	for (int i = 0; i < 5; i++)
 	{
-		CountDrawData[i].position = XMVECTOR{ 1.0f + (i * 2.0f), 15.0f, -1.0f ,0 };
+		CountDrawData[i].position = XMVECTOR{ -0.3f + (i * 1.5f), 15.0f, -1.0f ,0 };
 		CountDrawData[i].position += movePos;
 	}
 }
@@ -1713,8 +1712,6 @@ void OthelloManager::SubNormaModelPos(bool isNormaMode)
 	SubNormaDrawData.position = allDeleteModelPos;
 	SubNormaDrawData.position += moveTextModelPos;
 	SubNormaDrawData.position += movePos;
-
-
 }
 void OthelloManager::RemovePlayer()
 {
@@ -2655,6 +2652,14 @@ void OthelloManager::AllDeadPanel()
 	EraseChanceObject();
 }
 
+void OthelloManager::AllDeletePanel()
+{
+	if (othellos.size() <= 0)
+	{
+		return;
+	}
+	othellos.clear();
+}
 void OthelloManager::DownStep(list<Othello>::iterator playerItr)
 {
 	playerNotMove();
