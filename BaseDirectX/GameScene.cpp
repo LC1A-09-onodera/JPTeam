@@ -408,7 +408,7 @@ void GameScene::TitleUpdate()
 					}
 				}
 				//チュートリアルに飛ぶ
-				if ((Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01)) && !isPouse)
+				if ((Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01)) && !isPouse && !isSceneChange)
 				{
 					if (titleSelectNum == 1)
 					{
@@ -732,7 +732,7 @@ void GameScene::GameUpdate()
 	//ゲームシーンからリザルトへのトリガー
 	if (gameTime <= 0 && !isResultSceneChange)
 	{
-		//ToResult();
+		ToResult();
 	}
 	//カメラの動き
 	if (isResultSceneChange)
@@ -858,6 +858,10 @@ void GameScene::GameUpdate()
 	Lights::Add(checkObject);
 	Lights::Update();
 	ParticleControl::Update();
+	if (isPouseToTiTle)
+	{
+		PouseToTitleUpdate();
+	}
 
 	//tips用
 	if (isTipsDraw)
@@ -1097,12 +1101,21 @@ void GameScene::GameDraw()
 
 	//PostEffectのPostDraw
 	//PostEffects::PostDraw();
-
+	sky.each.rotation.x += 1.0f;
 	Draw3DObject(sky);
+	othelloStage.each.position.m128_f32[2] = 8.0f;
 	if (isStageDisplay)Draw3DObject(othelloStage);
-	if (isSceneChange == true && (sceneChageType == 3 || sceneChageType == 4 || sceneChageType == 5 || sceneChageType == 6))
+	if ((isSceneChange == true && sceneChageType >= 3) || isBackGroundOthello)
 	{
 		for (auto opOthelloItr = opOthellos.begin(); opOthelloItr != opOthellos.end(); ++opOthelloItr)
+		{
+			ObjectParticles::othello2.object.Update(&(*opOthelloItr));
+			Draw3DObject(ObjectParticles::othello2.object);
+		}
+	}
+	if (isPouseToTiTle && !isBackGroundOthello)
+	{
+		for (auto opOthelloItr = pouseOthellos.begin(); opOthelloItr != pouseOthellos.end(); ++opOthelloItr)
 		{
 			ObjectParticles::othello2.object.Update(&(*opOthelloItr));
 			Draw3DObject(ObjectParticles::othello2.object);
@@ -2216,6 +2229,7 @@ void GameScene::PouseToTitle()
 	isPouseToTiTle = true;
 	pouseToTitleEaseTime1 = 0.0f;
 	isBackGroundOthello = false;
+	isSceneChange = true;
 }
 
 void GameScene::PouseToTitleUpdate()
