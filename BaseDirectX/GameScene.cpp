@@ -690,7 +690,14 @@ void GameScene::GameUpdate()
 				}
 				else if (othelloManager.GetIsNormaClear())
 				{
-					PouseToTitle();
+					static int checkTime = 0;
+					checkTime++;
+					if (checkTime > 60)
+					{
+						checkTime = 0;
+						PouseToTitle();
+					}
+					//PouseToTitle();
 				}
 			}
 			if (othelloManager.GetIsSendDataUpdate())

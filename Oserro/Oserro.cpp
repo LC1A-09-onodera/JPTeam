@@ -1153,8 +1153,8 @@ void OthelloManager::NormaTextModelDraw(int stageNum, bool isDraw)
 			PanelTextModel.Update(&SubNormaDrawData);
 			Draw3DObject(PanelTextModel);
 		}
-
 		CountModelDraw(status);
+		normaChecker.Draw();
 	}
 }
 void OthelloManager::Finalize()
@@ -1164,12 +1164,10 @@ void OthelloManager::Finalize()
 	{
 		itr->Finalize();
 	}
-
 }
 
 void OthelloManager::Controll()
 {
-	//MauseControll();
 	PlayerControll();
 }
 
