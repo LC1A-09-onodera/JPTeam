@@ -146,7 +146,36 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData, bo
 		OthelloCheck(Direction_X::EAST, Direction_Y::SOUTH, pPos.first, pPos.second, isCheck);
 	}
 
-	if (!reachData.empty())
+	if (nameAndCombos.empty())
+	{
+		if (!reachData.empty())
+		{
+			for (int i = 0; i < 8; i++)
+			{
+				for (int j = 0; j < 8; j++)
+				{
+					reachCheck[i][j] = false;
+				}
+			}
+
+			for (auto itr = reachData.begin(); itr != reachData.end(); ++itr)
+			{
+				int lastX = itr->first;
+				int lastY = itr->second;
+
+				CheckReachOthello(Direction_X::WEST, NONE_DIRECTION, lastX, lastY);
+				CheckReachOthello(Direction_X::EAST, NONE_DIRECTION, lastX, lastY);
+				CheckReachOthello(NONE_DIRECTION, Direction_Y::SOUTH, lastX, lastY);
+				CheckReachOthello(NONE_DIRECTION, Direction_Y::NOUTH, lastX, lastY);
+				CheckReachOthello(Direction_X::WEST, Direction_Y::NOUTH, lastX, lastY);
+				CheckReachOthello(Direction_X::WEST, Direction_Y::SOUTH, lastX, lastY);
+				CheckReachOthello(Direction_X::EAST, Direction_Y::NOUTH, lastX, lastY);
+				CheckReachOthello(Direction_X::EAST, Direction_Y::SOUTH, lastX, lastY);
+			}
+			reachData.clear();
+		}
+	}
+	else
 	{
 		for (int i = 0; i < 8; i++)
 		{
@@ -156,7 +185,19 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData, bo
 			}
 		}
 
-		for (auto itr = reachData.begin(); itr != reachData.end(); ++itr)
+		vector<pair<int, int>> comboReachData;
+
+		for (int i = 0; i < OthelloConstData::fieldSize; i++)
+		{
+			for (int j = 0; j < OthelloConstData::fieldSize; j++)
+			{
+				if (othelloDatas[i][j].chainName != 0)
+				{
+					comboReachData.push_back(make_pair(j, i));
+				}
+			}
+		}
+		for (auto itr = comboReachData.begin(); itr != comboReachData.end(); ++itr)
 		{
 			int lastX = itr->first;
 			int lastY = itr->second;
@@ -170,6 +211,36 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData, bo
 			CheckReachOthello(Direction_X::EAST, Direction_Y::NOUTH, lastX, lastY);
 			CheckReachOthello(Direction_X::EAST, Direction_Y::SOUTH, lastX, lastY);
 		}
+
+		/*vector<pair<int, int>> reCheck;
+
+		for (int i = 0; i < OthelloConstData::fieldSize; i++)
+		{
+			for (int j = 0; j < OthelloConstData::fieldSize; j++)
+			{
+				if (reachCheck[i][j])
+				{
+					reCheck.push_back(make_pair(j, i));
+				}
+			}
+		}
+		if (!reCheck.empty())
+		{
+			for (auto itr = reCheck.begin(); itr != reCheck.end(); ++itr)
+			{
+				int lastX = itr->first;
+				int lastY = itr->second;
+
+				CheckReachOthello(Direction_X::WEST, NONE_DIRECTION, lastX, lastY);
+				CheckReachOthello(Direction_X::EAST, NONE_DIRECTION, lastX, lastY);
+				CheckReachOthello(NONE_DIRECTION, Direction_Y::SOUTH, lastX, lastY);
+				CheckReachOthello(NONE_DIRECTION, Direction_Y::NOUTH, lastX, lastY);
+				CheckReachOthello(Direction_X::WEST, Direction_Y::NOUTH, lastX, lastY);
+				CheckReachOthello(Direction_X::WEST, Direction_Y::SOUTH, lastX, lastY);
+				CheckReachOthello(Direction_X::EAST, Direction_Y::NOUTH, lastX, lastY);
+				CheckReachOthello(Direction_X::EAST, Direction_Y::SOUTH, lastX, lastY);
+			}
+		}*/
 		reachData.clear();
 	}
 }
