@@ -111,7 +111,7 @@ public://シーンで使うもの
 	float eyeEaseTime;
 
 	int resultForTime;
-	const int gameMaxTime = 59;
+	const int gameMaxTime = 5999;
 
 	//スコア用
 	//Sprite scoreNum[60];

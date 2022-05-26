@@ -45,7 +45,7 @@ void OthlloPlayer::Init()
 	playerFbx = FbxLoader::GetInstance()->LoadModelFromFile("player_stay");
 
 	playerStay = FbxLoader::GetInstance()->LoadModelFromFile("player_stay");
-	playerRunNow = FbxLoader::GetInstance()->LoadModelFromFile("player_move");
+	playerRunNow = FbxLoader::GetInstance()->LoadModelFromFile("player_move_now");
 	playerReverse = FbxLoader::GetInstance()->LoadModelFromFile("player_reverse");
 	
 
