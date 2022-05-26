@@ -716,7 +716,7 @@ void GameScene::GameUpdate()
 					//PouseToTitle();
 				}
 			}
-			checkObject.Update(othelloManager.Send(), othelloManager.GetIsSendDataUpdate());
+			checkObject.Update(othelloManager.Send(), true);
 			othelloManager.Receive(checkObject.GetOthelloDatas(), checkObject.GetCompletePos());
 			othelloManager.SpawnChances(checkObject.GetReachDatas());
 
