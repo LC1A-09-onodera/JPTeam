@@ -168,7 +168,7 @@ namespace OthelloConstData
 	const int downStepCountMax = 0;
 	const int tutorialEndTextTimer = 300;
 
-	const int NormaStageCount = 9;
+	const int NormaStageCount = 56;
 	//アニメーション
 	const int vanishTimerMax = 1200;
 	const int vanishAnimation = 180;
@@ -191,8 +191,8 @@ namespace OthelloConstData
 	const XMVECTOR moveAllDeleteCountPos{5.0f, 0.0f, 0.0f , 0.0f };
 	const XMVECTOR moveSubTextPos = { 105, 50, 0,0 };
 	//テキストの表示箇所3D
-	const XMVECTOR comboScoreModelPos{ -3.0f, 13.0f, -1.0f ,0 };//コンボとスコアの文字の基準位置
-	const XMVECTOR allDeleteModelPos{ -5.0f, 13.0f, -1.0f ,0 };//ゼンブハサムの文字の基準位置
+	const XMVECTOR comboScoreModelPos{ -1.6f, 13.0f, -1.0f ,0 };//コンボとスコアの文字の基準位置
+	const XMVECTOR allDeleteModelPos{ -3.0f, 13.0f, -1.0f ,0 };//ゼンブハサムの文字の基準位置
 	const XMVECTOR moveTextModelPos{ 15.0f, 0.0f, 0.0f ,0.0f };//ノルマモードに入る際の移動量
 	const XMVECTOR moveSubTextModelPos{ 4.0f, -5.0f, 0.0f ,0.0f };//サブノルマの移動量
 	const XMVECTOR scoreAttackTextPos{ 0.0f, 15.0f, -1.0f ,0 };//スコアアタックの文字の基準位置
@@ -230,13 +230,15 @@ public:
 class Othello
 {
 public:
-
+	bool isCompleteDraw = false;
 private:
 	OthelloEachInfo each;
+	OthelloEachInfo completeEach;
 	XMFLOAT3 startPos;
 	XMFLOAT3 endPos;
 	OthelloModel *model;
 	OthelloModel *chainModel;
+	OthelloModel *compModel;
 	float startAngle;
 	float endAngle;
 	float time;
@@ -252,7 +254,7 @@ public:
 	void SetPosition(XMFLOAT3 &position) { this->each.position = ConvertXMFLOAT3toXMVECTOR(position); }
 	void SetScale(XMFLOAT3 &scale) { this->each.scale = scale; }
 public:
-	void Init(OthelloModel *model, OthelloModel *chainModel);
+	void Init(OthelloModel *model, OthelloModel *chainModel, OthelloModel *compModel);
 	void Update(int combo);
 	void Draw();
 	void Finalize();
@@ -323,7 +325,7 @@ public:
 	void AddPanel();
 
 	const vector<vector<SendOthelloData>> &Send();
-	void Receive(const vector<vector<SendOthelloData>> &data);
+	void Receive(const vector<vector<SendOthelloData>> &data, const vector<pair<int, int>> compPos);
 
 	void MinSpawn(bool inGame);
 	static list<Othello> othellos;
@@ -502,6 +504,7 @@ private:
 	static OthelloModel oserroModel;
 	static OthelloModel stopOserroModel;
 	static OthelloModel wallOserroModel;
+	static OthelloModel compModel;
 	static ChanceModel chanceModelBlue;
 	static ChanceModel chanceModelOrange;
 
@@ -547,6 +550,8 @@ private:
 	Sprite NormaComboText;
 	Sprite NormaScoreText;
 
+	//////////////////////Todo
+	XMVECTOR picupTextAnimation;
 	int textChangeTimer = 0;
 	bool textChange = false;
 
