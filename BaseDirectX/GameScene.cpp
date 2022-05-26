@@ -891,6 +891,7 @@ void GameScene::GameUpdate()
 			else if (selectPouse == 1)
 			{
 				PouseToTitle();
+				isCameraModed = false;
 			}
 			else if (selectPouse == 2)
 			{
@@ -2309,6 +2310,8 @@ void GameScene::ToTutorialUpdate()
 				if (isTutorial)
 				{
 					gameTime = 1;
+					SoundStopWave(countdDownSound);
+					SoundPlayOnce(countdDownSound);
 				}
 				else
 				{
@@ -2332,9 +2335,12 @@ void GameScene::ToTutorialUpdate()
 			if (goToGameTime >= 1.0f)
 			{
 				isSceneChange = false;
+				isCameraModed = true;
 				if (isTutorial)
 				{
 					gameTime = 1;
+					SoundStopWave(countdDownSound);
+					SoundPlayOnce(countdDownSound);
 				}
 				else
 				{
