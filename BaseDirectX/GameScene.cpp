@@ -127,7 +127,7 @@ void GameScene::Init()
 	Lights::LoadModels();
 	OthlloPlayer::Init();
 	sky.CreateModel("world", ShaderManager::playerShader, true);
-	sky.each.rotation = { 70, 0.0f, 0 };
+	sky.each.rotation = { 0, 0.0f, 0 };
 	sky.each.scale = { 100.0f ,100.0f, 100.f };
 	othelloStage.CreateModel("board", ShaderManager::playerShader);
 	othelloStage.each.position.m128_f32[0] = -1.0f;
@@ -368,6 +368,19 @@ void GameScene::Init()
 	tips_ss[2].CreateSprite(L"Resource/Img/tips/tips_ss3.png", XMFLOAT3(START_X - SIZE_X, START_Y, 0));
 	tips_ss[3].CreateSprite(L"Resource/Img/tips/tips_ss4.png", XMFLOAT3(START_X - SIZE_X, START_Y, 0));
 
+	for (int i = 0; i < 2; i++)
+	{
+		resultMaxConbo[i].CreateConstBuff0();
+		resultMaxConbo[i].CreateConstBuff1();
+	}
+	for (int i = 0; i < 3; i++)
+	{
+		resultEraseOthello[i].CreateConstBuff0();
+		resultEraseOthello[i].CreateConstBuff1();
+	}
+	resultScoreKanaModel.CreateModel("score_kana", ShaderManager::playerShader);
+	resultMaxConboModel.CreateModel("max_combo", ShaderManager::playerShader);
+	resultEraseOthelloModel.CreateModel("delete_block", ShaderManager::playerShader);
 	tipsCounts = 0;
 	changeTimerFrame = 0;
 	tipsDrawNum = 0;
@@ -1307,6 +1320,7 @@ void GameScene::GameDraw()
 	sky.each.rotation.y += 1.0f;
 	Draw3DObject(sky);
 	othelloStage.each.position.m128_f32[2] = 8.0f;
+	othelloStage.each.rotation.x = -90;
 	if (isStageDisplay)Draw3DObject(othelloStage);
 	if ((isSceneChange == true && sceneChageType >= 3) || isBackGroundOthello)
 	{
@@ -1543,10 +1557,6 @@ void GameScene::GameDraw()
 			scoreObject.Update();
 			Draw3DObject(scoreObject);
 		}
-		if (isTutorial)
-		{
-			othelloManager.TutorialTextDraw();
-		}
 	}
 	if (countDown > 0 && isSceneChange == false && isModeSelect == false)
 	{
@@ -1623,6 +1633,10 @@ void GameScene::GameDraw()
 	if (isModeSelect && !isSceneChange && !isPouseToTiTle)
 	{
 		othelloManager.ModeSelectModelDraw(true);
+	}
+	if (gameTime > 0 && countDown <= 0 && isTutorial)
+	{
+		othelloManager.TutorialTextDraw();
 	}
 	if (isPouse)
 	{
@@ -1738,49 +1752,50 @@ void GameScene::ResultDraw()
 	sky.each.rotation.y += 1.0f;
 	sky.Update();
 	Draw3DObject(sky);
+	othelloStage.each.rotation.x = -90;
 	Draw3DObject(othelloStage);
 	nowScore = checkObject.GetScore();
 	float scoreNum = 2.0f;
-	scoreEach[0].position = { 1.0f + scoreNum * 6, 20.0f, -12.0f, 1.0f };
+	scoreEach[0].position = { 1.0f + scoreNum * 6, 19.0f, -12.0f, 1.0f };
 	scoreEach[0].scale = { 0.4f, 0.4f, 0.4f };
 	scoreEach[0].rotation.x = -70.0f;
 	sNumbersObject[nowScore % 10].Update(&scoreEach[0]);
 	Draw3DObject(sNumbersObject[nowScore % 10]);
-	scoreEach[1].position = { 1.0f + scoreNum * 5, 20.0f, -12.0f, 1.0f };
+	scoreEach[1].position = { 1.0f + scoreNum * 5, 19.0f, -12.0f, 1.0f };
 	scoreEach[1].scale = { 0.4f, 0.4f, 0.4f };
 	scoreEach[1].rotation.x = -70.0f;
 	sNumbersObject[nowScore / 10 % 10].Update(&scoreEach[1]);
 	Draw3DObject(sNumbersObject[nowScore / 10 % 10]);
-	scoreEach[2].position = { 1.0f + scoreNum * 4, 20.0f, -12.0f, 1.0f };
+	scoreEach[2].position = { 1.0f + scoreNum * 4, 19.0f, -12.0f, 1.0f };
 	scoreEach[2].scale = { 0.4f, 0.4f, 0.4f };
 	scoreEach[2].rotation.x = -70.0f;
 	sNumbersObject[nowScore / 100 % 10].Update(&scoreEach[2]);
 	Draw3DObject(sNumbersObject[nowScore / 100 % 10]);
-	scoreEach[3].position = { 1.0f + scoreNum * 3, 20.0f, -12.0f, 1.0f };
+	scoreEach[3].position = { 1.0f + scoreNum * 3, 19.0f, -12.0f, 1.0f };
 	scoreEach[3].scale = { 0.4f, 0.4f, 0.4f };
 	scoreEach[3].rotation.x = -70.0f;
 	sNumbersObject[nowScore / 1000 % 10].Update(&scoreEach[3]);
 	Draw3DObject(sNumbersObject[nowScore / 1000 % 10]);
-	scoreEach[4].position = { 1.0f + scoreNum * 2, 20.0f, -12.0f, 1.0f };
+	scoreEach[4].position = { 1.0f + scoreNum * 2, 19.0f, -12.0f, 1.0f };
 	scoreEach[4].scale = { 0.4f, 0.4f, 0.4f };
 	scoreEach[4].rotation.x = -70.0f;
 	sNumbersObject[nowScore / 10000 % 10].Update(&scoreEach[4]);
 	Draw3DObject(sNumbersObject[nowScore / 10000 % 10]);
-	scoreEach[5].position = { 1.0f + scoreNum * 1, 20.0f, -12.0f, 1.0f };
+	scoreEach[5].position = { 1.0f + scoreNum * 1, 19.0f, -12.0f, 1.0f };
 	scoreEach[5].scale = { 0.4f, 0.4f, 0.4f };
 	scoreEach[5].rotation.x = -70.0f;
 	sNumbersObject[nowScore / 100000 % 10].Update(&scoreEach[5]);
 	Draw3DObject(sNumbersObject[nowScore / 100000 % 10]);
-	scoreEach[6].position = { 1.0f + scoreNum * 0, 20.0f, -12.0f, 1.0f };
+	scoreEach[6].position = { 1.0f + scoreNum * 0, 19.0f, -12.0f, 1.0f };
 	scoreEach[6].scale = { 0.4f, 0.4f, 0.4f };
 	scoreEach[6].rotation.x = -70.0f;
 	sNumbersObject[nowScore / 1000000 % 10].Update(&scoreEach[6]);
 	Draw3DObject(sNumbersObject[nowScore / 1000000 % 10]);
-	scoreObject.each.position = { -5.0f, 20.0f, -12.0f, 1.0f };
-	scoreObject.each.scale = { 0.4f, 0.4f, 0.4f };
-	scoreObject.each.rotation.x = -70.0f;
-	scoreObject.Update();
-	Draw3DObject(scoreObject);
+	resultScoreKanaModel.each.position = { -5.0f, 19.0f, -12.0f, 1.0f };
+	resultScoreKanaModel.each.scale = { 0.4f, 0.4f, 0.4f };
+	resultScoreKanaModel.each.rotation.x = -70.0f;
+	resultScoreKanaModel.Update();
+	Draw3DObject(resultScoreKanaModel);
 
 	XMFLOAT3 scale = { 0.4f, 0.4f, 0.4f };
 	titleObject.each.position = { -1, 3, 0, 1.0f };
@@ -1810,6 +1825,45 @@ void GameScene::ResultDraw()
 	pushSpace.each.scale = scale4;
 	pushSpace.Update();
 	Draw3DObject(pushSpace);
+
+	int combo = checkObject.GetMaxCombo();
+	int reverse = checkObject.GetTotalReverceCount();
+	resultMaxConbo[0].position = {3.0f, 17.0f, -10.0f, 1.0f};
+	resultMaxConbo[0].scale = scale;
+	resultMaxConbo[0].rotation.x = -70;
+	sNumbersObject[combo % 10].Update(&resultMaxConbo[0]);
+	Draw3DObject(sNumbersObject[combo % 10]);
+	resultMaxConbo[1].position = { 1.0f, 17.0f, -10.0f, 1.0f };
+	resultMaxConbo[1].scale = scale;
+	resultMaxConbo[1].rotation.x = -70;
+	sNumbersObject[combo / 10 % 10].Update(&resultMaxConbo[1]);
+	Draw3DObject(sNumbersObject[combo / 10 % 10]);
+	resultMaxConboModel.each.position = {-9.0f, 17.0f, -10.0f, 1.0f};
+	resultMaxConboModel.each.scale = scale;
+	resultMaxConboModel.each.rotation.x = -70;
+	resultMaxConboModel.Update();
+	Draw3DObject(resultMaxConboModel);
+
+	resultEraseOthello[0].position = { 5.0f, 15.0f, -8.0f, 1.0f};
+	resultEraseOthello[0].scale = scale;
+	resultEraseOthello[0].rotation.x = -70;
+	sNumbersObject[reverse % 10].Update(&resultEraseOthello[0]);
+	Draw3DObject(sNumbersObject[reverse % 10]);
+	resultEraseOthello[1].position = { 3.0f, 15.0f, -8.0f, 1.0f };
+	resultEraseOthello[1].scale = scale;
+	resultEraseOthello[1].rotation.x = -70;
+	sNumbersObject[reverse / 10 % 10].Update(&resultEraseOthello[1]);
+	Draw3DObject(sNumbersObject[reverse / 10 % 10]);
+	resultEraseOthello[2].position = { 1.0f, 15.0f, -8.0f, 1.0f };
+	resultEraseOthello[2].scale = scale;
+	resultEraseOthello[2].rotation.x = -70;
+	sNumbersObject[reverse / 100 % 10].Update(&resultEraseOthello[2]);
+	Draw3DObject(sNumbersObject[reverse / 100 % 10]);
+	resultEraseOthelloModel.each.position = {-7.0f, 15.0f, -8.0f, 1.0f};
+	resultEraseOthelloModel.each.scale = scale;
+	resultEraseOthelloModel.each.rotation.x = -70;
+	resultEraseOthelloModel.Update();
+	Draw3DObject(resultEraseOthelloModel);
 
 	//Imgui::DrawImGui();
 
@@ -2320,7 +2374,7 @@ void GameScene::ToModeSelectUpdate()
 				isSceneChange = false;
 				isCameraModed = true;
 				OthlloPlayer::isReverse = true;
-				OthlloPlayer::playerReverseObject->PlayAnimation();
+				//OthlloPlayer::playerReverseObject->PlayAnimation();
 			}
 		}
 	}
