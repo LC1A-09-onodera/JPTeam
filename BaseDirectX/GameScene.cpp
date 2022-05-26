@@ -255,8 +255,10 @@ void GameScene::Init()
 	tipsSprite[3].CreateSprite(L"Resource/Img/tips/ex4.png", XMFLOAT3(0, 0, 0));
 
 	startModel.CreateModel("start", ShaderManager::playerShader);
+	startModel.each.scale = { 0.3,0.3,0.3 };
 	AButton.CreateModel("A", ShaderManager::playerShader);
 	tutorialObject.CreateModel("tutorial", ShaderManager::playerShader);
+	tutorialObject.each.scale = { 0.3,0.3,0.3 };
 	pushSpace.CreateModel("push_space", ShaderManager::playerShader);
 	titleObject.CreateModel("title", ShaderManager::playerShader);
 	backGround.CreateModel("background", ShaderManager::half);
@@ -1138,13 +1140,31 @@ void GameScene::TitleDraw()
 			Draw3DObject(backGround);
 			XMFLOAT3 scale2 = { 0.3f, 0.3f, 0.3f };
 			startModel.each.position = { -1.0f + 6.0f, -2.0f, 0, 1.0f };
-			startModel.each.scale = scale2;
+			if (titleSelectNum == 0)
+			{
+				XMFLOAT3 scale = startModel.each.scale;
+				scale.x -= 0.001f;
+				scale.y -= 0.001f;
+				scale.z -= 0.001f;
+				if (scale.x < 0.276f) { scale = { 0.3f, 0.3f, 0.3f }; }
+				startModel.each.scale = scale;
+			}
+			else { startModel.each.scale = scale2; }
 			startModel.each.rotation = { 0, 0, 0 };
 			startModel.Update();
 			Draw3DObject(startModel);
 			XMFLOAT3 scale3 = { 0.3f, 0.3f, 0.3f };
 			tutorialObject.each.position = { -1 - 6.0f, -2.0f, 0, 1.0f };
-			tutorialObject.each.scale = scale3;
+			if (titleSelectNum == 1)
+			{
+				XMFLOAT3 scale = tutorialObject.each.scale;
+				scale.x -= 0.001f;
+				scale.y -= 0.001f;
+				scale.z -= 0.001f;
+				if (scale.x < 0.276f) { scale = { 0.3f, 0.3f, 0.3f }; }
+				tutorialObject.each.scale = scale;
+			}
+			else { tutorialObject.each.scale = scale3; }
 			tutorialObject.each.rotation = { 0, 0, 0 };
 			tutorialObject.Update();
 			Draw3DObject(tutorialObject);
