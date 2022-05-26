@@ -162,6 +162,7 @@ void Othello::Finalize()
 void Othello::Revers()
 {
 	data.isReverce = true;
+	data.isSpawn = false;
 	data.isPlayer = false;
 	data.isSandwich = true;
 	data.animationTimer = 0;
@@ -172,6 +173,7 @@ void Othello::Revers()
 	XMFLOAT3 pos = ConvertXMVECTORtoXMFLOAT3(each.position);
 	pos.z = -0.3f;
 	ObjectParticles::six.Init(pos, data.maxComboCount, ParticleType::Exprotion);
+	each.scale = { 1.0f,1.0f ,1.0f };
 }
 
 
@@ -179,12 +181,14 @@ void Othello::Sandwich()
 {
 	data.isPlayer = false;
 	data.isSandwich = true;
+	data.isSpawn = false;
 	data.waitTimer = animationTimerMax;
 	//data.isReverce = true;
 	data.animationTimer = 0;
 	//data.waitTimer = 0;
 	//data.JumpTimer = 0;
 	//data.isJumpUp = true;
+	each.scale = {1.0f,1.0f ,1.0f };
 	XMFLOAT3 pos = ConvertXMVECTORtoXMFLOAT3(each.position);
 	ObjectParticles::six.Init(pos, data.maxComboCount, ParticleType::Exprotion);
 
@@ -1933,7 +1937,7 @@ void OthelloManager::Receive(const vector<vector<SendOthelloData>> &data, const 
 		gameDatas->score = sendDatas[y][x].score;
 		gameDatas->chainName = sendDatas[y][x].chainName;
 		gameDatas->maxComboCount = sendDatas[y][x].maxComboCount;
-		if (sendDatas[y][x].type == NONE || gameDatas->isSpawn)
+		if (sendDatas[y][x].type == NONE/* || gameDatas->isSpawn*/)
 		{
 			continue;
 		}
