@@ -14,6 +14,7 @@ list<ChanceObject> OthelloManager::chances;
 OthelloModel OthelloManager::oserroModel;
 OthelloModel OthelloManager::stopOserroModel;
 OthelloModel OthelloManager::wallOserroModel;
+OthelloModel OthelloManager::compModel;
 TextModel OthelloManager::PanelTextModel;
 TextModel OthelloManager::ComboTextModel;
 TextModel OthelloManager::ScoreTextModel;
@@ -32,12 +33,17 @@ OthelloData::OthelloData()
 	}
 }
 
-void Othello::Init(OthelloModel *model, OthelloModel *chainModel)
+void Othello::Init(OthelloModel *model, OthelloModel *chainModel, OthelloModel *compModel)
 {
 	this->model = model;
 	this->chainModel = chainModel;
+	this->compModel = compModel;
 	each.CreateConstBuff0();
 	each.CreateConstBuff1();
+	completeEach.CreateConstBuff0();
+	completeEach.CreateConstBuff1();
+	completeEach.scale = {0.1f,0.1f ,0.1f };
+	completeEach.alpha = 1.0f;
 }
 
 void Othello::Update(int combo)
@@ -72,6 +78,7 @@ void Othello::Update(int combo)
 			{
 				each.position = XMVECTOR{ x, y ,0, 0 };
 				each.position += ConvertXMFLOAT3toXMVECTOR(stageLeftTop);
+				completeEach.position = each.position;
 				if (data.isFront)
 				{
 					each.rotation.y = 0;
@@ -129,6 +136,17 @@ void Othello::Draw()
 		}
 		model->Update(&each);
 		Draw3DObject(*model);
+
+#pragma region compDraw
+//回転変更
+		if (isCompleteDraw)
+		{
+			completeEach.position.m128_f32[2] = -1.0f;
+			compModel->Update(&completeEach);
+			Draw3DObject(*compModel);
+		}
+#pragma endregion
+
 		if (data.type == STOP && !GetIsActive() && isRockDraw)
 		{
 			chainModel->Update(&each);
@@ -144,6 +162,7 @@ void Othello::Finalize()
 void Othello::Revers()
 {
 	data.isReverce = true;
+	data.isSpawn = false;
 	data.isPlayer = false;
 	data.isSandwich = true;
 	data.animationTimer = 0;
@@ -154,6 +173,7 @@ void Othello::Revers()
 	XMFLOAT3 pos = ConvertXMVECTORtoXMFLOAT3(each.position);
 	pos.z = -0.3f;
 	ObjectParticles::six.Init(pos, data.maxComboCount, ParticleType::Exprotion);
+	each.scale = { 1.0f,1.0f ,1.0f };
 }
 
 
@@ -161,12 +181,14 @@ void Othello::Sandwich()
 {
 	data.isPlayer = false;
 	data.isSandwich = true;
+	data.isSpawn = false;
 	data.waitTimer = animationTimerMax;
 	//data.isReverce = true;
 	data.animationTimer = 0;
 	//data.waitTimer = 0;
 	//data.JumpTimer = 0;
 	//data.isJumpUp = true;
+	each.scale = {1.0f,1.0f ,1.0f };
 	XMFLOAT3 pos = ConvertXMVECTORtoXMFLOAT3(each.position);
 	ObjectParticles::six.Init(pos, data.maxComboCount, ParticleType::Exprotion);
 
@@ -504,6 +526,7 @@ void Othello::Spawn(OthelloType type, int x, int y, bool isFront)
 		//each.scale = { 1.0f , 1.0f ,  PanelSize };
 		each.scale = { 1.0f , 1.0f , 1.0f };
 		each.position += ConvertXMFLOAT3toXMVECTOR(stageLeftTop);
+		completeEach.position = each.position;
 		if (data.isFront)
 		{
 			each.rotation.y = 0;
@@ -532,6 +555,7 @@ void Othello::Borne(OthelloType type, int x, int y, bool isFront)
 
 		each.position = XMVECTOR{ x, y ,0, 0 };
 		each.position += ConvertXMFLOAT3toXMVECTOR(stageLeftTop);
+		completeEach.position = each.position;
 		XMFLOAT3 pos = ConvertXMVECTORtoXMFLOAT3(each.position);
 		ObjectParticles::frame.Init(pos, 1, ParticleType::Born);
 
@@ -651,6 +675,7 @@ void OthelloManager::Init(Tex num[10], Model numModel[10])
 	oserroModel.CreateModel("newOserro4", ShaderManager::othelloShader);
 	stopOserroModel.CreateModel("rock_othello", ShaderManager::othelloShader);
 	wallOserroModel.CreateModel("wall", ShaderManager::othelloShader);
+	compModel.CreateModel("A", ShaderManager::othelloShader);
 	chanceModelBlue.CreateModel("chance_1", ShaderManager::othelloShader);
 	chanceModelOrange.CreateModel("chance", ShaderManager::othelloShader);
 	sendDatas.resize(fieldSize);
@@ -666,7 +691,8 @@ void OthelloManager::Init(Tex num[10], Model numModel[10])
 	{
 		itr->resize(fieldSize);
 	}
-	fieldDrawText.resize(NormaStageCount);
+	LoadAllStage();
+	fieldDrawText.resize(NormaStartOthellos.size());
 	int stageCount = 0;
 	for (auto &e : fieldDrawText)
 	{
@@ -764,8 +790,6 @@ void OthelloManager::Init(Tex num[10], Model numModel[10])
 			normaCountTex[count].ChangeSize(48, 64);
 		}
 	}
-
-	LoadAllStage();
 }
 
 void OthelloManager::Update(int combo)
@@ -1354,7 +1378,7 @@ GameMode OthelloManager::GetEnterModeType()
 	GameMode now = GameMode::None;
 
 	int stageNum = (playerPanelPos.y * 8) + playerPanelPos.x + 1;
-	if (stageNum <= NormaStageCount)
+	if (stageNum <= NormaStartOthellos.size())
 	{
 		now = GameMode::NormaMode;
 	}
@@ -1535,7 +1559,7 @@ void OthelloManager::SetModeSelectPanel()
 	{
 		for (int x = 0; x < 8; x++)
 		{
-			stageEnd = ((y * 8) + x) >= NormaStageCount;
+			stageEnd = ((y * 8) + x) >= NormaStartOthellos.size();
 			if (stageEnd)
 			{
 				break;
@@ -1733,9 +1757,15 @@ void OthelloManager::SetCountModelPos(bool isNormaMode)
 	}
 	if(GetEnterNormaStage() == GameMode::ScoreAttack)
 	moveAllDeleteCountPos;
+	XMVECTOR baseCountPos = XMVECTOR{ 1.0f , 13.0f, -1.0f ,0 };
+	list<NormaModeFieldData>::iterator data = GetNormaStage(GetEnterNormaStage());
+	if (data->type == Norma::Panels)
+	{
+		baseCountPos = XMVECTOR{ 2.4f , 13.0f, -1.0f ,0 };
+	}
 	for (int i = 0; i < 5; i++)
 	{
-		CountDrawData[i].position = XMVECTOR{ -0.3f + (i * 1.5f), 13.0f, -1.0f ,0 };
+		CountDrawData[i].position = baseCountPos + XMVECTOR{ (i * 1.5f), 0.0f, 0.0f ,0 };
 		CountDrawData[i].position += movePos;
 	}
 }
@@ -1870,7 +1900,7 @@ const vector<vector<SendOthelloData>> &OthelloManager::Send()
 	return sendDatas;
 }
 
-void OthelloManager::Receive(const vector<vector<SendOthelloData>> &data)
+void OthelloManager::Receive(const vector<vector<SendOthelloData>> &data, const vector<pair<int, int>> compPos)
 {
 	sendDatas = data;
 
@@ -1894,10 +1924,20 @@ void OthelloManager::Receive(const vector<vector<SendOthelloData>> &data)
 		int x = gameDatas->widthPos;
 		int y = gameDatas->heightPos;
 
+		itr->isCompleteDraw = false;
+		for (auto &e : compPos)
+		{
+			bool isComplete = (x ==e.second && y == e.first);
+			if (isComplete)
+			{
+				itr->isCompleteDraw = true;
+				break;
+			}
+		}
 		gameDatas->score = sendDatas[y][x].score;
 		gameDatas->chainName = sendDatas[y][x].chainName;
 		gameDatas->maxComboCount = sendDatas[y][x].maxComboCount;
-		if (sendDatas[y][x].type == NONE || gameDatas->isSpawn)
+		if (sendDatas[y][x].type == NONE/* || gameDatas->isSpawn*/)
 		{
 			continue;
 		}
@@ -2019,7 +2059,7 @@ void OthelloManager::SetPanel()
 	if (itr == othellos.end())
 	{
 		Othello data;
-		data.Init(&oserroModel, &stopOserroModel);
+		data.Init(&oserroModel, &stopOserroModel, &compModel);
 		data.Spawn(NORMAL, x, y, true);
 		data.Update(0);
 		data.GetGameData()->isMove = false;
@@ -2122,7 +2162,7 @@ void OthelloManager::SpawnPanel(bool isInGame)
 
 	}
 	Othello data;
-	data.Init(&oserroModel, &stopOserroModel);
+	data.Init(&oserroModel, &stopOserroModel, &compModel);
 
 	bool randFront = rand() % 2;
 	if (isInGame)
@@ -2318,7 +2358,7 @@ void OthelloManager::StartSetPos()
 	int y = stagePos.y / -(cellScale * 2);
 
 	Othello data;
-	data.Init(&oserroModel, &stopOserroModel);
+	data.Init(&oserroModel, &stopOserroModel, &compModel);
 
 	bool randFront = rand() % 2;
 	data.Spawn(NORMAL, x, y, randFront);
@@ -2734,7 +2774,7 @@ void OthelloManager::SaveSpawn()
 		if (saveTimer >= saveTimerLimit)
 		{
 			Othello data;
-			data.Init(&oserroModel, &stopOserroModel);
+			data.Init(&oserroModel, &stopOserroModel, &compModel);
 			bool randFront = rand() % 2;
 			int x = playerPanelPos.x;
 			int y = playerPanelPos.y;
@@ -3057,16 +3097,16 @@ void OthelloManager::SetSpawnPanel(int x, int y, bool Front, OthelloType type, b
 	Othello data;
 	if (type == WALL)
 	{//タイプが壁だったら
-		data.Init(&wallOserroModel, &stopOserroModel);
+		data.Init(&wallOserroModel, &stopOserroModel, &compModel);
 	}
 	else if (type == STOP)
 	{//タイプが壁だったら
-		data.Init(&oserroModel, &stopOserroModel);
+		data.Init(&oserroModel, &stopOserroModel, &compModel);
 		data.SetIsRockDraw(isRockDraw);
 	}
 	else
 	{
-		data.Init(&oserroModel, &stopOserroModel);
+		data.Init(&oserroModel, &stopOserroModel, &compModel);
 	}
 	data.Spawn(type, x, y, Front);
 
@@ -3305,7 +3345,8 @@ void OthelloManager::LoadNormaStage(string stage)
 
 	if (file.fail())
 	{
-		assert(0);
+		file.close();
+		return;
 	}
 
 	string line;

@@ -46,6 +46,7 @@ private:
 	std::vector<pair<int, int>> reachPos;
 	std::vector<pair<int, int>> nameAndCombos;				//名前とコンボ数
 	std::vector<int> chainNames;
+	std::vector<pair<int, int>> completePos;
 
 private:
 	int last_x;				//最後に動かしたオセロのX座標
@@ -93,6 +94,7 @@ public:
 	const bool IsSand() { return isSand; }
 	const int GetMaxCombo() { return maxCombo; }
 	const int GetTotalReverceCount() { return totalReverceCount; }
+	const vector<pair<int, int>> GetCompletePos() { return completePos; }
 
 private:
 	//盤面チェック
