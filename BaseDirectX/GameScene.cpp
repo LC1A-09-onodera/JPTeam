@@ -1575,18 +1575,47 @@ void GameScene::GameDraw()
 	ObjectParticles::Draw();
 	ParticleControl::Draw();
 	if (!isPouseToTiTle)othelloManager.Draw();
-	if (gameTime / 60 < DRAW_COUNTDOWN_COUNT)
+
+	if (gameTime > 0 && countDown <= 0)
 	{
-		countDownInfo.position.m128_f32[0] = 0.0f;
-		countDownInfo.position.m128_f32[1] = 0.0f;
-		countDownInfo.position.m128_f32[2] = -2.0f;
-		countDownInfo.scale = { 2, 2, 2 };
-		countDownInfo.rotation.x = -30.0f;
-		countDownInfo.alpha = 0.2f;
-		int countDown = gameTime / 60;
-		countDownNumber[countDown].Update(&countDownInfo);
-		Draw3DObject(countDownNumber[countDown]);
+		if (gameTime / 60 < DRAW_COUNTDOWN_COUNT)
+		{
+			countDownInfo.position.m128_f32[0] = 0.0f;
+			countDownInfo.position.m128_f32[1] = 0.0f;
+			countDownInfo.position.m128_f32[2] = -2.0f;
+			countDownInfo.scale = { 2.3f, 2.3f, 2.3f };
+			countDownInfo.rotation.x = -30.0f;
+			int countDown = gameTime / 60;
+			float floatCountDown = gameTime / 60.0f - countDown;
+			if (floatCountDown < 0.02f) { countDownInfo.alpha = 0.2f; }
+			else if (floatCountDown < 0.5f) { countDownInfo.alpha -= 0.01f; }
+			else { countDownInfo.alpha = 0.2f; }
+			if (countDown % 2 == 0)
+			{
+				int random = rand();
+				if (!isSetRand)
+				{
+					countDownInfo.rotation.y = random % 10;
+				}
+				isSetRand = true;
+				countDownInfo.rotation.z = -6.0f;
+			}
+			else
+			{
+				int random = rand();
+				if (!isSetRand)
+				{
+					countDownInfo.rotation.y = random % 10 - 10;
+				}
+				isSetRand = true;
+				countDownInfo.rotation.z = 6.0f;
+			}
+			countDownNumber[countDown].Update(&countDownInfo);
+			Draw3DObject(countDownNumber[countDown]);
+		}
 	}
+	else { isSetRand = false; }
+
 	if (selectMode && !isSceneChange && !isPouseToTiTle)
 	{
 		othelloManager.NormaTextModelDraw(selectStageNum, true);

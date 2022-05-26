@@ -111,7 +111,7 @@ public://シーンで使うもの
 	float eyeEaseTime;
 
 	int resultForTime;
-	const int gameMaxTime = 359;
+	const int gameMaxTime = 5999;
 
 	//スコア用
 	//Sprite scoreNum[60];
@@ -211,6 +211,7 @@ public://シーンで使うもの
 
 	OthelloEachInfo countDownInfo;
 	bool isChanged = false;
+	bool isSetRand = false;
 	int timerCount = 0;
 	float size_x = MAX_SIZE_X;
 	float size_y = MAX_SIZE_Y;
