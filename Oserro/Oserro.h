@@ -41,8 +41,23 @@ namespace
 		int subNormaPanels = 0;
 		int normaMoveCount = 0;
 	};
+
 }
 
+namespace OthelloEase
+{
+	struct WaveEase
+	{
+		int timer = 0;
+		int MaxTime = 120;
+		bool isWaveUp = false;
+		WaveEase(int timer = 0, int  Max = 0, bool isWaveUp = true);
+		void Set(int timer = 0, int  Max = 0, bool isWaveUp = true);
+	};
+
+	float Wave(WaveEase &obj, int powCount);
+	float WaveInOut(WaveEase &obj, int powCount);
+}
 bool operator ==(const panelPos &a, const panelPos &b);
 namespace TutorialSceneFlow
 {
@@ -245,6 +260,7 @@ private:
 	bool isEase;
 	bool isRockDraw = true;
 	OthelloData data;
+	OthelloEase::WaveEase compEase;
 public:
 	OthelloData *GetGameData() { return &data; }
 	bool GetIsEase() { return isEase; }
@@ -257,6 +273,7 @@ public:
 	void Init(OthelloModel *model, OthelloModel *chainModel, OthelloModel *compModel);
 	void Update(int combo);
 	void Draw();
+	void CompDraw();
 	void Finalize();
 
 	void Spawn(OthelloType type, int x, int y, bool isFront = true);
@@ -437,7 +454,7 @@ private:
 	void playerNotMove();
 
 	void OthelloDraw();
-
+	void CompDraw();
 private://チャンスオブジェクト
 
 	void SetChanceObject(int x, int y, bool Front);
