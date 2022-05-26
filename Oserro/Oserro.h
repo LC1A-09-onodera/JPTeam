@@ -211,6 +211,8 @@ namespace OthelloConstData
 	const XMVECTOR moveTextModelPos{ 15.0f, 0.0f, 0.0f ,0.0f };//ノルマモードに入る際の移動量
 	const XMVECTOR moveSubTextModelPos{ 4.0f, -5.0f, 0.0f ,0.0f };//サブノルマの移動量
 	const XMVECTOR scoreAttackTextPos{ 0.0f, 15.0f, -1.0f ,0 };//スコアアタックの文字の基準位置
+	const XMVECTOR FloatAnimationDistance { 0.0f, 1.0f, 0.0f ,0.0f };
+
 	const float textBaseScale = 0.3f;
 }
 
@@ -568,7 +570,8 @@ private:
 	Sprite NormaScoreText;
 
 	//////////////////////Todo
-	XMVECTOR picupTextAnimation;
+	OthelloEase::WaveEase textEase;
+	float textAnimationRate = 0;
 	int textChangeTimer = 0;
 	bool textChange = false;
 

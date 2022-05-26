@@ -48,7 +48,7 @@ void Othello::Init(OthelloModel *model, OthelloModel *chainModel, OthelloModel *
 	completeEach.alpha = 1.0f;
 	completeEach.rotation.x = 60.0f;
 
-	compEase.Set(0, 60);
+	compEase.Set(0, 120);
 }
 
 void Othello::Update(int combo)
@@ -797,6 +797,7 @@ void OthelloManager::Init(Tex num[10], Model numModel[10])
 			normaCountTex[count].ChangeSize(48, 64);
 		}
 	}
+	textEase.Set(0, 120);
 }
 
 void OthelloManager::Update(int combo)
@@ -822,7 +823,6 @@ void OthelloManager::Update(int combo)
 
 
 	SaveSpawn();
-
 }
 
 void OthelloManager::TutorialUpdate(int combo)
@@ -1419,8 +1419,8 @@ int OthelloManager::GetEnterNormaStage()
 
 void OthelloManager::ModeSelectModelDraw(bool isDraw)
 {
+	textAnimationRate = Wave(textEase, 2);
 	SetTextPos(false);
-
 	if (isDraw)
 	{
 		int stageNum = playerPanelPos.x + 1;
@@ -1439,6 +1439,7 @@ void OthelloManager::ModeSelectModelDraw(bool isDraw)
 
 		if (GetEnterModeType() != GameMode::NormaMode) { return; }
 
+		NormaModeTextDrawData.position = XMVECTOR{ 0.0f, 18.0f, -1.0f ,0 } +(FloatAnimationDistance * textAnimationRate);
 		NormaModeTextModel.Update(&NormaModeTextDrawData);
 		Draw3DObject(NormaModeTextModel);
 		list<NormaModeFieldData>::iterator data = GetNormaStage(GetEnterNormaStage());
@@ -1477,6 +1478,7 @@ void OthelloManager::ModeSelectModelDraw(bool isDraw)
 
 	}
 }
+
 void OthelloManager::ModeSelectDraw(bool isDraw)
 {
 	SetTextPos(false);
@@ -1602,7 +1604,7 @@ void OthelloManager::SetCountPos(bool isNormaMode)
 	XMVECTOR movePos = moveTextPos;
 	if (!isNormaMode)
 	{
-		movePos *= 0;
+		movePos = FloatAnimationDistance * textAnimationRate;
 	}
 	for (int i = 0; i < 5; i++)
 	{
@@ -1620,7 +1622,7 @@ void OthelloManager::NormaComboTextSetPos(bool isNormaMode)
 	XMVECTOR movePos = moveTextPos;
 	if (!isNormaMode)
 	{
-		movePos *= 0;
+		movePos = FloatAnimationDistance * textAnimationRate;
 	}
 	float changeScale = 0.5f;
 	NormaComboText.position = XMVECTOR{ 640 - (219 * changeScale / 2) - 100,  (72 * changeScale - 5), 0, 0 };
@@ -1632,7 +1634,7 @@ void OthelloManager::NormaPanelsTextSetPos(bool isNormaMode)
 	XMVECTOR movePos = moveTextPos;
 	if (!isNormaMode)
 	{
-		movePos *= 0;
+		movePos = FloatAnimationDistance * textAnimationRate;
 	}
 	float changeScale = 0.5f;
 
@@ -1645,7 +1647,7 @@ void OthelloManager::NormaScoreTextSetPos(bool isNormaMode)
 	XMVECTOR movePos = moveTextPos;
 	if (!isNormaMode)
 	{
-		movePos *= 0;
+		movePos = FloatAnimationDistance * textAnimationRate;
 	}
 	float changeScale = 0.5f;
 
@@ -1659,7 +1661,7 @@ void OthelloManager::SubNormaTextPos(bool isNormaMode)
 	XMVECTOR movePos = moveSubTextPos;
 	if (!isNormaMode)
 	{
-		movePos *= 0;
+		movePos = FloatAnimationDistance * textAnimationRate;
 	}
 	float changeScale = 0.5f;
 
@@ -1713,7 +1715,7 @@ void OthelloManager::NormaComboModelSetPos(bool isNormaMode)
 	XMVECTOR movePos = moveTextModelPos;
 	if (!isNormaMode)
 	{
-		movePos *= 0;
+		movePos = FloatAnimationDistance * textAnimationRate;
 	}
 	float changeScale = 0.5f;
 
@@ -1726,7 +1728,7 @@ void OthelloManager::NormaPanelsModelSetPos(bool isNormaMode)
 	XMVECTOR movePos = moveTextModelPos;
 	if (!isNormaMode)
 	{
-		movePos *= 0;
+		movePos = FloatAnimationDistance * textAnimationRate;
 	}
 	float changeScale = 0.5f;
 	NormaDrawData.position = allDeleteModelPos;
@@ -1738,7 +1740,7 @@ void OthelloManager::NormaScoreModelSetPos(bool isNormaMode)
 	XMVECTOR movePos = moveTextModelPos;
 	if (!isNormaMode)
 	{
-		movePos *= 0;
+		movePos = FloatAnimationDistance * textAnimationRate;
 	}
 	NormaDrawData.position = comboScoreModelPos;
 	NormaDrawData.position += movePos;
@@ -1747,7 +1749,7 @@ void OthelloManager::NormaScoreModelSetPos(bool isNormaMode)
 
 void OthelloManager::SetScoreAttackTextPos()
 {
-	ScoreAttackDrawData.position = scoreAttackTextPos;
+	ScoreAttackDrawData.position = scoreAttackTextPos + (FloatAnimationDistance * textAnimationRate);
 	SetPickupModeEachInfo(ScoreAttackDrawData);
 	ScoreAttackDrawData.scale = { 0.5f,0.5f ,0.5f };
 
@@ -1759,6 +1761,7 @@ void OthelloManager::SetModeSelectEachInfo(EachInfo &data, panelPos &pos)
 	panelData.Spawn(NORMAL, pos.x, pos.y);
 	data.position = ConvertXMFLOAT3toXMVECTOR(panelData.GetPosition());
 	data.position.m128_f32[2] += -1.0f;
+	//data.position += FloatAnimationDistance * textAnimationRate;
 	data.scale = { 0.2,0.2 ,0.2 };
 	data.rotation = { -30, 0, 0 };
 }
@@ -1773,7 +1776,7 @@ void OthelloManager::SetCountModelPos(bool isNormaMode)
 	XMVECTOR movePos = moveTextModelPos;
 	if (!isNormaMode)
 	{
-		movePos *= 0;
+		movePos = FloatAnimationDistance * textAnimationRate;
 	}
 	if(GetEnterNormaStage() == GameMode::ScoreAttack)
 	moveAllDeleteCountPos;
@@ -1794,7 +1797,7 @@ void OthelloManager::SubNormaModelPos(bool isNormaMode)
 	XMVECTOR movePos = moveSubTextModelPos;
 	if (!isNormaMode)
 	{
-		movePos *= 0;
+		movePos = FloatAnimationDistance * textAnimationRate;
 	}
 	float changeScale = 0.5f;
 
@@ -1802,6 +1805,7 @@ void OthelloManager::SubNormaModelPos(bool isNormaMode)
 	SubNormaDrawData.position += moveTextModelPos;
 	SubNormaDrawData.position += movePos;
 }
+
 void OthelloManager::RemovePlayer()
 {
 	auto itr = othellos.begin();
