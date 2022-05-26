@@ -203,6 +203,16 @@ void GameScene::Init()
 	timerCount = 0;
 	size_x = MAX_SIZE_X;
 	size_y = MAX_SIZE_Y;
+	timerNumber[0].CreateModel("number0y", ShaderManager::playerShader);
+	timerNumber[1].CreateModel("number1y", ShaderManager::playerShader);
+	timerNumber[2].CreateModel("number2y", ShaderManager::playerShader);
+	timerNumber[3].CreateModel("number3y", ShaderManager::playerShader);
+	timerNumber[4].CreateModel("number4y", ShaderManager::playerShader);
+	timerNumber[5].CreateModel("number5y", ShaderManager::playerShader);
+	timerNumber[6].CreateModel("number6y", ShaderManager::playerShader);
+	timerNumber[7].CreateModel("number7y", ShaderManager::playerShader);
+	timerNumber[8].CreateModel("number8y", ShaderManager::playerShader);
+	timerNumber[9].CreateModel("number9y", ShaderManager::playerShader);
 	numbersObject[0].CreateModel("number0", ShaderManager::playerShader);
 	numbersObject[1].CreateModel("number1", ShaderManager::playerShader);
 	numbersObject[2].CreateModel("number2", ShaderManager::playerShader);
@@ -1146,7 +1156,7 @@ void GameScene::TitleDraw()
 			pushSpace.Update();
 			pushA.each.position = { -1 + 6.0f, -5.0f, 0, 1.0f };
 			pushA.each.scale = scale4;
-			pushA.each.rotation = {0, 0, 0};
+			pushA.each.rotation = { 0, 0, 0 };
 			pushA.Update();
 			Draw3DObject(pushA);
 			//Draw3DObject(pushSpace);
@@ -1322,8 +1332,19 @@ void GameScene::GameDraw()
 			timerEach[0].position.m128_f32[2] = -1.0f;
 			timerEach[0].scale = { size_x, size_x, size_x };
 			timerEach[0].rotation.x = -30.0f;
-			numbersObject[zyunokurai].Update(&timerEach[0]);
-			Draw3DObject(numbersObject[zyunokurai]);
+			if (gameTime / 60 > CHANGE_COLOR_COUNT)
+			{
+				sNumbersObject[zyunokurai].Update(&timerEach[0]);
+				Draw3DObject(sNumbersObject[zyunokurai]);
+			}
+			else
+			{
+				//numbersObject[zyunokurai].Update(&timerEach[0]);
+				timerNumber[zyunokurai].Update(&timerEach[0]);
+				//Draw3DObject(numbersObject[zyunokurai]);
+				Draw3DObject(timerNumber[zyunokurai]);
+			}
+
 
 			int ichinokurai = gameTime / 60 % 10;
 			timerEach[1].position.m128_f32[0] = 0.0f;
@@ -1331,8 +1352,18 @@ void GameScene::GameDraw()
 			timerEach[1].position.m128_f32[2] = -1.0f;
 			timerEach[1].scale = { size_x, size_x, size_x };
 			timerEach[1].rotation.x = -30.0f;
-			numbersObject[ichinokurai].Update(&timerEach[1]);
-			Draw3DObject(numbersObject[ichinokurai]);
+			if (gameTime / 60 > CHANGE_COLOR_COUNT)
+			{
+				sNumbersObject[ichinokurai].Update(&timerEach[1]);
+				Draw3DObject(sNumbersObject[ichinokurai]);
+			}
+			else
+			{
+				//numbersObject[ichinokurai].Update(&timerEach[1]);
+				timerNumber[ichinokurai].Update(&timerEach[1]);
+				//Draw3DObject(numbersObject[ichinokurai]);
+				Draw3DObject(timerNumber[ichinokurai]);
+			}
 		}
 		oldDisplay = nowScore;
 		oldScore = nowScore;
@@ -1607,7 +1638,12 @@ void GameScene::GameDraw()
 		tips_bar.SpriteDraw();
 		tips_text[tipsCounts].SpriteDraw();
 	}
-	else if (!isTipsDraw && isTipsDrawTrigger) { tipsCounts++; isTipsDrawTrigger = false; }
+	else if (!isTipsDraw && isTipsDrawTrigger)
+	{
+		tipsCounts++;
+		isTipsDrawTrigger = false;
+		if (tipsCounts > 8) { tipsCounts = 0; }
+	}
 
 	else if (isCameraModed)
 	{
