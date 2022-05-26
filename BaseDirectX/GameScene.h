@@ -95,7 +95,7 @@ public://シーンで使うもの
 	int countDown;
 	bool isCountDownEnd;
 	int countDownFrame;
-	const int countMax = 239;
+	const int countMax = 180;
 	//Sprite numbers[30];
 	//gameシーンからリザルトから使う
 	bool isResultSceneChange;
@@ -115,6 +115,9 @@ public://シーンで使うもの
 
 	EachInfo resultMaxConbo[2];
 	EachInfo resultEraseOthello[3];
+	Model resultScoreKanaModel;
+	Model resultMaxConboModel;
+	Model resultEraseOthelloModel;
 
 	//スコア用
 	//Sprite scoreNum[60];
