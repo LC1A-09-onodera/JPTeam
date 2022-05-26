@@ -256,9 +256,11 @@ void GameScene::Init()
 
 	startModel.CreateModel("start", ShaderManager::playerShader);
 	startModel.each.scale = { 0.3,0.3,0.3 };
+	startModel.Update();
 	AButton.CreateModel("A", ShaderManager::playerShader);
 	tutorialObject.CreateModel("tutorial", ShaderManager::playerShader);
 	tutorialObject.each.scale = { 0.3,0.3,0.3 };
+	tutorialObject.Update();
 	pushSpace.CreateModel("push_space", ShaderManager::playerShader);
 	titleObject.CreateModel("title", ShaderManager::playerShader);
 	backGround.CreateModel("background", ShaderManager::half);
@@ -1144,6 +1146,7 @@ void GameScene::TitleDraw()
 			if (titleSelectNum == 0)
 			{
 				XMFLOAT3 scale = startModel.each.scale;
+				if (scale.x > 0.3f) { scale = { 0.3f, 0.3f, 0.3f }; }
 				scale.x -= 0.001f;
 				scale.y -= 0.001f;
 				scale.z -= 0.001f;
@@ -1159,6 +1162,7 @@ void GameScene::TitleDraw()
 			if (titleSelectNum == 1)
 			{
 				XMFLOAT3 scale = tutorialObject.each.scale;
+				if (scale.x > 0.3f) { scale = { 0.3f, 0.3f, 0.3f }; }
 				scale.x -= 0.001f;
 				scale.y -= 0.001f;
 				scale.z -= 0.001f;
