@@ -42,7 +42,8 @@ void Othello::Init(OthelloModel *model, OthelloModel *chainModel, OthelloModel *
 	each.CreateConstBuff1();
 	completeEach.CreateConstBuff0();
 	completeEach.CreateConstBuff1();
-	completeEach.scale = {0.1f,0.1f ,0.1f };
+	float size = 0.1f;
+	completeEach.scale = { size,size ,size };
 	completeEach.alpha = 1.0f;
 }
 
@@ -3259,7 +3260,7 @@ void OthelloManager::StartNormaField(int stageNum)
 	//ステージが存在しない
 	bool isNoneStage = NormaStartOthellos.size() <= 0;
 	//指定されたステージ番号がステージ数を超過している
-	bool isStageOver = NormaStartOthellos.size() <= (stageNum);
+	bool isStageOver = NormaStartOthellos.size() < (stageNum);
 
 	if (isNoneStage || isStageOver)return;
 
