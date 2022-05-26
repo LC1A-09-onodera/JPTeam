@@ -787,7 +787,15 @@ void CheakOthello::CheckReachOthello(int direction_x, int direction_y, int last_
 			if (othelloDatas[lastY][lastX].type != NONE)
 			{
 				if (othelloDatas[lastY][lastX].isFront != side) { continue; }
-				else { completePos.push_back(make_pair(lastY, lastX)); break; }
+
+				else
+				{
+					if (!reachCheck[lastY][lastX])
+					{
+						completePos.push_back(make_pair(lastY, lastX));
+					}
+					break;
+				}
 			}
 			else if (othelloDatas[lastY][lastX].type == NONE)
 			{
