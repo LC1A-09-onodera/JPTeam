@@ -461,8 +461,10 @@ void GameScene::TitleUpdate()
 			}
 			if (!select)
 			{
+				bool A = directInput->IsButtonPush(directInput->LeftButton) && directInput->leftStickX() == 0 && directInput->leftStickY() == 0;
+				bool D = directInput->IsButtonPush(directInput->RightButton) && directInput->leftStickX() == 0 && directInput->leftStickY() == 0;
 				//チュートリアルかどうかを選択する
-				if (Input::KeyTrigger(DIK_A) || directInput->IsButtonPush(directInput->LeftButton))
+				if (Input::KeyTrigger(DIK_A) || A)
 				{
 					SoundStopWave(selectSound);
 					SoundPlayOnce(selectSound);
@@ -471,7 +473,7 @@ void GameScene::TitleUpdate()
 						titleSelectNum = 1;
 					}
 				}
-				if (Input::KeyTrigger(DIK_D) || directInput->IsButtonPush(directInput->RightButton))
+				if (Input::KeyTrigger(DIK_D) || D)
 				{
 					SoundStopWave(selectSound);
 					SoundPlayOnce(selectSound);
@@ -509,8 +511,10 @@ void GameScene::TitleUpdate()
 			}
 			else if (select)
 			{
+				bool A = directInput->IsButtonPush(directInput->LeftButton) && directInput->leftStickX() == 0 && directInput->leftStickY() == 0;
+				bool D = directInput->IsButtonPush(directInput->RightButton) && directInput->leftStickX() == 0 && directInput->leftStickY() == 0;
 				//スコアアタックかどうかの選択を行う
-				if (Input::KeyTrigger(DIK_A) || directInput->IsButtonPush(directInput->LeftButton))
+				if (Input::KeyTrigger(DIK_A) || A)
 				{
 					SoundStopWave(selectSound);
 					SoundPlayOnce(selectSound);
@@ -525,7 +529,7 @@ void GameScene::TitleUpdate()
 						selectStageNum--;
 					}
 				}
-				if (Input::KeyTrigger(DIK_D) || directInput->IsButtonPush(directInput->RightButton))
+				if (Input::KeyTrigger(DIK_D) || D)
 				{
 					SoundStopWave(selectSound);
 					SoundPlayOnce(selectSound);
@@ -590,7 +594,9 @@ void GameScene::TitleUpdate()
 		//ポーズ中の処理
 		else if (isPouse)
 		{
-			if (Input::KeyTrigger(DIK_W) || directInput->IsButtonPush(directInput->UpButton))
+			bool W = directInput->IsButtonPush(directInput->UpButton) && directInput->leftStickX() == 0 && directInput->leftStickY() == 0;
+			bool S = directInput->IsButtonPush(directInput->DownButton) && directInput->leftStickX() == 0 && directInput->leftStickY() == 0;
+			if (Input::KeyTrigger(DIK_W) || W)
 			{
 				SoundStopWave(selectSound);
 				SoundPlayOnce(selectSound);
@@ -603,7 +609,7 @@ void GameScene::TitleUpdate()
 					selectPouse--;
 				}
 			}
-			else if (Input::KeyTrigger(DIK_S) || directInput->IsButtonPush(directInput->DownButton))
+			else if (Input::KeyTrigger(DIK_S) || S)
 			{
 				SoundStopWave(selectSound);
 				SoundPlayOnce(selectSound);
@@ -856,7 +862,9 @@ void GameScene::GameUpdate()
 	//ポーズ中の処理
 	else if (isPouse)
 	{
-		if (Input::KeyTrigger(DIK_W) || directInput->IsButtonPush(directInput->UpButton))
+		bool W = directInput->IsButtonPush(directInput->UpButton) && directInput->leftStickX() == 0 && directInput->leftStickY() == 0;
+		bool S = directInput->IsButtonPush(directInput->DownButton) && directInput->leftStickX() == 0 && directInput->leftStickY() == 0;
+		if (Input::KeyTrigger(DIK_W) || W)
 		{
 			SoundStopWave(selectSound);
 			SoundPlayOnce(selectSound);
@@ -869,7 +877,7 @@ void GameScene::GameUpdate()
 				selectPouse--;
 			}
 		}
-		else if (Input::KeyTrigger(DIK_S) || directInput->IsButtonPush(directInput->DownButton))
+		else if (Input::KeyTrigger(DIK_S) || S)
 		{
 			SoundStopWave(selectSound);
 			SoundPlayOnce(selectSound);
