@@ -257,6 +257,7 @@ void GameScene::Init()
 	startModel.CreateModel("start", ShaderManager::playerShader);
 	startModel.each.scale = { 0.3,0.3,0.3 };
 	AButton.CreateModel("A", ShaderManager::playerShader);
+	pushA.CreateModel("pushA", ShaderManager::playerShader);
 	tutorialObject.CreateModel("tutorial", ShaderManager::playerShader);
 	tutorialObject.each.scale = { 0.3,0.3,0.3 };
 	pushSpace.CreateModel("push_space", ShaderManager::playerShader);
@@ -845,6 +846,7 @@ void GameScene::GameUpdate()
 			resultForTime++;
 		}
 	}
+	//if (!isPouse && (Input::KeyTrigger(DIK_ESCAPE) || directInput->IsButtonPush(directInput->ButtonPouse)) && )
 	if (!isPouse && (Input::KeyTrigger(DIK_ESCAPE) || directInput->IsButtonPush(directInput->ButtonPouse)) && (countDown <= 0 || isModeSelect))
 	{
 		isPouse = true;
@@ -1174,7 +1176,12 @@ void GameScene::TitleDraw()
 			pushSpace.each.scale = scale4;
 			pushSpace.each.rotation = { 0, 0, 0 };
 			pushSpace.Update();
-			Draw3DObject(pushSpace);
+			pushA.each.position = { -1 + 6.0f, -5.0f, 0, 1.0f };
+			pushA.each.scale = scale4;
+			pushA.each.rotation = {0, 0, 0};
+			pushA.Update();
+			Draw3DObject(pushA);
+			//Draw3DObject(pushSpace);
 		}
 		if (!isPouseToTiTle)
 		{
