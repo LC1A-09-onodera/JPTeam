@@ -27,12 +27,8 @@ public:
 
 	static FBXModel* playerStay;
 	static FBXObject* playerStayObject;
-	static FBXModel* playerRunStart;
-	static FBXObject* playerRunStartObject;
 	static FBXModel* playerRunNow;
 	static FBXObject* playerRunNowObject;
-	static FBXModel* playerRunEnd;
-	static FBXObject* playerRunEndObject;
 	static FBXModel* playerReverse;
 	static FBXObject* playerReverseObject;
 

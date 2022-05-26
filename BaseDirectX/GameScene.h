@@ -111,7 +111,7 @@ public://シーンで使うもの
 	float eyeEaseTime;
 
 	int resultForTime;
-	const int gameMaxTime = 5999;
+	const int gameMaxTime = 59;
 
 	//スコア用
 	//Sprite scoreNum[60];
@@ -179,7 +179,7 @@ public://シーンで使うもの
 	float selectEaseTime = 0.0f;
 	float selectNumDistance = 170.0f;
 	//float selectNumBigDistance = 160.0f;
-	Sprite selectStageNumSprite[11];
+	//Sprite selectStageNumSprite[11];
 	XMFLOAT3 selectStageFarstStartPos;
 	XMFLOAT3 selectStageFarstEndPos;
 	bool isScorePuls;
