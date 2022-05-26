@@ -18,12 +18,8 @@ FBXObject* OthlloPlayer::playerFbxObj;
 
 FBXModel* OthlloPlayer::playerStay;
 FBXObject* OthlloPlayer::playerStayObject;
-FBXModel* OthlloPlayer::playerRunStart;
-FBXObject* OthlloPlayer::playerRunStartObject;
 FBXModel* OthlloPlayer::playerRunNow;
 FBXObject* OthlloPlayer::playerRunNowObject;
-FBXModel* OthlloPlayer::playerRunEnd;
-FBXObject* OthlloPlayer::playerRunEndObject;
 FBXModel* OthlloPlayer::playerReverse;
 FBXObject* OthlloPlayer::playerReverseObject;
 
@@ -46,31 +42,23 @@ const int OthlloPlayer::MaxReverseTime = 60;
 XMFLOAT3 OthlloPlayer::rotation = {0, 0, 0};
 void OthlloPlayer::Init()
 {
-	player.CreateModel("player", ShaderManager::playerShader);
 	playerFbx = FbxLoader::GetInstance()->LoadModelFromFile("player_stay");
 
 	playerStay = FbxLoader::GetInstance()->LoadModelFromFile("player_stay");
-	playerRunStart = FbxLoader::GetInstance()->LoadModelFromFile("player_move_start");
-	playerRunNow = FbxLoader::GetInstance()->LoadModelFromFile("player_move_now");
-	playerRunEnd = FbxLoader::GetInstance()->LoadModelFromFile("player_move_end");
+	playerRunNow = FbxLoader::GetInstance()->LoadModelFromFile("player_move");
 	playerReverse = FbxLoader::GetInstance()->LoadModelFromFile("player_reverse");
+	
 
 	playerStayObject = new FBXObject;
-	playerRunStartObject = new FBXObject;
 	playerRunNowObject = new FBXObject;
-	playerRunEndObject = new FBXObject;
 	playerReverseObject = new FBXObject;
 
 	playerStayObject->Initialize();
-	playerRunStartObject->Initialize();
 	playerRunNowObject->Initialize(2);
-	playerRunEndObject->Initialize();
 	playerReverseObject->Initialize(2);
 
 	playerStayObject->SetModel(playerStay);
-	playerRunStartObject->SetModel(playerRunStart);
 	playerRunNowObject->SetModel(playerRunNow);
-	playerRunEndObject->SetModel(playerRunEnd);
 	playerReverseObject->SetModel(playerReverse);
 
 	playerFbxObj = new FBXObject;
@@ -106,17 +94,9 @@ void OthlloPlayer::Draw()
 {
 	MotionUpdate();
 
-	if (isRunStart)
-	{
-		playerRunStartObject->Draw(BaseDirectX::cmdList.Get());
-	}
-	else if (isRunNow)
+	if (isRunNow)
 	{
 		playerRunNowObject->Draw(BaseDirectX::cmdList.Get());
-	}
-	else if (isRunEnd)
-	{
-		playerRunEndObject->Draw(BaseDirectX::cmdList.Get());
 	}
 	else if (isReverse)
 	{
@@ -137,10 +117,11 @@ void OthlloPlayer::Move()
 	bool A = Input::KeyTrigger(DIK_A);
 	bool S = Input::KeyTrigger(DIK_S);
 	bool W = Input::KeyTrigger(DIK_W);
-	bool padD = directInput->IsButtonPush(DirectInput::ButtonKind::RightButton);
-	bool padS = directInput->IsButtonPush(DirectInput::ButtonKind::DownButton);
-	bool padA = directInput->IsButtonPush(DirectInput::ButtonKind::LeftButton);
-	bool padW = directInput->IsButtonPush(DirectInput::ButtonKind::UpButton);
+	const float deadAngle = 0.0f;
+	bool padD = directInput->IsButtonPush(DirectInput::ButtonKind::RightButton) && directInput->leftStickX() >= -deadAngle && directInput->leftStickX() <= deadAngle && directInput->leftStickY() <= deadAngle && directInput->leftStickY() >= -deadAngle;
+	bool padS = directInput->IsButtonPush(DirectInput::ButtonKind::DownButton) && directInput->leftStickX() >= -deadAngle && directInput->leftStickX() <= deadAngle && directInput->leftStickY() <= deadAngle && directInput->leftStickY() >= -deadAngle;
+	bool padA = directInput->IsButtonPush(DirectInput::ButtonKind::LeftButton) && directInput->leftStickX() >= -deadAngle && directInput->leftStickX() <= deadAngle && directInput->leftStickY() <= deadAngle && directInput->leftStickY() >= -deadAngle;
+	bool padW = directInput->IsButtonPush(DirectInput::ButtonKind::UpButton) && directInput->leftStickX() >= -deadAngle && directInput->leftStickX() <= deadAngle && directInput->leftStickY() <= deadAngle && directInput->leftStickY() >= -deadAngle;
 	
 	if (Input::KeyTrigger(DIK_SPACE))
 	{
@@ -191,19 +172,8 @@ void OthlloPlayer::Move()
 		easeTime = 0;
 	}
 
-	if (isRunStart)
-	{
-		isRunNow = false;
-		isRunEnd = false;
-		if (!playerRunStartObject->GetPlay())
-		{
-			isRunStart = false;
-			isRunNow = true;
-			runNTime = MaxNTime;
-			playerRunNowObject->PlayAnimation();
-		}
-	}
-	else if (isRunNow)
+	
+	if (isRunNow)
 	{
 		isRunStart = false;
 		isRunEnd = false;
@@ -215,16 +185,6 @@ void OthlloPlayer::Move()
 			runETime = MaxETime;
 			//playerRunEndObject->PlayAnimation();
 			playerStayObject->PlayAnimation();
-		}
-	}
-	else if (isRunEnd)
-	{
-		isRunStart = false;
-		isRunNow = false;
-		if (!playerRunEndObject->GetPlay())
-		{
-			isRunEnd = false;
-			isStay = true;
 		}
 	}
 	else if (isStay)
@@ -252,25 +212,11 @@ void OthlloPlayer::EaseUpdate()
 
 void OthlloPlayer::MotionUpdate()
 {
-	playerRunStartObject->position = playerFbxObj->position;
-	//playerRunStartObject->rotation = playerFbxObj->rotation;
-	playerRunStartObject->rotation = rotation;
-	playerRunStartObject->scale = playerFbxObj->scale;
-	playerRunStartObject->Update();
-	//player.Update(&each);
-
-
 	playerRunNowObject->position = playerFbxObj->position;
 	//playerRunNowObject->rotation = playerFbxObj->rotation;
 	playerRunNowObject->rotation = rotation;
 	playerRunNowObject->scale = playerFbxObj->scale;
 	playerRunNowObject->Update();
-
-	playerRunEndObject->position = playerFbxObj->position;
-	//playerRunEndObject->rotation = playerFbxObj->rotation;
-	playerRunEndObject->rotation = rotation;
-	playerRunEndObject->scale = playerFbxObj->scale;
-	playerRunEndObject->Update();
 
 	playerReverseObject->position = playerFbxObj->position;
 	//playerReverseObject->rotation = playerFbxObj->rotation;

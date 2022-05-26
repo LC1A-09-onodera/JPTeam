@@ -2219,10 +2219,11 @@ void OthelloManager::KeySetPlayer()
 	bool A = Input::KeyTrigger(DIK_A);
 	bool S = Input::KeyTrigger(DIK_S);
 	bool W = Input::KeyTrigger(DIK_W);
-	bool padD = directInput->IsButtonPush(DirectInput::ButtonKind::RightButton);
-	bool padS = directInput->IsButtonPush(DirectInput::ButtonKind::DownButton);
-	bool padA = directInput->IsButtonPush(DirectInput::ButtonKind::LeftButton);
-	bool padW = directInput->IsButtonPush(DirectInput::ButtonKind::UpButton);
+	const float deadAngle = 0.0f;
+	bool padD = directInput->IsButtonPush(DirectInput::ButtonKind::RightButton) && directInput->leftStickX() >= -deadAngle && directInput->leftStickX() <= deadAngle && directInput->leftStickY() <= deadAngle && directInput->leftStickY() >= -deadAngle;;
+	bool padS = directInput->IsButtonPush(DirectInput::ButtonKind::DownButton) && directInput->leftStickX() >= -deadAngle && directInput->leftStickX() <= deadAngle && directInput->leftStickY() <= deadAngle && directInput->leftStickY() >= -deadAngle;
+	bool padA = directInput->IsButtonPush(DirectInput::ButtonKind::LeftButton) && directInput->leftStickX() >= -deadAngle && directInput->leftStickX() <= deadAngle && directInput->leftStickY() <= deadAngle && directInput->leftStickY() >= -deadAngle;
+	bool padW = directInput->IsButtonPush(DirectInput::ButtonKind::UpButton) && directInput->leftStickX() >= -deadAngle && directInput->leftStickX() <= deadAngle && directInput->leftStickY() <= deadAngle && directInput->leftStickY() >= -deadAngle;
 
 	if (D || padD)
 	{

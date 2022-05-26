@@ -119,16 +119,6 @@ void GameScene::Init()
 	num[7].LoadGraph(L"Resource/Img/number_7.png");
 	num[8].LoadGraph(L"Resource/Img/number_8.png");
 	num[9].LoadGraph(L"Resource/Img/number_9.png");
-	selectStageNumSprite[1].CreateSprite(num[1], XMFLOAT3(window_width / 2 - 30 + selectNumDistance * 0.0f, window_height / 2 + 50, 0));
-	selectStageNumSprite[2].CreateSprite(num[2], XMFLOAT3(window_width / 2 - 30 + selectNumDistance * 1.0f, window_height / 2 + 50, 0));
-	selectStageNumSprite[3].CreateSprite(num[3], XMFLOAT3(window_width / 2 - 30 + selectNumDistance * 2.0f, window_height / 2 + 50, 0));
-	selectStageNumSprite[4].CreateSprite(num[4], XMFLOAT3(window_width / 2 - 30 + selectNumDistance * 3.0f, window_height / 2 + 50, 0));
-	selectStageNumSprite[5].CreateSprite(num[5], XMFLOAT3(window_width / 2 - 30 + selectNumDistance * 4.0f, window_height / 2 + 50, 0));
-	selectStageNumSprite[6].CreateSprite(num[6], XMFLOAT3(window_width / 2 - 30 + selectNumDistance * 5.0f, window_height / 2 + 50, 0));
-	selectStageNumSprite[7].CreateSprite(num[7], XMFLOAT3(window_width / 2 - 30 + selectNumDistance * 6.0f, window_height / 2 + 50, 0));
-	selectStageNumSprite[8].CreateSprite(num[8], XMFLOAT3(window_width / 2 - 30 + selectNumDistance * 7.0f, window_height / 2 + 50, 0));
-	selectStageNumSprite[9].CreateSprite(num[9], XMFLOAT3(window_width / 2 - 30 + selectNumDistance * 8.0f, window_height / 2 + 50, 0));
-	selectStageNumSprite[10].CreateSprite(L"Resource/Img/number_10.png", XMFLOAT3(window_width / 2 - 30 + selectNumDistance * 9.0f, window_height / 2 + 50, 0));
 	//addReverse.CreateSprite(L"Resource/Img/combo.png", XMFLOAT3(0, 0, 0));
 	scoreSprite.CreateSprite(L"Resource/Img/score.png", XMFLOAT3(0, 0, 0));
 	timeUp.CreateSprite(L"Resource/Img/time_up.png", XMFLOAT3(0, 0, 0));
@@ -256,10 +246,12 @@ void GameScene::Init()
 
 	startModel.CreateModel("start", ShaderManager::playerShader);
 	startModel.each.scale = { 0.3,0.3,0.3 };
+	startModel.Update();
 	AButton.CreateModel("A", ShaderManager::playerShader);
 	pushA.CreateModel("pushA", ShaderManager::playerShader);
 	tutorialObject.CreateModel("tutorial", ShaderManager::playerShader);
 	tutorialObject.each.scale = { 0.3,0.3,0.3 };
+	tutorialObject.Update();
 	pushSpace.CreateModel("push_space", ShaderManager::playerShader);
 	titleObject.CreateModel("title", ShaderManager::playerShader);
 	backGround.CreateModel("background", ShaderManager::half);
@@ -495,9 +487,6 @@ void GameScene::TitleUpdate()
 					{
 						selectEaseDirection = true;
 						selectEase = true;
-						selectStageFarstStartPos = ConvertXMVECTORtoXMFLOAT3(selectStageNumSprite[1].position);
-						selectStageFarstEndPos = selectStageFarstStartPos;
-						selectStageFarstEndPos.x += selectNumDistance;
 						selectStageNum--;
 					}
 				}
@@ -513,9 +502,6 @@ void GameScene::TitleUpdate()
 					{
 						selectEaseDirection = false;
 						selectEase = true;
-						selectStageFarstStartPos = ConvertXMVECTORtoXMFLOAT3(selectStageNumSprite[1].position);
-						selectStageFarstEndPos = selectStageFarstStartPos;
-						selectStageFarstEndPos.x -= selectNumDistance;
 						selectStageNum++;
 					}
 				}
@@ -558,25 +544,6 @@ void GameScene::TitleUpdate()
 			{
 				ObjectParticles::othello2.object.Update(&(*opOthelloItr));
 				Draw3DObject(ObjectParticles::othello2.object);
-			}
-		}
-		if (selectEase)
-		{
-			selectStageNumSprite[1].position = ConvertXMFLOAT3toXMVECTOR(ShlomonMath::EaseInQuad(selectStageFarstStartPos, selectStageFarstEndPos, selectEaseTime));
-			for (int i = 2; i < othelloManager.GetNormaStagesCount(); i++)
-			{
-				selectStageNumSprite[i].position.m128_f32[0] = selectStageNumSprite[1].position.m128_f32[0] + (selectNumDistance * (i - 1));
-			}
-			selectEaseTime += 0.1f;
-			if (selectEaseTime > 1.0f)
-			{
-				selectStageNumSprite[1].position = ConvertXMFLOAT3toXMVECTOR(ShlomonMath::EaseInQuad(selectStageFarstStartPos, selectStageFarstEndPos, 1.0));
-				for (int i = 2; i < othelloManager.GetNormaStagesCount(); i++)
-				{
-					selectStageNumSprite[i].position.m128_f32[0] = selectStageNumSprite[1].position.m128_f32[0] + (selectNumDistance * (i - 1));
-				}
-				selectEase = false;
-				selectEaseTime = 0;
 			}
 		}
 		//ポーズ画面に移行する
@@ -644,7 +611,6 @@ void GameScene::TitleUpdate()
 		LightUpdate();
 		sky.each.rotation.y += 1.0f;
 		sky.Update();
-		//othelloStage.Update();
 	}
 	if (isPouseToTiTle)
 	{
@@ -1146,6 +1112,7 @@ void GameScene::TitleDraw()
 			if (titleSelectNum == 0)
 			{
 				XMFLOAT3 scale = startModel.each.scale;
+				if (scale.x > 0.3f) { scale = { 0.3f, 0.3f, 0.3f }; }
 				scale.x -= 0.001f;
 				scale.y -= 0.001f;
 				scale.z -= 0.001f;
@@ -1161,6 +1128,7 @@ void GameScene::TitleDraw()
 			if (titleSelectNum == 1)
 			{
 				XMFLOAT3 scale = tutorialObject.each.scale;
+				if (scale.x > 0.3f) { scale = { 0.3f, 0.3f, 0.3f }; }
 				scale.x -= 0.001f;
 				scale.y -= 0.001f;
 				scale.z -= 0.001f;
