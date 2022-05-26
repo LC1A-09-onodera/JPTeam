@@ -25,23 +25,41 @@ public:
 	static FBXModel* playerFbx;
 	static FBXObject* playerFbxObj;
 
-	static FBXModel* playerStay;
-	static FBXObject* playerStayObject;
-	static FBXModel* playerRunNow;
-	static FBXObject* playerRunNowObject;
-	static FBXModel* playerReverse;
-	static FBXObject* playerReverseObject;
-
 	static XMFLOAT3 startPos;
 	static XMFLOAT3 endPos;
 	static bool isEase;
 	static float easeTime;
 
 	static bool isStay;
-	static bool isRunStart;
 	static bool isRunNow;
-	static bool isRunEnd;
 	static bool isReverse;
+
+	static float easeRun1;
+	static float easeRun2;
+	static float easeSpace1;
+	static float easeSpace2;
+	static float easeStay1;
+	static float easeStay2;
+
+	static float easeRunAngleStart;
+	static float easeRunAngleEnd;
+	static float easeRunAngleConst;
+	static bool side;
+
+	static float easeStayStart;
+	static float easeStayEnd;
+	static float easeStayStartConst;
+	static float easeStayEndConst;
+
+	static float easeSpaceStartConst;
+	static float easeSpaceEndConst;
+
+	static void InitRun();
+	static void InitSpace();
+	static void InitStay();
+	static void UpdateRun();
+	static void UpdateSpace();
+	static void UpdateStay();
 
 	static int runSTime;
 	static int runNTime;

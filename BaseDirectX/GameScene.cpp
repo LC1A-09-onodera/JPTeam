@@ -1264,6 +1264,7 @@ void GameScene::GameDraw()
 	sky.each.rotation.y += 1.0f;
 	Draw3DObject(sky);
 	othelloStage.each.position.m128_f32[2] = 8.0f;
+	othelloStage.each.rotation.x = -90;
 	if (isStageDisplay)Draw3DObject(othelloStage);
 	if ((isSceneChange == true && sceneChageType >= 3) || isBackGroundOthello)
 	{
@@ -1638,6 +1639,7 @@ void GameScene::ResultDraw()
 	sky.each.rotation.y += 1.0f;
 	sky.Update();
 	Draw3DObject(sky);
+	othelloStage.each.rotation.x = -90;
 	Draw3DObject(othelloStage);
 	nowScore = checkObject.GetScore();
 	float scoreNum = 2.0f;
@@ -1710,6 +1712,23 @@ void GameScene::ResultDraw()
 	pushSpace.each.scale = scale4;
 	pushSpace.Update();
 	Draw3DObject(pushSpace);
+
+	int combo = checkObject.GetMaxCombo();
+	int reverse = checkObject.GetTotalReverceCount();
+	resultMaxConbo[0].position = {0, 17.0f, -10.0f, 1.0f};
+	resultMaxConbo[0].scale = scale4;
+	resultMaxConbo[0].rotation.x = -70;
+	sNumbersObject[combo % 10].Update(&resultMaxConbo[0]);
+	Draw3DObject(sNumbersObject[combo % 10]);
+	resultMaxConbo[1].position = { -2.0f, 17.0f, -10.0f, 1.0f };
+	resultMaxConbo[1].scale = scale4;
+	resultMaxConbo[1].rotation.x = -70;
+	sNumbersObject[combo / 10 % 10].Update(&resultMaxConbo[1]);
+	Draw3DObject(sNumbersObject[combo / 10 % 10]);
+
+	resultEraseOthello[0].position = {0, 15.0f, -8.0f, 1.0f};
+	//result
+
 
 	//Imgui::DrawImGui();
 
@@ -2220,7 +2239,7 @@ void GameScene::ToModeSelectUpdate()
 				isSceneChange = false;
 				isCameraModed = true;
 				OthlloPlayer::isReverse = true;
-				OthlloPlayer::playerReverseObject->PlayAnimation();
+				//OthlloPlayer::playerReverseObject->PlayAnimation();
 			}
 		}
 	}

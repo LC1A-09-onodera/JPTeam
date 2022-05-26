@@ -111,7 +111,10 @@ public://シーンで使うもの
 	float eyeEaseTime;
 
 	int resultForTime;
-	const int gameMaxTime = 59;
+	const int gameMaxTime = 5999;
+
+	EachInfo resultMaxConbo[2];
+	EachInfo resultEraseOthello[3];
 
 	//スコア用
 	//Sprite scoreNum[60];
