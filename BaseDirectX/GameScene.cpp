@@ -199,10 +199,35 @@ void GameScene::Init()
 	}
 
 	//TimerŠÇ——p
+	countDownInfo.CreateConstBuff0();
+	countDownInfo.CreateConstBuff1();
 	isChanged = false;
 	timerCount = 0;
 	size_x = MAX_SIZE_X;
 	size_y = MAX_SIZE_Y;
+
+	/*countDownNumber[0].CreateModel("count_0", ShaderManager::othelloShader);
+	countDownNumber[1].CreateModel("count_1", ShaderManager::othelloShader);
+	countDownNumber[2].CreateModel("count_2", ShaderManager::othelloShader);
+	countDownNumber[3].CreateModel("count_3", ShaderManager::othelloShader);
+	countDownNumber[4].CreateModel("count_4", ShaderManager::othelloShader);
+	countDownNumber[5].CreateModel("count_5", ShaderManager::othelloShader);
+	countDownNumber[6].CreateModel("count_6", ShaderManager::othelloShader);
+	countDownNumber[7].CreateModel("count_7", ShaderManager::othelloShader);
+	countDownNumber[8].CreateModel("count_8", ShaderManager::othelloShader);
+	countDownNumber[9].CreateModel("count_9", ShaderManager::othelloShader);*/
+
+	countDownNumber[0].CreateModel("number0s", ShaderManager::othelloShader);
+	countDownNumber[1].CreateModel("number1s", ShaderManager::othelloShader);
+	countDownNumber[2].CreateModel("number2s", ShaderManager::othelloShader);
+	countDownNumber[3].CreateModel("number3s", ShaderManager::othelloShader);
+	countDownNumber[4].CreateModel("number4s", ShaderManager::othelloShader);
+	countDownNumber[5].CreateModel("number5s", ShaderManager::othelloShader);
+	countDownNumber[6].CreateModel("number6s", ShaderManager::othelloShader);
+	countDownNumber[7].CreateModel("number7s", ShaderManager::othelloShader);
+	countDownNumber[8].CreateModel("number8s", ShaderManager::othelloShader);
+	countDownNumber[9].CreateModel("number9s", ShaderManager::othelloShader);
+
 	timerNumber[0].CreateModel("number0y", ShaderManager::playerShader);
 	timerNumber[1].CreateModel("number1y", ShaderManager::playerShader);
 	timerNumber[2].CreateModel("number2y", ShaderManager::playerShader);
@@ -1332,19 +1357,6 @@ void GameScene::GameDraw()
 			timerEach[0].position.m128_f32[2] = -1.0f;
 			timerEach[0].scale = { size_x, size_x, size_x };
 			timerEach[0].rotation.x = -30.0f;
-			if (gameTime / 60 > CHANGE_COLOR_COUNT)
-			{
-				sNumbersObject[zyunokurai].Update(&timerEach[0]);
-				Draw3DObject(sNumbersObject[zyunokurai]);
-			}
-			else
-			{
-				//numbersObject[zyunokurai].Update(&timerEach[0]);
-				timerNumber[zyunokurai].Update(&timerEach[0]);
-				//Draw3DObject(numbersObject[zyunokurai]);
-				Draw3DObject(timerNumber[zyunokurai]);
-			}
-
 
 			int ichinokurai = gameTime / 60 % 10;
 			timerEach[1].position.m128_f32[0] = 0.0f;
@@ -1352,16 +1364,19 @@ void GameScene::GameDraw()
 			timerEach[1].position.m128_f32[2] = -1.0f;
 			timerEach[1].scale = { size_x, size_x, size_x };
 			timerEach[1].rotation.x = -30.0f;
+
 			if (gameTime / 60 > CHANGE_COLOR_COUNT)
 			{
+				sNumbersObject[zyunokurai].Update(&timerEach[0]);
+				Draw3DObject(sNumbersObject[zyunokurai]);
 				sNumbersObject[ichinokurai].Update(&timerEach[1]);
 				Draw3DObject(sNumbersObject[ichinokurai]);
 			}
 			else
 			{
-				//numbersObject[ichinokurai].Update(&timerEach[1]);
+				timerNumber[zyunokurai].Update(&timerEach[0]);
+				Draw3DObject(timerNumber[zyunokurai]);
 				timerNumber[ichinokurai].Update(&timerEach[1]);
-				//Draw3DObject(numbersObject[ichinokurai]);
 				Draw3DObject(timerNumber[ichinokurai]);
 			}
 		}
@@ -1552,6 +1567,18 @@ void GameScene::GameDraw()
 	ObjectParticles::Draw();
 	ParticleControl::Draw();
 	if (!isPouseToTiTle)othelloManager.Draw();
+	if (gameTime / 60 < DRAW_COUNTDOWN_COUNT)
+	{
+		countDownInfo.position.m128_f32[0] = 0.0f;
+		countDownInfo.position.m128_f32[1] = 0.0f;
+		countDownInfo.position.m128_f32[2] = -2.0f;
+		countDownInfo.scale = { 2, 2, 2 };
+		countDownInfo.rotation.x = -30.0f;
+		countDownInfo.alpha = 0.2f;
+		int countDown = gameTime / 60;
+		countDownNumber[countDown].Update(&countDownInfo);
+		Draw3DObject(countDownNumber[countDown]);
+	}
 	if (selectMode && !isSceneChange && !isPouseToTiTle)
 	{
 		othelloManager.NormaTextModelDraw(selectStageNum, true);

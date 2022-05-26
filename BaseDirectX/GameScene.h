@@ -111,7 +111,7 @@ public://シーンで使うもの
 	float eyeEaseTime;
 
 	int resultForTime;
-	const int gameMaxTime = 5999;
+	const int gameMaxTime = 359;
 
 	//スコア用
 	//Sprite scoreNum[60];
@@ -204,10 +204,12 @@ public://シーンで使うもの
 	const int CHANGE_TIMER_SECOND = 100;	//-1の値から振動開始
 	const int MAX_COUNT = 10;				//何フレームかけて拡縮するか（偶数必須）
 	const int CHANGE_COLOR_COUNT = 95;		//何カウント目で色を変更するようにするか
+	const int DRAW_COUNTDOWN_COUNT = 6;
 	const float ADD_SIZE = 0.05f;			//1フレームで拡縮するサイズ
 	const float MAX_SIZE_X = 0.3f;			//初期の画像サイズ_X
 	const float MAX_SIZE_Y = 0.3f;			//初期の画像サイズ_Y
 
+	OthelloEachInfo countDownInfo;
 	bool isChanged = false;
 	int timerCount = 0;
 	float size_x = MAX_SIZE_X;
@@ -216,6 +218,7 @@ public://シーンで使うもの
 	bool isModeSelect = false;
 
 	float flagss;
+	OthelloModel countDownNumber[10];
 	Model timerNumber[10];
 	Model numbersObject[10];
 	Model sNumbersObject[10];
