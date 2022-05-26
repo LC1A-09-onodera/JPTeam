@@ -793,6 +793,7 @@ void CheakOthello::CheckReachOthello(int direction_x, int direction_y, int last_
 					if (!reachCheck[lastY][lastX])
 					{
 						completePos.push_back(make_pair(lastY, lastX));
+						reachCheck[lastY][lastX] = true;
 					}
 					break;
 				}
