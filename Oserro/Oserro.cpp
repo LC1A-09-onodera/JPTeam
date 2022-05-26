@@ -25,6 +25,7 @@ ChanceModel OthelloManager::chanceModelOrange;
 vector<vector<SendOthelloData>> OthelloManager::sendDatas;
 using namespace OthelloConstData;
 
+using namespace OthelloEase;
 OthelloData::OthelloData()
 {
 	for (int i = 0; i < 8; i++)
@@ -42,8 +43,12 @@ void Othello::Init(OthelloModel *model, OthelloModel *chainModel, OthelloModel *
 	each.CreateConstBuff1();
 	completeEach.CreateConstBuff0();
 	completeEach.CreateConstBuff1();
-	completeEach.scale = {0.1f,0.1f ,0.1f };
+	float size = 0.1f;
+	completeEach.scale = { size,size ,size };
 	completeEach.alpha = 1.0f;
+	completeEach.rotation.x = 60.0f;
+
+	compEase.Set(0, 60);
 }
 
 void Othello::Update(int combo)
@@ -137,16 +142,6 @@ void Othello::Draw()
 		model->Update(&each);
 		Draw3DObject(*model);
 
-#pragma region compDraw
-//回転変更
-		if (isCompleteDraw)
-		{
-			completeEach.position.m128_f32[2] = -1.0f;
-			compModel->Update(&completeEach);
-			Draw3DObject(*compModel);
-		}
-#pragma endregion
-
 		if (data.type == STOP && !GetIsActive() && isRockDraw)
 		{
 			chainModel->Update(&each);
@@ -155,6 +150,19 @@ void Othello::Draw()
 	}
 }
 
+void Othello::CompDraw()
+{
+	//回転変更
+	if (isCompleteDraw)
+	{
+		float alpha = 0.3f;
+		alpha += WaveInOut(compEase, 2) * 0.7;
+		completeEach.position.m128_f32[2] = -1.0f;
+		completeEach.alpha = alpha;
+		compModel->Update(&completeEach);
+		Draw3DObject(*compModel);
+	}
+}
 void Othello::Finalize()
 {
 }
@@ -518,7 +526,6 @@ void Othello::Spawn(OthelloType type, int x, int y, bool isFront)
 		data.heightPos = y;
 		data.type = type;
 		data.isFront = isFront;
-
 		float x = (data.widthPos * cellScale * 2);
 		float y = -(data.heightPos * cellScale * 2);
 
@@ -675,7 +682,7 @@ void OthelloManager::Init(Tex num[10], Model numModel[10])
 	oserroModel.CreateModel("newOserro4", ShaderManager::othelloShader);
 	stopOserroModel.CreateModel("rock_othello", ShaderManager::othelloShader);
 	wallOserroModel.CreateModel("wall", ShaderManager::othelloShader);
-	compModel.CreateModel("A", ShaderManager::othelloShader);
+	compModel.CreateModel("a_button", ShaderManager::othelloShader);
 	chanceModelBlue.CreateModel("chance_1", ShaderManager::othelloShader);
 	chanceModelOrange.CreateModel("chance", ShaderManager::othelloShader);
 	sendDatas.resize(fieldSize);
@@ -1087,6 +1094,7 @@ void OthelloManager::Draw()
 {
 	OthelloDraw();
 	ChanceDraw();
+	CompDraw();
 }
 
 void OthelloManager::OthelloDraw()
@@ -1108,6 +1116,18 @@ void OthelloManager::ChanceDraw()
 	for (; itr != chances.end(); ++itr)
 	{
 		itr->Draw();
+	}
+}
+
+
+void OthelloManager::CompDraw()
+{
+	if (othellos.size() == 0) return;
+
+	auto itr = othellos.begin();
+	for (; itr != othellos.end(); ++itr)
+	{
+		itr->CompDraw();
 	}
 }
 
@@ -3260,7 +3280,7 @@ void OthelloManager::StartNormaField(int stageNum)
 	//ステージが存在しない
 	bool isNoneStage = NormaStartOthellos.size() <= 0;
 	//指定されたステージ番号がステージ数を超過している
-	bool isStageOver = NormaStartOthellos.size() <= (stageNum);
+	bool isStageOver = NormaStartOthellos.size() < (stageNum);
 
 	if (isNoneStage || isStageOver)return;
 
@@ -3508,4 +3528,72 @@ std::list<XMFLOAT3> &OthelloManager::GetPressPanellPos()
 bool operator==(const panelPos &a, const panelPos &b)
 {
 	return (a.x == b.x && a.y == b.y);
+}
+
+WaveEase::WaveEase(int timer, int  Max, bool isWaveUp):
+timer(timer),
+MaxTime(Max),
+isWaveUp(isWaveUp)
+{
+
+}
+
+void WaveEase::Set(int timer, int  Max, bool isWaveUp)
+{
+this->timer = timer;
+this->MaxTime = Max;
+this->isWaveUp = isWaveUp;
+}
+
+float OthelloEase::Wave(WaveEase &obj, int powCount)
+{
+	if (obj.timer >= obj.MaxTime)
+	{
+		obj.timer = 0;
+		obj.isWaveUp = !obj.isWaveUp;
+	}
+	else
+	{
+		obj.timer++;
+	}
+	float ret = static_cast<float>(obj.timer) / static_cast<float>(obj.MaxTime);
+
+	if (obj.isWaveUp)
+	{
+		ret = ShlomonMath::EaseInOutQuad(XMFLOAT3{}, XMFLOAT3{ 1, 0, 0 }, ret).x;
+	}
+	else
+	{
+		ret = ShlomonMath::EaseInOutQuad( XMFLOAT3{ 1, 0, 0 }, XMFLOAT3{}, ret).x;
+	}
+	ret = pow(ret, powCount);
+
+	return ret;
+}
+
+float OthelloEase::WaveInOut(WaveEase &obj, int powCount)
+{
+	if (obj.timer >= obj.MaxTime)
+	{
+		obj.timer = 0;
+		obj.isWaveUp = !obj.isWaveUp;
+	}
+	else
+	{
+		obj.timer++;
+	}
+	float ret = static_cast<float>(obj.timer) / static_cast<float>(obj.MaxTime);
+
+	if (obj.isWaveUp)
+	{
+		ret = ShlomonMath::EaseOutQuad(XMFLOAT3{}, XMFLOAT3{ 1, 0, 0 }, ret).x;
+	}
+	else
+	{
+		ret = ShlomonMath::EaseInQuad(XMFLOAT3{ 1, 0, 0 }, XMFLOAT3{}, ret).x;
+	}
+	ret = pow(ret, powCount);
+
+	return ret;
+
 }

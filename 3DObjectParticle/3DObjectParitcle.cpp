@@ -877,8 +877,8 @@ void ObjectParticle3D::UpdateBorn(list<XMFLOAT3> list)
 void ObjectParticle3D::UpdateBornAndShake(int combo)
 {
 	each.position = ConvertXMFLOAT3toXMVECTOR(startPosition);
-	each.position.m128_f32[0] += (rand() % (int)(20.0f * easeTime + 1) - (9 * easeTime)) / 400.0f;
-	each.position.m128_f32[1] += (rand() % (int)(20.0f * easeTime + 1) - (9 * easeTime)) / 400.0f;
+	//each.position.m128_f32[0] += (rand() % (int)(20.0f * easeTime + 1) - (9 * easeTime)) / 400.0f;
+	//each.position.m128_f32[1] += (rand() % (int)(20.0f * easeTime + 1) - (9 * easeTime)) / 400.0f;
 	easeTime -= 1.0f / 1200.0f;//vanishTimerMax
 	each.colorType = combo;
 	if (easeTime <= 0.0f)
@@ -890,8 +890,8 @@ void ObjectParticle3D::UpdateBornAndShake(int combo)
 void ObjectParticle3D::UpdateBornAndShake()
 {
 	each.position = ConvertXMFLOAT3toXMVECTOR(startPosition);
-	each.position.m128_f32[0] += (rand() % (int)(20.0f * easeTime + 1) - (9 * easeTime)) / 400.0f;
-	each.position.m128_f32[1] += (rand() % (int)(20.0f * easeTime + 1) - (9 * easeTime)) / 400.0f;
+	//each.position.m128_f32[0] += (rand() % (int)(20.0f * easeTime + 1) - (9 * easeTime)) / 400.0f;
+	//each.position.m128_f32[1] += (rand() % (int)(20.0f * easeTime + 1) - (9 * easeTime)) / 400.0f;
 	easeTime -= 1.0f / 1200.0f;//vanishTimerMax
 
 	/*int othellotypeint = othellosName;
@@ -905,7 +905,7 @@ void ObjectParticle3D::UpdateBornAndShake()
 	XMFLOAT3 pos = ConvertXMVECTORtoXMFLOAT3(each.position);
 	for (auto itr = OthelloManager::othellos.begin(); itr != OthelloManager::othellos.end(); ++itr)
 	{
-		if (Lenght(pos, itr->GetPosition()) <= 1.5f && itr->GetGameData()->comboCount != 0)
+		if (Lenght(pos, itr->GetPosition()) <= 1.0f && itr->GetGameData()->comboCount != 0)
 		{
 			each.colorType = itr->GetGameData()->maxComboCount;
 		}

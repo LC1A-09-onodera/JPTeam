@@ -127,7 +127,7 @@ void GameScene::Init()
 	Lights::LoadModels();
 	OthlloPlayer::Init();
 	sky.CreateModel("world", ShaderManager::playerShader, true);
-	sky.each.rotation = { 70, 0.0f, 0 };
+	sky.each.rotation = { 0, 0.0f, 0 };
 	sky.each.scale = { 100.0f ,100.0f, 100.f };
 	othelloStage.CreateModel("board", ShaderManager::playerShader);
 	othelloStage.each.position.m128_f32[0] = -1.0f;
@@ -203,6 +203,16 @@ void GameScene::Init()
 	timerCount = 0;
 	size_x = MAX_SIZE_X;
 	size_y = MAX_SIZE_Y;
+	timerNumber[0].CreateModel("number0y", ShaderManager::playerShader);
+	timerNumber[1].CreateModel("number1y", ShaderManager::playerShader);
+	timerNumber[2].CreateModel("number2y", ShaderManager::playerShader);
+	timerNumber[3].CreateModel("number3y", ShaderManager::playerShader);
+	timerNumber[4].CreateModel("number4y", ShaderManager::playerShader);
+	timerNumber[5].CreateModel("number5y", ShaderManager::playerShader);
+	timerNumber[6].CreateModel("number6y", ShaderManager::playerShader);
+	timerNumber[7].CreateModel("number7y", ShaderManager::playerShader);
+	timerNumber[8].CreateModel("number8y", ShaderManager::playerShader);
+	timerNumber[9].CreateModel("number9y", ShaderManager::playerShader);
 	numbersObject[0].CreateModel("number0", ShaderManager::playerShader);
 	numbersObject[1].CreateModel("number1", ShaderManager::playerShader);
 	numbersObject[2].CreateModel("number2", ShaderManager::playerShader);
@@ -333,6 +343,17 @@ void GameScene::Init()
 	tips_ss[2].CreateSprite(L"Resource/Img/tips/tips_ss3.png", XMFLOAT3(START_X - SIZE_X, START_Y, 0));
 	tips_ss[3].CreateSprite(L"Resource/Img/tips/tips_ss4.png", XMFLOAT3(START_X - SIZE_X, START_Y, 0));
 
+	for (int i = 0; i < 2; i++)
+	{
+		resultMaxConbo[i].CreateConstBuff0();
+		resultMaxConbo[i].CreateConstBuff1();
+	}
+	for (int i = 0; i < 3; i++)
+	{
+		resultEraseOthello[i].CreateConstBuff0();
+		resultEraseOthello[i].CreateConstBuff1();
+	}
+
 	tipsCounts = 0;
 	changeTimerFrame = 0;
 	tipsDrawNum = 0;
@@ -426,8 +447,10 @@ void GameScene::TitleUpdate()
 			}
 			if (!select)
 			{
+				bool A = directInput->IsButtonPush(directInput->LeftButton) && directInput->leftStickX() == 0 && directInput->leftStickY() == 0;
+				bool D = directInput->IsButtonPush(directInput->RightButton) && directInput->leftStickX() == 0 && directInput->leftStickY() == 0;
 				//チュートリアルかどうかを選択する
-				if (Input::KeyTrigger(DIK_A) || directInput->IsButtonPush(directInput->LeftButton))
+				if (Input::KeyTrigger(DIK_A) || A)
 				{
 					SoundStopWave(selectSound);
 					SoundPlayOnce(selectSound);
@@ -436,7 +459,7 @@ void GameScene::TitleUpdate()
 						titleSelectNum = 1;
 					}
 				}
-				if (Input::KeyTrigger(DIK_D) || directInput->IsButtonPush(directInput->RightButton))
+				if (Input::KeyTrigger(DIK_D) || D)
 				{
 					SoundStopWave(selectSound);
 					SoundPlayOnce(selectSound);
@@ -474,8 +497,10 @@ void GameScene::TitleUpdate()
 			}
 			else if (select)
 			{
+				bool A = directInput->IsButtonPush(directInput->LeftButton) && directInput->leftStickX() == 0 && directInput->leftStickY() == 0;
+				bool D = directInput->IsButtonPush(directInput->RightButton) && directInput->leftStickX() == 0 && directInput->leftStickY() == 0;
 				//スコアアタックかどうかの選択を行う
-				if (Input::KeyTrigger(DIK_A) || directInput->IsButtonPush(directInput->LeftButton))
+				if (Input::KeyTrigger(DIK_A) || A)
 				{
 					SoundStopWave(selectSound);
 					SoundPlayOnce(selectSound);
@@ -490,7 +515,7 @@ void GameScene::TitleUpdate()
 						selectStageNum--;
 					}
 				}
-				if (Input::KeyTrigger(DIK_D) || directInput->IsButtonPush(directInput->RightButton))
+				if (Input::KeyTrigger(DIK_D) || D)
 				{
 					SoundStopWave(selectSound);
 					SoundPlayOnce(selectSound);
@@ -555,7 +580,9 @@ void GameScene::TitleUpdate()
 		//ポーズ中の処理
 		else if (isPouse)
 		{
-			if (Input::KeyTrigger(DIK_W) || directInput->IsButtonPush(directInput->UpButton))
+			bool W = directInput->IsButtonPush(directInput->UpButton) && directInput->leftStickX() == 0 && directInput->leftStickY() == 0;
+			bool S = directInput->IsButtonPush(directInput->DownButton) && directInput->leftStickX() == 0 && directInput->leftStickY() == 0;
+			if (Input::KeyTrigger(DIK_W) || W)
 			{
 				SoundStopWave(selectSound);
 				SoundPlayOnce(selectSound);
@@ -568,7 +595,7 @@ void GameScene::TitleUpdate()
 					selectPouse--;
 				}
 			}
-			else if (Input::KeyTrigger(DIK_S) || directInput->IsButtonPush(directInput->DownButton))
+			else if (Input::KeyTrigger(DIK_S) || S)
 			{
 				SoundStopWave(selectSound);
 				SoundPlayOnce(selectSound);
@@ -821,7 +848,9 @@ void GameScene::GameUpdate()
 	//ポーズ中の処理
 	else if (isPouse)
 	{
-		if (Input::KeyTrigger(DIK_W) || directInput->IsButtonPush(directInput->UpButton))
+		bool W = directInput->IsButtonPush(directInput->UpButton) && directInput->leftStickX() == 0 && directInput->leftStickY() == 0;
+		bool S = directInput->IsButtonPush(directInput->DownButton) && directInput->leftStickX() == 0 && directInput->leftStickY() == 0;
+		if (Input::KeyTrigger(DIK_W) || W)
 		{
 			SoundStopWave(selectSound);
 			SoundPlayOnce(selectSound);
@@ -834,7 +863,7 @@ void GameScene::GameUpdate()
 				selectPouse--;
 			}
 		}
-		else if (Input::KeyTrigger(DIK_S) || directInput->IsButtonPush(directInput->DownButton))
+		else if (Input::KeyTrigger(DIK_S) || S)
 		{
 			SoundStopWave(selectSound);
 			SoundPlayOnce(selectSound);
@@ -1146,7 +1175,7 @@ void GameScene::TitleDraw()
 			pushSpace.Update();
 			pushA.each.position = { -1 + 6.0f, -5.0f, 0, 1.0f };
 			pushA.each.scale = scale4;
-			pushA.each.rotation = {0, 0, 0};
+			pushA.each.rotation = { 0, 0, 0 };
 			pushA.Update();
 			Draw3DObject(pushA);
 			//Draw3DObject(pushSpace);
@@ -1323,8 +1352,19 @@ void GameScene::GameDraw()
 			timerEach[0].position.m128_f32[2] = -1.0f;
 			timerEach[0].scale = { size_x, size_x, size_x };
 			timerEach[0].rotation.x = -30.0f;
-			numbersObject[zyunokurai].Update(&timerEach[0]);
-			Draw3DObject(numbersObject[zyunokurai]);
+			if (gameTime / 60 > CHANGE_COLOR_COUNT)
+			{
+				sNumbersObject[zyunokurai].Update(&timerEach[0]);
+				Draw3DObject(sNumbersObject[zyunokurai]);
+			}
+			else
+			{
+				//numbersObject[zyunokurai].Update(&timerEach[0]);
+				timerNumber[zyunokurai].Update(&timerEach[0]);
+				//Draw3DObject(numbersObject[zyunokurai]);
+				Draw3DObject(timerNumber[zyunokurai]);
+			}
+
 
 			int ichinokurai = gameTime / 60 % 10;
 			timerEach[1].position.m128_f32[0] = 0.0f;
@@ -1332,8 +1372,18 @@ void GameScene::GameDraw()
 			timerEach[1].position.m128_f32[2] = -1.0f;
 			timerEach[1].scale = { size_x, size_x, size_x };
 			timerEach[1].rotation.x = -30.0f;
-			numbersObject[ichinokurai].Update(&timerEach[1]);
-			Draw3DObject(numbersObject[ichinokurai]);
+			if (gameTime / 60 > CHANGE_COLOR_COUNT)
+			{
+				sNumbersObject[ichinokurai].Update(&timerEach[1]);
+				Draw3DObject(sNumbersObject[ichinokurai]);
+			}
+			else
+			{
+				//numbersObject[ichinokurai].Update(&timerEach[1]);
+				timerNumber[ichinokurai].Update(&timerEach[1]);
+				//Draw3DObject(numbersObject[ichinokurai]);
+				Draw3DObject(timerNumber[ichinokurai]);
+			}
 		}
 		oldDisplay = nowScore;
 		oldScore = nowScore;
@@ -1490,10 +1540,6 @@ void GameScene::GameDraw()
 			scoreObject.Update();
 			Draw3DObject(scoreObject);
 		}
-		if (isTutorial)
-		{
-			othelloManager.TutorialTextDraw();
-		}
 	}
 	if (countDown > 0 && isSceneChange == false && isModeSelect == false)
 	{
@@ -1529,6 +1575,10 @@ void GameScene::GameDraw()
 	if (isModeSelect && !isSceneChange && !isPouseToTiTle)
 	{
 		othelloManager.ModeSelectModelDraw(true);
+	}
+	if (gameTime > 0 && countDown <= 0 && isTutorial)
+	{
+		othelloManager.TutorialTextDraw();
 	}
 	if (isPouse)
 	{
@@ -1608,7 +1658,12 @@ void GameScene::GameDraw()
 		tips_bar.SpriteDraw();
 		tips_text[tipsCounts].SpriteDraw();
 	}
-	else if (!isTipsDraw && isTipsDrawTrigger) { tipsCounts++; isTipsDrawTrigger = false; }
+	else if (!isTipsDraw && isTipsDrawTrigger)
+	{
+		tipsCounts++;
+		isTipsDrawTrigger = false;
+		if (tipsCounts > 8) { tipsCounts = 0; }
+	}
 
 	else if (isCameraModed)
 	{
@@ -1715,7 +1770,7 @@ void GameScene::ResultDraw()
 
 	int combo = checkObject.GetMaxCombo();
 	int reverse = checkObject.GetTotalReverceCount();
-	resultMaxConbo[0].position = {0, 17.0f, -10.0f, 1.0f};
+	resultMaxConbo[0].position = {-0.0f, 17.0f, -10.0f, 1.0f};
 	resultMaxConbo[0].scale = scale4;
 	resultMaxConbo[0].rotation.x = -70;
 	sNumbersObject[combo % 10].Update(&resultMaxConbo[0]);
@@ -1726,9 +1781,21 @@ void GameScene::ResultDraw()
 	sNumbersObject[combo / 10 % 10].Update(&resultMaxConbo[1]);
 	Draw3DObject(sNumbersObject[combo / 10 % 10]);
 
-	resultEraseOthello[0].position = {0, 15.0f, -8.0f, 1.0f};
-	//result
-
+	resultEraseOthello[0].position = { -0.0f, 15.0f, -8.0f, 1.0f};
+	resultEraseOthello[0].scale = scale4;
+	resultEraseOthello[0].rotation.x = -70;
+	sNumbersObject[reverse % 10].Update(&resultEraseOthello[0]);
+	Draw3DObject(sNumbersObject[reverse % 10]);
+	resultEraseOthello[1].position = { -2.0f, 15.0f, -8.0f, 1.0f };
+	resultEraseOthello[1].scale = scale4;
+	resultEraseOthello[1].rotation.x = -70;
+	sNumbersObject[reverse / 10 % 10].Update(&resultEraseOthello[1]);
+	Draw3DObject(sNumbersObject[reverse / 10 % 10]);
+	resultEraseOthello[2].position = { -4.0f, 15.0f, -8.0f, 1.0f };
+	resultEraseOthello[2].scale = scale4;
+	resultEraseOthello[2].rotation.x = -70;
+	sNumbersObject[reverse / 100 % 10].Update(&resultEraseOthello[2]);
+	Draw3DObject(sNumbersObject[reverse / 100 % 10]);
 
 	//Imgui::DrawImGui();
 
