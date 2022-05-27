@@ -397,7 +397,7 @@ private://ノルマモード用内部処理関数
 	void LoadNormaStage(std::string stage);
 	void LoadAllStage();
 	void CountTextDraw(int count);
-	void CountModelDraw(int count, EachInfo *data = nullptr);
+	void CountModelDraw(int count, EachInfo *data = nullptr, EachInfo *dataB = nullptr);
 public://モードセレクト用外部関数
 	//モード選択開始時
 	void ModeSelectStart(int stageNum = -1);
