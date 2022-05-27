@@ -48,6 +48,11 @@ private:
 	void ToResult();
 	void PouseToTitle();
 	void PouseToTitleUpdate();
+	void NormaToModeSelect();
+	void NormaToModeSelectUpdate();
+	bool isNormaToSelect;
+	void NormaToModeSelect2();
+	void NormaToModeSelectUpdate2();
 public:
 	GameScene();
 	~GameScene();
@@ -78,6 +83,7 @@ public://シーンで使うもの
 	float circleShadowAtten[3] = { 0.5f, 0.6f, 0.0f };
 	float circleShadowFactorAngle[2] = { 0.0f, 0.0f };
 
+	bool isTipsButtonDraw;
 	//PostEffect postEffect;
 	Model sample;
 	OthelloManager othelloManager;
@@ -95,7 +101,7 @@ public://シーンで使うもの
 	int countDown;
 	bool isCountDownEnd;
 	int countDownFrame;
-	const int countMax = 180;
+	const int countMax = 239;
 	//Sprite numbers[30];
 	//gameシーンからリザルトから使う
 	bool isResultSceneChange;

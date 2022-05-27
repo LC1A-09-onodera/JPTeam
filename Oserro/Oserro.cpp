@@ -1430,7 +1430,7 @@ int OthelloManager::GetEnterNormaStage()
 
 void OthelloManager::ModeSelectModelDraw(bool isDraw)
 {
-	textAnimationRate = Wave(textEase, 2);
+	textAnimationRate = WaveInOut(textEase, 2);
 	SetTextPos(false);
 	if (isDraw)
 	{
