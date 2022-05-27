@@ -2327,7 +2327,7 @@ void GameScene::ToModeSelectUpdate()
 			isTipsButtonDraw = true;
 			if (Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01))
 			{
-				if (!isTipsOk)othelloManager.ModeSelectStart();
+				if (!isTipsOk)othelloManager.ModeSelectStart(100);
 				isTipsOk = true;
 			}
 			if (isTipsOk)

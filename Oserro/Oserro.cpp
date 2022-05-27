@@ -10,7 +10,7 @@
 #include <limits>
 list<Othello> OthelloManager::othellos;
 list<NormaModeFieldData> OthelloManager::NormaStartOthellos;
-list<ChanceObject> OthelloManager::chances;
+vector<ChanceObject> OthelloManager::chances;
 OthelloModel OthelloManager::oserroModel;
 OthelloModel OthelloManager::stopOserroModel;
 OthelloModel OthelloManager::wallOserroModel;
@@ -196,7 +196,7 @@ void Othello::Sandwich()
 	//data.waitTimer = 0;
 	//data.JumpTimer = 0;
 	//data.isJumpUp = true;
-	each.scale = {1.0f,1.0f ,1.0f };
+	each.scale = { 1.0f,1.0f ,1.0f };
 	XMFLOAT3 pos = ConvertXMVECTORtoXMFLOAT3(each.position);
 	ObjectParticles::six.Init(pos, data.maxComboCount, ParticleType::Exprotion);
 
@@ -722,7 +722,7 @@ void OthelloManager::Init(Tex num[10], Model numModel[10])
 	NormaPanelsText.CreateSprite(L"Resource/Img/all_delete_UI.png", XMFLOAT3(0, 0, 0));
 	NormaComboText.CreateSprite(L"Resource/Img/combo_UI.png", XMFLOAT3(0, 0, 0));
 	NormaScoreText.CreateSprite(L"Resource/Img/score_UI.png", XMFLOAT3(0, 0, 0));
-	
+
 	float changeScale = 0.5f;
 
 	TutorialText1.ChangeSize(1227 * changeScale, 332 * changeScale);
@@ -798,6 +798,14 @@ void OthelloManager::Init(Tex num[10], Model numModel[10])
 		}
 	}
 	textEase.Set(0, 120);
+	for (int y = 0; y < 8; y++)
+	{
+		for (int x = 0; x < 8; x++)
+		{
+			SetChanceObject(x, y, true);
+		}
+	}
+
 }
 
 void OthelloManager::Update(int combo)
@@ -1115,7 +1123,10 @@ void OthelloManager::ChanceDraw()
 	auto itr = chances.begin();
 	for (; itr != chances.end(); ++itr)
 	{
-		itr->Draw();
+		if (itr->isDraw)
+		{
+			itr->Draw();
+		}
 	}
 }
 
@@ -1312,7 +1323,7 @@ void OthelloManager::Move(const XMFLOAT3 &MousePos)
 }
 
 
-void OthelloManager::ModeSelectStart()
+void OthelloManager::ModeSelectStart(int stageNum)
 {
 
 	XMFLOAT3 startPos = OthlloPlayer::GetPosition();
@@ -1344,7 +1355,7 @@ void OthelloManager::ModeSelectStart()
 	//	SetChanceObject(stageCount, 7 - stageCount, false);
 	//}
 	//MinSpawn(false);
-	SetModeSelectPanel();
+	SetModeSelectPanel(stageNum);
 }
 
 void OthelloManager::ModeSelectUpdate()
@@ -1419,7 +1430,7 @@ int OthelloManager::GetEnterNormaStage()
 
 void OthelloManager::ModeSelectModelDraw(bool isDraw)
 {
-	textAnimationRate = Wave(textEase, 2);
+	textAnimationRate = WaveInOut(textEase, 2);
 	SetTextPos(false);
 	if (isDraw)
 	{
@@ -1439,7 +1450,7 @@ void OthelloManager::ModeSelectModelDraw(bool isDraw)
 
 		if (GetEnterModeType() != GameMode::NormaMode) { return; }
 
-		NormaModeTextDrawData.position = XMVECTOR{ 0.0f, 18.0f, -1.0f ,0 } +(FloatAnimationDistance * textAnimationRate);
+		NormaModeTextDrawData.position = XMVECTOR{ 0.0f, 18.0f, -1.0f ,0 } + (FloatAnimationDistance * textAnimationRate);
 		NormaModeTextModel.Update(&NormaModeTextDrawData);
 		Draw3DObject(NormaModeTextModel);
 		list<NormaModeFieldData>::iterator data = GetNormaStage(GetEnterNormaStage());
@@ -1573,7 +1584,7 @@ void OthelloManager::CountModelDraw(int count, EachInfo *data)
 	}
 }
 
-void OthelloManager::SetModeSelectPanel()
+void OthelloManager::SetModeSelectPanel(int stageNum)
 {
 	AllDeletePanel();
 	bool stageEnd = false;
@@ -1595,7 +1606,23 @@ void OthelloManager::SetModeSelectPanel()
 	}
 	//SetSpawnPanel(normaMode.x, normaMode.y, true, STOP, false);
 	SetSpawnPanel(scoreAttack.x, scoreAttack.y, true, STOP, false);
-	SetSpawnPlayer(7, 7);
+
+	bool isDefault = stageNum <= 0;
+	if (isDefault)
+	{
+		SetSpawnPlayer(7, 7);
+	}
+	else
+	{
+		if (stageNum >= NormaStartOthellos.size())
+		{
+			stageNum = NormaStartOthellos.size();
+		}
+		stageNum--;
+		int x = stageNum % 8;
+		int y = stageNum / 8;
+		SetSpawnPlayer(x, y);
+	}
 }
 
 
@@ -1778,8 +1805,8 @@ void OthelloManager::SetCountModelPos(bool isNormaMode)
 	{
 		movePos = FloatAnimationDistance * textAnimationRate;
 	}
-	if(GetEnterNormaStage() == GameMode::ScoreAttack)
-	moveAllDeleteCountPos;
+	if (GetEnterNormaStage() == GameMode::ScoreAttack)
+		moveAllDeleteCountPos;
 	XMVECTOR baseCountPos = XMVECTOR{ 1.0f , 13.0f, -1.0f ,0 };
 	list<NormaModeFieldData>::iterator data = GetNormaStage(GetEnterNormaStage());
 	if (data->type == Norma::Panels)
@@ -1951,7 +1978,7 @@ void OthelloManager::Receive(const vector<vector<SendOthelloData>> &data, const 
 		itr->isCompleteDraw = false;
 		for (auto &e : compPos)
 		{
-			bool isComplete = (x ==e.second && y == e.first);
+			bool isComplete = (x == e.second && y == e.first);
 			if (isComplete)
 			{
 				itr->isCompleteDraw = true;
@@ -3070,33 +3097,21 @@ void OthelloManager::whyChainSpawn()
 
 void OthelloManager::EraseChanceObject()
 {
-	if (chances.size() <= 0)
-	{
-		return;
-	}
 
-	chances.clear();
+	for (auto &e : chances)
+	{
+		e.isDraw = false;
+	}
 }
 
 void OthelloManager::SpawnChances(const vector<pair<int, int>> &pos)
 {
 	EraseChanceObject();
-	int posC = pos.size();
 	bool isNothing = (pos.size() <= 0);
-	if (isNothing)
+	for (auto &e : pos)
 	{
-		return;
-	}
-	auto posItr = pos.begin();
-
-	bool isNotEnd = true;
-	while (isNotEnd)
-	{
-
-		SetChanceObject(posItr->second, posItr->first, true);
-
-		posItr++;
-		isNotEnd = (posItr != pos.end());
+		int pos = (e.first * 8) + (e.second);
+		chances[pos].isDraw = true;
 	}
 }
 
@@ -3208,7 +3223,6 @@ void ChanceObject::Finalize()
 }
 void ChanceObject::Spawn(int x, int y, bool isFront)
 {
-
 	float posX = (x * cellScale * 2);
 	float posY = -(y * cellScale * 2);
 
@@ -3534,19 +3548,19 @@ bool operator==(const panelPos &a, const panelPos &b)
 	return (a.x == b.x && a.y == b.y);
 }
 
-WaveEase::WaveEase(int timer, int  Max, bool isWaveUp):
-timer(timer),
-MaxTime(Max),
-isWaveUp(isWaveUp)
+WaveEase::WaveEase(int timer, int  Max, bool isWaveUp) :
+	timer(timer),
+	MaxTime(Max),
+	isWaveUp(isWaveUp)
 {
 
 }
 
 void WaveEase::Set(int timer, int  Max, bool isWaveUp)
 {
-this->timer = timer;
-this->MaxTime = Max;
-this->isWaveUp = isWaveUp;
+	this->timer = timer;
+	this->MaxTime = Max;
+	this->isWaveUp = isWaveUp;
 }
 
 float OthelloEase::Wave(WaveEase &obj, int powCount)
@@ -3568,7 +3582,7 @@ float OthelloEase::Wave(WaveEase &obj, int powCount)
 	}
 	else
 	{
-		ret = ShlomonMath::EaseInOutQuad( XMFLOAT3{ 1, 0, 0 }, XMFLOAT3{}, ret).x;
+		ret = ShlomonMath::EaseInOutQuad(XMFLOAT3{ 1, 0, 0 }, XMFLOAT3{}, ret).x;
 	}
 	ret = pow(ret, powCount);
 
