@@ -666,9 +666,13 @@ void GameScene::TitleUpdate()
 		sky.each.rotation.y += 1.0f;
 		sky.Update();
 	}
-	if (isPouseToTiTle)
+	if (isPouseToTiTle && sceneChageType != 30)
 	{
 		PouseToTitleUpdate();
+	}
+	else if (sceneChageType == 30)
+	{
+		NormaToModeSelectUpdate();
 	}
 #pragma endregion
 }
@@ -749,7 +753,9 @@ void GameScene::GameUpdate()
 					if (checkTime > 60)
 					{
 						checkTime = 0;
-						PouseToTitle();
+						//PouseToTitle();
+						//ToTutorial();
+						NormaToModeSelect();
 					}
 					//PouseToTitle();
 				}
@@ -821,6 +827,10 @@ void GameScene::GameUpdate()
 		{
 			ToTutorialUpdate();
 		}
+		else if (sceneChageType == 30)
+		{
+			NormaToModeSelectUpdate();
+		}
 	}
 	//ゲームシーンからリザルトへのトリガー
 	if (gameTime <= 0 && !isResultSceneChange)
@@ -840,24 +850,10 @@ void GameScene::GameUpdate()
 				Camera::target.v = ShlomonMath::EaseInQuad(eyeStart, eyeEnd, 1.0f);
 				resultForTime = 0;
 				isResultSceneChange = false;
-				/*if (isPouseToTitle == true)
-				{
-					SceneNum = TITLE;
-					SoundPlayLoop(BGMSound);
-					isPouseToTitle = false;
-				}*/
-				/*if (isTutorial == true)
-				{
-					SceneNum = TITLE;
-					SoundPlayLoop(BGMSound);
-					isTutorial = false;
-				}*/
-				if (!isPouseToTitle && !isTutorial)
-					SceneNum = RESULT;
+				if (!isPouseToTitle && !isTutorial) SceneNum = RESULT;
 				resultForTime = 0;
 				isResultSceneChange = false;
 				displayScore = checkObject.GetScore();
-
 			}
 			Camera::Update();
 		}
@@ -941,20 +937,13 @@ void GameScene::GameUpdate()
 	{
 		tornadoTime = 0;
 	}
-	/*if (!isSceneChange && !isResultSceneChange && !isPouse)
-	{
-		if (Input::KeyTrigger(DIK_U) || directInput->IsButtonPush(directInput->Button03) && !isTutorial)
-		{
-			ReStart();
-		}
-	}*/
 
 	sky.Update();
 	othelloStage.Update();
 	Lights::Add(checkObject);
 	Lights::Update();
 	ParticleControl::Update();
-	if (isPouseToTiTle)
+	if (isPouseToTiTle && sceneChageType != 30)
 	{
 		PouseToTitleUpdate();
 	}
@@ -1096,7 +1085,6 @@ void GameScene::ResultUpdate()
 		SoundPlayOnce(enterSound);
 		OthlloPlayer::SetPosition(XMFLOAT3(0, 0, -2));
 		SoundPlayLoop(BGMSound);
-		//SceneNum = TITLE;
 		//isSceneChange = false;
 		ToTitle();
 	}
@@ -1330,9 +1318,15 @@ void GameScene::GameDraw()
 			Draw3DObject(ObjectParticles::othello2.object);
 		}
 	}
-	if (isPouseToTiTle && !isBackGroundOthello)
+	//if (isPouseToTiTle && !isBackGroundOthello)
+	if (isPouseToTiTle)
 	{
 		for (auto opOthelloItr = pouseOthellos.begin(); opOthelloItr != pouseOthellos.end(); ++opOthelloItr)
+		{
+			ObjectParticles::othello2.object.Update(&(*opOthelloItr));
+			Draw3DObject(ObjectParticles::othello2.object);
+		}
+		for (auto opOthelloItr = opOthellos.begin(); opOthelloItr != opOthellos.end(); ++opOthelloItr)
 		{
 			ObjectParticles::othello2.object.Update(&(*opOthelloItr));
 			Draw3DObject(ObjectParticles::othello2.object);
@@ -1828,7 +1822,7 @@ void GameScene::ResultDraw()
 
 	int combo = checkObject.GetMaxCombo();
 	int reverse = checkObject.GetTotalReverceCount();
-	resultMaxConbo[0].position = {3.0f, 17.0f, -10.0f, 1.0f};
+	resultMaxConbo[0].position = { 3.0f, 17.0f, -10.0f, 1.0f };
 	resultMaxConbo[0].scale = scale;
 	resultMaxConbo[0].rotation.x = -70;
 	sNumbersObject[combo % 10].Update(&resultMaxConbo[0]);
@@ -1838,13 +1832,13 @@ void GameScene::ResultDraw()
 	resultMaxConbo[1].rotation.x = -70;
 	sNumbersObject[combo / 10 % 10].Update(&resultMaxConbo[1]);
 	Draw3DObject(sNumbersObject[combo / 10 % 10]);
-	resultMaxConboModel.each.position = {-9.0f, 17.0f, -10.0f, 1.0f};
+	resultMaxConboModel.each.position = { -9.0f, 17.0f, -10.0f, 1.0f };
 	resultMaxConboModel.each.scale = scale;
 	resultMaxConboModel.each.rotation.x = -70;
 	resultMaxConboModel.Update();
 	Draw3DObject(resultMaxConboModel);
 
-	resultEraseOthello[0].position = { 5.0f, 15.0f, -8.0f, 1.0f};
+	resultEraseOthello[0].position = { 5.0f, 15.0f, -8.0f, 1.0f };
 	resultEraseOthello[0].scale = scale;
 	resultEraseOthello[0].rotation.x = -70;
 	sNumbersObject[reverse % 10].Update(&resultEraseOthello[0]);
@@ -1859,7 +1853,7 @@ void GameScene::ResultDraw()
 	resultEraseOthello[2].rotation.x = -70;
 	sNumbersObject[reverse / 100 % 10].Update(&resultEraseOthello[2]);
 	Draw3DObject(sNumbersObject[reverse / 100 % 10]);
-	resultEraseOthelloModel.each.position = {-7.0f, 15.0f, -8.0f, 1.0f};
+	resultEraseOthelloModel.each.position = { -7.0f, 15.0f, -8.0f, 1.0f };
 	resultEraseOthelloModel.each.scale = scale;
 	resultEraseOthelloModel.each.rotation.x = -70;
 	resultEraseOthelloModel.Update();
@@ -2655,6 +2649,54 @@ void GameScene::PouseToTitleUpdate()
 				}
 			}
 		}
+	}
+}
+
+void GameScene::NormaToModeSelect()
+{
+	sceneChageType = 30;
+	isPouseToTiTle = true;
+	pouseToTitleEaseTime1 = 0.0f;
+	isBackGroundOthello = false;
+	isSceneChange = true;
+	titleScaleEaseTime = 0.0f;
+	ObjectParticles::othelloFrame.DeleteAllParticle();
+	ObjectParticles::six.DeleteAllParticle();
+	ObjectParticles::frame.DeleteAllParticle();
+	othelloManager.AllDeletePanel();
+	othelloManager.EraseChanceObject();
+}
+
+void GameScene::NormaToModeSelectUpdate()
+{
+	if (isPouseToTiTle)
+	{
+		ObjectParticles::frame.DeleteAllParticle();
+		pouseToTitleEaseTime1 += 0.02f;
+		if (pouseToTitleEaseTime1 >= 1.0f)
+		{
+			pouseToTitleEaseTime1 = 1.0f;
+			isBackGroundOthello = true;
+			isTipsDraw = true;
+		}
+		for (auto pouseOthelloItr = pouseOthellos.begin(); pouseOthelloItr != pouseOthellos.end(); ++pouseOthelloItr)
+		{
+			pouseOthelloItr->scale = ShlomonMath::EaseInQuad(XMFLOAT3(0.01f, 0.01f, 0.01f), XMFLOAT3(1.5f, 1.5f, 1.0f), pouseToTitleEaseTime1);
+		}
+
+		if (Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01))
+		{
+			SceneNum = GAME;
+			//isTipsDraw = false;
+			isSceneChange = true;
+			gameTime = 1;
+			isTipsDraw = false;
+			isPouseToTiTle = false;
+			ToModeSelect();
+		}
+		/*Camera::target = { -1, 1, 0 };
+		Camera::eye = { -1, 1, -15 };
+		Camera::Update();*/
 	}
 }
 

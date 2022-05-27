@@ -48,6 +48,8 @@ private:
 	void ToResult();
 	void PouseToTitle();
 	void PouseToTitleUpdate();
+	void NormaToModeSelect();
+	void NormaToModeSelectUpdate();
 public:
 	GameScene();
 	~GameScene();
