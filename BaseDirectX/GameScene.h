@@ -50,6 +50,9 @@ private:
 	void PouseToTitleUpdate();
 	void NormaToModeSelect();
 	void NormaToModeSelectUpdate();
+	bool isNormaToSelect;
+	void NormaToModeSelect2();
+	void NormaToModeSelectUpdate2();
 public:
 	GameScene();
 	~GameScene();

@@ -191,7 +191,7 @@ void GameScene::Init()
 			each.rotation.x = 0;
 			each.position.m128_f32[0] = -(20 / 2.0f * OthelloR) + (i * OthelloR);
 			each.position.m128_f32[1] = -(12 / 2.0f * OthelloR) + (j * OthelloR);
-			each.position.m128_f32[2] = 2.0f - j * 1.0f;
+			each.position.m128_f32[2] = 2.0f - j * 1.5f;
 			each.scale = { 0.01f, 0.01f, 0.01f };
 			each.rotation.x = -33.0f;
 			pouseOthellos.push_back(each);
@@ -831,6 +831,10 @@ void GameScene::GameUpdate()
 		{
 			NormaToModeSelectUpdate();
 		}
+		else if (sceneChageType == 31)
+		{
+			NormaToModeSelectUpdate2();
+		}
 	}
 	//ゲームシーンからリザルトへのトリガー
 	if (gameTime <= 0 && !isResultSceneChange)
@@ -863,7 +867,7 @@ void GameScene::GameUpdate()
 		}
 	}
 	//if (!isPouse && (Input::KeyTrigger(DIK_ESCAPE) || directInput->IsButtonPush(directInput->ButtonPouse)) && )
-	if (!isPouse && (Input::KeyTrigger(DIK_ESCAPE) || directInput->IsButtonPush(directInput->ButtonPouse)) && (countDown <= 0 || isModeSelect))
+	if (!isPouse && (Input::KeyTrigger(DIK_ESCAPE) || directInput->IsButtonPush(directInput->ButtonPouse)) && (countDown <= 0 || isModeSelect) && sceneChageType != 30 && sceneChageType != 31)
 	{
 		isPouse = true;
 		selectPouse = 0;
@@ -943,7 +947,7 @@ void GameScene::GameUpdate()
 	Lights::Add(checkObject);
 	Lights::Update();
 	ParticleControl::Update();
-	if (isPouseToTiTle && sceneChageType != 30)
+	if (isPouseToTiTle && sceneChageType != 30 && sceneChageType != 31)
 	{
 		PouseToTitleUpdate();
 	}
@@ -1318,7 +1322,6 @@ void GameScene::GameDraw()
 			Draw3DObject(ObjectParticles::othello2.object);
 		}
 	}
-	//if (isPouseToTiTle && !isBackGroundOthello)
 	if (isPouseToTiTle)
 	{
 		for (auto opOthelloItr = pouseOthellos.begin(); opOthelloItr != pouseOthellos.end(); ++opOthelloItr)
@@ -1327,6 +1330,14 @@ void GameScene::GameDraw()
 			Draw3DObject(ObjectParticles::othello2.object);
 		}
 		for (auto opOthelloItr = opOthellos.begin(); opOthelloItr != opOthellos.end(); ++opOthelloItr)
+		{
+			ObjectParticles::othello2.object.Update(&(*opOthelloItr));
+			Draw3DObject(ObjectParticles::othello2.object);
+		}
+	}
+	if (isPouseToTiTle && sceneChageType == 31)
+	{
+		for (auto opOthelloItr = pouseOthellos.begin(); opOthelloItr != pouseOthellos.end(); ++opOthelloItr)
 		{
 			ObjectParticles::othello2.object.Update(&(*opOthelloItr));
 			Draw3DObject(ObjectParticles::othello2.object);
@@ -2604,9 +2615,9 @@ void GameScene::PouseToTitleUpdate()
 	{
 		ObjectParticles::frame.DeleteAllParticle();
 		pouseToTitleEaseTime1 += 0.02f;
-		if (pouseToTitleEaseTime1 >= 1.0f)
+		if (pouseToTitleEaseTime1 >= 1.1f)
 		{
-			pouseToTitleEaseTime1 = 1.0f;
+			pouseToTitleEaseTime1 = 1.1f;
 			isBackGroundOthello = true;
 			isTipsDraw = true;
 		}
@@ -2687,17 +2698,110 @@ void GameScene::NormaToModeSelectUpdate()
 		if (Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01))
 		{
 			SceneNum = GAME;
-			//isTipsDraw = false;
-			isSceneChange = true;
 			gameTime = 1;
-			isTipsDraw = false;
-			isPouseToTiTle = false;
-			ToModeSelect();
+			//isPouseToTiTle = false;
+			NormaToModeSelect2();
 		}
 		/*Camera::target = { -1, 1, 0 };
 		Camera::eye = { -1, 1, -15 };
 		Camera::Update();*/
 	}
+}
+
+void GameScene::NormaToModeSelect2()
+{//初期化
+	checkObject.Init();
+	//シーンが変わることを伝える
+	isSceneChange = true;
+	//シーンの種類を決める
+	sceneChageType = 31;
+	isNormaToSelect = true;
+	isPouse = false;
+	SceneNum = GAME;
+	//カメラの終点を決める
+	eyeStart = XMFLOAT3(-1, 1, -15.0f);
+	eyeEnd = gameNowEye;
+	camTargetStart = { -1, 1, 0 };
+	camTargetEnd = { -1, 0, 0 };
+
+	eyeEaseTime = 0.0f;
+	sceneChangeAfterTime = 0.0f;
+
+	//
+	isModeSelect = true;
+
+	isTipsOk = false;
+	isStageDisplay = false;
+	goToGameTime = 0.0f;
+	sceneChangeDiray2 = 0;
+	//なんやかんやの初期化
+	nowScore = 0;
+	displayScore = 0;
+	oldDisplay = 0;
+	countDown = 239;
+	checkObject.SetScore(0);
+	OthlloPlayer::SetPosition(XMFLOAT3(0, 0, -2));
+	OthlloPlayer::isEase = false;
+
+	ObjectParticles::othello.DeleteAllParticle();
+
+	select = true;
+	selectStage = false;
+	selectMode = false;
+
+	othelloManager.AllDeletePanel();
+	othelloManager.EraseChanceObject();
+
+	tipsNumber = rand() % GameScene::tipsCount;
+
+	isCameraModed = false;
+}
+
+void GameScene::NormaToModeSelectUpdate2()
+{
+	eyeEaseTime += 1.0f;
+	if (eyeEaseTime >= 1.0f)
+	{
+		isStageDisplay = true;
+		eyeEaseTime = 1.0f;
+		sceneChangeDiray2++;
+		if (sceneChangeDiray2 >= MaxSceneChangeOk)
+		{
+			if (Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01))
+			{
+				if (!isTipsOk)othelloManager.ModeSelectStart();
+				SceneNum = GAME;
+				isTipsOk = true;
+			}
+			if (isTipsOk)
+			{
+				//セレクト画面のアップデート
+				othelloManager.ModeSelectUpdate();
+				isTipsDraw = false;
+				sceneChangeAfterTime += 0.01f;
+				for (auto opOthelloItr = pouseOthellos.begin(); opOthelloItr != pouseOthellos.end(); ++opOthelloItr)
+				{
+					opOthelloItr->scale = ShlomonMath::EaseInQuad(XMFLOAT3(1.5f, 1.5f, 1.5f), XMFLOAT3(0.01f, 0.01f, 0.01f), sceneChangeAfterTime);
+					opOthelloItr->rotation = ShlomonMath::EaseInQuad(XMFLOAT3(0, 0, 90), XMFLOAT3(0, 0, 0), sceneChangeAfterTime);
+				}
+			}
+		}
+		//ゲーム画面」に移行し、カウントダウン開始
+		if (sceneChangeAfterTime >= 1.0f)
+		{
+			sceneChangeAfterTime = 1.0f;
+			for (auto opOthelloItr = pouseOthellos.begin(); opOthelloItr != pouseOthellos.end(); ++opOthelloItr)
+			{
+				opOthelloItr->scale = ShlomonMath::EaseInQuad(XMFLOAT3(1.5f, 1.5f, 1.5f), XMFLOAT3(0.01f, 0.01f, 0.01f), sceneChangeAfterTime);
+				opOthelloItr->rotation = ShlomonMath::EaseInQuad(XMFLOAT3(0, 0, 90), XMFLOAT3(0, 0, 0), sceneChangeAfterTime);
+			}
+			isPouseToTiTle = false;
+			isSceneChange = false;
+			isCameraModed = true;
+			OthlloPlayer::isReverse = true;
+		}
+	}
+	Camera::Update();
 }
 
 void GameScene::EndDraw()
