@@ -255,6 +255,7 @@ void OthlloPlayer::InitStay()
 	easeStay2 = 0.0f;
 	easeStayStart = player.each.position.m128_f32[2];
 	easeStayEnd = easeStayEndConst;
+	player.each.rotation = {0.0f, 0.0f, 0.0f};
 }
 
 void OthlloPlayer::UpdateStay()
