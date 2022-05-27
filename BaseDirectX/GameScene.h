@@ -83,6 +83,7 @@ public://ÉVÅ[ÉìÇ≈égÇ§Ç‡ÇÃ
 	float circleShadowAtten[3] = { 0.5f, 0.6f, 0.0f };
 	float circleShadowFactorAngle[2] = { 0.0f, 0.0f };
 
+	bool isTipsButtonDraw;
 	//PostEffect postEffect;
 	Model sample;
 	OthelloManager othelloManager;

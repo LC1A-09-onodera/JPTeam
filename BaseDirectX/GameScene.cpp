@@ -136,6 +136,7 @@ void GameScene::Init()
 	othelloStage.each.rotation.x = 90;
 	othelloStage.each.scale = { 2.0f, 1.0f, 2.0f };
 	isPouse = false;
+	isTipsButtonDraw = false;
 	pouseBack.CreateSprite(L"Resource/Img/title_back_80.png", XMFLOAT3(0, 0, 0));
 	isGameEnd = false;
 	moveSprite.CreateSprite(L"Resource/Img/control.png", XMFLOAT3(0, 0, 0));
@@ -1697,16 +1698,17 @@ void GameScene::GameDraw()
 	if (isTipsDraw)
 	{
 		isTipsDrawTrigger = true;
-
 		//pushButton_green.Update();
-		Draw3DObject(pushButton_green);
-
-		pushButton_black.Update(&pushButton[0]);
-		Draw3DObject(pushButton_black);
-		pushButton_black.Update(&pushButton[1]);
-		Draw3DObject(pushButton_black);
-		pushButton_black.Update(&pushButton[2]);
-		Draw3DObject(pushButton_black);
+		if (isTipsButtonDraw)
+		{
+			Draw3DObject(pushButton_green);
+			pushButton_black.Update(&pushButton[0]);
+			Draw3DObject(pushButton_black);
+			pushButton_black.Update(&pushButton[1]);
+			Draw3DObject(pushButton_black);
+			pushButton_black.Update(&pushButton[2]);
+			Draw3DObject(pushButton_black);
+		}
 
 		tips_ss[0].SpriteDraw();
 		tips_ss[1].SpriteDraw();
@@ -2011,7 +2013,7 @@ void GameScene::ToGame4(bool flags)
 	sceneChangeAfterTime = 0.0f;
 
 	isModeSelect = false;
-
+	isTipsButtonDraw = false;
 	gameTime = gameMaxTime;
 
 	isTipsOk = false;
@@ -2228,7 +2230,7 @@ void GameScene::ToGame4Update()
 		}
 		if (sceneChangeDiray2 >= MaxSceneChangeOk)
 		{
-
+			isTipsButtonDraw = true;
 			if (Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01))
 			{
 				if (!selectMode && !isTipsOk)
@@ -2331,7 +2333,7 @@ void GameScene::ToModeSelectUpdate()
 		}
 		if (sceneChangeDiray2 >= MaxSceneChangeOk)
 		{
-
+			isTipsButtonDraw = true;
 			if (Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01))
 			{
 				if (!isTipsOk)othelloManager.ModeSelectStart();
@@ -2507,7 +2509,7 @@ void GameScene::ToModeSelect()
 
 	eyeEaseTime = 0.0f;
 	sceneChangeAfterTime = 0.0f;
-
+	isTipsButtonDraw = false;
 	//
 	isModeSelect = true;
 
