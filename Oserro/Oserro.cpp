@@ -10,7 +10,7 @@
 #include <limits>
 list<Othello> OthelloManager::othellos;
 list<NormaModeFieldData> OthelloManager::NormaStartOthellos;
-list<ChanceObject> OthelloManager::chances;
+vector<ChanceObject> OthelloManager::chances;
 OthelloModel OthelloManager::oserroModel;
 OthelloModel OthelloManager::stopOserroModel;
 OthelloModel OthelloManager::wallOserroModel;
@@ -798,6 +798,14 @@ void OthelloManager::Init(Tex num[10], Model numModel[10])
 		}
 	}
 	textEase.Set(0, 120);
+	for (int y = 0; y < 8; y++)
+	{
+		for (int x = 0; x < 8; x++)
+		{
+			SetChanceObject(x, y, true);
+		}
+	}
+
 }
 
 void OthelloManager::Update(int combo)
@@ -1115,7 +1123,10 @@ void OthelloManager::ChanceDraw()
 	auto itr = chances.begin();
 	for (; itr != chances.end(); ++itr)
 	{
-		itr->Draw();
+		if (itr->isDraw)
+		{
+			itr->Draw();
+		}
 	}
 }
 
@@ -3070,33 +3081,21 @@ void OthelloManager::whyChainSpawn()
 
 void OthelloManager::EraseChanceObject()
 {
-	if (chances.size() <= 0)
+	
+	for (auto &e : chances)
 	{
-		return;
+		e.isDraw = false;
 	}
-
-	chances.clear();
 }
 
 void OthelloManager::SpawnChances(const vector<pair<int, int>> &pos)
 {
 	EraseChanceObject();
-	int posC = pos.size();
 	bool isNothing = (pos.size() <= 0);
-	if (isNothing)
+	for (auto &e : pos)
 	{
-		return;
-	}
-	auto posItr = pos.begin();
-
-	bool isNotEnd = true;
-	while (isNotEnd)
-	{
-
-		SetChanceObject(posItr->second, posItr->first, true);
-
-		posItr++;
-		isNotEnd = (posItr != pos.end());
+		int pos = (e.first * 8) + (e.second);
+		chances[pos].isDraw = true;
 	}
 }
 
@@ -3208,7 +3207,6 @@ void ChanceObject::Finalize()
 }
 void ChanceObject::Spawn(int x, int y, bool isFront)
 {
-
 	float posX = (x * cellScale * 2);
 	float posY = -(y * cellScale * 2);
 

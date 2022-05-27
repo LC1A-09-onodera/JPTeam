@@ -328,6 +328,7 @@ public:
 public:
 	OthelloEachInfo each;
 	bool isFront = false;
+	bool isDraw = false;
 private:
 	ChanceModel *model;
 };
@@ -350,7 +351,7 @@ public:
 	static list<Othello> othellos;
 	static list<NormaModeFieldData> NormaStartOthellos;
 	void SpawnChances(const vector<pair<int, int>> &pos);
-	static list<ChanceObject> chances;
+	static vector<ChanceObject> chances;
 	void DeadPanel();
 
 	void StartSetPos();
