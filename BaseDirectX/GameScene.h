@@ -101,7 +101,7 @@ public://シーンで使うもの
 	int countDown;
 	bool isCountDownEnd;
 	int countDownFrame;
-	const int countMax = 180;
+	const int countMax = 239;
 	//Sprite numbers[30];
 	//gameシーンからリザルトから使う
 	bool isResultSceneChange;
