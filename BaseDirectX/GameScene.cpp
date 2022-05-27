@@ -192,7 +192,7 @@ void GameScene::Init()
 			each.rotation.x = 0;
 			each.position.m128_f32[0] = -(20 / 2.0f * OthelloR) + (i * OthelloR);
 			each.position.m128_f32[1] = -(12 / 2.0f * OthelloR) + (j * OthelloR);
-			each.position.m128_f32[2] = 2.0f - j * 1.5f;
+			each.position.m128_f32[2] = 2.0f - j * 1.0f;
 			each.scale = { 0.01f, 0.01f, 0.01f };
 			each.rotation.x = -33.0f;
 			pouseOthellos.push_back(each);
@@ -1315,7 +1315,7 @@ void GameScene::GameDraw()
 	othelloStage.each.position.m128_f32[2] = 8.0f;
 	othelloStage.each.rotation.x = -90;
 	if (isStageDisplay)Draw3DObject(othelloStage);
-	if ((isSceneChange == true && sceneChageType >= 3) || isBackGroundOthello)
+	if ((isSceneChange == true && sceneChageType >= 3 && sceneChageType != 31) || isBackGroundOthello)
 	{
 		for (auto opOthelloItr = opOthellos.begin(); opOthelloItr != opOthellos.end(); ++opOthelloItr)
 		{
@@ -1323,7 +1323,7 @@ void GameScene::GameDraw()
 			Draw3DObject(ObjectParticles::othello2.object);
 		}
 	}
-	if (isPouseToTiTle)
+	if (isPouseToTiTle && sceneChageType != 31)
 	{
 		for (auto opOthelloItr = pouseOthellos.begin(); opOthelloItr != pouseOthellos.end(); ++opOthelloItr)
 		{
@@ -1732,17 +1732,16 @@ void GameScene::GameDraw()
 
 	else if (isCameraModed)
 	{
-		Draw3DObject(pushButton_green);
-
-		//XMFLOAT3 rot = pushButton_black.each.rotation;
-		//XMFLOAT3 rot2 = pushButton_green.each.rotation;
-
-		pushButton_black.Update(&pushButton[0]);
-		Draw3DObject(pushButton_black);
-		pushButton_black.Update(&pushButton[1]);
-		Draw3DObject(pushButton_black);
-		pushButton_black.Update(&pushButton[2]);
-		Draw3DObject(pushButton_black);
+		if (!isSceneChange && !isResultSceneChange)
+		{
+			Draw3DObject(pushButton_green);
+			pushButton_black.Update(&pushButton[0]);
+			Draw3DObject(pushButton_black);
+			pushButton_black.Update(&pushButton[1]);
+			Draw3DObject(pushButton_black);
+			pushButton_black.Update(&pushButton[2]);
+			Draw3DObject(pushButton_black);
+		}
 	}
 	//Imgui::DrawImGui();
 	//•`‰æƒRƒ}ƒ“ƒh‚±‚±‚Ü‚Å
@@ -2783,7 +2782,8 @@ void GameScene::NormaToModeSelectUpdate2()
 				sceneChangeAfterTime += 0.01f;
 				for (auto opOthelloItr = pouseOthellos.begin(); opOthelloItr != pouseOthellos.end(); ++opOthelloItr)
 				{
-					opOthelloItr->scale = ShlomonMath::EaseInQuad(XMFLOAT3(1.5f, 1.5f, 1.5f), XMFLOAT3(0.01f, 0.01f, 0.01f), sceneChangeAfterTime);
+					//opOthelloItr->scale = ShlomonMath::EaseInQuad(XMFLOAT3(1.5f, 1.5f, 1.5f), XMFLOAT3(0.01f, 0.01f, 0.01f), sceneChangeAfterTime);
+					opOthelloItr->scale = ShlomonMath::EaseInQuad(XMFLOAT3(2.0f,2.0f,2.0f), XMFLOAT3(0.01f, 0.01f, 0.01f), sceneChangeAfterTime);
 					opOthelloItr->rotation = ShlomonMath::EaseInQuad(XMFLOAT3(0, 0, 90), XMFLOAT3(0, 0, 0), sceneChangeAfterTime);
 				}
 			}
