@@ -1336,14 +1336,6 @@ void GameScene::GameDraw()
 			Draw3DObject(ObjectParticles::othello2.object);
 		}
 	}
-	/*if (isPouseToTiTle && sceneChageType == 31)
-	{
-		for (auto opOthelloItr = pouseOthellos.begin(); opOthelloItr != pouseOthellos.end(); ++opOthelloItr)
-		{
-			ObjectParticles::othello2.object.Update(&(*opOthelloItr));
-			Draw3DObject(ObjectParticles::othello2.object);
-		}
-	}*/
 	float sizeX = size_x;
 	float sizeY = size_y;
 	if (gameTime > 0 && countDown <= 0)
