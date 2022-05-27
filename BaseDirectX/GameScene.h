@@ -182,7 +182,7 @@ public://シーンで使うもの
 	//モードセレクトに入るかどうかをチェック
 	bool select = false;
 
-	int selectStageNum = 1;
+	int selectStageNum = -2;
 	bool selectStage = false;
 
 	//動く方向右がfalse;左がture;
@@ -258,7 +258,7 @@ public://シーンで使うもの
 	int tipsNumber;
 	list<pair<int, int>> tipsNumAndTexCount;
 
-	const int MaxSceneChangeOk = 120;
+	const int MaxSceneChangeOk = 60;
 
 	//falseはそのままリザルトへ
 	bool isResultOrTitle = false;
@@ -338,4 +338,13 @@ public://シーンで使うもの
 	float titleScaleEaseTime = 0.0f;
 
 	bool isCameraModed = false;
+
+	//ポーズ用モデル-----------------
+	bool isSupport;
+	Model SupportModel;
+	Model BackModel;
+	Model TiTleModel;
+	Model EndModel;
+	EachInfo pouseKakko[2];
+	//-------------------------------
 };

@@ -540,7 +540,7 @@ void GameScene::TitleUpdate()
 					{
 						selectEaseDirection = true;
 						selectEase = true;
-						selectStageNum--;
+						//selectStageNum--;
 					}
 				}
 				if (Input::KeyTrigger(DIK_D) || D)
@@ -555,7 +555,7 @@ void GameScene::TitleUpdate()
 					{
 						selectEaseDirection = false;
 						selectEase = true;
-						selectStageNum++;
+						//selectStageNum++;
 					}
 				}
 				if ((Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01)) && !isPouse && !isPouseToTiTle)
@@ -868,7 +868,7 @@ void GameScene::GameUpdate()
 		}
 	}
 	//if (!isPouse && (Input::KeyTrigger(DIK_ESCAPE) || directInput->IsButtonPush(directInput->ButtonPouse)) && )
-	if (!isPouse && (Input::KeyTrigger(DIK_ESCAPE) || directInput->IsButtonPush(directInput->ButtonPouse)) && (countDown <= 0 || isModeSelect) && sceneChageType != 30 && sceneChageType != 31)
+	if (!isPouse && (Input::KeyTrigger(DIK_ESCAPE) || directInput->IsButtonPush(directInput->ButtonPouse)) && (countDown <= 0 || isModeSelect) && !isTipsDraw)
 	{
 		isPouse = true;
 		selectPouse = 0;
@@ -2230,7 +2230,7 @@ void GameScene::ToGame4Update()
 				}
 				if (flagss && !isTipsOk)
 				{
-					othelloManager.StartNormaMode(selectStageNum);
+					othelloManager.StartNormaMode();
 				}
 				isTipsOk = true;
 			}
@@ -2327,7 +2327,7 @@ void GameScene::ToModeSelectUpdate()
 			isTipsButtonDraw = true;
 			if (Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01))
 			{
-				if (!isTipsOk)othelloManager.ModeSelectStart(100);
+				if (!isTipsOk)othelloManager.ModeSelectStart();
 				isTipsOk = true;
 			}
 			if (isTipsOk)
@@ -2767,7 +2767,7 @@ void GameScene::NormaToModeSelectUpdate2()
 		{
 			if (Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01))
 			{
-				if (!isTipsOk)othelloManager.ModeSelectStart();
+				if (!isTipsOk)othelloManager.ModeSelectStart(selectStageNum + 1);
 				SceneNum = GAME;
 				isTipsOk = true;
 			}
