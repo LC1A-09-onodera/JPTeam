@@ -1721,7 +1721,7 @@ void GameScene::GameDraw()
 	{
 		tipsCounts++;
 		isTipsDrawTrigger = false;
-		if (tipsCounts > 8) { tipsCounts = 0; }
+		if (tipsCounts >= 8) { tipsCounts = 0; }
 	}
 
 	else if (isCameraModed)
@@ -2232,7 +2232,7 @@ void GameScene::ToGame4Update()
 				}
 				if (flagss && !isTipsOk)
 				{
-					othelloManager.StartNormaMode();
+					othelloManager.StartNormaMode(selectStageNum);
 				}
 				isTipsOk = true;
 			}

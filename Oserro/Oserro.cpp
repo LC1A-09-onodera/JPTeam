@@ -1468,14 +1468,20 @@ void OthelloManager::ModeSelectModelDraw(bool isDraw)
 				int firstDegit = textCount;
 				int secondDegit = textCount+1;
 					CountModelDraw(i, &fieldDrawText[firstDegit], &fieldDrawText[secondDegit]);
-					textCount++;
 				}
 				else
 				{
 					CountModelDraw(i, &fieldDrawText[textCount]);
 				}
 			}
-			textCount++;
+			if (i >= 10)
+			{
+				textCount+= 2;
+			}
+			else
+			{
+				textCount++;
+			}
 		}
 		ScoreAttackTextModel.Update(&ScoreAttackDrawData);
 		Draw3DObject(ScoreAttackTextModel);
