@@ -269,18 +269,20 @@ public://シーンで使うもの
 	int logoNum;
 	float easeTimer;
 	bool isDrawLogo;
+	bool isDrawLogoEnd = false;
 
 	//tips用
 	const int CHANGE_TIMER_FRAME = 90;	//tipsの中身が切り替わるフレーム
-	const int USE_TEX_0 = 4;			//tips_0で使うテクスチャの数
+	const int USE_TEX_0 = 3;			//tips_0で使うテクスチャの数
 	const float SIZE_X = 768;			//tipsの中身の画像サイズ_X
 	const float SIZE_Y = 432;			//tipsの中身の画像サイズ_Y
-	const float START_X = 61;			//tipsの中身の画像位置_X
+	const float START_X = 50;			//tipsの中身の画像位置_X61
 	const float START_Y = 179;			//tipsの中身の画像位置_Y
 	Model pushButton_black;
 	EachInfo pushButton[3];				//ボタン黒
 	Model pushButton_green;				//ボタン緑
 	Sprite tips[8];						//tips枠
+	Sprite tips_ss[3];					//tips_0中身
 	/*----------新tips用----------*/
 	const float EASE_DELAY = 0.2f;
 
@@ -313,7 +315,6 @@ public://シーンで使うもの
 	float newTips_easeTimer;
 	/*----------新tips用----------*/
 	Sprite tips_cont;					//tipsコントローラー用（用修正）
-	Sprite tips_ss[4];					//tips_0中身
 	int tipsCounts;
 	int tipsDrawNum;
 	int changeTimerFrame;

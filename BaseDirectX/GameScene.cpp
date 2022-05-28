@@ -310,6 +310,7 @@ void GameScene::Init()
 	logoNum = 0;
 	easeTimer = 0;
 	isDrawLogo = false;
+	isDrawLogoEnd = false;
 
 	//tips用
 	pushButton_black.CreateModel("push_button_black", ShaderManager::playerShader);
@@ -363,10 +364,10 @@ void GameScene::Init()
 
 	tips_cont.CreateSprite(L"Resource/Img/tips/tips_1.png", XMFLOAT3(0, 0, 0));
 
-	tips_ss[0].CreateSprite(L"Resource/Img/tips/tips_ss1.png", XMFLOAT3(START_X, START_Y, 0));
-	tips_ss[1].CreateSprite(L"Resource/Img/tips/tips_ss2.png", XMFLOAT3(START_X - SIZE_X, START_Y, 0));
-	tips_ss[2].CreateSprite(L"Resource/Img/tips/tips_ss3.png", XMFLOAT3(START_X - SIZE_X, START_Y, 0));
-	tips_ss[3].CreateSprite(L"Resource/Img/tips/tips_ss4.png", XMFLOAT3(START_X - SIZE_X, START_Y, 0));
+	tips_ss[0].CreateSprite(L"Resource/Img/tips/in_tips_0.png", XMFLOAT3(START_X, START_Y, 0));
+	tips_ss[1].CreateSprite(L"Resource/Img/tips/in_tips_1.png", XMFLOAT3(START_X - SIZE_X, START_Y, 0));
+	tips_ss[2].CreateSprite(L"Resource/Img/tips/in_tips_2.png", XMFLOAT3(START_X - SIZE_X, START_Y, 0));
+	//tips_ss[3].CreateSprite(L"Resource/Img/tips/tips_ss4.png", XMFLOAT3(START_X - SIZE_X, START_Y, 0));
 
 	for (int i = 0; i < 2; i++)
 	{
@@ -460,6 +461,7 @@ void GameScene::TitleUpdate()
 			titleLogo[2].position = ConvertXMFLOAT3toXMVECTOR(XMFLOAT3(960, 540, 0));
 			titleLogo[3].position = ConvertXMFLOAT3toXMVECTOR(XMFLOAT3(320, 540, 0));
 		}
+		else { isDrawLogoEnd = true; }
 		//オセロのパーティクルを出していく
 		static int particleTime = 0;
 		//シーンチェンジ開始前
@@ -1706,7 +1708,7 @@ void GameScene::GameDraw()
 		tips_ss[0].SpriteDraw();
 		tips_ss[1].SpriteDraw();
 		tips_ss[2].SpriteDraw();
-		tips_ss[3].SpriteDraw();
+		//tips_ss[3].SpriteDraw();
 		//tips[tipsCounts].SpriteDraw();
 
 		tips_frame.SpriteDraw();
