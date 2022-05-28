@@ -286,9 +286,9 @@ public://シーンで使うもの
 	const float SIZE_Y = 432;			//tipsの中身の画像サイズ_Y
 	const float START_X = 50;			//tipsの中身の画像位置_X61
 	const float START_Y = 179;			//tipsの中身の画像位置_Y
-	Model pushButton_black;
-	EachInfo pushButton[3];				//ボタン黒
-	Model pushButton_green;				//ボタン緑
+	//Model pushButton_black;
+	//EachInfo pushButton[3];				//ボタン黒
+	//Model pushButton_green;				//ボタン緑
 	Sprite pushButtonGreen;
 	Sprite pushButtonBlack[3];
 	Sprite tips[8];						//tips枠
@@ -362,7 +362,7 @@ public://シーンで使うもの
 	int tipsDrawNum;
 	int changeTimerFrame;
 	float tips_easeTimer;				//タイトルと同じ速さ
-	float green_scale;
+	//float green_scale;
 	bool isTipsDrawTrigger;
 	bool moveTips;
 

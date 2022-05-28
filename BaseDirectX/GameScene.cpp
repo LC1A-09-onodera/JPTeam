@@ -318,15 +318,15 @@ void GameScene::Init()
 	pushButtonBlack[0].CreateSprite(L"Resource/Img/pushButton/push_button_black.png", XMFLOAT3(0, 0, 0));
 	pushButtonBlack[1].CreateSprite(L"Resource/Img/pushButton/push_button_black.png", XMFLOAT3(0, 0, 0));
 	pushButtonBlack[2].CreateSprite(L"Resource/Img/pushButton/push_button_black.png", XMFLOAT3(0, 0, 0));
-	pushButton_black.CreateModel("push_button_black", ShaderManager::playerShader);
-	pushButton_green.CreateModel("push_button_green", ShaderManager::playerShader);
+	//pushButton_black.CreateModel("push_button_black", ShaderManager::playerShader);
+	//pushButton_green.CreateModel("push_button_green", ShaderManager::playerShader);
 
-	pushButton[0].CreateConstBuff0();
-	pushButton[0].CreateConstBuff1();
-	pushButton[1].CreateConstBuff0();
-	pushButton[1].CreateConstBuff1();
-	pushButton[2].CreateConstBuff0();
-	pushButton[2].CreateConstBuff1();
+	//pushButton[0].CreateConstBuff0();
+	//pushButton[0].CreateConstBuff1();
+	//pushButton[1].CreateConstBuff0();
+	//pushButton[1].CreateConstBuff1();
+	//pushButton[2].CreateConstBuff0();
+	//pushButton[2].CreateConstBuff1();
 
 	tips[0].CreateSprite(L"Resource/Img/tips/tips_0.png", XMFLOAT3(0, 0, 0));
 	tips[1].CreateSprite(L"Resource/Img/tips/tips_2.png", XMFLOAT3(0, 0, 0));
@@ -405,7 +405,7 @@ void GameScene::Init()
 	changeTimerFrame = 0;
 	tipsDrawNum = 0;
 	tips_easeTimer = 0;
-	green_scale = 0.09f;
+	//green_scale = 0.09f;
 	isTipsDrawTrigger = false;
 	moveTips = false;
 }
@@ -980,21 +980,21 @@ void GameScene::GameUpdate()
 		//pushButton_black.each.position = { 5.0f, -4.0f, -5.0f, 1.0 };
 		//pushButton_black.each.scale = { 0.1f, 0.1f, 0.1f };
 
-		const float black_scale = 0.085f;
-		if (green_scale < 0.075f) { green_scale = 0.09f; }
-		green_scale -= 0.0005f;
+		//const float black_scale = 0.085f;
+		//if (green_scale < 0.075f) { green_scale = 0.09f; }
+		//green_scale -= 0.0005f;
 
-		pushButton[0].position = { 8.2f, -3.33f, -5.0f, 1.0 };
-		pushButton[0].scale = { black_scale, black_scale, black_scale };
+		//pushButton[0].position = { 8.2f, -3.33f, -5.0f, 1.0 };
+		//pushButton[0].scale = { black_scale, black_scale, black_scale };
 
-		pushButton[1].position = { 7.7f, -3.83f, -5.0f, 1.0 };
-		pushButton[1].scale = { black_scale, black_scale, black_scale };
+		//pushButton[1].position = { 7.7f, -3.83f, -5.0f, 1.0 };
+		//pushButton[1].scale = { black_scale, black_scale, black_scale };
 
-		pushButton[2].position = { 8.7f, -3.83f, -5.0f, 1.0 };
-		pushButton[2].scale = { black_scale, black_scale, black_scale };
+		//pushButton[2].position = { 8.7f, -3.83f, -5.0f, 1.0 };
+		//pushButton[2].scale = { black_scale, black_scale, black_scale };
 
-		pushButton_green.each.position = { 8.2f, -4.33f, -5.0f, 1.0 };
-		pushButton_green.each.scale = { green_scale, green_scale, green_scale };
+		//pushButton_green.each.position = { 8.2f, -4.33f, -5.0f, 1.0 };
+		//pushButton_green.each.scale = { green_scale, green_scale, green_scale };
 
 		//pushButton_black.Update();
 		//pushButton_green.Update();
@@ -1080,16 +1080,6 @@ void GameScene::GameUpdate()
 		}
 	}
 
-	else if (isCameraModed)
-	{
-		const float black_scale = 0.085f;
-		if (green_scale < 0.075f) { green_scale = 0.09f; }
-		green_scale -= 0.0005f;
-
-		//pushButton_green.each.position = { 8.2f, -4.33f, -5.0f, 1.0 };
-		pushButton_green.each.scale = { green_scale, green_scale, green_scale };
-	}
-
 	if (!isTipsDraw)
 	{
 		if (isInit)
@@ -1113,7 +1103,7 @@ void GameScene::GameUpdate()
 		}
 	}
 
-	pushButton_green.Update();
+	//pushButton_green.Update();
 }
 
 void GameScene::ResultUpdate()
@@ -2801,7 +2791,6 @@ void GameScene::NormaToModeSelectUpdate()
 		Camera::eye = { -1, 1, -15 };*/
 		Camera::Update();
 	}
-}
 
 void GameScene::NormaToModeSelect2()
 {//‰Šú‰»
