@@ -328,6 +328,7 @@ public:
 public:
 	OthelloEachInfo each;
 	bool isFront = false;
+	bool isDraw = false;
 private:
 	ChanceModel *model;
 };
@@ -350,7 +351,7 @@ public:
 	static list<Othello> othellos;
 	static list<NormaModeFieldData> NormaStartOthellos;
 	void SpawnChances(const vector<pair<int, int>> &pos);
-	static list<ChanceObject> chances;
+	static vector<ChanceObject> chances;
 	void DeadPanel();
 
 	void StartSetPos();
@@ -396,10 +397,10 @@ private://ノルマモード用内部処理関数
 	void LoadNormaStage(std::string stage);
 	void LoadAllStage();
 	void CountTextDraw(int count);
-	void CountModelDraw(int count, EachInfo *data = nullptr);
+	void CountModelDraw(int count, EachInfo *data = nullptr, EachInfo *dataB = nullptr);
 public://モードセレクト用外部関数
 	//モード選択開始時
-	void ModeSelectStart();
+	void ModeSelectStart(int stageNum = -1);
 
 	void ModeSelectControll();
 	//モード選択中
@@ -416,7 +417,7 @@ public://モードセレクト用外部関数
 private://モードセレクト用変数:
 	vector<EachInfo> fieldDrawText;
 private://モードセレクト用内部関数
-	void SetModeSelectPanel();
+	void SetModeSelectPanel(int stageNum);
 	void NormaComboTextSetPos(bool isNormaMode);
 	void NormaPanelsTextSetPos(bool isNormaMode);
 	void NormaScoreTextSetPos(bool isNormaMode);
