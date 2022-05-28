@@ -138,6 +138,8 @@ void GameScene::Init()
 	isPouse = false;
 	isTipsButtonDraw = false;
 	pouseBack.CreateSprite(L"Resource/Img/title_back_80.png", XMFLOAT3(0, 0, 0));
+	pouseBackEach.CreateConstBuff0();
+	pouseBackEach.CreateConstBuff1();
 	isGameEnd = false;
 	moveSprite.CreateSprite(L"Resource/Img/control.png", XMFLOAT3(0, 0, 0));
 	reverseSprtie.CreateSprite(L"Resource/Img/reverse.png", XMFLOAT3(0, 0, 0));
@@ -360,8 +362,6 @@ void GameScene::Init()
 	isInit = false;
 	newTips_easeTimer = 0;
 	/*----------新tips用----------*/
-
-
 	tips_cont.CreateSprite(L"Resource/Img/tips/tips_1.png", XMFLOAT3(0, 0, 0));
 
 	tips_ss[0].CreateSprite(L"Resource/Img/tips/tips_ss1.png", XMFLOAT3(START_X, START_Y, 0));
@@ -392,10 +392,10 @@ void GameScene::Init()
 		pouseKakko[i].CreateConstBuff0();
 		pouseKakko[i].CreateConstBuff1();
 	}
-	pouseMinSizeConst = { 0.3f, 0.3f, 0.3f };
-	pouseMaxSizeConst = { 0.4f, 0.4f, 0.4f };
+	pouseMinSizeConst = { 0.2f, 0.2f, 0.2f };
+	pouseMaxSizeConst = { 0.3f, 0.3f, 0.3f };
 	pouseNormalSizeConst = { 0.4f, 0.4f, 0.4f };
-	pouseSelectTime = 0.0f;
+	pouseSelectTime1 = 0.0f;
 	tipsCounts = 0;
 	changeTimerFrame = 0;
 	tipsDrawNum = 0;
@@ -1241,62 +1241,73 @@ void GameScene::TitleDraw()
 	}
 	if (isPouse)
 	{
-		SupportModel.Update();
-		Draw3DObject(SupportModel);
-		BackModel.Update();
-		Draw3DObject(BackModel);
-		TiTleModel.Update();
-		Draw3DObject(TiTleModel);
-		EndModel.Update();
-		Draw3DObject(EndModel);
-		ChackBoxModel.Update();
-		Draw3DObject(ChackBoxModel);
-		/*pouseBack.ChangeSize(1280, 720);
-		pouseBack.position.m128_f32[0] = 0;
-		pouseBack.position.m128_f32[1] = 0;
-		pouseBack.SpriteDraw();
-		backSprite.position.m128_f32[0] = window_width / 2 - 100;
-		backSprite.position.m128_f32[1] = window_height / 2;
-		backSprite.SpriteDraw();
-		titleSprite.position.m128_f32[0] = window_width / 2 - 100;
-		titleSprite.position.m128_f32[1] = window_height / 2 + 80;
-		titleSprite.SpriteDraw();
-		endSprite.position.m128_f32[0] = window_width / 2 - 100;
-		endSprite.position.m128_f32[1] = window_height / 2 + 170;
-		endSprite.SpriteDraw();
+		pouseBackEach.position = {0, 0, -1.0f, 1.0f};
+		pouseBackEach.scale = {100.0f, 100.f ,1.0f};
+		backGround.Update(&pouseBackEach);
+		Draw3DObject(backGround);
+		if (pouseSelectTime1 < 1.0f)
+		{
+			pouseSelectTime1 += 0.02f;
+			pouseNowSize = Lerp(pouseMinSizeConst,pouseMaxSizeConst, pouseSelectTime1);
+		}
+		else if (pouseSelectTime2 < 1.0f)
+		{
+			pouseSelectTime2 += 0.02f;
+			pouseNowSize = Lerp(pouseMaxSizeConst, pouseMinSizeConst, pouseSelectTime2);
+		}
+		else
+		{
+			pouseSelectTime1 = 0.0f;
+			pouseSelectTime2 = 0.0f;
+		}
 		if (selectPouse == 0)
 		{
-			kagikakkoStartSprite.ChangeSize(30, 70);
-			kagikakkoStartSprite.position.m128_f32[0] = window_width / 2 - 140;
-			kagikakkoStartSprite.position.m128_f32[1] = window_height / 2 + 5;
-			kagikakkoStartSprite.SpriteDraw();
-			kagikakkoEndSprite.ChangeSize(30, 70);
-			kagikakkoEndSprite.position.m128_f32[0] = window_width / 2 + 120;
-			kagikakkoEndSprite.position.m128_f32[1] = window_height / 2 + 5;
-			kagikakkoEndSprite.SpriteDraw();
+			SupportModel.each.scale = pouseMinSizeConst;
+			BackModel.each.scale = pouseMinSizeConst;
+			TiTleModel.each.scale = pouseMinSizeConst;
+			EndModel.each.scale = pouseMinSizeConst;
+			ChackBoxModel.each.scale = pouseMinSizeConst;
 		}
 		else if (selectPouse == 1)
 		{
-			kagikakkoStartSprite.ChangeSize(30, 70);
-			kagikakkoStartSprite.position.m128_f32[0] = window_width / 2 - 140;
-			kagikakkoStartSprite.position.m128_f32[1] = window_height / 2 + 85;
-			kagikakkoStartSprite.SpriteDraw();
-			kagikakkoEndSprite.ChangeSize(30, 70);
-			kagikakkoEndSprite.position.m128_f32[0] = window_width / 2 + 120;
-			kagikakkoEndSprite.position.m128_f32[1] = window_height / 2 + 85;
-			kagikakkoEndSprite.SpriteDraw();
+			SupportModel.each.scale = pouseMinSizeConst;
+			BackModel.each.scale = pouseMinSizeConst;
+			TiTleModel.each.scale = pouseMinSizeConst;
+			EndModel.each.scale = pouseMinSizeConst;
+			ChackBoxModel.each.scale = pouseMinSizeConst;
 		}
 		else if (selectPouse == 2)
 		{
-			kagikakkoStartSprite.ChangeSize(30, 70);
-			kagikakkoStartSprite.position.m128_f32[0] = window_width / 2 - 140;
-			kagikakkoStartSprite.position.m128_f32[1] = window_height / 2 + 165;
-			kagikakkoStartSprite.SpriteDraw();
-			kagikakkoEndSprite.ChangeSize(30, 70);
-			kagikakkoEndSprite.position.m128_f32[0] = window_width / 2 + 70;
-			kagikakkoEndSprite.position.m128_f32[1] = window_height / 2 + 165;
-			kagikakkoEndSprite.SpriteDraw();
-		}*/
+			SupportModel.each.scale = pouseMinSizeConst;
+			BackModel.each.scale = pouseMinSizeConst;
+			TiTleModel.each.scale = pouseMinSizeConst;
+			EndModel.each.scale = pouseMinSizeConst;
+			ChackBoxModel.each.scale = pouseMinSizeConst;
+		}
+		else if (selectPouse == -1)
+		{
+			SupportModel.each.scale = pouseMinSizeConst;
+			BackModel.each.scale = pouseMinSizeConst;
+			TiTleModel.each.scale = pouseMinSizeConst;
+			EndModel.each.scale = pouseMinSizeConst;
+			ChackBoxModel.each.scale = pouseMinSizeConst;
+		}
+		ChackBoxModel.each.scale = ChackBoxModel.each.scale - 0.1f;
+		SupportModel.each.position = {3.0f, 3.0f, -3.0f, 1.0f};
+		SupportModel.Update();
+		Draw3DObject(SupportModel);
+		BackModel.each.position = {1.0f, 1.0f, -3.0f, 1.0f};
+		BackModel.Update();
+		Draw3DObject(BackModel);
+		TiTleModel.each.position = {1.0f, -1.0f, -3.0f, 1.0f};
+		TiTleModel.Update();
+		Draw3DObject(TiTleModel);
+		EndModel.each.position = {1.0f, -3.0f, -3.0f, 1.0f};
+		EndModel.Update();
+		Draw3DObject(EndModel);
+		ChackBoxModel.each.position = {-3.0f, 3.0f, -3.0f, 1.0f};
+		ChackBoxModel.Update();
+		Draw3DObject(ChackBoxModel);
 	}
 	//Imgui::DrawImGui();
 	//描画コマンドここまで
