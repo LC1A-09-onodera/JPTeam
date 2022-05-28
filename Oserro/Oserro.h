@@ -341,7 +341,7 @@ public:
 	void Init(Tex num[10], Model numModel[10]);
 	void Update(int combo);
 	void TutorialUpdate(int combo);
-	void Draw();
+	void Draw(bool isChanceDraw = true, bool isCompDraw = true);
 	void Finalize();
 	void Controll();
 	void AddPanel();

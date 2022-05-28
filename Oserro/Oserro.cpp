@@ -1120,11 +1120,17 @@ void OthelloManager::NormaUpdate(int combo)
 		normaChecker.Update(othellos, nowScore, nowMaxCombo);
 	}
 }
-void OthelloManager::Draw()
+void OthelloManager::Draw(bool isChanceDraw, bool isCompDraw)
 {
 	OthelloDraw();
-	ChanceDraw();
-	CompDraw();
+	if (isChanceDraw)
+	{
+		ChanceDraw();
+	}
+	if (isCompDraw)
+	{
+		CompDraw();
+	}
 }
 
 void OthelloManager::OthelloDraw()
@@ -1466,8 +1472,8 @@ void OthelloManager::ModeSelectModelDraw(bool isDraw)
 			{
 				if (i >= 10)
 				{
-				int firstDegit = textCount;
-				int secondDegit = textCount+1;
+					int firstDegit = textCount;
+					int secondDegit = textCount + 1;
 					CountModelDraw(i, &fieldDrawText[firstDegit], &fieldDrawText[secondDegit]);
 				}
 				else
@@ -1477,7 +1483,7 @@ void OthelloManager::ModeSelectModelDraw(bool isDraw)
 			}
 			if (i >= 10)
 			{
-				textCount+= 2;
+				textCount += 2;
 			}
 			else
 			{
