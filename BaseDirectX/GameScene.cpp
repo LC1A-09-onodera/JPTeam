@@ -314,6 +314,10 @@ void GameScene::Init()
 	isDrawLogoEnd = false;
 
 	//tips用
+	pushButtonGreen.CreateSprite(L"Resource/Img/pushButton/push_button_green.png", XMFLOAT3(0, 0, 0));
+	pushButtonBlack[0].CreateSprite(L"Resource/Img/pushButton/push_button_black.png", XMFLOAT3(0, 0, 0));
+	pushButtonBlack[1].CreateSprite(L"Resource/Img/pushButton/push_button_black.png", XMFLOAT3(0, 0, 0));
+	pushButtonBlack[2].CreateSprite(L"Resource/Img/pushButton/push_button_black.png", XMFLOAT3(0, 0, 0));
 	pushButton_black.CreateModel("push_button_black", ShaderManager::playerShader);
 	pushButton_green.CreateModel("push_button_green", ShaderManager::playerShader);
 
@@ -336,28 +340,28 @@ void GameScene::Init()
 	tips_frame.CreateSprite(L"Resource/Img/tips/tips_frame.png", XMFLOAT3(0, 0, 0));
 
 	/*----------新tips用----------*/
-	tips_name[0].CreateSprite(L"Resource/Img/tips/othello_move.png", XMFLOAT3(NAME_START_X, NAME_START_Y, 0));
-	tips_name[1].CreateSprite(L"Resource/Img/tips/othello_move.png", XMFLOAT3(NAME_START_X, NAME_START_Y, 0));
-	tips_name[2].CreateSprite(L"Resource/Img/tips/othello_move.png", XMFLOAT3(NAME_START_X, NAME_START_Y, 0));
-	tips_name[3].CreateSprite(L"Resource/Img/tips/othello_move.png", XMFLOAT3(NAME_START_X, NAME_START_Y, 0));
-	tips_name[4].CreateSprite(L"Resource/Img/tips/othello_move.png", XMFLOAT3(NAME_START_X, NAME_START_Y, 0));
-	tips_name[5].CreateSprite(L"Resource/Img/tips/othello_move.png", XMFLOAT3(NAME_START_X, NAME_START_Y, 0));
-	tips_name[6].CreateSprite(L"Resource/Img/tips/othello_move.png", XMFLOAT3(NAME_START_X, NAME_START_Y, 0));
-	tips_name[7].CreateSprite(L"Resource/Img/tips/othello_move.png", XMFLOAT3(NAME_START_X, NAME_START_Y, 0));
+	tips_name[0].CreateSprite(L"Resource/Img/tips/othello_move.png", XMFLOAT3(NAME_START_X[0], NAME_START_Y, 0));
+	tips_name[1].CreateSprite(L"Resource/Img/tips/reverse.png", XMFLOAT3(NAME_START_X[1], NAME_START_Y, 0));
+	tips_name[2].CreateSprite(L"Resource/Img/tips/reach.png", XMFLOAT3(NAME_START_X[2], NAME_START_Y, 0));
+	tips_name[3].CreateSprite(L"Resource/Img/tips/wall.png", XMFLOAT3(NAME_START_X[3], NAME_START_Y, 0));
+	tips_name[4].CreateSprite(L"Resource/Img/tips/connect.png", XMFLOAT3(NAME_START_X[4], NAME_START_Y, 0));
+	tips_name[5].CreateSprite(L"Resource/Img/tips/bookend.png", XMFLOAT3(NAME_START_X[5], NAME_START_Y, 0));
+	tips_name[6].CreateSprite(L"Resource/Img/tips/waltz.png", XMFLOAT3(NAME_START_X[6], NAME_START_Y, 0));
+	tips_name[7].CreateSprite(L"Resource/Img/tips/reversible.png", XMFLOAT3(NAME_START_X[7], NAME_START_Y, 0));
 
 	tips_system[0].CreateSprite(L"Resource/Img/tips/system.png", XMFLOAT3(SYSTEM_START_X, SYSTEM_START_Y, 0));
 	tips_system[1].CreateSprite(L"Resource/Img/tips/system.png", XMFLOAT3(SYSTEM_START_X, SYSTEM_START_Y, 0));
 
 	tips_bar.CreateSprite(L"Resource/Img/tips/tips_bar.png", XMFLOAT3(BAR_START_X, BAR_START_Y, 0));
 
-	tips_text[0].CreateSprite(L"Resource/Img/tips/othello_move_text.png", XMFLOAT3(TEXT_START_X, TEXT_START_Y, 0));
-	tips_text[1].CreateSprite(L"Resource/Img/tips/othello_move_text.png", XMFLOAT3(TEXT_START_X, TEXT_START_Y, 0));
-	tips_text[2].CreateSprite(L"Resource/Img/tips/othello_move_text.png", XMFLOAT3(TEXT_START_X, TEXT_START_Y, 0));
-	tips_text[3].CreateSprite(L"Resource/Img/tips/othello_move_text.png", XMFLOAT3(TEXT_START_X, TEXT_START_Y, 0));
-	tips_text[4].CreateSprite(L"Resource/Img/tips/othello_move_text.png", XMFLOAT3(TEXT_START_X, TEXT_START_Y, 0));
-	tips_text[5].CreateSprite(L"Resource/Img/tips/othello_move_text.png", XMFLOAT3(TEXT_START_X, TEXT_START_Y, 0));
-	tips_text[6].CreateSprite(L"Resource/Img/tips/othello_move_text.png", XMFLOAT3(TEXT_START_X, TEXT_START_Y, 0));
-	tips_text[7].CreateSprite(L"Resource/Img/tips/othello_move_text.png", XMFLOAT3(TEXT_START_X, TEXT_START_Y, 0));
+	tips_text[0].CreateSprite(L"Resource/Img/tips/othello_move_text.png", XMFLOAT3(TEXT_START_X[0] + window_width, TEXT_START_Y, 0));
+	tips_text[1].CreateSprite(L"Resource/Img/tips/reverse_text.png", XMFLOAT3(TEXT_START_X[1] + window_width, TEXT_START_Y, 0));
+	tips_text[2].CreateSprite(L"Resource/Img/tips/reach_text.png", XMFLOAT3(TEXT_START_X[2] + window_width, TEXT_START_Y, 0));
+	tips_text[3].CreateSprite(L"Resource/Img/tips/wall_text.png", XMFLOAT3(TEXT_START_X[3] + window_width, TEXT_START_Y, 0));
+	tips_text[4].CreateSprite(L"Resource/Img/tips/connect_text.png", XMFLOAT3(TEXT_START_X[4] + window_width, TEXT_START_Y, 0));
+	tips_text[5].CreateSprite(L"Resource/Img/tips/bookend_text.png", XMFLOAT3(TEXT_START_X[5] + window_width, TEXT_START_Y, 0));
+	tips_text[6].CreateSprite(L"Resource/Img/tips/waltz_text.png", XMFLOAT3(TEXT_START_X[6] + window_width, TEXT_START_Y, 0));
+	tips_text[7].CreateSprite(L"Resource/Img/tips/reversible_text.png", XMFLOAT3(TEXT_START_X[7] + window_width, TEXT_START_Y, 0));
 	isInit = false;
 	newTips_easeTimer = 0;
 	/*----------新tips用----------*/
@@ -993,9 +997,10 @@ void GameScene::GameUpdate()
 		XMFLOAT3 name_Goal = { NAME_X,NAME_Y,0 };
 		XMFLOAT3 system_Goal = { SYSTEM_X,SYSTEM_Y,0 };
 		XMFLOAT3 bar_Goal = { BAR_X,BAR_Y,0 };
-		XMFLOAT3 text_Goal = { TEXT_X,TEXT_Y,0 };
+		//XMFLOAT3 text_Goal = { TEXT_X,TEXT_Y,0 };
+		XMFLOAT3 text_Goal = { TEXT_X[tipsCounts],TEXT_Y,0 };
 
-		if (newTips_easeTimer < 1.0f) { newTips_easeTimer += 0.01; }
+		if (newTips_easeTimer < 1.0f) { newTips_easeTimer += EASE_TIPS_ADD_TIMER; }
 		if (newTips_easeTimer > 1.0f) { newTips_easeTimer = 1.0f; }
 
 		float tips_Timers[3];
@@ -1007,6 +1012,10 @@ void GameScene::GameUpdate()
 		if (tips_Timers[0] >= 0.0f) { system = ShlomonMath::EaseInQuad(system, system_Goal, tips_Timers[0]); }
 		if (tips_Timers[1] >= 0.0f) { bar = ShlomonMath::EaseInQuad(bar, bar_Goal, tips_Timers[1]); }
 		if (tips_Timers[2] >= 0.0f) { text = ShlomonMath::EaseInQuad(text, text_Goal, tips_Timers[2]); }
+		/*if (text.x - 1 < text_Goal.x - 1)
+		{
+			isTextMove = true;
+		}*/
 
 		tips_name[tipsCounts].position = ConvertXMFLOAT3toXMVECTOR(name);
 		if (tipsCounts < 5) { tips_system[0].position = ConvertXMFLOAT3toXMVECTOR(system); }
@@ -1017,6 +1026,7 @@ void GameScene::GameUpdate()
 		//中身の移動
 		if (!moveTips)
 		{
+			if (isFirst) { changeTimerFrame -= FIRST_SS_DELAY; isFirst = false; }
 			if (changeTimerFrame < CHANGE_TIMER_FRAME) { changeTimerFrame++; }
 			else { changeTimerFrame = 0; moveTips = true; }
 		}
@@ -1032,7 +1042,7 @@ void GameScene::GameUpdate()
 			XMFLOAT3 ssPos0_Goal = { START_X + SIZE_X,START_Y,0 };
 			XMFLOAT3 ssPos1_Goal = { START_X,START_Y,0 };
 
-			if (tips_easeTimer < 1.0f) { tips_easeTimer += 0.01; }
+			if (tips_easeTimer < 1.0f) { tips_easeTimer += EASE_ADD_TIMER; }
 			if (tips_easeTimer > 1.0f) { tips_easeTimer = 1.0f; }
 
 			ssPos0 = ShlomonMath::EaseInQuad(ssPos0, ssPos0_Goal, tips_easeTimer);
@@ -1070,13 +1080,21 @@ void GameScene::GameUpdate()
 	{
 		if (isInit)
 		{
+			moveTips = false;
+			isFirst = true;
+			changeTimerFrame = 0;
 			newTips_easeTimer = 0.0f;
-			tips_name[tipsCounts].position = { NAME_START_X,NAME_START_Y,0,0 };
+			tips_name[tipsCounts].position = { NAME_START_X[tipsCounts],NAME_START_Y,0,0 };
 			if (tipsCounts < 5) { tips_system[0].position = { SYSTEM_START_X,SYSTEM_START_Y,0,0 }; }
 			else { tips_system[1].position = { SYSTEM_START_X,SYSTEM_START_Y,0,0 }; }
 			tips_bar.position = { BAR_START_X,BAR_START_Y,0,0 };
-			tips_text[tipsCounts].position = { TEXT_START_X,TEXT_START_Y,0,0 };
+			//tips_text[tipsCounts].position = { TEXT_START_X,TEXT_START_Y,0,0 };
+			tips_text[tipsCounts].position = { TEXT_START_X[tipsCounts] + window_width,TEXT_START_Y,0,0 };
 
+			tipsDrawNum = 0;
+			tips_ss[0].position = { START_X,START_Y,0,0 };
+			tips_ss[1].position = { START_X - SIZE_X,START_Y,0,0 };
+			tips_ss[2].position = { START_X - SIZE_X,START_Y,0,0 };
 			isInit = false;
 		}
 	}
@@ -1689,20 +1707,17 @@ void GameScene::GameDraw()
 	}
 
 	//tips用
+	const float max_size = 36;
+	const float ander_size = 33;
+	const float dist = 60;
+	const float green_x = 1180;
+	const float green_y = 662;
+	const float sub_size = 0.2f;
+
 	if (isTipsDraw)
 	{
 		isTipsDrawTrigger = true;
 		//pushButton_green.Update();
-		if (isTipsButtonDraw)
-		{
-			Draw3DObject(pushButton_green);
-			pushButton_black.Update(&pushButton[0]);
-			Draw3DObject(pushButton_black);
-			pushButton_black.Update(&pushButton[1]);
-			Draw3DObject(pushButton_black);
-			pushButton_black.Update(&pushButton[2]);
-			Draw3DObject(pushButton_black);
-		}
 
 		tips_ss[0].SpriteDraw();
 		tips_ss[1].SpriteDraw();
@@ -1716,25 +1731,72 @@ void GameScene::GameDraw()
 		else { tips_system[1].SpriteDraw(); }
 		tips_bar.SpriteDraw();
 		tips_text[tipsCounts].SpriteDraw();
+
+		if (isTipsButtonDraw)
+		{
+			/*Draw3DObject(pushButton_green);
+			pushButton_black.Update(&pushButton[0]);
+			Draw3DObject(pushButton_black);
+			pushButton_black.Update(&pushButton[1]);
+			Draw3DObject(pushButton_black);
+			pushButton_black.Update(&pushButton[2]);
+			Draw3DObject(pushButton_black);*/
+
+			if (size < ander_size - 5) { size = max_size; }
+			size -= sub_size;
+			pushButtonGreen.ChangeSizeOther(size, size);
+			pushButtonBlack[0].ChangeSize(ander_size, ander_size);
+			pushButtonBlack[1].ChangeSize(ander_size, ander_size);
+			pushButtonBlack[2].ChangeSize(ander_size, ander_size);
+
+			pushButtonGreen.position = { green_x + ander_size / 2, green_y + ander_size / 2,0,0 };
+			pushButtonGreen.SpriteDraw();
+
+			pushButtonBlack[0].position = { green_x, green_y - dist,0,0 };
+			pushButtonBlack[1].position = { green_x - dist / 2, green_y - dist / 2,0,0 };
+			pushButtonBlack[2].position = { green_x + dist / 2, green_y - dist / 2,0,0 };
+
+			pushButtonBlack[0].SpriteDraw();
+			pushButtonBlack[1].SpriteDraw();
+			pushButtonBlack[2].SpriteDraw();
+		}
 	}
 	else if (!isTipsDraw && isTipsDrawTrigger)
 	{
 		tipsCounts++;
 		isTipsDrawTrigger = false;
-		if (tipsCounts > 8) { tipsCounts = 0; }
+		if (tipsCounts >= 8) { tipsCounts = 0; }
 	}
 
 	else if (isCameraModed)
 	{
 		if (!isSceneChange && !isResultSceneChange)
 		{
-			Draw3DObject(pushButton_green);
+			/*Draw3DObject(pushButton_green);
 			pushButton_black.Update(&pushButton[0]);
 			Draw3DObject(pushButton_black);
 			pushButton_black.Update(&pushButton[1]);
 			Draw3DObject(pushButton_black);
 			pushButton_black.Update(&pushButton[2]);
-			Draw3DObject(pushButton_black);
+			Draw3DObject(pushButton_black);*/
+
+			if (size < ander_size - 5) { size = max_size; }
+			size -= sub_size;
+			pushButtonGreen.ChangeSizeOther(size, size);
+			pushButtonBlack[0].ChangeSize(ander_size, ander_size);
+			pushButtonBlack[1].ChangeSize(ander_size, ander_size);
+			pushButtonBlack[2].ChangeSize(ander_size, ander_size);
+
+			pushButtonGreen.position = { green_x + ander_size / 2, green_y + ander_size / 2,0,0 };
+			pushButtonGreen.SpriteDraw();
+
+			pushButtonBlack[0].position = { green_x, green_y - dist,0,0 };
+			pushButtonBlack[1].position = { green_x - dist / 2, green_y - dist / 2,0,0 };
+			pushButtonBlack[2].position = { green_x + dist / 2, green_y - dist / 2,0,0 };
+
+			pushButtonBlack[0].SpriteDraw();
+			pushButtonBlack[1].SpriteDraw();
+			pushButtonBlack[2].SpriteDraw();
 		}
 	}
 	//Imgui::DrawImGui();
@@ -2700,7 +2762,7 @@ void GameScene::NormaToModeSelectUpdate()
 			pouseOthelloItr->scale = ShlomonMath::EaseInQuad(XMFLOAT3(0.01f, 0.01f, 0.01f), XMFLOAT3(1.5f, 1.5f, 1.0f), pouseToTitleEaseTime1);
 		}
 
-		
+
 		/*Camera::target = { -1, 1, 0 };
 		Camera::eye = { -1, 1, -15 };*/
 		Camera::Update();
@@ -2764,7 +2826,7 @@ void GameScene::NormaToModeSelectUpdate2()
 		isStageDisplay = true;
 		eyeEaseTime = 1.0f;
 		sceneChangeDiray2++;
-		
+
 		if (sceneChangeDiray2 >= MaxSceneChangeOk)
 		{
 			if (Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01))
@@ -2785,7 +2847,7 @@ void GameScene::NormaToModeSelectUpdate2()
 				for (auto opOthelloItr = pouseOthellos.begin(); opOthelloItr != pouseOthellos.end(); ++opOthelloItr)
 				{
 					//opOthelloItr->scale = ShlomonMath::EaseInQuad(XMFLOAT3(1.5f, 1.5f, 1.5f), XMFLOAT3(0.01f, 0.01f, 0.01f), sceneChangeAfterTime);
-					opOthelloItr->scale = ShlomonMath::EaseInQuad(XMFLOAT3(2.0f,2.0f,2.0f), XMFLOAT3(0.01f, 0.01f, 0.01f), sceneChangeAfterTime);
+					opOthelloItr->scale = ShlomonMath::EaseInQuad(XMFLOAT3(2.0f, 2.0f, 2.0f), XMFLOAT3(0.01f, 0.01f, 0.01f), sceneChangeAfterTime);
 					opOthelloItr->rotation = ShlomonMath::EaseInQuad(XMFLOAT3(0, 0, 90), XMFLOAT3(0, 0, 0), sceneChangeAfterTime);
 				}
 			}
