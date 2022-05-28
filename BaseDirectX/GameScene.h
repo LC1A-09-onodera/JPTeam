@@ -275,24 +275,41 @@ public://シーンで使うもの
 	int logoNum;
 	float easeTimer;
 	bool isDrawLogo;
+	bool isDrawLogoEnd = false;
 
 	//tips用
 	const int CHANGE_TIMER_FRAME = 90;	//tipsの中身が切り替わるフレーム
-	const int USE_TEX_0 = 4;			//tips_0で使うテクスチャの数
+	const int FIRST_SS_DELAY = 180;		//最初のスクショのディレイ
+	const int USE_TEX_0 = 3;			//tips_0で使うテクスチャの数
+	const float EASE_ADD_TIMER = 0.005f;//加算されるタイマー	
 	const float SIZE_X = 768;			//tipsの中身の画像サイズ_X
 	const float SIZE_Y = 432;			//tipsの中身の画像サイズ_Y
-	const float START_X = 61;			//tipsの中身の画像位置_X
+	const float START_X = 50;			//tipsの中身の画像位置_X61
 	const float START_Y = 179;			//tipsの中身の画像位置_Y
-	Model pushButton_black;
-	EachInfo pushButton[3];				//ボタン黒
-	Model pushButton_green;				//ボタン緑
+	//Model pushButton_black;
+	//EachInfo pushButton[3];				//ボタン黒
+	//Model pushButton_green;				//ボタン緑
+	Sprite pushButtonGreen;
+	Sprite pushButtonBlack[3];
 	Sprite tips[8];						//tips枠
+	Sprite tips_ss[3];					//tips_0中身
+	float size = 0;
 	/*----------新tips用----------*/
 	const float EASE_DELAY = 0.2f;
+	const float EASE_TIPS_ADD_TIMER = 0.01f;
 
 	const float NAME_X = 50;					//ゴール_X
 	const float NAME_Y = 50;					//ゴール_Y
-	const float NAME_START_X = -412;			//スタート_X
+	const float NAME_START_X[8] = {				//スタート_X
+		-412,
+		-327,
+		-243,
+		-80,
+		-328,
+		-499,
+		-245,
+		-495
+	};
 	const float NAME_START_Y = 50;				//スタート_Y
 
 	const float SYSTEM_X = 1110;				//ゴール_X
@@ -305,10 +322,31 @@ public://シーンで使うもの
 	const float BAR_START_X = 1280 + 361;		//スタート_X
 	const float BAR_START_Y = 216;				//スタート_Y
 
-	const float TEXT_X = 856;					//ゴール_X
-	const float TEXT_Y = 278;					//ゴール_Y
-	const float TEXT_START_X = 1280 + 377;		//スタート_X
-	const float TEXT_START_Y = 278;				//スタート_Y
+	//const float TEXT_X = 856;					//ゴール_X
+	const float TEXT_Y = 228;					//ゴール_Y
+	//const float TEXT_START_X = 1280 + 377;	//スタート_X
+	const float TEXT_START_Y = 228;				//スタート_Y
+
+	const float TEXT_X[8] = {
+		856,	//コマの移動
+		888,	//リバース
+		960,	//リーチ
+		906,	//壁
+		906,	//コネクト
+		972,	//ブックエンド
+		908,	//ワルツ
+		942		//リバーシブル
+	};
+	const float TEXT_START_X[8] = {
+		377,
+		342,
+		269,
+		324,
+		323,
+		257,
+		321,
+		287
+	};
 
 	Sprite tips_frame;					//tips枠
 	Sprite tips_name[8];				//tips名前
@@ -316,15 +354,15 @@ public://シーンで使うもの
 	Sprite tips_bar;					//tipsバー
 	Sprite tips_text[8];				//tipsテキスト
 	bool isInit;
+	bool isFirst = true;
 	float newTips_easeTimer;
 	/*----------新tips用----------*/
 	Sprite tips_cont;					//tipsコントローラー用（用修正）
-	Sprite tips_ss[4];					//tips_0中身
 	int tipsCounts;
 	int tipsDrawNum;
 	int changeTimerFrame;
 	float tips_easeTimer;				//タイトルと同じ速さ
-	float green_scale;
+	//float green_scale;
 	bool isTipsDrawTrigger;
 	bool moveTips;
 

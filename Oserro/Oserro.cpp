@@ -699,15 +699,37 @@ void OthelloManager::Init(Tex num[10], Model numModel[10])
 		itr->resize(fieldSize);
 	}
 	LoadAllStage();
-	fieldDrawText.resize(NormaStartOthellos.size());
+	int fieldTextCount = NormaStartOthellos.size();
+	fieldTextCount *= 2;
+	fieldTextCount -= 9;
+	fieldDrawText.resize(fieldTextCount);
 	int stageCount = 0;
-	for (auto &e : fieldDrawText)
+	auto stageCountTextItr = fieldDrawText.begin();
+	for (int i = 0; i < NormaStartOthellos.size(); i++)
 	{
+		bool tenOver = stageCount >= 9;
 		int x = stageCount % fieldSize;
 		int y = stageCount / fieldSize;
-		e.CreateConstBuff0();
-		e.CreateConstBuff1();
-		SetModeSelectEachInfo(e, panelPos{ x, y });
+		stageCountTextItr->CreateConstBuff0();
+		stageCountTextItr->CreateConstBuff1();
+		SetModeSelectEachInfo(*stageCountTextItr, panelPos{ x, y });
+		//10ステージ以上なら
+		if (tenOver)
+		{
+			float slideLength = 0.4;
+			float widthScale = 0.75;
+			stageCountTextItr->position.m128_f32[0] += slideLength;
+			stageCountTextItr->scale.x *= widthScale;
+			stageCountTextItr++;
+
+			stageCountTextItr->CreateConstBuff0();
+			stageCountTextItr->CreateConstBuff1();
+			SetModeSelectEachInfo(*stageCountTextItr, panelPos{ x, y });
+			stageCountTextItr->position.m128_f32[0] -= slideLength;
+			stageCountTextItr->scale.x *= widthScale;
+		}
+
+		stageCountTextItr++;
 		stageCount++;
 	}
 	TutorialText1.CreateSprite(L"Resource/Img/string_0.png", XMFLOAT3(0, 0, 0));
@@ -1191,6 +1213,7 @@ void OthelloManager::NormaTextModelDraw(int stageNum, bool isDraw)
 		{
 			ComboTextModel.Update(&NormaDrawData);
 			Draw3DObject(ComboTextModel);
+			CountModelDraw(status);
 		}
 		else if (data->type == Norma::Panels)
 		{
@@ -1209,13 +1232,13 @@ void OthelloManager::NormaTextModelDraw(int stageNum, bool isDraw)
 		{
 			ScoreTextModel.Update(&NormaDrawData);
 			Draw3DObject(ScoreTextModel);
+			CountModelDraw(status);
 		}
 		if (data->subNormaFlag)
 		{
 			PanelTextModel.Update(&SubNormaDrawData);
 			Draw3DObject(PanelTextModel);
 		}
-		CountModelDraw(status);
 		normaChecker.Draw();
 	}
 }
@@ -1436,14 +1459,30 @@ void OthelloManager::ModeSelectModelDraw(bool isDraw)
 	{
 		int stageNum = playerPanelPos.x + 1;
 		stageNum += playerPanelPos.y * 8;
-		int i = 1;
-		for (auto &e : fieldDrawText)
+		int textCount = 0;
+		for (int i = 1; i <= NormaStartOthellos.size(); i++)
 		{
 			if (i != stageNum)
 			{
-				CountModelDraw(i, &e);
+				if (i >= 10)
+				{
+				int firstDegit = textCount;
+				int secondDegit = textCount+1;
+					CountModelDraw(i, &fieldDrawText[firstDegit], &fieldDrawText[secondDegit]);
+				}
+				else
+				{
+					CountModelDraw(i, &fieldDrawText[textCount]);
+				}
 			}
-			i++;
+			if (i >= 10)
+			{
+				textCount+= 2;
+			}
+			else
+			{
+				textCount++;
+			}
 		}
 		ScoreAttackTextModel.Update(&ScoreAttackDrawData);
 		Draw3DObject(ScoreAttackTextModel);
@@ -1461,6 +1500,7 @@ void OthelloManager::ModeSelectModelDraw(bool isDraw)
 		{
 			ComboTextModel.Update(&NormaDrawData);
 			Draw3DObject(ComboTextModel);
+			CountModelDraw(status);
 		}
 		else if (data->type == Norma::Panels)
 		{
@@ -1479,13 +1519,13 @@ void OthelloManager::ModeSelectModelDraw(bool isDraw)
 		{
 			ScoreTextModel.Update(&NormaDrawData);
 			Draw3DObject(ScoreTextModel);
+			CountModelDraw(status);
 		}
 		if (data->subNormaFlag)
 		{
 			PanelTextModel.Update(&SubNormaDrawData);
 			Draw3DObject(PanelTextModel);
 		}
-		CountModelDraw(status);
 
 	}
 }
@@ -1554,7 +1594,7 @@ void OthelloManager::CountTextDraw(int count)
 	}
 }
 
-void OthelloManager::CountModelDraw(int count, EachInfo *data)
+void OthelloManager::CountModelDraw(int count, EachInfo *data, EachInfo *dataB)
 {
 	vector<int>degit;
 	while (count >= 10)
@@ -1566,16 +1606,35 @@ void OthelloManager::CountModelDraw(int count, EachInfo *data)
 	degit.push_back(count);
 
 	auto itr = degit.begin();
-	for (int i = degit.size(); i > 0; i--)
+	//二桁のモード選択
+	if (dataB != nullptr)
 	{
-		if (data != nullptr)
-		{
 
-			numberModel[*itr]->Update(data);
-			Draw3DObject(*numberModel[*itr]);
-			itr++;
-		}
-		else
+		numberModel[*itr]->Update(data);
+		Draw3DObject(*numberModel[*itr]);
+		itr++;
+		numberModel[*itr]->Update(dataB);
+		Draw3DObject(*numberModel[*itr]);
+
+#pragma region testDraw
+		//int testCount = 8;
+		//numberModel[testCount]->Update(data);
+		//Draw3DObject(*numberModel[testCount]);
+		//itr++;
+		//numberModel[testCount]->Update(dataB);
+		//Draw3DObject(*numberModel[testCount]);
+#pragma endregion
+
+	}//一桁のモード選択
+	else if (data != nullptr)
+	{
+		numberModel[*itr]->Update(data);
+		Draw3DObject(*numberModel[*itr]);
+		itr++;
+	}//通常の数字の表示
+	else
+	{
+		for (int i = degit.size(); i > 0; i--)
 		{
 			numberModel[*itr]->Update(&CountDrawData[i]);
 			Draw3DObject(*numberModel[*itr]);
@@ -1733,7 +1792,7 @@ void OthelloManager::SetTextPos(bool isNormaMode, int stageNum)
 		NormaScoreModelSetPos(isNormaMode);
 	}
 
-	SetCountModelPos(isNormaMode);
+	SetCountModelPos(isNormaMode, stageNum);
 	SubNormaModelPos(isNormaMode);
 }
 
@@ -1798,17 +1857,19 @@ void OthelloManager::SetPickupModeEachInfo(EachInfo &data)
 	data.rotation = { -30, 0, 0 };
 }
 
-void OthelloManager::SetCountModelPos(bool isNormaMode)
+void OthelloManager::SetCountModelPos(bool isNormaMode, int stageNum)
 {
 	XMVECTOR movePos = moveTextModelPos;
+	list<NormaModeFieldData>::iterator data = GetNormaStage(stageNum);
 	if (!isNormaMode)
 	{
 		movePos = FloatAnimationDistance * textAnimationRate;
+		data = GetNormaStage(GetEnterNormaStage());
 	}
 	if (GetEnterNormaStage() == GameMode::ScoreAttack)
 		moveAllDeleteCountPos;
 	XMVECTOR baseCountPos = XMVECTOR{ 1.0f , 13.0f, -1.0f ,0 };
-	list<NormaModeFieldData>::iterator data = GetNormaStage(GetEnterNormaStage());
+
 	if (data->type == Norma::Panels)
 	{
 		baseCountPos = XMVECTOR{ 2.4f , 13.0f, -1.0f ,0 };
