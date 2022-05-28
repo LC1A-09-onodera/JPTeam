@@ -92,15 +92,6 @@ void GameScene::Init()
 	//ポストエフェクトの初期化
 	//PostEffects::Init();
 
-	/*model = FbxLoader::GetInstance()->LoadModelFromFile("boneTest");
-	object = new FBXObject;
-	object->Initialize();
-	object->SetModel(model);
-	object->PlayAnimation();*/
-	//sample.CreateModel("newOserro", ShaderManager::playerShader);
-	//sample.each.rotation.x = 0;
-
-
 	checkObject.Init();
 	ObjectParticles::LoadModels();
 
@@ -119,7 +110,6 @@ void GameScene::Init()
 	num[7].LoadGraph(L"Resource/Img/number_7.png");
 	num[8].LoadGraph(L"Resource/Img/number_8.png");
 	num[9].LoadGraph(L"Resource/Img/number_9.png");
-	//addReverse.CreateSprite(L"Resource/Img/combo.png", XMFLOAT3(0, 0, 0));
 	scoreSprite.CreateSprite(L"Resource/Img/score.png", XMFLOAT3(0, 0, 0));
 	timeUp.CreateSprite(L"Resource/Img/time_up.png", XMFLOAT3(0, 0, 0));
 	startSprite.CreateSprite(L"Resource/Img/START.png", XMFLOAT3(0, 0, 0));
@@ -208,60 +198,26 @@ void GameScene::Init()
 	timerCount = 0;
 	size_x = MAX_SIZE_X;
 	size_y = MAX_SIZE_Y;
-
-	/*countDownNumber[0].CreateModel("count_0", ShaderManager::othelloShader);
-	countDownNumber[1].CreateModel("count_1", ShaderManager::othelloShader);
-	countDownNumber[2].CreateModel("count_2", ShaderManager::othelloShader);
-	countDownNumber[3].CreateModel("count_3", ShaderManager::othelloShader);
-	countDownNumber[4].CreateModel("count_4", ShaderManager::othelloShader);
-	countDownNumber[5].CreateModel("count_5", ShaderManager::othelloShader);
-	countDownNumber[6].CreateModel("count_6", ShaderManager::othelloShader);
-	countDownNumber[7].CreateModel("count_7", ShaderManager::othelloShader);
-	countDownNumber[8].CreateModel("count_8", ShaderManager::othelloShader);
-	countDownNumber[9].CreateModel("count_9", ShaderManager::othelloShader);*/
-
-	countDownNumber[0].CreateModel("number0s", ShaderManager::othelloShader);
-	countDownNumber[1].CreateModel("number1s", ShaderManager::othelloShader);
-	countDownNumber[2].CreateModel("number2s", ShaderManager::othelloShader);
-	countDownNumber[3].CreateModel("number3s", ShaderManager::othelloShader);
-	countDownNumber[4].CreateModel("number4s", ShaderManager::othelloShader);
-	countDownNumber[5].CreateModel("number5s", ShaderManager::othelloShader);
-	countDownNumber[6].CreateModel("number6s", ShaderManager::othelloShader);
-	countDownNumber[7].CreateModel("number7s", ShaderManager::othelloShader);
-	countDownNumber[8].CreateModel("number8s", ShaderManager::othelloShader);
-	countDownNumber[9].CreateModel("number9s", ShaderManager::othelloShader);
-
-	timerNumber[0].CreateModel("number0y", ShaderManager::playerShader);
-	timerNumber[1].CreateModel("number1y", ShaderManager::playerShader);
-	timerNumber[2].CreateModel("number2y", ShaderManager::playerShader);
-	timerNumber[3].CreateModel("number3y", ShaderManager::playerShader);
-	timerNumber[4].CreateModel("number4y", ShaderManager::playerShader);
-	timerNumber[5].CreateModel("number5y", ShaderManager::playerShader);
-	timerNumber[6].CreateModel("number6y", ShaderManager::playerShader);
-	timerNumber[7].CreateModel("number7y", ShaderManager::playerShader);
-	timerNumber[8].CreateModel("number8y", ShaderManager::playerShader);
-	timerNumber[9].CreateModel("number9y", ShaderManager::playerShader);
-	numbersObject[0].CreateModel("number0", ShaderManager::playerShader);
-	numbersObject[1].CreateModel("number1", ShaderManager::playerShader);
-	numbersObject[2].CreateModel("number2", ShaderManager::playerShader);
-	numbersObject[3].CreateModel("number3", ShaderManager::playerShader);
-	numbersObject[4].CreateModel("number4", ShaderManager::playerShader);
-	numbersObject[5].CreateModel("number5", ShaderManager::playerShader);
-	numbersObject[6].CreateModel("number6", ShaderManager::playerShader);
-	numbersObject[7].CreateModel("number7", ShaderManager::playerShader);
-	numbersObject[8].CreateModel("number8", ShaderManager::playerShader);
-	numbersObject[9].CreateModel("number9", ShaderManager::playerShader);
-	sNumbersObject[0].CreateModel("number0s", ShaderManager::playerShader);
-	sNumbersObject[1].CreateModel("number1s", ShaderManager::playerShader);
-	sNumbersObject[2].CreateModel("number2s", ShaderManager::playerShader);
-	sNumbersObject[3].CreateModel("number3s", ShaderManager::playerShader);
-	sNumbersObject[4].CreateModel("number4s", ShaderManager::playerShader);
-	sNumbersObject[5].CreateModel("number5s", ShaderManager::playerShader);
-	sNumbersObject[6].CreateModel("number6s", ShaderManager::playerShader);
-	sNumbersObject[7].CreateModel("number7s", ShaderManager::playerShader);
-	sNumbersObject[8].CreateModel("number8s", ShaderManager::playerShader);
-	sNumbersObject[9].CreateModel("number9s", ShaderManager::playerShader);
-	reverseObject.CreateModel("reverse", ShaderManager::playerShader);
+	for (int i = 0; i <= 9; i++)
+	{
+		string name = "number" + to_string(i) + "s";
+		countDownNumber[i].CreateModel(name.c_str(), ShaderManager::othelloShader);
+	}
+	for (int i = 0; i <= 9; i++)
+	{
+		string name = "number" + to_string(i) + "y";
+		timerNumber[i].CreateModel(name.c_str(), ShaderManager::playerShader);
+	}
+	for (int i = 0; i <= 9; i++)
+	{
+		string name = "number" + to_string(i);
+		numbersObject[i].CreateModel(name.c_str(), ShaderManager::playerShader);
+	}
+	for (int i = 0; i <= 9; i++)
+	{
+		string name = "number" + to_string(i) + "s";
+		sNumbersObject[i].CreateModel(name.c_str(), ShaderManager::playerShader);
+	}
 
 	scoreObject.CreateModel("score", ShaderManager::playerShader);
 
@@ -320,15 +276,6 @@ void GameScene::Init()
 	pushButtonBlack[0].CreateSprite(L"Resource/Img/pushButton/push_button_black.png", XMFLOAT3(0, 0, 0));
 	pushButtonBlack[1].CreateSprite(L"Resource/Img/pushButton/push_button_black.png", XMFLOAT3(0, 0, 0));
 	pushButtonBlack[2].CreateSprite(L"Resource/Img/pushButton/push_button_black.png", XMFLOAT3(0, 0, 0));
-	//pushButton_black.CreateModel("push_button_black", ShaderManager::playerShader);
-	//pushButton_green.CreateModel("push_button_green", ShaderManager::playerShader);
-
-	//pushButton[0].CreateConstBuff0();
-	//pushButton[0].CreateConstBuff1();
-	//pushButton[1].CreateConstBuff0();
-	//pushButton[1].CreateConstBuff1();
-	//pushButton[2].CreateConstBuff0();
-	//pushButton[2].CreateConstBuff1();
 
 	tips[0].CreateSprite(L"Resource/Img/tips/tips_0.png", XMFLOAT3(0, 0, 0));
 	tips[1].CreateSprite(L"Resource/Img/tips/tips_2.png", XMFLOAT3(0, 0, 0));
@@ -372,7 +319,6 @@ void GameScene::Init()
 	tips_ss[0].CreateSprite(L"Resource/Img/tips/in_tips_0.png", XMFLOAT3(START_X, START_Y, 0));
 	tips_ss[1].CreateSprite(L"Resource/Img/tips/in_tips_1.png", XMFLOAT3(START_X - SIZE_X, START_Y, 0));
 	tips_ss[2].CreateSprite(L"Resource/Img/tips/in_tips_2.png", XMFLOAT3(START_X - SIZE_X, START_Y, 0));
-	//tips_ss[3].CreateSprite(L"Resource/Img/tips/tips_ss4.png", XMFLOAT3(START_X - SIZE_X, START_Y, 0));
 
 	for (int i = 0; i < 2; i++)
 	{
@@ -841,7 +787,7 @@ void GameScene::GameUpdate()
 			countDown--;
 		}
 	}
-	if (countDown == 45)
+	if (countDown == 58)
 	{
 		SoundStopWave(countdDownSound);
 		SoundStopWave(startSound);
@@ -1686,7 +1632,7 @@ void GameScene::GameDraw()
 	ParticleControl::Draw();
 	if (!isPouseToTiTle)othelloManager.Draw(isSupport, isSupport);
 
-	if (gameTime > 0 && countDown <= 0)
+	if (gameTime > 0 && countDown <= 0 && !isTutorial)
 	{
 		if (gameTime / 60 < DRAW_COUNTDOWN_COUNT)
 		{
