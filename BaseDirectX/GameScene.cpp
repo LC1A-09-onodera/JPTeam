@@ -413,6 +413,14 @@ void GameScene::Init()
 
 void GameScene::TitleUpdate()
 {
+	static int BGMSoundCount = 0;
+	BGMSoundCount++;
+	if (BGMSoundCount > 51 * 60)
+	{
+		BGMSoundCount = 0;
+		SoundStopWave(BGMSound);
+		SoundPlayOnce(BGMSound);
+	}
 	//SoundPlayLoop(BGMSound);
 	if (!isDrawLogo)
 	{
@@ -639,7 +647,7 @@ void GameScene::TitleUpdate()
 				{
 					selectPouse = selectMaxPouse;
 				}
-				else 
+				else
 				{
 					selectPouse--;
 				}
@@ -720,6 +728,14 @@ void GameScene::SelectUpdate()
 
 void GameScene::GameUpdate()
 {
+	static int BGMSoundCount = 0;
+	BGMSoundCount++;
+	if (BGMSoundCount > 51 * 60)
+	{
+		BGMSoundCount = 0;
+		SoundStopWave(BGMSound);
+		SoundPlayOnce(BGMSound);
+	}
 	light->SetLightDir(XMFLOAT3(Camera::GetTargetDirection()));
 	LightUpdate();
 	//カメラ変化が行われていない時にゲームを開始する
@@ -1147,6 +1163,7 @@ void GameScene::TitleDraw()
 	/*-----この中で処理書いてください-----*/
 	if (isDrawLogo)
 	{
+		sky.each.rotation.x = 0.0f;
 		Draw3DObject(sky);
 		//Draw3DObject(othelloStage);
 		if (isPouseToTiTle)
@@ -1228,7 +1245,7 @@ void GameScene::TitleDraw()
 			{
 				kakko[1].each.position = { -1 + 10.5f, -2.0f, 0, 1.0f };
 				kakko[1].each.rotation.x += 1.0f;
-				kakko[1].each.scale = {1.0f, 1.0f , 1.0f };
+				kakko[1].each.scale = { 1.0f, 1.0f , 1.0f };
 				kakko[1].Update();
 				Draw3DObject(kakko[1]);
 				kakko[0].each.position = { -1 + 1.5f, -2.0f, 0, 1.0f };
@@ -1254,14 +1271,14 @@ void GameScene::TitleDraw()
 	}
 	if (isPouse)
 	{
-		pouseBackEach.position = {0, 0, -1.0f, 1.0f};
-		pouseBackEach.scale = {100.0f, 100.f ,1.0f};
+		pouseBackEach.position = { 0, 0, -1.0f, 1.0f };
+		pouseBackEach.scale = { 100.0f, 100.f ,1.0f };
 		backGround.Update(&pouseBackEach);
 		Draw3DObject(backGround);
 		if (pouseSelectTime1 < 1.0f)
 		{
 			pouseSelectTime1 += 0.1f;
-			pouseNowSize = Lerp(pouseMinSizeConst,pouseMaxSizeConst, pouseSelectTime1);
+			pouseNowSize = Lerp(pouseMinSizeConst, pouseMaxSizeConst, pouseSelectTime1);
 		}
 		else if (pouseSelectTime2 < 1.0f)
 		{
@@ -1324,7 +1341,7 @@ void GameScene::TitleDraw()
 		if (isSupport)
 		{
 			CheckModel.each.position = { -2.8f, 3.6f, -3.0f, 1.0f };
-			CheckModel.each.scale = {0.2f, 0.2f, 0.2f};
+			CheckModel.each.scale = { 0.2f, 0.2f, 0.2f };
 			CheckModel.Update();
 			Draw3DObject(CheckModel);
 		}
@@ -1333,19 +1350,19 @@ void GameScene::TitleDraw()
 		Draw3DObject(kakko[0]);
 		Draw3DObject(kakko[1]);
 		ChackBoxModel.each.scale = ChackBoxModel.each.scale - 0.1f;
-		SupportModel.each.position = {3.0f, 3.0f, -3.0f, 1.0f};
+		SupportModel.each.position = { 3.0f, 3.0f, -3.0f, 1.0f };
 		SupportModel.Update();
 		Draw3DObject(SupportModel);
-		BackModel.each.position = {1.0f, 1.0f, -3.0f, 1.0f};
+		BackModel.each.position = { 1.0f, 1.0f, -3.0f, 1.0f };
 		BackModel.Update();
 		Draw3DObject(BackModel);
-		TiTleModel.each.position = {1.0f, -1.0f, -3.0f, 1.0f};
+		TiTleModel.each.position = { 1.0f, -1.0f, -3.0f, 1.0f };
 		TiTleModel.Update();
 		Draw3DObject(TiTleModel);
-		EndModel.each.position = {1.0f, -3.0f, -3.0f, 1.0f};
+		EndModel.each.position = { 1.0f, -3.0f, -3.0f, 1.0f };
 		EndModel.Update();
 		Draw3DObject(EndModel);
-		ChackBoxModel.each.position = {-3.0f, 3.0f, -3.0f, 1.0f};
+		ChackBoxModel.each.position = { -3.0f, 3.0f, -3.0f, 1.0f };
 		ChackBoxModel.Update();
 		Draw3DObject(ChackBoxModel);
 	}
@@ -1380,6 +1397,14 @@ void GameScene::GameDraw()
 	BaseDirectX::clearColor[3] = 0.0f;
 	BaseDirectX::UpdateFront();
 	sky.each.rotation.y += 1.0f;
+	if (isSceneChange)
+	{
+		sky.each.rotation.x = 0.0f;
+	}
+	else
+	{
+		sky.each.rotation.x = 80.0f;
+	}
 	Draw3DObject(sky);
 	othelloStage.each.position.m128_f32[2] = 8.0f;
 	othelloStage.each.rotation.x = -90;
@@ -1985,6 +2010,7 @@ void GameScene::ResultDraw()
 	BaseDirectX::clearColor[2] = 0.0f;
 	BaseDirectX::clearColor[3] = 0.0f;
 	BaseDirectX::UpdateFront();
+	sky.each.rotation.x = 80.0f;
 	sky.each.rotation.y += 1.0f;
 	sky.Update();
 	Draw3DObject(sky);
@@ -2940,10 +2966,10 @@ void GameScene::NormaToModeSelectUpdate()
 	Camera::Update();
 
 
-		/*Camera::target = { -1, 1, 0 };
-		Camera::eye = { -1, 1, -15 };*/
-		Camera::Update();
-	}
+	/*Camera::target = { -1, 1, 0 };
+	Camera::eye = { -1, 1, -15 };*/
+	Camera::Update();
+}
 
 void GameScene::NormaToModeSelect2()
 {//初期化
