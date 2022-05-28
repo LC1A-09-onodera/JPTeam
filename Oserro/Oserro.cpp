@@ -3441,7 +3441,7 @@ bool OthelloManager::GetIsNormaFailed()
 	return normaChecker.GetFailed();
 }
 
-void OthelloManager::LoadNormaStage(string stage)
+void OthelloManager::LoadNormaStage(string stage, list<NormaModeFieldData> &stageList)
 {
 	std::ifstream file;
 	const string stageFileName = "Resource/Stage/" + stage + ".txt";
@@ -3583,7 +3583,7 @@ void OthelloManager::LoadNormaStage(string stage)
 
 		}
 	}
-	NormaStartOthellos.push_back(NormaField);
+	stageList.push_back(NormaField);
 }
 
 void OthelloManager::LoadAllStage()
@@ -3594,7 +3594,7 @@ void OthelloManager::LoadAllStage()
 	for (int i = 0; i <= NormaStageCount; i++)
 	{
 		string count = to_string(i + 1);
-		LoadNormaStage(baseName + count);
+		LoadNormaStage(baseName + count, NormaStartOthellos);
 	}
 
 	int stageCount = NormaStartOthellos.size();

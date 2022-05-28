@@ -396,7 +396,7 @@ public://ノルマモード用関数
 private://ノルマモード用内部処理関数
 	void StartNormaField(int stageNum = 0);
 	void TestStage();
-	void LoadNormaStage(std::string stage);
+	void LoadNormaStage(std::string stage, list<NormaModeFieldData> &stageList);
 	void LoadAllStage();
 	void CountTextDraw(int count);
 	void CountModelDraw(int count, EachInfo *data = nullptr, EachInfo *dataB = nullptr);
