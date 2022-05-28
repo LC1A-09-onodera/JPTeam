@@ -1213,6 +1213,7 @@ void OthelloManager::NormaTextModelDraw(int stageNum, bool isDraw)
 		{
 			ComboTextModel.Update(&NormaDrawData);
 			Draw3DObject(ComboTextModel);
+			CountModelDraw(status);
 		}
 		else if (data->type == Norma::Panels)
 		{
@@ -1231,13 +1232,13 @@ void OthelloManager::NormaTextModelDraw(int stageNum, bool isDraw)
 		{
 			ScoreTextModel.Update(&NormaDrawData);
 			Draw3DObject(ScoreTextModel);
+			CountModelDraw(status);
 		}
 		if (data->subNormaFlag)
 		{
 			PanelTextModel.Update(&SubNormaDrawData);
 			Draw3DObject(PanelTextModel);
 		}
-		CountModelDraw(status);
 		normaChecker.Draw();
 	}
 }
@@ -1468,14 +1469,20 @@ void OthelloManager::ModeSelectModelDraw(bool isDraw)
 				int firstDegit = textCount;
 				int secondDegit = textCount+1;
 					CountModelDraw(i, &fieldDrawText[firstDegit], &fieldDrawText[secondDegit]);
-					textCount++;
 				}
 				else
 				{
 					CountModelDraw(i, &fieldDrawText[textCount]);
 				}
 			}
-			textCount++;
+			if (i >= 10)
+			{
+				textCount+= 2;
+			}
+			else
+			{
+				textCount++;
+			}
 		}
 		ScoreAttackTextModel.Update(&ScoreAttackDrawData);
 		Draw3DObject(ScoreAttackTextModel);
@@ -1493,6 +1500,7 @@ void OthelloManager::ModeSelectModelDraw(bool isDraw)
 		{
 			ComboTextModel.Update(&NormaDrawData);
 			Draw3DObject(ComboTextModel);
+			CountModelDraw(status);
 		}
 		else if (data->type == Norma::Panels)
 		{
@@ -1511,13 +1519,13 @@ void OthelloManager::ModeSelectModelDraw(bool isDraw)
 		{
 			ScoreTextModel.Update(&NormaDrawData);
 			Draw3DObject(ScoreTextModel);
+			CountModelDraw(status);
 		}
 		if (data->subNormaFlag)
 		{
 			PanelTextModel.Update(&SubNormaDrawData);
 			Draw3DObject(PanelTextModel);
 		}
-		CountModelDraw(status);
 
 	}
 }
@@ -1784,7 +1792,7 @@ void OthelloManager::SetTextPos(bool isNormaMode, int stageNum)
 		NormaScoreModelSetPos(isNormaMode);
 	}
 
-	SetCountModelPos(isNormaMode);
+	SetCountModelPos(isNormaMode, stageNum);
 	SubNormaModelPos(isNormaMode);
 }
 
@@ -1849,17 +1857,19 @@ void OthelloManager::SetPickupModeEachInfo(EachInfo &data)
 	data.rotation = { -30, 0, 0 };
 }
 
-void OthelloManager::SetCountModelPos(bool isNormaMode)
+void OthelloManager::SetCountModelPos(bool isNormaMode, int stageNum)
 {
 	XMVECTOR movePos = moveTextModelPos;
+	list<NormaModeFieldData>::iterator data = GetNormaStage(stageNum);
 	if (!isNormaMode)
 	{
 		movePos = FloatAnimationDistance * textAnimationRate;
+		data = GetNormaStage(GetEnterNormaStage());
 	}
 	if (GetEnterNormaStage() == GameMode::ScoreAttack)
 		moveAllDeleteCountPos;
 	XMVECTOR baseCountPos = XMVECTOR{ 1.0f , 13.0f, -1.0f ,0 };
-	list<NormaModeFieldData>::iterator data = GetNormaStage(GetEnterNormaStage());
+
 	if (data->type == Norma::Panels)
 	{
 		baseCountPos = XMVECTOR{ 2.4f , 13.0f, -1.0f ,0 };

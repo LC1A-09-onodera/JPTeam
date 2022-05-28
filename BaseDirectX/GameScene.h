@@ -383,6 +383,11 @@ public://ÉVÅ[ÉìÇ≈égÇ§Ç‡ÇÃ
 	Model BackModel;
 	Model TiTleModel;
 	Model EndModel;
+	Model ChackBoxModel;
 	EachInfo pouseKakko[2];
+	XMFLOAT3 pouseMinSizeConst;
+	XMFLOAT3 pouseMaxSizeConst;
+	XMFLOAT3 pouseNormalSizeConst;
+	float pouseSelectTime;
 	//-------------------------------
 };
