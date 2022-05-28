@@ -382,6 +382,20 @@ void GameScene::Init()
 	resultScoreKanaModel.CreateModel("score_kana", ShaderManager::playerShader);
 	resultMaxConboModel.CreateModel("max_combo", ShaderManager::playerShader);
 	resultEraseOthelloModel.CreateModel("delete_block", ShaderManager::playerShader);
+	SupportModel.CreateModel("assist", ShaderManager::playerShader);
+	BackModel.CreateModel("back", ShaderManager::playerShader);
+	TiTleModel.CreateModel("title_text", ShaderManager::playerShader);
+	EndModel.CreateModel("end", ShaderManager::playerShader);
+	ChackBoxModel.CreateModel("check_box", ShaderManager::playerShader);
+	for (int i = 0; i < 2; i++)
+	{
+		pouseKakko[i].CreateConstBuff0();
+		pouseKakko[i].CreateConstBuff1();
+	}
+	pouseMinSizeConst = { 0.3f, 0.3f, 0.3f };
+	pouseMaxSizeConst = { 0.4f, 0.4f, 0.4f };
+	pouseNormalSizeConst = { 0.4f, 0.4f, 0.4f };
+	pouseSelectTime = 0.0f;
 	tipsCounts = 0;
 	changeTimerFrame = 0;
 	tipsDrawNum = 0;
@@ -1137,7 +1151,6 @@ void GameScene::TitleDraw()
 		ParticleControl::Draw();
 		ObjectParticles::Draw();
 		Lights::Draw();
-		//スプライトの描画-------------------------
 		if (isSceneChange == false)
 		{
 			XMFLOAT3 scale = { 0.4f, 0.4f, 0.4f };
@@ -1228,7 +1241,17 @@ void GameScene::TitleDraw()
 	}
 	if (isPouse)
 	{
-		pouseBack.ChangeSize(1280, 720);
+		SupportModel.Update();
+		Draw3DObject(SupportModel);
+		BackModel.Update();
+		Draw3DObject(BackModel);
+		TiTleModel.Update();
+		Draw3DObject(TiTleModel);
+		EndModel.Update();
+		Draw3DObject(EndModel);
+		ChackBoxModel.Update();
+		Draw3DObject(ChackBoxModel);
+		/*pouseBack.ChangeSize(1280, 720);
 		pouseBack.position.m128_f32[0] = 0;
 		pouseBack.position.m128_f32[1] = 0;
 		pouseBack.SpriteDraw();
@@ -1273,7 +1296,7 @@ void GameScene::TitleDraw()
 			kagikakkoEndSprite.position.m128_f32[0] = window_width / 2 + 70;
 			kagikakkoEndSprite.position.m128_f32[1] = window_height / 2 + 165;
 			kagikakkoEndSprite.SpriteDraw();
-		}
+		}*/
 	}
 	//Imgui::DrawImGui();
 	//描画コマンドここまで
@@ -1331,6 +1354,14 @@ void GameScene::GameDraw()
 			Draw3DObject(ObjectParticles::othello2.object);
 		}
 		for (auto opOthelloItr = opOthellos.begin(); opOthelloItr != opOthellos.end(); ++opOthelloItr)
+		{
+			ObjectParticles::othello2.object.Update(&(*opOthelloItr));
+			Draw3DObject(ObjectParticles::othello2.object);
+		}
+	}
+	if (isSceneChange == true && (sceneChageType == 31 || sceneChageType == 30))
+	{
+		for (auto opOthelloItr = pouseOthellos.begin(); opOthelloItr != pouseOthellos.end(); ++opOthelloItr)
 		{
 			ObjectParticles::othello2.object.Update(&(*opOthelloItr));
 			Draw3DObject(ObjectParticles::othello2.object);
@@ -2659,7 +2690,6 @@ void GameScene::PouseToTitleUpdate()
 void GameScene::NormaToModeSelect()
 {
 	sceneChageType = 30;
-	isPouseToTiTle = true;
 	pouseToTitleEaseTime1 = 0.0f;
 	isBackGroundOthello = false;
 	isSceneChange = true;
@@ -2674,35 +2704,34 @@ void GameScene::NormaToModeSelect()
 
 void GameScene::NormaToModeSelectUpdate()
 {
-	if (isPouseToTiTle)
-	{
-		ObjectParticles::frame.DeleteAllParticle();
-		pouseToTitleEaseTime1 += 0.02f;
-		if (pouseToTitleEaseTime1 >= 1.0f)
-		{
-			pouseToTitleEaseTime1 = 1.0f;
-			isBackGroundOthello = true;
-			isTipsDraw = true;
-			isTipsButtonDraw = true;
-			Camera::eye.v = { -1.0f, -10.0f, -15.0f };
-			Camera::target.v = { -1, 1, 0 };
-			if (Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01))
-			{
-				SceneNum = GAME;
-				gameTime = 1;
-				NormaToModeSelect2();
-			}
-		}
-		for (auto pouseOthelloItr = pouseOthellos.begin(); pouseOthelloItr != pouseOthellos.end(); ++pouseOthelloItr)
-		{
-			pouseOthelloItr->scale = ShlomonMath::EaseInQuad(XMFLOAT3(0.01f, 0.01f, 0.01f), XMFLOAT3(1.5f, 1.5f, 1.0f), pouseToTitleEaseTime1);
-		}
 
-		
-		/*Camera::target = { -1, 1, 0 };
-		Camera::eye = { -1, 1, -15 };*/
-		Camera::Update();
+	ObjectParticles::frame.DeleteAllParticle();
+	pouseToTitleEaseTime1 += 0.02f;
+	if (pouseToTitleEaseTime1 >= 1.0f)
+	{
+		pouseToTitleEaseTime1 = 1.0f;
+		isBackGroundOthello = true;
+		isTipsDraw = true;
+		isTipsButtonDraw = true;
+		Camera::eye.v = { -1.0f, -10.0f, -15.0f };
+		Camera::target.v = { -1, 1, 0 };
+		if (Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01))
+		{
+			SceneNum = GAME;
+			gameTime = 1;
+			NormaToModeSelect2();
+		}
 	}
+	for (auto pouseOthelloItr = pouseOthellos.begin(); pouseOthelloItr != pouseOthellos.end(); ++pouseOthelloItr)
+	{
+		pouseOthelloItr->scale = ShlomonMath::EaseInQuad(XMFLOAT3(0.01f, 0.01f, 0.01f), XMFLOAT3(1.5f, 1.5f, 1.0f), pouseToTitleEaseTime1);
+	}
+
+
+	/*Camera::target = { -1, 1, 0 };
+	Camera::eye = { -1, 1, -15 };*/
+	Camera::Update();
+
 }
 
 void GameScene::NormaToModeSelect2()
@@ -2762,7 +2791,7 @@ void GameScene::NormaToModeSelectUpdate2()
 		isStageDisplay = true;
 		eyeEaseTime = 1.0f;
 		sceneChangeDiray2++;
-		
+
 		if (sceneChangeDiray2 >= MaxSceneChangeOk)
 		{
 			if (Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01))
@@ -2783,8 +2812,7 @@ void GameScene::NormaToModeSelectUpdate2()
 				for (auto opOthelloItr = pouseOthellos.begin(); opOthelloItr != pouseOthellos.end(); ++opOthelloItr)
 				{
 					//opOthelloItr->scale = ShlomonMath::EaseInQuad(XMFLOAT3(1.5f, 1.5f, 1.5f), XMFLOAT3(0.01f, 0.01f, 0.01f), sceneChangeAfterTime);
-					opOthelloItr->scale = ShlomonMath::EaseInQuad(XMFLOAT3(2.0f,2.0f,2.0f), XMFLOAT3(0.01f, 0.01f, 0.01f), sceneChangeAfterTime);
-					opOthelloItr->rotation = ShlomonMath::EaseInQuad(XMFLOAT3(0, 0, 90), XMFLOAT3(0, 0, 0), sceneChangeAfterTime);
+					opOthelloItr->scale = ShlomonMath::EaseInQuad(XMFLOAT3(1.5f, 1.5f, 1.5f), XMFLOAT3(0.01f, 0.01f, 0.01f), sceneChangeAfterTime);
 				}
 			}
 		}
@@ -2795,7 +2823,6 @@ void GameScene::NormaToModeSelectUpdate2()
 			for (auto opOthelloItr = pouseOthellos.begin(); opOthelloItr != pouseOthellos.end(); ++opOthelloItr)
 			{
 				opOthelloItr->scale = ShlomonMath::EaseInQuad(XMFLOAT3(1.5f, 1.5f, 1.5f), XMFLOAT3(0.01f, 0.01f, 0.01f), sceneChangeAfterTime);
-				opOthelloItr->rotation = ShlomonMath::EaseInQuad(XMFLOAT3(0, 0, 90), XMFLOAT3(0, 0, 0), sceneChangeAfterTime);
 			}
 			isPouseToTiTle = false;
 			isSceneChange = false;
