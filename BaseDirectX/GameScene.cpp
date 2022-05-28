@@ -392,6 +392,7 @@ void GameScene::Init()
 	TiTleModel.CreateModel("title_text", ShaderManager::playerShader);
 	EndModel.CreateModel("end", ShaderManager::playerShader);
 	ChackBoxModel.CreateModel("check_box", ShaderManager::playerShader);
+	CheckModel.CreateModel("check", ShaderManager::playerShader);
 	for (int i = 0; i < 2; i++)
 	{
 		pouseKakko[i].CreateConstBuff0();
@@ -634,11 +635,11 @@ void GameScene::TitleUpdate()
 			{
 				SoundStopWave(selectSound);
 				SoundPlayOnce(selectSound);
-				if (selectPouse == 0)
+				if (selectPouse == -1)
 				{
 					selectPouse = selectMaxPouse;
 				}
-				else
+				else 
 				{
 					selectPouse--;
 				}
@@ -649,7 +650,7 @@ void GameScene::TitleUpdate()
 				SoundPlayOnce(selectSound);
 				if (selectPouse == selectMaxPouse)
 				{
-					selectPouse = 0;
+					selectPouse = -1;
 				}
 				else
 				{
@@ -659,7 +660,18 @@ void GameScene::TitleUpdate()
 			if (Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01))
 			{
 				//ƒŠƒUƒ‹ƒg‚É–ß‚é
-				if (selectPouse == 0)
+				if (selectPouse == -1)
+				{
+					if (isSupport)
+					{
+						isSupport = false;
+					}
+					else
+					{
+						isSupport = true;
+					}
+				}
+				else if (selectPouse == 0)
 				{
 					isPouse = false;
 				}
@@ -1277,6 +1289,10 @@ void GameScene::TitleDraw()
 			TiTleModel.each.scale = pouseMinSizeConst;
 			EndModel.each.scale = pouseMinSizeConst;
 			ChackBoxModel.each.scale = pouseMinSizeConst;
+			pouseKakko[0].position = { -1.0f, 1.0f, -3.0f, 1.0f };
+			pouseKakko[1].position = { 3.0f, 1.0f, -3.0f, 1.0f };
+			pouseKakko[0].scale = { 0.35f, 0.35f, 0.35f };
+			pouseKakko[1].scale = { 0.35f, 0.35f, 0.35f };
 		}
 		else if (selectPouse == 1)
 		{
@@ -1285,6 +1301,10 @@ void GameScene::TitleDraw()
 			TiTleModel.each.scale = pouseMinSizeConst;
 			EndModel.each.scale = pouseMinSizeConst;
 			ChackBoxModel.each.scale = pouseMinSizeConst;
+			pouseKakko[0].position = { -1.0f, -1.0f, -3.0f, 1.0f };
+			pouseKakko[1].position = { 3.0f, -1.0f, -3.0f, 1.0f };
+			pouseKakko[0].scale = { 0.35f, 0.35f, 0.35f };
+			pouseKakko[1].scale = { 0.35f, 0.35f, 0.35f };
 		}
 		else if (selectPouse == 2)
 		{
@@ -1293,6 +1313,10 @@ void GameScene::TitleDraw()
 			TiTleModel.each.scale = pouseMinSizeConst;
 			EndModel.each.scale = pouseMinSizeConst;
 			ChackBoxModel.each.scale = pouseMinSizeConst;
+			pouseKakko[0].position = { -1.0f, -3.0f, -3.0f, 1.0f };
+			pouseKakko[1].position = { 3.0f, -3.0f, -3.0f, 1.0f };
+			pouseKakko[0].scale = { 0.35f, 0.35f, 0.35f };
+			pouseKakko[1].scale = { 0.35f, 0.35f, 0.35f };
 		}
 		else if (selectPouse == -1)
 		{
@@ -1301,7 +1325,22 @@ void GameScene::TitleDraw()
 			TiTleModel.each.scale = pouseMinSizeConst;
 			EndModel.each.scale = pouseMinSizeConst;
 			ChackBoxModel.each.scale = pouseMinSizeConst;
+			pouseKakko[0].position = { -1.0f, 3.0f, -3.0f, 1.0f };
+			pouseKakko[1].position = { 7.0f, 3.0f, -3.0f, 1.0f };
+			pouseKakko[0].scale = { 0.35f, 0.35f, 0.35f };
+			pouseKakko[1].scale = { 0.35f, 0.35f, 0.35f };
 		}
+		if (isSupport)
+		{
+			CheckModel.each.position = { -2.8f, 3.6f, -3.0f, 1.0f };
+			CheckModel.each.scale = {0.2f, 0.2f, 0.2f};
+			CheckModel.Update();
+			Draw3DObject(CheckModel);
+		}
+		kakko[0].Update(&pouseKakko[0]);
+		kakko[1].Update(&pouseKakko[1]);
+		Draw3DObject(kakko[0]);
+		Draw3DObject(kakko[1]);
 		ChackBoxModel.each.scale = ChackBoxModel.each.scale - 0.1f;
 		SupportModel.each.position = {3.0f, 3.0f, -3.0f, 1.0f};
 		SupportModel.Update();
@@ -1349,11 +1388,6 @@ void GameScene::GameDraw()
 	BaseDirectX::clearColor[2] = 0.0f;
 	BaseDirectX::clearColor[3] = 0.0f;
 	BaseDirectX::UpdateFront();
-	//PostEffect‚ÌDraw
-	//PostEffects::Draw();
-
-	//PostEffect‚ÌPostDraw
-	//PostEffects::PostDraw();
 	sky.each.rotation.y += 1.0f;
 	Draw3DObject(sky);
 	othelloStage.each.position.m128_f32[2] = 8.0f;
@@ -1690,7 +1724,124 @@ void GameScene::GameDraw()
 	}
 	if (isPouse)
 	{
-		pouseBack.ChangeSize(1280, 720);
+		pouseBackEach.position = { 0, 0, -1.0f, 1.0f };
+		pouseBackEach.scale = { 100.0f, 100.f ,1.0f };
+		backGround.Update(&pouseBackEach);
+		Draw3DObject(backGround);
+		if (pouseSelectTime1 < 1.0f)
+		{
+			pouseSelectTime1 += 0.02f;
+			pouseNowSize = Lerp(pouseMinSizeConst, pouseMaxSizeConst, pouseSelectTime1);
+		}
+		else if (pouseSelectTime2 < 1.0f)
+		{
+			pouseSelectTime2 += 0.02f;
+			pouseNowSize = Lerp(pouseMaxSizeConst, pouseMinSizeConst, pouseSelectTime2);
+		}
+		else
+		{
+			pouseSelectTime1 = 0.0f;
+			pouseSelectTime2 = 0.0f;
+		}
+		if (selectPouse == 0)
+		{
+			SupportModel.each.scale = pouseMinSizeConst;
+			SupportModel.each.rotation.x = -35;
+			BackModel.each.scale = pouseMinSizeConst;
+			BackModel.each.rotation.x = -35;
+			TiTleModel.each.scale = pouseMinSizeConst;
+			TiTleModel.each.rotation.x = -35;
+			EndModel.each.scale = pouseMinSizeConst;
+			EndModel.each.rotation.x = -35;
+			ChackBoxModel.each.scale = pouseMinSizeConst;
+			ChackBoxModel.each.rotation.x = -35;
+			pouseKakko[0].position = { -1.0f, 1.0f, -3.0f, 1.0f };
+			pouseKakko[1].position = { 3.0f, 1.0f, -3.0f, 1.0f };
+			pouseKakko[0].scale = { 0.35f, 0.35f, 0.35f };
+			pouseKakko[1].scale = { 0.35f, 0.35f, 0.35f };
+			pouseKakko[0].rotation.x = -35;
+			pouseKakko[1].rotation.x = -35;
+		}
+		else if (selectPouse == 1)
+		{
+			SupportModel.each.scale = pouseMinSizeConst;
+			SupportModel.each.rotation.x = -35;
+			BackModel.each.scale = pouseMinSizeConst;
+			BackModel.each.rotation.x = -35;
+			TiTleModel.each.scale = pouseMinSizeConst;
+			TiTleModel.each.rotation.x = -35;
+			EndModel.each.scale = pouseMinSizeConst;
+			EndModel.each.rotation.x = -35;
+			ChackBoxModel.each.scale = pouseMinSizeConst;
+			ChackBoxModel.each.rotation.x = -35;
+			pouseKakko[0].position = { -1.0f, -1.0f, -3.0f, 1.0f };
+			pouseKakko[1].position = { 3.0f, -1.0f, -3.0f, 1.0f };
+			pouseKakko[0].scale = { 0.35f, 0.35f, 0.35f };
+			pouseKakko[1].scale = { 0.35f, 0.35f, 0.35f };
+		}
+		else if (selectPouse == 2)
+		{
+			SupportModel.each.scale = pouseMinSizeConst;
+			SupportModel.each.rotation.x = -35;
+			BackModel.each.scale = pouseMinSizeConst;
+			BackModel.each.rotation.x = -35;
+			TiTleModel.each.scale = pouseMinSizeConst;
+			TiTleModel.each.rotation.x = -35;
+			EndModel.each.scale = pouseMinSizeConst;
+			EndModel.each.rotation.x = -35;
+			ChackBoxModel.each.scale = pouseMinSizeConst;
+			ChackBoxModel.each.rotation.x = -35;
+			pouseKakko[0].position = { -1.0f, -3.0f, -3.0f, 1.0f };
+			pouseKakko[1].position = { 3.0f, -3.0f, -3.0f, 1.0f };
+			pouseKakko[0].scale = { 0.35f, 0.35f, 0.35f };
+			pouseKakko[1].scale = { 0.35f, 0.35f, 0.35f };
+		}
+		else if (selectPouse == -1)
+		{
+			SupportModel.each.scale = pouseMinSizeConst;
+			SupportModel.each.rotation.x = -35;
+			BackModel.each.scale = pouseMinSizeConst;
+			BackModel.each.rotation.x = -35;
+			TiTleModel.each.scale = pouseMinSizeConst;
+			TiTleModel.each.rotation.x = -35;
+			EndModel.each.scale = pouseMinSizeConst;
+			EndModel.each.rotation.x = -35;
+			ChackBoxModel.each.scale = pouseMinSizeConst;
+			ChackBoxModel.each.rotation.x = -35;
+			pouseKakko[0].position = { -1.0f, 3.0f, -3.0f, 1.0f };
+			pouseKakko[1].position = { 7.0f, 3.0f, -3.0f, 1.0f };
+			pouseKakko[0].scale = { 0.35f, 0.35f, 0.35f };
+			pouseKakko[1].scale = { 0.35f, 0.35f, 0.35f };
+		}
+		if (isSupport)
+		{
+			CheckModel.each.position = { -2.8f, 3.6f, -3.0f, 1.0f };
+			CheckModel.each.scale = { 0.2f, 0.2f, 0.2f };
+			CheckModel.each.rotation.x = -35;
+			CheckModel.Update();
+			Draw3DObject(CheckModel);
+		}
+		kakko[0].Update(&pouseKakko[0]);
+		kakko[1].Update(&pouseKakko[1]);
+		Draw3DObject(kakko[0]);
+		Draw3DObject(kakko[1]);
+		ChackBoxModel.each.scale = ChackBoxModel.each.scale - 0.1f;
+		SupportModel.each.position = { 3.0f, 3.0f, -3.0f, 1.0f };
+		SupportModel.Update();
+		Draw3DObject(SupportModel);
+		BackModel.each.position = { 1.0f, 1.0f, -3.0f, 1.0f };
+		BackModel.Update();
+		Draw3DObject(BackModel);
+		TiTleModel.each.position = { 1.0f, -1.0f, -3.0f, 1.0f };
+		TiTleModel.Update();
+		Draw3DObject(TiTleModel);
+		EndModel.each.position = { 1.0f, -3.0f, -3.0f, 1.0f };
+		EndModel.Update();
+		Draw3DObject(EndModel);
+		ChackBoxModel.each.position = { -3.0f, 3.0f, -3.0f, 1.0f };
+		ChackBoxModel.Update();
+		Draw3DObject(ChackBoxModel);
+		/*pouseBack.ChangeSize(1280, 720);
 		pouseBack.position.m128_f32[0] = 0;
 		pouseBack.position.m128_f32[1] = 0;
 		pouseBack.SpriteDraw();
@@ -1735,7 +1886,7 @@ void GameScene::GameDraw()
 			kagikakkoEndSprite.position.m128_f32[0] = window_width / 2 + 75;
 			kagikakkoEndSprite.position.m128_f32[1] = window_height / 2 + 170;
 			kagikakkoEndSprite.SpriteDraw();
-		}
+		}*/
 	}
 
 	//tips—p

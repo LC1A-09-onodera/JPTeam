@@ -378,12 +378,13 @@ public://シーンで使うもの
 	bool isCameraModed = false;
 
 	//ポーズ用モデル-----------------
-	bool isSupport;
+	bool isSupport = true;
 	Model SupportModel;
 	Model BackModel;
 	Model TiTleModel;
 	Model EndModel;
 	Model ChackBoxModel;
+	Model CheckModel;
 	EachInfo pouseKakko[2];
 	EachInfo pouseBackEach;
 	XMFLOAT3 pouseMinSizeConst;
