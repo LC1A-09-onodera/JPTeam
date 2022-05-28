@@ -207,7 +207,9 @@ namespace OthelloConstData
 	const XMVECTOR moveSubTextPos = { 105, 50, 0,0 };
 	//テキストの表示箇所3D
 	const XMVECTOR comboScoreModelPos{ -1.6f, 13.0f, -1.0f ,0 };//コンボとスコアの文字の基準位置
-	const XMVECTOR allDeleteModelPos{ -3.0f, 13.0f, -1.0f ,0 };//ゼンブハサムの文字の基準位置
+	//const XMVECTOR allDeleteModelPos{ -3.0f, 13.0f, -1.0f ,0 };//ゼンブハサムの文字の基準位置
+	const XMVECTOR allDeleteModelPos{ 0.0f, 13.0f, -1.0f ,0 };//ゼンブハサムの文字の基準位置
+
 	const XMVECTOR moveTextModelPos{ 15.0f, 0.0f, 0.0f ,0.0f };//ノルマモードに入る際の移動量
 	const XMVECTOR moveSubTextModelPos{ 4.0f, -5.0f, 0.0f ,0.0f };//サブノルマの移動量
 	const XMVECTOR scoreAttackTextPos{ 0.0f, 15.0f, -1.0f ,0 };//スコアアタックの文字の基準位置
@@ -429,7 +431,7 @@ private://モードセレクト用内部関数
 	void NormaComboModelSetPos(bool isNormaMode);
 	void NormaPanelsModelSetPos(bool isNormaMode);
 	void NormaScoreModelSetPos(bool isNormaMode);
-	void SetCountModelPos(bool isNormaMode);
+	void SetCountModelPos(bool isNormaMode, int stageNum);
 	void SetScoreAttackTextPos();
 	void SubNormaModelPos(bool isNormaMode);
 	void SetModelPos(bool isNormaMode);
