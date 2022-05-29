@@ -420,6 +420,8 @@ public://チュートリアルの関数
 	bool IsTutorialEnd();
 
 	std::list<XMFLOAT3> &GetPressPanellPos();
+	void TutorialStart();
+private:
 	//挟むチュートリアルでーす
 	void whySandwichSpawn();
 
