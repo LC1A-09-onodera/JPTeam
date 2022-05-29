@@ -892,6 +892,7 @@ void OthelloManager::TutorialUpdate(int combo)
 	switch (scenes)
 	{
 	case TutorialSceneFlow::SandwichSpawn:
+		whySandwichSpawn();
 		break;
 
 	case TutorialSceneFlow::SandwichUpdate:
@@ -1687,9 +1688,9 @@ GameMode OthelloManager::GetEnterModeType()
 	{
 		now = GameMode::Dojo;
 	}
-	else if (playerPanelPos == tutorialPanel && nowType == DojoSelect)
+	else if (playerPanelPos == tutorialPanel && nowType == GameModeSelect)
 	{
-		now = GameMode::Dojo;
+		now = GameMode::Tutorial;
 	}
 	
 	return now;
@@ -3488,6 +3489,11 @@ void OthelloManager::SpawnChances(const vector<pair<int, int>> &pos)
 		int pos = (e.first * 8) + (e.second);
 		chances[pos].isDraw = true;
 	}
+}
+
+void OthelloManager::TutorialStart()
+{
+	whySandwichSpawn();
 }
 
 void OthelloManager::whyStepSpawn()
