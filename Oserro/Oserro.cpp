@@ -698,7 +698,7 @@ void OthelloManager::Init(Tex num[10], Model numModel[10])
 	{
 		itr->resize(fieldSize);
 	}
-	LoadAllStage();
+	LoadAllNormaStage();
 	int fieldTextCount = NormaStartOthellos.size();
 	fieldTextCount *= 2;
 	fieldTextCount -= 9;
@@ -846,7 +846,7 @@ void OthelloManager::Update(int combo)
 	{
 		itr->Update(combo);
 	}
-	if (Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01))
+	if (A())
 	{
 		isFieldUpdate = true;
 	}
@@ -882,7 +882,7 @@ void OthelloManager::TutorialUpdate(int combo)
 			tutorialOnPlayer = (itr->GetGameData()->widthPos == playerPanelPos.x && itr->GetGameData()->heightPos == playerPanelPos.y);
 		}
 	}
-	if (Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01))
+	if (A())
 	{
 		isFieldUpdate = true;
 	}
@@ -892,6 +892,7 @@ void OthelloManager::TutorialUpdate(int combo)
 	switch (scenes)
 	{
 	case TutorialSceneFlow::SandwichSpawn:
+		whySandwichSpawn();
 		break;
 
 	case TutorialSceneFlow::SandwichUpdate:
@@ -1110,7 +1111,7 @@ void OthelloManager::NormaUpdate(int combo)
 			nowMaxCombo = itr->GetGameData()->maxComboCount;
 		}
 	}
-	if (Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01))
+	if (A())
 	{
 		isFieldUpdate = true;
 	}
@@ -1305,6 +1306,7 @@ void OthelloManager::SetPlayer()
 	playerItr->GetGameData()->panels = tmpPanels;
 }
 
+
 void OthelloManager::Move(const XMFLOAT3 &MousePos)
 {
 	XMFLOAT3 stagePos = MousePos - stageLeftTop;
@@ -1373,19 +1375,199 @@ void OthelloManager::ModeSelectStart(int stageNum)
 		//data.GetGameData()->isMove = false;
 		//data.GetGameData()->isPlayer = false;
 		//othellos.push_back(data);
-
-
-
-	playerPanelPos = { x, y };
-
 	//for (int stageCount = 0; stageCount < 8; stageCount++)
 	//{
 	//	SetChanceObject(stageCount, stageCount, true);
 	//	SetChanceObject(stageCount, 7 - stageCount, false);
 	//}
 	//MinSpawn(false);
-	SetModeSelectPanel(stageNum);
+	SetGameModeSelectPanel(stageNum);
 }
+
+void OthelloManager::DojoStart()
+{
+	//全ての道場が初期化される
+	ConnectStart();
+	WaltzStart();
+	BookendStart();
+	ReversiblrStart();
+}
+
+void OthelloManager::DojoUpdate(int combo)
+{
+	//死ぬ
+	DeadPanel();
+
+	//更新
+	auto itr = othellos.begin();
+	int panelCount = 0;
+	int comboMax = 0;
+	bool tutorialOnPlayer = false;
+	for (; itr != othellos.end(); ++itr)
+	{
+		itr->Update(combo);
+		if (!itr->GetIsActive())
+		{
+			panelCount++;
+		}
+		if (itr->GetGameData()->comboCount > comboMax)
+		{
+			comboMax = itr->GetGameData()->comboCount;
+		}
+
+		if (!tutorialOnPlayer)
+		{
+			tutorialOnPlayer = (itr->GetGameData()->widthPos == playerPanelPos.x && itr->GetGameData()->heightPos == playerPanelPos.y);
+		}
+	}
+	if (A())
+	{
+		isFieldUpdate = true;
+	}
+	bool retry = (Input::KeyTrigger(DIK_R) || directInput->IsButtonPush(directInput->Button03));
+
+	switch (dojoType)
+	{
+	case Conect:
+		break;
+	case Waltz:
+		break;
+	case Bookend:
+		break;
+	case Reversible:
+		break;
+	default:
+		break;
+	}
+	//スイッチ文で道場の内容分岐
+}
+
+void OthelloManager::DojoDraw()
+{
+	//スイッチ文で道場の内容分岐
+	switch (dojoType)
+	{
+	case Conect:
+		break;
+	case Waltz:
+		break;
+	case Bookend:
+		break;
+	case Reversible:
+		break;
+	default:
+		break;
+	}
+}
+
+void OthelloManager::DojoEnd()
+{
+	//スイッチ文で道場の内容分岐
+	switch (dojoType)
+	{
+	case Conect:
+		break;
+	case Waltz:
+		break;
+	case Bookend:
+		break;
+	case Reversible:
+		break;
+	default:
+		break;
+	}
+}
+
+void OthelloManager::DojoRestart()
+{
+	//スイッチ文で道場の内容分岐
+	switch (dojoType)
+	{
+	case Conect:
+		break;
+	case Waltz:
+		break;
+	case Bookend:
+		break;
+	case Reversible:
+		break;
+	default:
+		break;
+	}
+}
+
+#pragma region Connect
+void OthelloManager::ConnectStart()
+{
+	nowConnectFlow = Connect0;
+}
+void OthelloManager::ConnecgtUpdate()
+{
+}
+void OthelloManager::ConnectDraw()
+{
+
+}
+#pragma endregion
+
+
+#pragma region Waltz
+void OthelloManager::WaltzStart()
+{
+	nowWaltzFlow = Waltz0;
+
+}
+void OthelloManager::WaltzUpdate()
+{
+
+
+}
+void OthelloManager::WaltzDrwa()
+{
+
+
+}
+#pragma endregion
+
+
+#pragma region Boolend
+void OthelloManager::BookendStart()
+{
+
+
+}
+void OthelloManager::BookendUpdate()
+{
+
+
+}
+void OthelloManager::BookendDrwa()
+{
+
+
+}
+
+#pragma endregion
+
+#pragma region Revercible
+void OthelloManager::ReversiblrStart()
+{
+
+
+}
+
+void OthelloManager::ReversiblrUpdate()
+{
+
+
+}
+void OthelloManager::ReversiblrDrwa()
+{
+
+}
+
+#pragma endregion
+
 
 void OthelloManager::ModeSelectUpdate()
 {
@@ -1402,15 +1584,71 @@ void OthelloManager::ModeSelectUpdate()
 
 		itr->Update(1);
 	}
-	if (Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01))
+	if (A())
 	{
+		switch (nowType)
+		{
+		case GameModeSelect:
+			SelectUpdateGameMode();
+			break;
+		case DojoSelect:
+			SelectUpdateDojo();
+			break;
+		case PuzzleSelect:
+			SelectUpdatePazzle();
+			break;
+		default:
+			break;
+		}
 		isFieldUpdate = true;
 	}
 
 
 
 }
+void OthelloManager::SelectUpdateGameMode()
+{
+	if (playerPanelPos == DojoPanel)
+	{
+		nowType = ModeSelectType::DojoSelect;
+		SetDojoModeSelectPanel();
+	}
+}
 
+void OthelloManager::SelectUpdateDojo()
+{
+	if (playerPanelPos == ConectPanel)
+	{
+		dojoType = DojoType::Conect;
+	}
+	else if (playerPanelPos == WaltzPanel)
+	{
+		dojoType = DojoType::Waltz;
+	}
+	else if (playerPanelPos == BookendPanel)
+	{
+		dojoType = DojoType::Bookend;
+	}
+	else if (playerPanelPos == reversiblePanel)
+	{
+		dojoType = DojoType::Reversible;
+	}
+	else if (playerPanelPos == UndoPanel)
+	{
+		nowType = ModeSelectType::GameModeSelect;
+		SetGameModeSelectPanel();
+	}
+
+}
+
+void OthelloManager::SelectUpdatePazzle()
+{
+	if (playerPanelPos == UndoPanel)
+	{
+		nowType = ModeSelectType::GameModeSelect;
+		SetGameModeSelectPanel();
+	}
+}
 
 void OthelloManager::ModeSelectControll()
 {
@@ -1430,22 +1668,31 @@ void OthelloManager::ModeSelectControll()
 
 bool OthelloManager::InMode()
 {
-	return (Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01));
+	return (A());
 }
 
 GameMode OthelloManager::GetEnterModeType()
 {
-	GameMode now = GameMode::None;
+	GameMode now = GameMode::NoneGameMode;
 
 	int stageNum = (playerPanelPos.y * 8) + playerPanelPos.x + 1;
-	if (stageNum <= NormaStartOthellos.size())
+	if (stageNum <= NormaStartOthellos.size() && nowType == PuzzleSelect)
 	{
 		now = GameMode::NormaMode;
 	}
-	else if (playerPanelPos == scoreAttack)
+	else if (playerPanelPos == ScoreAttackPanel && nowType == GameModeSelect)
 	{
 		now = GameMode::ScoreAttack;
 	}
+	else if (playerPanelPos == DojoPanel && nowType == DojoSelect)
+	{
+		now = GameMode::Dojo;
+	}
+	else if (playerPanelPos == tutorialPanel && nowType == GameModeSelect)
+	{
+		now = GameMode::Tutorial;
+	}
+	
 	return now;
 }
 
@@ -1649,9 +1896,72 @@ void OthelloManager::CountModelDraw(int count, EachInfo *data, EachInfo *dataB)
 	}
 }
 
-void OthelloManager::SetModeSelectPanel(int stageNum)
+void OthelloManager::SetGameModeSelectPanel(int startPos)
 {
-	AllDeletePanel();
+	AllDeadPanel();
+
+	//SetSpawnPanel(normaMode.x, normaMode.y, true, STOP, false);
+	SetSpawnPanel(ScoreAttackPanel.x, ScoreAttackPanel.y, true, STOP, false);
+	SetSpawnPanel(tutorialPanel.x, tutorialPanel.y, true, STOP, false);
+	SetSpawnPanel(DojoPanel.x, DojoPanel.y, true, STOP, false);
+
+
+	//条件に寄って初期位置が変化する
+	bool isDefault = startPos <= 0;
+	if (isDefault)
+	{
+		SetSpawnPlayer(7, 7);
+	}
+	else
+	{
+		if (startPos >= NormaStartOthellos.size())
+		{
+			startPos = NormaStartOthellos.size();
+		}
+		startPos--;
+		int x = startPos % 8;
+		int y = startPos / 8;
+		SetSpawnPlayer(x, y);
+	}
+}
+
+
+void OthelloManager::SetDojoModeSelectPanel(int startPos)
+{
+	AllDeadPanel();
+	bool stageEnd = false;
+
+	//SetSpawnPanel(normaMode.x, normaMode.y, true, STOP, false);
+	SetSpawnPanel(ConectPanel.x, ConectPanel.y, true, STOP, false);
+	SetSpawnPanel(WaltzPanel.x, WaltzPanel.y, true, STOP, false);
+	SetSpawnPanel(BookendPanel.x, BookendPanel.y, true, STOP, false);
+	SetSpawnPanel(reversiblePanel.x, reversiblePanel.y, true, STOP, false);
+	SetSpawnPanel(UndoPanel.x, UndoPanel.y, true, STOP, false);
+
+
+
+	//条件に寄って初期位置が変化する
+	bool isDefault = startPos <= 0;
+	if (isDefault)
+	{
+		SetSpawnPlayer(7, 7);
+	}
+	else
+	{
+		if (startPos >= NormaStartOthellos.size())
+		{
+			startPos = NormaStartOthellos.size();
+		}
+		startPos--;
+		int x = startPos % 8;
+		int y = startPos / 8;
+		SetSpawnPlayer(x, y);
+	}
+}
+
+void OthelloManager::SetPuzzleModeSelectPanel(int startPos)
+{
+	AllDeadPanel();
 	bool stageEnd = false;
 	for (int y = 0; y < 7; y++)
 	{
@@ -1670,26 +1980,25 @@ void OthelloManager::SetModeSelectPanel(int stageNum)
 		}
 	}
 	//SetSpawnPanel(normaMode.x, normaMode.y, true, STOP, false);
-	SetSpawnPanel(scoreAttack.x, scoreAttack.y, true, STOP, false);
 
-	bool isDefault = stageNum <= 0;
+	//条件に寄って初期位置が変化する
+	bool isDefault = startPos <= 0;
 	if (isDefault)
 	{
 		SetSpawnPlayer(7, 7);
 	}
 	else
 	{
-		if (stageNum >= NormaStartOthellos.size())
+		if (startPos >= NormaStartOthellos.size())
 		{
-			stageNum = NormaStartOthellos.size();
+			startPos = NormaStartOthellos.size();
 		}
-		stageNum--;
-		int x = stageNum % 8;
-		int y = stageNum / 8;
+		startPos--;
+		int x = startPos % 8;
+		int y = startPos / 8;
 		SetSpawnPlayer(x, y);
 	}
 }
-
 
 void OthelloManager::SetCountPos(bool isNormaMode)
 {
@@ -2001,7 +2310,7 @@ const vector<vector<SendOthelloData>> &OthelloManager::Send()
 			data.isOnPlayer = true;
 		}
 
-		if ((Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01)) && isOnPlayer)
+		if (A() && isOnPlayer)
 		{
 			data.isMove = true;
 			SetNormaMove();
@@ -3182,6 +3491,11 @@ void OthelloManager::SpawnChances(const vector<pair<int, int>> &pos)
 	}
 }
 
+void OthelloManager::TutorialStart()
+{
+	whySandwichSpawn();
+}
+
 void OthelloManager::whyStepSpawn()
 {
 	AllDeletePanel();
@@ -3441,7 +3755,7 @@ bool OthelloManager::GetIsNormaFailed()
 	return normaChecker.GetFailed();
 }
 
-void OthelloManager::LoadNormaStage(string stage)
+void OthelloManager::LoadNormaStage(string stage, list<NormaModeFieldData> &stageList)
 {
 	std::ifstream file;
 	const string stageFileName = "Resource/Stage/" + stage + ".txt";
@@ -3583,10 +3897,10 @@ void OthelloManager::LoadNormaStage(string stage)
 
 		}
 	}
-	NormaStartOthellos.push_back(NormaField);
+	stageList.push_back(NormaField);
 }
 
-void OthelloManager::LoadAllStage()
+void OthelloManager::LoadAllNormaStage()
 {
 	//LoadNormaStage("test");
 
@@ -3594,7 +3908,7 @@ void OthelloManager::LoadAllStage()
 	for (int i = 0; i <= NormaStageCount; i++)
 	{
 		string count = to_string(i + 1);
-		LoadNormaStage(baseName + count);
+		LoadNormaStage(baseName + count, NormaStartOthellos);
 	}
 
 	int stageCount = NormaStartOthellos.size();
@@ -3681,4 +3995,9 @@ float OthelloEase::WaveInOut(WaveEase &obj, int powCount)
 
 	return ret;
 
+}
+
+bool OthelloManager::A()
+{
+	return (Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01));
 }

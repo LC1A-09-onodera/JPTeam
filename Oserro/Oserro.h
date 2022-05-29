@@ -12,11 +12,65 @@ enum OthelloType
 	NONE,
 };
 
+//ゲームシーン側から送る合図
 enum GameMode
 {
-	None,
+	NoneGameMode,
 	NormaMode,
 	ScoreAttack,
+	Dojo,
+	Tutorial,
+};
+
+//モード選択のシーン
+enum ModeSelectType
+{
+	GameModeSelect,
+	DojoSelect,
+	PuzzleSelect,
+};
+
+//道場の内容
+enum DojoType
+{
+	NoneDojo,
+	Conect,
+	Waltz,
+	Bookend,
+	Reversible,
+};
+
+//Connectの全体フロー
+enum ConectFlow
+{
+	Connect0,//開始
+	Connect1,//コンボ1
+	Connect2,//コンボして壁が立つ
+	Connect3,//コンボ２
+	Connect4,//コンボ３
+	Connect5,//終了
+};
+enum WaltzFlow
+{
+	Waltz0,//開始
+	Waltz1,
+	Waltz2,
+	Waltz3,
+	Waltz4,
+	Waltz5,
+	Waltz6,
+	Waltz7,
+	Waltz8,
+};
+
+enum BookendFlow
+{
+	BookEnd0,//開始
+};
+
+enum ReversibleFlow
+{
+	Reversible0,//開始
 };
 namespace
 {
@@ -70,17 +124,6 @@ namespace TutorialSceneFlow
 		StepSpawn,
 		StepUpdate,
 		TutorialEnd
-	};
-
-	enum TutorialFlow
-	{
-		FirstText,
-		FirstPlay,
-		SecondText,
-		SeconDPlay,
-		ThirdText,
-		ThirdPlay,
-		FlowEnd
 	};
 }
 struct OthelloData
@@ -200,10 +243,17 @@ namespace OthelloConstData
 		const int breathLevelTimerMax = 60;
 	};
 	const panelPos normaMode = { 0, 0 };
-	const panelPos scoreAttack = { 0, 7 };
+	const panelPos ScoreAttackPanel = { 2, 5 };
+	const panelPos tutorialPanel = { 2, 2 };
+	const panelPos DojoPanel = { 5, 2 };
+	const panelPos UndoPanel = { 7, 7 };
+	const panelPos ConectPanel = { 1, 2 };
+	const panelPos WaltzPanel = { 3, 2 };
+	const panelPos BookendPanel = { 5, 2 };
+	const panelPos reversiblePanel = { 7, 2 };
 	//テキストの表示箇所2D
 	const XMVECTOR moveTextPos = { 400, 0, 0,0 };
-	const XMVECTOR moveAllDeleteCountPos{5.0f, 0.0f, 0.0f , 0.0f };
+	const XMVECTOR moveAllDeleteCountPos{ 5.0f, 0.0f, 0.0f , 0.0f };
 	const XMVECTOR moveSubTextPos = { 105, 50, 0,0 };
 	//テキストの表示箇所3D
 	const XMVECTOR comboScoreModelPos{ -1.6f, 13.0f, -1.0f ,0 };//コンボとスコアの文字の基準位置
@@ -213,7 +263,7 @@ namespace OthelloConstData
 	const XMVECTOR moveTextModelPos{ 15.0f, 0.0f, 0.0f ,0.0f };//ノルマモードに入る際の移動量
 	const XMVECTOR moveSubTextModelPos{ 4.0f, -5.0f, 0.0f ,0.0f };//サブノルマの移動量
 	const XMVECTOR scoreAttackTextPos{ 0.0f, 15.0f, -1.0f ,0 };//スコアアタックの文字の基準位置
-	const XMVECTOR FloatAnimationDistance { 0.0f, 1.0f, 0.0f ,0.0f };
+	const XMVECTOR FloatAnimationDistance{ 0.0f, 1.0f, 0.0f ,0.0f };
 
 	const float textBaseScale = 0.3f;
 }
@@ -270,7 +320,7 @@ public:
 	bool GetIsEase() { return isEase; }
 	XMFLOAT3 GetPosition() { return ConvertXMVECTORtoXMFLOAT3(each.position); }
 	void SetIsEase(bool isEase) { this->isEase = isEase; }
-	void SetIsRockDraw(bool isRockDraw) {this->isRockDraw = isRockDraw;}
+	void SetIsRockDraw(bool isRockDraw) { this->isRockDraw = isRockDraw; }
 	void SetPosition(XMFLOAT3 &position) { this->each.position = ConvertXMFLOAT3toXMVECTOR(position); }
 	void SetScale(XMFLOAT3 &scale) { this->each.scale = scale; }
 public:
@@ -340,7 +390,6 @@ class OthelloManager
 public:
 	void Init(Tex num[10], Model numModel[10]);
 	void Update(int combo);
-	void TutorialUpdate(int combo);
 	void Draw(bool isChanceDraw = true, bool isCompDraw = true);
 	void Finalize();
 	void Controll();
@@ -361,7 +410,18 @@ public:
 	void AllDeletePanel();
 	bool GetIsSendDataUpdate();
 	void EraseChanceObject();
-public:
+
+public://チュートリアルの関数
+	void TutorialUpdate(int combo);
+
+
+	void TutorialTextDraw();
+
+	bool IsTutorialEnd();
+
+	std::list<XMFLOAT3> &GetPressPanellPos();
+	void TutorialStart();
+private:
 	//挟むチュートリアルでーす
 	void whySandwichSpawn();
 
@@ -370,12 +430,8 @@ public:
 
 	//落ちてしまった場合の復帰方法だよ
 	void whyStepSpawn();
-
-	void TutorialTextDraw();
-
-	bool IsTutorialEnd();
-
-	std::list<XMFLOAT3> &GetPressPanellPos();
+private:
+	bool A();
 public://ノルマモード用関数
 	void NormaUpdate(int combo);
 	void SetNormaMove();
@@ -396,8 +452,8 @@ public://ノルマモード用関数
 private://ノルマモード用内部処理関数
 	void StartNormaField(int stageNum = 0);
 	void TestStage();
-	void LoadNormaStage(std::string stage);
-	void LoadAllStage();
+	void LoadNormaStage(std::string stage, list<NormaModeFieldData> &stageList);
+	void LoadAllNormaStage();
 	void CountTextDraw(int count);
 	void CountModelDraw(int count, EachInfo *data = nullptr, EachInfo *dataB = nullptr);
 public://モードセレクト用外部関数
@@ -416,10 +472,18 @@ public://モードセレクト用外部関数
 	//何かしら描画があるなら
 	void ModeSelectDraw(bool isDraw);
 	void ModeSelectModelDraw(bool isDraw);
+	void SetGameModeSelectPanel(int startPos = -1);
+	void SetPuzzleModeSelectPanel(int startPos = -1);
+	void SetDojoModeSelectPanel(int startPos = -1);
 private://モードセレクト用変数:
 	vector<EachInfo> fieldDrawText;
+	ModeSelectType nowType = GameModeSelect;
+	ModeSelectType oldType = nowType;
 private://モードセレクト用内部関数
-	void SetModeSelectPanel(int stageNum);
+	void SelectUpdateGameMode();
+	void SelectUpdateDojo();
+	void SelectUpdatePazzle();
+private://描画の配置
 	void NormaComboTextSetPos(bool isNormaMode);
 	void NormaPanelsTextSetPos(bool isNormaMode);
 	void NormaScoreTextSetPos(bool isNormaMode);
@@ -438,6 +502,46 @@ private://モードセレクト用内部関数
 
 	void SetModeSelectEachInfo(EachInfo &data, panelPos &pos);
 	void SetPickupModeEachInfo(EachInfo &data);
+public:
+	void DojoStart();
+	void DojoUpdate(int combo);
+	void DojoDraw();
+	void DojoEnd();
+	void DojoRestart();
+	bool GetDojoIsStart();
+	bool IsDojoEnd();
+private://道場変数
+	DojoType dojoType;
+private:
+#pragma region connect
+	void ConnectStart();
+	void ConnecgtUpdate();
+	void ConnectDraw();
+	ConectFlow	nowConnectFlow;
+#pragma endregion
+
+#pragma region Waltz
+	void WaltzStart();
+	void WaltzUpdate();
+	void WaltzDrwa();
+	WaltzFlow	nowWaltzFlow;
+#pragma endregion
+
+#pragma region Bookend
+	void BookendStart();
+	void BookendUpdate();
+	void BookendDrwa();
+	BookendFlow	nowBookendFlow;
+#pragma endregion
+
+#pragma region Reversible
+	void ReversiblrStart();
+	void ReversiblrUpdate();
+	void ReversiblrDrwa();
+	ReversibleFlow	nowReversibleFlow;
+#pragma endregion
+
+private:
 private:
 	void SetPlayer();
 
@@ -578,6 +682,6 @@ private:
 	int textChangeTimer = 0;
 	bool textChange = false;
 
-	
+
 	std::list<XMFLOAT3> pressPos;
 };

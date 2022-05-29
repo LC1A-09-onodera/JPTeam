@@ -2572,7 +2572,7 @@ void GameScene::ToTutorialUpdate()
 			{
 				isTutorial = true;
 				titleSelectNum = 0;
-				othelloManager.whySandwichSpawn();
+				othelloManager.TutorialStart();
 				gameTime = 60;
 				isTipsOk = true;
 			}
