@@ -828,6 +828,70 @@ void OthelloManager::Init(Tex num[10], Model numModel[10])
 		}
 	}
 
+
+	ConnectText.resize(17);
+
+	ConnectText[0].CreateSprite(L"Resource/Img/connect/connect_text_0.png", XMFLOAT3{});
+	ConnectText[1].CreateSprite(L"Resource/Img/connect/connect_text_1.png", XMFLOAT3{});
+	ConnectText[2].CreateSprite(L"Resource/Img/connect/connect_text_2.png", XMFLOAT3{});
+	ConnectText[3].CreateSprite(L"Resource/Img/connect/connect_text_3.png", XMFLOAT3{});
+	ConnectText[4].CreateSprite(L"Resource/Img/connect/connect_text_4.png", XMFLOAT3{});
+	ConnectText[5].CreateSprite(L"Resource/Img/connect/connect_text_5.png", XMFLOAT3{});
+	ConnectText[6].CreateSprite(L"Resource/Img/connect/connect_text_6.png", XMFLOAT3{});
+	ConnectText[7].CreateSprite(L"Resource/Img/connect/connect_text_7.png", XMFLOAT3{});
+	ConnectText[8].CreateSprite(L"Resource/Img/connect/connect_text_8.png", XMFLOAT3{});
+	ConnectText[9].CreateSprite(L"Resource/Img/connect/connect_text_9.png", XMFLOAT3{});
+	ConnectText[10].CreateSprite(L"Resource/Img/connect/connect_text_10.png", XMFLOAT3{});
+	ConnectText[11].CreateSprite(L"Resource/Img/connect/connect_text_11.png", XMFLOAT3{});
+	ConnectText[12].CreateSprite(L"Resource/Img/connect/connect_text_12.png", XMFLOAT3{});
+	ConnectText[13].CreateSprite(L"Resource/Img/connect/connect_text_13.png", XMFLOAT3{});
+	ConnectText[14].CreateSprite(L"Resource/Img/connect/connect_text_14.png", XMFLOAT3{});
+	ConnectText[15].CreateSprite(L"Resource/Img/connect/connect_text_15.png", XMFLOAT3{});
+	ConnectText[16].CreateSprite(L"Resource/Img/connect/connect_text_16.png", XMFLOAT3{});
+
+	for (auto &e : ConnectText)
+	{
+		e.ChangeSize(1280, 300);
+		e.position = XMVECTOR{0, 720 - (300 + 30), 0, 0 };
+	}
+	WaltzText.resize(15);
+	WaltzText[0].CreateSprite(L"Resource/Img/waltz_text/waltz_text_0.png", XMFLOAT3{});
+	WaltzText[1].CreateSprite(L"Resource/Img/waltz_text/waltz_text_1.png", XMFLOAT3{});
+	WaltzText[2].CreateSprite(L"Resource/Img/waltz_text/waltz_text_2.png", XMFLOAT3{});
+	WaltzText[3].CreateSprite(L"Resource/Img/waltz_text/waltz_text_3.png", XMFLOAT3{});
+	WaltzText[4].CreateSprite(L"Resource/Img/waltz_text/waltz_text_4.png", XMFLOAT3{});
+	WaltzText[5].CreateSprite(L"Resource/Img/waltz_text/waltz_text_5.png", XMFLOAT3{});
+	WaltzText[6].CreateSprite(L"Resource/Img/waltz_text/waltz_text_6.png", XMFLOAT3{});
+	WaltzText[7].CreateSprite(L"Resource/Img/waltz_text/waltz_text_7.png", XMFLOAT3{});
+	WaltzText[8].CreateSprite(L"Resource/Img/waltz_text/waltz_text_8.png", XMFLOAT3{});
+	WaltzText[9].CreateSprite(L"Resource/Img/waltz_text/waltz_text_9.png", XMFLOAT3{});
+	WaltzText[10].CreateSprite(L"Resource/Img/waltz_text/waltz_text_10.png", XMFLOAT3{});
+	WaltzText[11].CreateSprite(L"Resource/Img/waltz_text/waltz_text_11.png", XMFLOAT3{});
+	WaltzText[12].CreateSprite(L"Resource/Img/waltz_text/waltz_text_12.png", XMFLOAT3{});
+	WaltzText[13].CreateSprite(L"Resource/Img/waltz_text/waltz_text_13.png", XMFLOAT3{});
+	WaltzText[14].CreateSprite(L"Resource/Img/waltz_text/waltz_text_14.png", XMFLOAT3{});
+	for (auto &e : WaltzText)
+	{
+		e.ChangeSize(1280, 300);
+		e.position = XMVECTOR{ 0, 720 - (300 + 30), 0, 0 };
+	}
+	BookendText.resize(11);
+	BookendText[0].CreateSprite(L"Resource/Img/bookend_text/bookend_text_0.png", XMFLOAT3{});
+	BookendText[1].CreateSprite(L"Resource/Img/bookend_text/bookend_text_1.png", XMFLOAT3{});
+	BookendText[2].CreateSprite(L"Resource/Img/bookend_text/bookend_text_2.png", XMFLOAT3{});
+	BookendText[3].CreateSprite(L"Resource/Img/bookend_text/bookend_text_3.png", XMFLOAT3{});
+	BookendText[4].CreateSprite(L"Resource/Img/bookend_text/bookend_text_4.png", XMFLOAT3{});
+	BookendText[5].CreateSprite(L"Resource/Img/bookend_text/bookend_text_5.png", XMFLOAT3{});
+	BookendText[6].CreateSprite(L"Resource/Img/bookend_text/bookend_text_6.png", XMFLOAT3{});
+	BookendText[7].CreateSprite(L"Resource/Img/bookend_text/bookend_text_7.png", XMFLOAT3{});
+	BookendText[8].CreateSprite(L"Resource/Img/bookend_text/bookend_text_8.png", XMFLOAT3{});
+	BookendText[9].CreateSprite(L"Resource/Img/bookend_text/bookend_text_9.png", XMFLOAT3{});
+	BookendText[10].CreateSprite(L"Resource/Img/bookend_text/bookend_text_10.png", XMFLOAT3{});
+	for (auto &e : BookendText)
+	{
+		e.ChangeSize(1280, 300);
+		e.position = XMVECTOR{ 0, 720 - (300 + 30), 0, 0 };
+	}
 }
 
 void OthelloManager::Update(int combo)
@@ -1386,11 +1450,25 @@ void OthelloManager::ModeSelectStart(int stageNum)
 
 void OthelloManager::DojoStart()
 {
+	TextCount = 0;
+	isAct = false;
 	//全ての道場が初期化される
-	ConnectStart();
-	WaltzStart();
-	BookendStart();
-	ReversiblrStart();
+	switch (dojoType)
+	{
+	case Conect:
+		ConnectStart();
+		break;
+	case Waltz:
+		WaltzStart();
+		break;
+	case Bookend:
+		BookendStart();
+		break;
+	case Reversible:
+		break;
+	default:
+		break;
+	}
 }
 
 void OthelloManager::DojoUpdate(int combo)
@@ -1403,36 +1481,46 @@ void OthelloManager::DojoUpdate(int combo)
 	int panelCount = 0;
 	int comboMax = 0;
 	bool tutorialOnPlayer = false;
-	for (; itr != othellos.end(); ++itr)
+	if (isAct)
 	{
-		itr->Update(combo);
-		if (!itr->GetIsActive())
+		for (; itr != othellos.end(); ++itr)
 		{
-			panelCount++;
-		}
-		if (itr->GetGameData()->comboCount > comboMax)
-		{
-			comboMax = itr->GetGameData()->comboCount;
-		}
+			itr->Update(combo);
+			if (!itr->GetIsActive())
+			{
+				panelCount++;
+			}
+			if (itr->GetGameData()->comboCount > comboMax)
+			{
+				comboMax = itr->GetGameData()->comboCount;
+			}
 
-		if (!tutorialOnPlayer)
+			if (!tutorialOnPlayer)
+			{
+				tutorialOnPlayer = (itr->GetGameData()->widthPos == playerPanelPos.x && itr->GetGameData()->heightPos == playerPanelPos.y);
+			}
+		}
+		if (A())
 		{
-			tutorialOnPlayer = (itr->GetGameData()->widthPos == playerPanelPos.x && itr->GetGameData()->heightPos == playerPanelPos.y);
+			isFieldUpdate = true;
 		}
 	}
-	if (A())
+	else
 	{
-		isFieldUpdate = true;
+		playerNotMove();
 	}
 	bool retry = (Input::KeyTrigger(DIK_R) || directInput->IsButtonPush(directInput->Button03));
 
 	switch (dojoType)
 	{
 	case Conect:
+		ConnectUpdate(panelCount, comboMax);
 		break;
 	case Waltz:
+		WaltzUpdate(panelCount, comboMax);
 		break;
 	case Bookend:
+		BookendUpdate(panelCount, comboMax);
 		break;
 	case Reversible:
 		break;
@@ -1448,10 +1536,13 @@ void OthelloManager::DojoDraw()
 	switch (dojoType)
 	{
 	case Conect:
+		ConnectDraw();
 		break;
 	case Waltz:
+		WaltzDrwa();
 		break;
 	case Bookend:
+		BookendDrwa();
 		break;
 	case Reversible:
 		break;
@@ -1460,12 +1551,14 @@ void OthelloManager::DojoDraw()
 	}
 }
 
-void OthelloManager::DojoEnd()
+bool OthelloManager::DojoEnd()
 {
+	bool isEnd = false;
 	//スイッチ文で道場の内容分岐
 	switch (dojoType)
 	{
 	case Conect:
+		isEnd = nowConnectFlow == ConnectEnd;
 		break;
 	case Waltz:
 		break;
@@ -1476,37 +1569,192 @@ void OthelloManager::DojoEnd()
 	default:
 		break;
 	}
-}
-
-void OthelloManager::DojoRestart()
-{
-	//スイッチ文で道場の内容分岐
-	switch (dojoType)
-	{
-	case Conect:
-		break;
-	case Waltz:
-		break;
-	case Bookend:
-		break;
-	case Reversible:
-		break;
-	default:
-		break;
-	}
+	return isEnd;
 }
 
 #pragma region Connect
+//済
 void OthelloManager::ConnectStart()
 {
-	nowConnectFlow = Connect0;
+	nowConnectFlow = Connect1;
+	ConnectFirstSpwan();
 }
-void OthelloManager::ConnecgtUpdate()
+//済
+void OthelloManager::ConnectUpdate(int AlivePanel, int ComboCount)
 {
+	switch (nowConnectFlow)
+	{
+	case Connect1:
+		ConnectFirstUpdate(AlivePanel, ComboCount);
+		break;
+	case Connect2:
+		ConnectSecondUpdate(AlivePanel, ComboCount);
+		break;
+	case Connect3:
+		ConnectThirdUpdate(AlivePanel, ComboCount);
+		break;
+	case Connect4:
+		ConnectForceUpdate(AlivePanel, ComboCount);
+		break;
+	case Connect5:
+		ConnectFifthUpdate(AlivePanel, ComboCount);
+		break;
+	case ConnectEnd:
+		break;
+	default:
+		break;
+	}
 }
+//済
 void OthelloManager::ConnectDraw()
 {
+	if (TextCount >= ConnectText.size())
+	{
+		return;
+	}
+	ConnectText[TextCount].SpriteDraw();
+}
 
+//済
+void OthelloManager::ConnectFirstSpwan()
+{
+	SetSpawnPanel(6, 2, false);
+	SetSpawnPanel(6, 4, false);
+	SetSpawnPanel(6, 5, true);
+	SetSpawnPlayer(6, 2);
+}
+//済
+void OthelloManager::ConnectFirstUpdate(int AlivePanel, int ComboCount)
+{
+	if (!isAct)
+	{
+		playerNotMove();
+		if (A())
+		{
+			TextCount++;
+		}
+		if (TextCount > 3)
+		{
+			isAct = true;
+		}
+	}
+	else
+	{
+		if (AlivePanel <= 0)
+		{
+			ConnectSecondSpawn();
+		}
+	}
+}
+
+//済
+void OthelloManager::ConnectSecondSpawn()
+{
+	SetSpawnPanel(4, 5, true);
+	SetSpawnPanel(5, 5, false);
+	nowConnectFlow = Connect2;
+	isAct = false;
+}
+//済
+void OthelloManager::ConnectSecondUpdate(int AlivePanel, int ComboCount)
+{
+	if (!isAct)
+	{
+		playerNotMove();
+		if (A())
+		{
+			TextCount++;
+		}
+		if (TextCount > 3)
+		{
+			isAct = true;
+		}
+	}
+	else
+	{
+		if (AlivePanel <= 0)
+		{
+			isAct = false;
+			if (A())
+			{
+				TextCount++;
+			}
+			if (TextCount > 8)
+			{
+				ConnectThirdSpawn();
+			}
+		}
+	}
+}
+
+//済
+void OthelloManager::ConnectThirdSpawn()
+{
+	SetSpawnPanel(4, 4, false);
+	SetSpawnPanel(4, 3, true);
+	nowConnectFlow = Connect3;
+}
+//済
+void OthelloManager::ConnectThirdUpdate(int AlivePanel, int ComboCount)
+{
+	if (!isAct)
+	{
+		playerNotMove();
+		if (A())
+		{
+			TextCount++;
+		}
+		if (TextCount > 3)
+		{
+			isAct = true;
+		}
+	}
+	else
+	{
+		if (AlivePanel <= 0)
+		{
+			isAct = false;
+			if (A())
+			{
+				TextCount++;
+			}
+			if (TextCount > 8)
+			{
+				ConnectForceSpawn();
+			}
+		}
+	}
+}
+
+//済
+void OthelloManager::ConnectForceSpawn()
+{
+	SetSpawnPanel(2, 3, true);
+	SetSpawnPanel(1, 3, false);
+	nowConnectFlow = Connect4;
+}
+//済
+void OthelloManager::ConnectForceUpdate(int AlivePanel, int ComboCount)
+{
+	ConnectFifthSpawn();
+}
+
+//済
+void OthelloManager::ConnectFifthSpawn()
+{
+	SetSpawnPanel(3, 0, false);
+	SetSpawnPanel(3, 1, true);
+	SetSpawnPanel(3, 2, true);
+	SetSpawnPanel(3, 4, false);
+	nowConnectFlow = Connect5;
+}
+//済
+void OthelloManager::ConnectFifthUpdate(int AlivePanel, int ComboCount)
+{
+	if (/*チュートリアルが終わったら*/false)
+	{
+		nowConnectFlow = ConnectEnd;
+	}
 }
 #pragma endregion
 
@@ -1514,17 +1762,57 @@ void OthelloManager::ConnectDraw()
 #pragma region Waltz
 void OthelloManager::WaltzStart()
 {
-	nowWaltzFlow = Waltz0;
+	nowWaltzFlow = Waltz1;
 
 }
-void OthelloManager::WaltzUpdate()
+void OthelloManager::WaltzUpdate(int AlivePanel, int ComboCount)
 {
 
 
 }
 void OthelloManager::WaltzDrwa()
 {
+	if (TextCount >= WaltzText.size())
+	{
+		return;
+	}
+	WaltzText[TextCount].SpriteDraw();
 
+}
+
+void OthelloManager::WaltzFirstSpwan()
+{
+
+}
+void OthelloManager::WaltzFirstUpdate(int AlivePanel, int ComboCount)
+{
+
+}
+
+void OthelloManager::WaltzSecondSpawn()
+{
+
+}
+void OthelloManager::WaltzSecondUpdate(int AlivePanel, int ComboCount)
+{
+
+}
+
+void OthelloManager::WaltzThirdSpawn()
+{
+
+}
+void OthelloManager::WaltzThirdUpdate(int AlivePanel, int ComboCount)
+{
+
+}
+
+void OthelloManager::WaltzForceSpawn()
+{
+
+}
+void OthelloManager::WaltzForceUpdate(int AlivePanel, int ComboCount)
+{
 
 }
 #pragma endregion
@@ -1536,38 +1824,56 @@ void OthelloManager::BookendStart()
 
 
 }
-void OthelloManager::BookendUpdate()
+void OthelloManager::BookendUpdate(int AlivePanel, int ComboCount)
 {
 
 
 }
 void OthelloManager::BookendDrwa()
 {
+	if (TextCount >= BookendText.size())
+	{
+		return;
+	}
+	BookendText[TextCount].SpriteDraw();
+}
 
+void OthelloManager::BookendFirstSpwan()
+{
+
+}
+void OthelloManager::BookendFirstUpdate(int AlivePanel, int ComboCount)
+{
 
 }
 
+void OthelloManager::BookendSecondSpawn()
+{
+
+}
+void OthelloManager::BookendSecondUpdate(int AlivePanel, int ComboCount)
+{
+
+}
+
+void OthelloManager::BookendThirdSpawn()
+{
+
+}
+void OthelloManager::BookendThirdUpdate(int AlivePanel, int ComboCount)
+{
+
+}
+
+void OthelloManager::BookendForceSpawn()
+{
+
+}
+void OthelloManager::BookendForceUpdate(int AlivePanel, int ComboCount)
+{
+
+}
 #pragma endregion
-
-#pragma region Revercible
-void OthelloManager::ReversiblrStart()
-{
-
-
-}
-
-void OthelloManager::ReversiblrUpdate()
-{
-
-
-}
-void OthelloManager::ReversiblrDrwa()
-{
-
-}
-
-#pragma endregion
-
 
 void OthelloManager::ModeSelectUpdate()
 {
@@ -1640,6 +1946,28 @@ void OthelloManager::SelectUpdateDojo()
 	}
 
 }
+bool OthelloManager::SelectDojoPanel()
+{
+	bool isOnpanel = false;
+	if (playerPanelPos == ConectPanel)
+	{
+		isOnpanel = true;
+	}
+	else if (playerPanelPos == WaltzPanel)
+	{
+		isOnpanel = true;
+	}
+	else if (playerPanelPos == BookendPanel)
+	{
+		isOnpanel = true;
+	}
+	else if (playerPanelPos == reversiblePanel)
+	{
+		isOnpanel = true;
+	}
+
+	return isOnpanel;
+}
 
 void OthelloManager::SelectUpdatePazzle()
 {
@@ -1684,7 +2012,7 @@ GameMode OthelloManager::GetEnterModeType()
 	{
 		now = GameMode::ScoreAttack;
 	}
-	else if (playerPanelPos == DojoPanel && nowType == DojoSelect)
+	else if (SelectDojoPanel() && nowType == DojoSelect)
 	{
 		now = GameMode::Dojo;
 	}
@@ -1692,7 +2020,7 @@ GameMode OthelloManager::GetEnterModeType()
 	{
 		now = GameMode::Tutorial;
 	}
-	
+
 	return now;
 }
 

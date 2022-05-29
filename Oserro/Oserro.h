@@ -43,16 +43,15 @@ enum DojoType
 //Connectの全体フロー
 enum ConectFlow
 {
-	Connect0,//開始
-	Connect1,//コンボ1
+	Connect1,//開始
 	Connect2,//コンボして壁が立つ
-	Connect3,//コンボ２
-	Connect4,//コンボ３
-	Connect5,//終了
+	Connect3,//コンボ３
+	Connect4,
+	Connect5,
+	ConnectEnd,
 };
 enum WaltzFlow
 {
-	Waltz0,//開始
 	Waltz1,
 	Waltz2,
 	Waltz3,
@@ -61,16 +60,19 @@ enum WaltzFlow
 	Waltz6,
 	Waltz7,
 	Waltz8,
+	WaltzEnd,
 };
 
 enum BookendFlow
 {
 	BookEnd0,//開始
+	BookEndEnd,
 };
 
 enum ReversibleFlow
 {
 	Reversible0,//開始
+	ReversibleEnd,
 };
 namespace
 {
@@ -482,6 +484,7 @@ private://モードセレクト用変数:
 private://モードセレクト用内部関数
 	void SelectUpdateGameMode();
 	void SelectUpdateDojo();
+	bool SelectDojoPanel();
 	void SelectUpdatePazzle();
 private://描画の配置
 	void NormaComboTextSetPos(bool isNormaMode);
@@ -506,39 +509,75 @@ public:
 	void DojoStart();
 	void DojoUpdate(int combo);
 	void DojoDraw();
-	void DojoEnd();
-	void DojoRestart();
+	bool DojoEnd();
 	bool GetDojoIsStart();
-	bool IsDojoEnd();
 private://道場変数
 	DojoType dojoType;
+	//テキスト読みの時間と実行の時間
+	bool isAct = false;
+	int TextCount = 0;
 private:
 #pragma region connect
 	void ConnectStart();
-	void ConnecgtUpdate();
+	void ConnectUpdate(int AlivePanel, int ComboCount);
 	void ConnectDraw();
 	ConectFlow	nowConnectFlow;
+	vector<Othello> ConnectObject;
+	vector<Sprite> ConnectText;
+	void ConnectFirstSpwan();
+	void ConnectFirstUpdate(int AlivePanel, int ComboCount);
+
+	void ConnectSecondSpawn();
+	void ConnectSecondUpdate(int AlivePanel, int ComboCount);
+
+	void ConnectThirdSpawn();
+	void ConnectThirdUpdate(int AlivePanel, int ComboCount);
+
+	void ConnectForceSpawn();
+	void ConnectForceUpdate(int AlivePanel, int ComboCount);
+
+	void ConnectFifthSpawn();
+	void ConnectFifthUpdate(int AlivePanel, int ComboCount);
 #pragma endregion
 
 #pragma region Waltz
 	void WaltzStart();
-	void WaltzUpdate();
+	void WaltzUpdate(int AlivePanel, int ComboCount);
 	void WaltzDrwa();
 	WaltzFlow	nowWaltzFlow;
+	vector<Othello> WaltzObject;
+	vector<Sprite> WaltzText;
+	void WaltzFirstSpwan();
+	void WaltzFirstUpdate(int AlivePanel, int ComboCount);
+
+	void WaltzSecondSpawn();
+	void WaltzSecondUpdate(int AlivePanel, int ComboCount);
+
+	void WaltzThirdSpawn();
+	void WaltzThirdUpdate(int AlivePanel, int ComboCount);
+
+	void WaltzForceSpawn();
+	void WaltzForceUpdate(int AlivePanel, int ComboCount);
 #pragma endregion
 
 #pragma region Bookend
 	void BookendStart();
-	void BookendUpdate();
+	void BookendUpdate(int AlivePanel, int ComboCount);
 	void BookendDrwa();
 	BookendFlow	nowBookendFlow;
-#pragma endregion
+	vector<Othello> BookendObject;
+	vector<Sprite> BookendText;
+	void BookendFirstSpwan();
+	void BookendFirstUpdate(int AlivePanel, int ComboCount);
 
-#pragma region Reversible
-	void ReversiblrStart();
-	void ReversiblrUpdate();
-	void ReversiblrDrwa();
-	ReversibleFlow	nowReversibleFlow;
+	void BookendSecondSpawn();
+	void BookendSecondUpdate(int AlivePanel, int ComboCount);
+
+	void BookendThirdSpawn();
+	void BookendThirdUpdate(int AlivePanel, int ComboCount);
+
+	void BookendForceSpawn();
+	void BookendForceUpdate(int AlivePanel, int ComboCount);
 #pragma endregion
 
 private:
