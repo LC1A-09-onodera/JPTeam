@@ -450,119 +450,14 @@ void GameScene::TitleUpdate()
 			}
 			if (!select)
 			{
-				bool A = directInput->IsButtonPush(directInput->LeftButton) && directInput->leftStickX() == 0 && directInput->leftStickY() == 0;
-				bool D = directInput->IsButtonPush(directInput->RightButton) && directInput->leftStickX() == 0 && directInput->leftStickY() == 0;
-				//チュートリアルかどうかを選択する
-				if (Input::KeyTrigger(DIK_A) || A)
-				{
-					SoundStopWave(selectSound);
-					SoundPlayOnce(selectSound);
-					if (titleSelectNum == 0)
-					{
-						titleSelectNum = 1;
-					}
-				}
-				if (Input::KeyTrigger(DIK_D) || D)
-				{
-					SoundStopWave(selectSound);
-					SoundPlayOnce(selectSound);
-					if (titleSelectNum == 1)
-					{
-						titleSelectNum = 0;
-					}
-				}
 				//チュートリアルに飛ぶ
 				if ((Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01)) && !isPouse && !isSceneChange && !isPouseToTiTle && isDrawLogoEnd)
 				{
-					if (titleSelectNum == 1)
-					{
-						SoundStopWave(enterSound);
-						SoundPlayOnce(enterSound);
-
-						ToTutorial();
-
-						isTutorial = true;
-						isTipsDraw = false;
-						othelloManager.AllDeletePanel();
-						othelloManager.EraseChanceObject();
-						titleSelectNum = 0;
-						//othelloManager.whySandwichSpawn();
-						gameTime = 60;
-					}
-					//ここでモード選択に飛ぶ
-					else
-					{
+					
+					titleSelectNum = 0;
 						gameTime = 1;
 						isTipsDraw = false;
 						ToModeSelect();
-					}
-				}
-			}
-			else if (select)
-			{
-				bool A = directInput->IsButtonPush(directInput->LeftButton) && directInput->leftStickX() == 0 && directInput->leftStickY() == 0;
-				bool D = directInput->IsButtonPush(directInput->RightButton) && directInput->leftStickX() == 0 && directInput->leftStickY() == 0;
-				//スコアアタックかどうかの選択を行う
-				if (Input::KeyTrigger(DIK_A) || A)
-				{
-					SoundStopWave(selectSound);
-					SoundPlayOnce(selectSound);
-					if (!selectStage)
-					{
-						selectMode = true;
-					}
-					else if (selectStage && 1 < selectStageNum && !selectEase)
-					{
-						selectEaseDirection = true;
-						selectEase = true;
-						//selectStageNum--;
-					}
-				}
-				if (Input::KeyTrigger(DIK_D) || D)
-				{
-					SoundStopWave(selectSound);
-					SoundPlayOnce(selectSound);
-					if (!selectStage)
-					{
-						selectMode = false;
-					}
-					else if (selectStageNum < othelloManager.GetNormaStagesCount() && selectStage && !selectEase)
-					{
-						selectEaseDirection = false;
-						selectEase = true;
-						//selectStageNum++;
-					}
-				}
-				if ((Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01)) && !isPouse && !isPouseToTiTle)
-				{
-
-					SoundStopWave(enterSound);
-					SoundPlayOnce(enterSound);
-					othelloManager.AllDeletePanel();
-					othelloManager.EraseChanceObject();
-					//スコアアタック
-					if (!selectMode)
-					{
-						gameTime = gameMaxTime;
-						isTutorial = false;
-						ToGame4();
-						titleSelectNum = 0;
-					}
-					//ノルマモード
-					else
-					{
-						if (selectStage)
-						{
-							gameTime = gameMaxTime;
-							isTutorial = false;
-							ToGame4(true);
-							titleSelectNum = 0;
-						}
-						else
-						{
-							selectStage = true;
-						}
-					}
 				}
 			}
 		}
@@ -653,14 +548,14 @@ void GameScene::TitleUpdate()
 		sky.each.rotation.y += 1.0f;
 		sky.Update();
 	}
-	if (isPouseToTiTle && sceneChageType != 30)
+	/*if (isPouseToTiTle && sceneChageType != 30)
 	{
 		PouseToTitleUpdate();
 	}
 	else if (sceneChageType == 30)
 	{
 		NormaToModeSelectUpdate();
-	}
+	}*/
 #pragma endregion
 }
 
@@ -674,6 +569,7 @@ void GameScene::SelectUpdate()
 
 void GameScene::GameUpdate()
 {
+	//BGMを無理やり流す--------------------------
 	static int BGMSoundCount = 0;
 	BGMSoundCount++;
 	if (BGMSoundCount > 51 * 60)
@@ -682,11 +578,13 @@ void GameScene::GameUpdate()
 		SoundStopWave(BGMSound);
 		SoundPlayOnce(BGMSound);
 	}
+	//-------------------------------------------
 	light->SetLightDir(XMFLOAT3(Camera::GetTargetDirection()));
 	LightUpdate();
 	//カメラ変化が行われていない時にゲームを開始する
 	if (!isSceneChange && !isResultSceneChange && !isPouse)
 	{
+		//選択したモードへ移行する
 		if (isModeSelect)
 		{
 			OthlloPlayer::Update();
@@ -704,43 +602,56 @@ void GameScene::GameUpdate()
 			}
 			//ノルマモードを選択した
 			if (othelloManager.InMode() && othelloManager.GetEnterModeType() == GameMode::NormaMode)
-			{//内部でステージ数を検索(中身は適当です)
+			{
 				othelloManager.AllDeletePanel();
 				gameTime = gameMaxTime;
 				isTutorial = false;
 				selectMode = true;
 				ToGame4(true);
-				//othelloManager.StartNormaMode(othelloManager.GetEnterNormaStage());
 				titleSelectNum = 0;
 				selectStageNum = othelloManager.GetEnterNormaStage();
 			}
 #pragma endregion
 		}
+		//ゲーム中アップデート
 		else if (countDown <= 0)
 		{
-			SoundPlayOnce(BGMSound);
+			//BGM流す---------------------------
+			static int BGMSoundCount = 0;
+			BGMSoundCount++;
+			if (BGMSoundCount > 51 * 60)
+			{
+				BGMSoundCount = 0;
+				SoundStopWave(BGMSound);
+				SoundPlayOnce(BGMSound);
+			}
+			//-----------------------------------
 			OthlloPlayer::Update();
-
 			othelloManager.Controll();
 			if (isTutorial)
 			{
+				//チュートリアルのアップデート
 				othelloManager.TutorialUpdate(checkObject.GetCombo());
 			}
 			else
 			{
 				if (!selectMode)
 				{
+					//ゲーム中のアップデート？
 					othelloManager.Update(checkObject.GetCombo());
 				}
 				else if (selectMode)
 				{
+					//ノルマモードのアップデート？
 					othelloManager.SetScore(checkObject.GetScore());
 					othelloManager.NormaUpdate(checkObject.GetCombo());
 				}
+				//失敗したとき(過去の遺産)
 				if (othelloManager.GetIsNormaFailed())
 				{
 					isSceneChange = true;
 				}
+				//クリアしたときの処理
 				else if (othelloManager.GetIsNormaClear())
 				{
 					static int checkTime = 0;
@@ -748,28 +659,24 @@ void GameScene::GameUpdate()
 					if (checkTime > 60)
 					{
 						checkTime = 0;
-						//PouseToTitle();
-						//ToTutorial();
 						NormaToModeSelect();
 					}
-					//PouseToTitle();
 				}
 			}
+			//判定系の更新
 			checkObject.Update(othelloManager.Send(), true);
+			//ひっくり返る更新
 			othelloManager.Receive(checkObject.GetOthelloDatas(), checkObject.GetCompletePos());
+			//リーチ目の更新
 			othelloManager.SpawnChances(checkObject.GetReachDatas());
-
-			if (othelloManager.GetIsSendDataUpdate())
-			{
-				
-			}
+			//ゲーム中のカウントダウン減少
 			if (!isTutorial && !selectMode)
 			{
 				gameTime--;
 			}
+			//チュートリアル終わった時の処理
 			else if (othelloManager.IsTutorialEnd() && isTutorial)
 			{
-				//gameTime--;
 				PouseToTitle();
 			}
 			countDown--;
@@ -780,15 +687,20 @@ void GameScene::GameUpdate()
 			countDown--;
 		}
 	}
+	//スタートの音を鳴らす
 	if (countDown == 58)
 	{
 		SoundStopWave(countdDownSound);
 		SoundStopWave(startSound);
 		SoundPlayOnce(startSound);
 	}
+	if (countDown == 0)
+	{
+		SoundPlayOnce(BGMSound);
+	}
 	ObjectParticles::Update(othelloManager.GetPressPanellPos(), checkObject.GetCombo());
 	ObjectParticles::Update(othelloManager.GetPressPanellPos(), checkObject.GetNameAndCombos());
-	//タイトルからgameシーンへ
+	//タイトルからgameシーンへ-----基本いじらなくていいかも
 	if (isSceneChange)
 	{
 		if (sceneChageType == 1)
@@ -824,12 +736,12 @@ void GameScene::GameUpdate()
 			NormaToModeSelectUpdate2();
 		}
 	}
-	//ゲームシーンからリザルトへのトリガー
+	//ゲームシーンからリザルトへのトリガー---ゲーム終了時
 	if (gameTime <= 0 && !isResultSceneChange)
 	{
 		ToResult();
 	}
-	//カメラの動き
+	//カメラの動き-----基本いじらなくていいかも
 	if (isResultSceneChange)
 	{
 		isPouse = false;
@@ -854,7 +766,7 @@ void GameScene::GameUpdate()
 			resultForTime++;
 		}
 	}
-	//if (!isPouse && (Input::KeyTrigger(DIK_ESCAPE) || directInput->IsButtonPush(directInput->ButtonPouse)) && )
+	//ポーズへ行く
 	if (!isPouse && (Input::KeyTrigger(DIK_ESCAPE) || directInput->IsButtonPush(directInput->ButtonPouse)) && (countDown <= 0 || isModeSelect) && !isTipsDraw)
 	{
 		isPouse = true;
@@ -926,6 +838,7 @@ void GameScene::GameUpdate()
 			isPouse = false;
 		}
 	}
+	//竜巻出す
 	if (checkObject.GetCombo() >= 3)
 	{
 		tornadoTime++;
@@ -945,11 +858,11 @@ void GameScene::GameUpdate()
 	Lights::Add(checkObject);
 	Lights::Update();
 	ParticleControl::Update();
+	//ゲーム中ポーズ画面からタイトルへ戻す
 	if (isPouseToTiTle && sceneChageType != 30 && sceneChageType != 31)
 	{
 		PouseToTitleUpdate();
 	}
-
 	//tips用
 	if (isTipsDraw)
 	{
@@ -1033,7 +946,6 @@ void GameScene::GameUpdate()
 			}
 		}
 	}
-
 	if (!isTipsDraw)
 	{
 		if (isInit)
@@ -1056,8 +968,6 @@ void GameScene::GameUpdate()
 			isInit = false;
 		}
 	}
-
-	//pushButton_green.Update();
 }
 
 void GameScene::ResultUpdate()
