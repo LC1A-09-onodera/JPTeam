@@ -219,6 +219,7 @@ void GameScene::Init()
 		sNumbersObject[i].CreateModel(name.c_str(), ShaderManager::playerShader);
 	}
 
+	reverseObject.CreateModel("reverse", ShaderManager::playerShader);
 	scoreObject.CreateModel("score", ShaderManager::playerShader);
 
 	for (int i = 0; i < 2; i++)
@@ -299,7 +300,7 @@ void GameScene::Init()
 	tips_name[7].CreateSprite(L"Resource/Img/tips/reversible.png", XMFLOAT3(NAME_START_X[7], NAME_START_Y, 0));
 
 	tips_system[0].CreateSprite(L"Resource/Img/tips/system.png", XMFLOAT3(SYSTEM_START_X, SYSTEM_START_Y, 0));
-	tips_system[1].CreateSprite(L"Resource/Img/tips/system.png", XMFLOAT3(SYSTEM_START_X, SYSTEM_START_Y, 0));
+	tips_system[1].CreateSprite(L"Resource/Img/tips/technic.png", XMFLOAT3(SYSTEM_START_X, SYSTEM_START_Y, 0));
 
 	tips_bar.CreateSprite(L"Resource/Img/tips/tips_bar.png", XMFLOAT3(BAR_START_X, BAR_START_Y, 0));
 
@@ -1507,29 +1508,81 @@ void GameScene::GameDraw()
 			Draw3DObject(scoreObject);
 		}
 	}
+	if (!isSceneChange && !isPouseToTiTle)
+	{
+		OthlloPlayer::Draw();
+	}
 	if (countDown > 0 && isSceneChange == false && isModeSelect == false)
 	{
 		XMFLOAT3 scale = { 0.7f, 0.7f, 0.7f };
-		if (countDown < 59)
+		if (countDown < 60)
 		{
-			startModel.each.position = { -1, 5.0f, -2.0f, 1.0f, };
-			startModel.each.scale = scale;
-			startModel.each.rotation.x = -30.0f;
+			if (countDown == 59)
+			{
+				startModel.each.position = { -1, 5.0f, -2.0f, 1.0f, };
+				startModel.each.scale = scale;
+				startModel.each.rotation.x = -30.0f;
+				isSetRand = false;
+			}
+			else
+			{
+				const float max_shake = 5.0f;
+				if (countDown % 1 == 0)
+				{
+					if (countDown % 2 == 0) { startModel.each.rotation.z = (max_shake) * ((float)countDown / 60.0f); }
+					else { startModel.each.rotation.z = (-max_shake) * ((float)countDown / 60.0f); }
+				}
+				/*else if (countDown % 10 == 0)
+				{
+					startModel.each.rotation.z = -max_shake * ((float)countDown / 60.0f);
+				}*/
+				startModel.each.position.m128_f32[1] -= 0.48f;
+				startModel.each.position.m128_f32[2] -= 0.35f;
+			}
 			startModel.Update();
 			Draw3DObject(startModel);
 		}
 		else
 		{
-			scoreEach[0].position = { -1, 5.0f, -2.0f, 1.0f };
+			/*scoreEach[0].position = { -1, 5.0f, -2.0f, 1.0f };
 			scoreEach[0].scale = scale;
 			scoreEach[0].rotation.x = -30.0f;
 			sNumbersObject[countDown / 60].Update(&scoreEach[0]);
-			Draw3DObject(sNumbersObject[countDown / 60]);
+			Draw3DObject(sNumbersObject[countDown / 60]);*/
+
+			countDownInfo.position.m128_f32[0] = 0.0f;
+			countDownInfo.position.m128_f32[1] = 0.0f;
+			countDownInfo.position.m128_f32[2] = -2.0f;
+			countDownInfo.scale = { 1.7f, 2.5f, 1.7f };
+			countDownInfo.rotation.x = -30.0f;
+			int local_countDown = countDown / 60;
+			float floatCountDown = countDown / 60.0f - local_countDown;
+			if (floatCountDown < 0.02f) { countDownInfo.alpha = 0.2f; }
+			else if (floatCountDown < 0.5f) { countDownInfo.alpha -= 0.01f; }
+			else { countDownInfo.alpha = 0.5f; }
+			if (local_countDown % 2 == 0)
+			{
+				int random = rand();
+				if (!isSetRand)
+				{
+					countDownInfo.rotation.y = random % 8;
+				}
+				isSetRand = true;
+				countDownInfo.rotation.z = -6.0f;
+			}
+			else
+			{
+				int random = rand();
+				if (!isSetRand)
+				{
+					countDownInfo.rotation.y = random % 8 - 8;
+				}
+				isSetRand = true;
+				countDownInfo.rotation.z = 6.0f;
+			}
+			countDownNumber[local_countDown].Update(&countDownInfo);
+			Draw3DObject(countDownNumber[local_countDown]);
 		}
-	}
-	if (!isSceneChange && !isPouseToTiTle)
-	{
-		OthlloPlayer::Draw();
 	}
 	ObjectParticles::Draw();
 	ParticleControl::Draw();
@@ -1542,19 +1595,19 @@ void GameScene::GameDraw()
 			countDownInfo.position.m128_f32[0] = 0.0f;
 			countDownInfo.position.m128_f32[1] = 0.0f;
 			countDownInfo.position.m128_f32[2] = -2.0f;
-			countDownInfo.scale = { 2.3f, 2.3f, 2.3f };
+			countDownInfo.scale = { 1.7f, 2.5f, 1.7f };
 			countDownInfo.rotation.x = -30.0f;
 			int countDown = gameTime / 60;
 			float floatCountDown = gameTime / 60.0f - countDown;
 			if (floatCountDown < 0.02f) { countDownInfo.alpha = 0.2f; }
 			else if (floatCountDown < 0.5f) { countDownInfo.alpha -= 0.01f; }
-			else { countDownInfo.alpha = 0.2f; }
+			else { countDownInfo.alpha = 0.5f; }
 			if (countDown % 2 == 0)
 			{
 				int random = rand();
 				if (!isSetRand)
 				{
-					countDownInfo.rotation.y = random % 10;
+					countDownInfo.rotation.y = random % 8;
 				}
 				isSetRand = true;
 				countDownInfo.rotation.z = -6.0f;
@@ -1564,7 +1617,7 @@ void GameScene::GameDraw()
 				int random = rand();
 				if (!isSetRand)
 				{
-					countDownInfo.rotation.y = random % 10 - 10;
+					countDownInfo.rotation.y = random % 8 - 8;
 				}
 				isSetRand = true;
 				countDownInfo.rotation.z = 6.0f;
@@ -1573,7 +1626,7 @@ void GameScene::GameDraw()
 			Draw3DObject(countDownNumber[countDown]);
 		}
 	}
-	else { isSetRand = false; }
+	else { if (countDown < 59) { isSetRand = false; } }
 
 	if (selectMode && !isSceneChange && !isPouseToTiTle)
 	{
