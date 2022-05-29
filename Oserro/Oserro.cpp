@@ -852,7 +852,7 @@ void OthelloManager::Init(Tex num[10], Model numModel[10])
 	for (auto &e : ConnectText)
 	{
 		e.ChangeSize(1280, 300);
-		e.position = XMVECTOR{0, 720 - (300 + 30), 0, 0 };
+		e.position = XMVECTOR{ 0, 720 - (300 + 30), 0, 0 };
 	}
 	WaltzText.resize(15);
 	WaltzText[0].CreateSprite(L"Resource/Img/waltz_text/waltz_text_0.png", XMFLOAT3{});
@@ -1608,7 +1608,7 @@ void OthelloManager::ConnectUpdate(int AlivePanel, int ComboCount)
 //済
 void OthelloManager::ConnectDraw()
 {
-	if (TextCount >= ConnectText.size())
+	if (TextCount >= ConnectText.size() || nowConnectFlow == ConnectEnd)
 	{
 		return;
 	}
@@ -1633,6 +1633,7 @@ void OthelloManager::ConnectFirstUpdate(int AlivePanel, int ComboCount)
 		{
 			TextCount++;
 		}
+		//テキストが一定より進んだら
 		if (TextCount > 3)
 		{
 			isAct = true;
@@ -1640,6 +1641,7 @@ void OthelloManager::ConnectFirstUpdate(int AlivePanel, int ComboCount)
 	}
 	else
 	{
+		//生きてるパネルがなくなったら
 		if (AlivePanel <= 0)
 		{
 			ConnectSecondSpawn();
@@ -1665,21 +1667,23 @@ void OthelloManager::ConnectSecondUpdate(int AlivePanel, int ComboCount)
 		{
 			TextCount++;
 		}
-		if (TextCount > 3)
+		//テキストカウントが一定を超えたら
+		if (TextCount > 9)
 		{
 			isAct = true;
 		}
 	}
 	else
 	{
+		//生きてるパネルがなくなったら
 		if (AlivePanel <= 0)
 		{
-			isAct = false;
+			playerNotMove();
 			if (A())
 			{
 				TextCount++;
 			}
-			if (TextCount > 8)
+			if (TextCount > 12)
 			{
 				ConnectThirdSpawn();
 			}
@@ -1693,35 +1697,19 @@ void OthelloManager::ConnectThirdSpawn()
 	SetSpawnPanel(4, 4, false);
 	SetSpawnPanel(4, 3, true);
 	nowConnectFlow = Connect3;
+	isAct = true;
 }
 //済
 void OthelloManager::ConnectThirdUpdate(int AlivePanel, int ComboCount)
 {
 	if (!isAct)
 	{
-		playerNotMove();
-		if (A())
-		{
-			TextCount++;
-		}
-		if (TextCount > 3)
-		{
-			isAct = true;
-		}
 	}
 	else
 	{
 		if (AlivePanel <= 0)
 		{
-			isAct = false;
-			if (A())
-			{
-				TextCount++;
-			}
-			if (TextCount > 8)
-			{
-				ConnectForceSpawn();
-			}
+			ConnectForceSpawn();
 		}
 	}
 }
@@ -1732,11 +1720,21 @@ void OthelloManager::ConnectForceSpawn()
 	SetSpawnPanel(2, 3, true);
 	SetSpawnPanel(1, 3, false);
 	nowConnectFlow = Connect4;
+	isAct = true;
 }
 //済
 void OthelloManager::ConnectForceUpdate(int AlivePanel, int ComboCount)
 {
-	ConnectFifthSpawn();
+	if (!isAct)
+	{
+	}
+	else
+	{
+		if (AlivePanel <= 0)
+		{
+			ConnectFifthSpawn();
+		}
+	}
 }
 
 //済
@@ -1747,13 +1745,39 @@ void OthelloManager::ConnectFifthSpawn()
 	SetSpawnPanel(3, 2, true);
 	SetSpawnPanel(3, 4, false);
 	nowConnectFlow = Connect5;
+	isAct = false;
 }
 //済
 void OthelloManager::ConnectFifthUpdate(int AlivePanel, int ComboCount)
 {
-	if (/*チュートリアルが終わったら*/false)
+	if (!isAct)
 	{
-		nowConnectFlow = ConnectEnd;
+		playerNotMove();
+		if (A())
+		{
+			TextCount++;
+		}
+		//テキストカウントが一定を超えたら
+		if (TextCount > 15)
+		{
+			isAct = true;
+		}
+	}
+	else
+	{
+		//生きてるパネルがなくなったら
+		if (AlivePanel <= 0)
+		{
+			playerNotMove();
+			if (A())
+			{
+				TextCount++;
+			}
+			if (TextCount > 17)
+			{
+				nowConnectFlow = ConnectEnd;
+			}
+		}
 	}
 }
 #pragma endregion
@@ -2038,76 +2062,79 @@ void OthelloManager::ModeSelectModelDraw(bool isDraw)
 	SetTextPos(false);
 	if (isDraw)
 	{
-		int stageNum = playerPanelPos.x + 1;
-		stageNum += playerPanelPos.y * 8;
-		int textCount = 0;
-		for (int i = 1; i <= NormaStartOthellos.size(); i++)
+		//int stageNum = playerPanelPos.x + 1;
+		//stageNum += playerPanelPos.y * 8;
+		//int textCount = 0;
+		//for (int i = 1; i <= NormaStartOthellos.size(); i++)
+		//{
+		//	if (i != stageNum)
+		//	{
+		//		if (i >= 10)
+		//		{
+		//			int firstDegit = textCount;
+		//			int secondDegit = textCount + 1;
+		//			CountModelDraw(i, &fieldDrawText[firstDegit], &fieldDrawText[secondDegit]);
+		//		}
+		//		else
+		//		{
+		//			CountModelDraw(i, &fieldDrawText[textCount]);
+		//		}
+		//	}
+		//	if (i >= 10)
+		//	{
+		//		textCount += 2;
+		//	}
+		//	else
+		//	{
+		//		textCount++;
+		//	}
+		//}
+
+		if (nowType == GameModeSelect)
 		{
-			if (i != stageNum)
+			ScoreAttackTextModel.Update(&ScoreAttackDrawData);
+			Draw3DObject(ScoreAttackTextModel);
+
+			if (GetEnterModeType() != GameMode::NormaMode) { return; }
+
+			NormaModeTextDrawData.position = XMVECTOR{ 0.0f, 18.0f, -1.0f ,0 } + (FloatAnimationDistance * textAnimationRate);
+			NormaModeTextModel.Update(&NormaModeTextDrawData);
+			Draw3DObject(NormaModeTextModel);
+			list<NormaModeFieldData>::iterator data = GetNormaStage(GetEnterNormaStage());
+			int status = data->normaStatus;
+			auto itr = data->panels.begin();
+
+			if (data->type == Norma::Combo)
 			{
-				if (i >= 10)
+				ComboTextModel.Update(&NormaDrawData);
+				Draw3DObject(ComboTextModel);
+				CountModelDraw(status);
+			}
+			else if (data->type == Norma::Panels)
+			{
+				status = 0;
+				for (; itr != data->panels.end(); itr++)
 				{
-					int firstDegit = textCount;
-					int secondDegit = textCount + 1;
-					CountModelDraw(i, &fieldDrawText[firstDegit], &fieldDrawText[secondDegit]);
+					if (itr->type != WALL)
+					{
+						status++;
+					}
 				}
-				else
-				{
-					CountModelDraw(i, &fieldDrawText[textCount]);
-				}
+				PanelTextModel.Update(&NormaDrawData);
+				Draw3DObject(PanelTextModel);
 			}
-			if (i >= 10)
+			else if (data->type == Norma::Score)
 			{
-				textCount += 2;
+				ScoreTextModel.Update(&NormaDrawData);
+				Draw3DObject(ScoreTextModel);
+				CountModelDraw(status);
 			}
-			else
+			if (data->subNormaFlag)
 			{
-				textCount++;
+				PanelTextModel.Update(&SubNormaDrawData);
+				Draw3DObject(PanelTextModel);
 			}
 		}
-		ScoreAttackTextModel.Update(&ScoreAttackDrawData);
-		Draw3DObject(ScoreAttackTextModel);
-
-		if (GetEnterModeType() != GameMode::NormaMode) { return; }
-
-		NormaModeTextDrawData.position = XMVECTOR{ 0.0f, 18.0f, -1.0f ,0 } + (FloatAnimationDistance * textAnimationRate);
-		NormaModeTextModel.Update(&NormaModeTextDrawData);
-		Draw3DObject(NormaModeTextModel);
-		list<NormaModeFieldData>::iterator data = GetNormaStage(GetEnterNormaStage());
-		int status = data->normaStatus;
-		auto itr = data->panels.begin();
-
-		if (data->type == Norma::Combo)
-		{
-			ComboTextModel.Update(&NormaDrawData);
-			Draw3DObject(ComboTextModel);
-			CountModelDraw(status);
-		}
-		else if (data->type == Norma::Panels)
-		{
-			status = 0;
-			for (; itr != data->panels.end(); itr++)
-			{
-				if (itr->type != WALL)
-				{
-					status++;
-				}
-			}
-			PanelTextModel.Update(&NormaDrawData);
-			Draw3DObject(PanelTextModel);
-		}
-		else if (data->type == Norma::Score)
-		{
-			ScoreTextModel.Update(&NormaDrawData);
-			Draw3DObject(ScoreTextModel);
-			CountModelDraw(status);
-		}
-		if (data->subNormaFlag)
-		{
-			PanelTextModel.Update(&SubNormaDrawData);
-			Draw3DObject(PanelTextModel);
-		}
-
 	}
 }
 
@@ -2411,7 +2438,7 @@ void OthelloManager::SetTextPos(bool isNormaMode, int stageNum)
 	}
 	else
 	{
-		SetModeSelectEachInfo(ScoreAttackDrawData, panelPos{ 0, 7 });
+		SetModeSelectEachInfo(ScoreAttackDrawData, ScoreAttackPanel);
 	}
 	list<NormaModeFieldData>::iterator data;
 	if (isNormaMode)
@@ -2484,7 +2511,7 @@ void OthelloManager::SetScoreAttackTextPos()
 
 }
 
-void OthelloManager::SetModeSelectEachInfo(EachInfo &data, panelPos &pos)
+void OthelloManager::SetModeSelectEachInfo(EachInfo &data, const panelPos &pos)
 {
 	Othello panelData;
 	panelData.Spawn(NORMAL, pos.x, pos.y);

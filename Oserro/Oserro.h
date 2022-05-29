@@ -503,7 +503,7 @@ private://•`‰æ‚Ì”z’u
 	void SubNormaModelPos(bool isNormaMode);
 	void SetModelPos(bool isNormaMode);
 
-	void SetModeSelectEachInfo(EachInfo &data, panelPos &pos);
+	void SetModeSelectEachInfo(EachInfo &data, const panelPos &pos);
 	void SetPickupModeEachInfo(EachInfo &data);
 public:
 	void DojoStart();
