@@ -155,7 +155,7 @@ void GameScene::Init()
 	selectGameTypeActive = false;
 	selectGameType = 1;
 	SoundPlayLoop(BGMSound);
-
+	reverseObject.CreateModel("reverse", ShaderManager::playerShader);
 
 	const float OthelloR = 1.8f;
 	for (int i = 0; i < 20; i++)
@@ -472,7 +472,7 @@ void GameScene::TitleUpdate()
 					}
 				}
 				//チュートリアルに飛ぶ
-				if ((Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01)) && !isPouse && !isSceneChange && !isPouseToTiTle)
+				if ((Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01)) && !isPouse && !isSceneChange && !isPouseToTiTle && isDrawLogoEnd)
 				{
 					if (titleSelectNum == 1)
 					{
@@ -611,7 +611,7 @@ void GameScene::TitleUpdate()
 					selectPouse++;
 				}
 			}
-			if (Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01))
+			if ((Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01)))
 			{
 				//リザルトに戻る
 				if (selectPouse == -1)
@@ -761,14 +761,7 @@ void GameScene::GameUpdate()
 
 			if (othelloManager.GetIsSendDataUpdate())
 			{
-
-				//vector<pair<int, int>> testPos;
-				//for (int i = 0; i < 8; i++)
-				//{
-				//	pair<int, int> tmp(i, i);
-				//	testPos.push_back(tmp);
-				//}
-				//othelloManager.SpawnChances(testPos);
+				
 			}
 			if (!isTutorial && !selectMode)
 			{
