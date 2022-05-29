@@ -33,7 +33,9 @@ private:
 	void ToGame();
 	void ToGame2();
 	void ToGame3();
-	void ToGame4(bool flags = false);
+	bool isToTutorial = false;
+	bool isToDojo = false;
+	void ToGame4(bool flags = false, bool isToTutorial = false, bool isToDojo = false);
 	void ToTutorial();
 
 	void ToGame1Update();

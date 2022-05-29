@@ -549,6 +549,11 @@ void GameScene::TitleUpdate()
 		sky.each.rotation.y += 1.0f;
 		sky.Update();
 	}
+	//ゲーム中ポーズ画面からタイトルへ戻す
+	if (isPouseToTiTle && sceneChageType != 30 && sceneChageType != 31)
+	{
+		PouseToTitleUpdate();
+	}
 	/*if (isPouseToTiTle && sceneChageType != 30)
 	{
 		PouseToTitleUpdate();
@@ -611,6 +616,22 @@ void GameScene::GameUpdate()
 				ToGame4(true);
 				titleSelectNum = 0;
 				selectStageNum = othelloManager.GetEnterNormaStage();
+			}
+			if (othelloManager.InMode() && othelloManager.GetEnterModeType() == GameMode::Tutorial)
+			{
+				//Initとシーン遷移を入れる
+				othelloManager.AllDeletePanel();
+				gameTime = gameMaxTime;
+				ToGame4(true, true);
+				titleSelectNum = 0;
+			}
+			if (othelloManager.InMode() && othelloManager.GetEnterModeType() == GameMode::Dojo)
+			{
+				//Initとシーン遷移を入れる
+				othelloManager.AllDeletePanel();
+				gameTime = gameMaxTime;
+				ToGame4(true, false, true);
+				titleSelectNum = 0;
 			}
 #pragma endregion
 		}
@@ -2149,7 +2170,7 @@ void GameScene::ToGame3()
 	OthlloPlayer::isEase = false;
 }
 
-void GameScene::ToGame4(bool flags)
+void GameScene::ToGame4(bool flags, bool isToTutorial, bool isToDojo)
 {
 	//初期化
 	checkObject.Init();
@@ -2168,7 +2189,8 @@ void GameScene::ToGame4(bool flags)
 
 	eyeEaseTime = 0.0f;
 	sceneChangeAfterTime = 0.0f;
-
+	this->isToTutorial = isToTutorial;
+	this->isToDojo = isToDojo;
 	isModeSelect = false;
 	isTipsButtonDraw = false;
 	gameTime = gameMaxTime;
@@ -2390,11 +2412,19 @@ void GameScene::ToGame4Update()
 			isTipsButtonDraw = true;
 			if (Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01))
 			{
-				if (!selectMode && !isTipsOk)
+				if (isToTutorial)
+				{
+					othelloManager.TutorialStart();
+				}
+				else if (isToDojo)
+				{
+					othelloManager.DojoStart();
+				}
+				else if (!selectMode && !isTipsOk)
 				{
 					othelloManager.StartSetPos();
 				}
-				if (flagss && !isTipsOk)
+				else if (flagss && !isTipsOk)
 				{
 					othelloManager.StartNormaMode(selectStageNum);
 				}
