@@ -785,7 +785,7 @@ void CheakOthello::AddScore()
 {
 	totalScore = (int)(totalScore * powf(OTHELLO_BONUS, totalDeleteOthello - 1));
 	totalDeleteOthello = 0;
-}
+} 
 
 void CheakOthello::ChangeScoreAndCombo()
 {
