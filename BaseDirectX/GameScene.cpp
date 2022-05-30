@@ -1533,6 +1533,9 @@ void GameScene::GameDraw()
 	{
 		OthlloPlayer::Draw();
 	}
+	ObjectParticles::Draw();
+	ParticleControl::Draw();
+	if (!isPouseToTiTle)othelloManager.Draw(isSupport, isSupport);
 	if (countDown > 0 && isSceneChange == false && isModeSelect == false)
 	{
 		XMFLOAT3 scale = { 0.7f, 0.7f, 0.7f };
@@ -1605,9 +1608,6 @@ void GameScene::GameDraw()
 			Draw3DObject(countDownNumber[local_countDown]);
 		}
 	}
-	ObjectParticles::Draw();
-	ParticleControl::Draw();
-	if (!isPouseToTiTle)othelloManager.Draw(isSupport, isSupport);
 
 	if (gameTime > 0 && countDown <= 0 && !isTutorial)
 	{
