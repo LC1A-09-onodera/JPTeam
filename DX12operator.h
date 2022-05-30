@@ -7,24 +7,24 @@ using namespace DirectX;
 
 namespace ShlomonMath
 {
-	static const float Cos(float angle)
-	{
-		return cos(angle * PI / 180.0f);
-	}
-	static const float Sin(float angle)
-	{
-		return sin(angle * PI / 180.0f);
-	}
-	static uint64_t xor64() {
-		static uint64_t x = 88172645463325252ULL;
-		x = x ^ (x << 7);
-		return x = x ^ (x >> 9);
-	}
-	static uint32_t xor () {
-		static uint32_t y = 2463534242;
-		y = y ^ (y << 13); y = y ^ (y >> 17);
-		return y = y ^ (y << 5);
-	}
+static const float Cos(float angle)
+{
+	return cos(angle * PI / 180.0f);
+}
+static const float Sin(float angle)
+{
+	return sin(angle * PI / 180.0f);
+}
+static uint64_t xor64() {
+	static uint64_t x = 88172645463325252ULL;
+	x = x ^ (x << 7);
+	return x = x ^ (x >> 9);
+}
+static uint32_t xor () {
+	static uint32_t y = 2463534242;
+	y = y ^ (y << 13); y = y ^ (y >> 17);
+	return y = y ^ (y << 5);
+}
 }
 
 static const XMFLOAT3 operator +(const XMFLOAT3 v1, const XMFLOAT3 v2)
@@ -229,64 +229,77 @@ static XMFLOAT3 Cross(const XMFLOAT3& v1, const XMFLOAT3& v2)
 }
 namespace ShlomonMath
 {
-	static XMFLOAT3 EaseInQuad(const XMFLOAT3& start, XMFLOAT3& end, const float t)
-	{
-		XMFLOAT3 result;
-		XMFLOAT3 sub = end - start;
-		result.x = start.x + ((t * t) * sub.x);
-		result.y = start.y + ((t * t) * sub.y);
-		result.z = start.z + ((t * t) * sub.z);
-		return result;
-	}
+static XMFLOAT3 EaseInQuad(const XMFLOAT3& start, XMFLOAT3& end, const float t)
+{
+	XMFLOAT3 result;
+	XMFLOAT3 sub = end - start;
+	result.x = start.x + ((t * t) * sub.x);
+	result.y = start.y + ((t * t) * sub.y);
+	result.z = start.z + ((t * t) * sub.z);
+	return result;
+}
 
-	static XMFLOAT3 EaseOutQuad(const XMFLOAT3& start, XMFLOAT3& end, const float t)
-	{
-		XMFLOAT3 result;
-		XMFLOAT3 sub = end - start;
-		result.x = start.x + ((1.0f - (1.0f - t) * (1.0f - t)) * sub.x);
-		result.y = start.y + ((1.0f - (1.0f - t) * (1.0f - t)) * sub.y);
-		result.z = start.z + ((1.0f - (1.0f - t) * (1.0f - t)) * sub.z);
-		return result;
-	}
+static XMFLOAT3 EaseOutQuad(const XMFLOAT3& start, XMFLOAT3& end, const float t)
+{
+	XMFLOAT3 result;
+	XMFLOAT3 sub = end - start;
+	result.x = start.x + ((1.0f - (1.0f - t) * (1.0f - t)) * sub.x);
+	result.y = start.y + ((1.0f - (1.0f - t) * (1.0f - t)) * sub.y);
+	result.z = start.z + ((1.0f - (1.0f - t) * (1.0f - t)) * sub.z);
+	return result;
+}
 
-	static XMFLOAT3 EaseInOutQuad(const XMFLOAT3& start, XMFLOAT3& end, const float t)
+static XMFLOAT3 EaseInOutQuad(const XMFLOAT3& start, XMFLOAT3& end, const float t)
+{
+	XMFLOAT3 result;
+	XMFLOAT3 sub = end - start;
+	if (t < 0.5f)
 	{
-		XMFLOAT3 result;
-		XMFLOAT3 sub = end - start;
-		if (t < 0.5f)
-		{
-			result.x = start.x + (2.0f * (t * t) * sub.x);
-			result.y = start.y + (2.0f * (t * t) * sub.y);
-			result.z = start.z + (2.0f * (t * t) * sub.z);
-		}
-		else
-		{
-			result.x = start.x + ((1.0f - pow(-2.0f * t + 2.0f, 2) / 2.0f) * sub.x);
-			result.y = start.y + ((1.0f - pow(-2.0f * t + 2.0f, 2) / 2.0f) * sub.y);
-			result.z = start.z + ((1.0f - pow(-2.0f * t + 2.0f, 2) / 2.0f) * sub.z);
-		}
-		return result;
+		result.x = start.x + (2.0f * (t * t) * sub.x);
+		result.y = start.y + (2.0f * (t * t) * sub.y);
+		result.z = start.z + (2.0f * (t * t) * sub.z);
 	}
+	else
+	{
+		result.x = start.x + ((1.0f - pow(-2.0f * t + 2.0f, 2) / 2.0f) * sub.x);
+		result.y = start.y + ((1.0f - pow(-2.0f * t + 2.0f, 2) / 2.0f) * sub.y);
+		result.z = start.z + ((1.0f - pow(-2.0f * t + 2.0f, 2) / 2.0f) * sub.z);
+	}
+	return result;
+}
 
-	static XMFLOAT3 EaseInBack(const XMFLOAT3& start, XMFLOAT3& end, const float t)
-	{
-		XMFLOAT3 result;
-		XMFLOAT3 sub = end - start;
-		const float c1 = 1.70158;
-		const float c3 = c1 + 1;
-		result.x = start.x + ((c3 * t * t * t - c1 * t * t) * sub.x);
-		result.y = start.y + ((c3 * t * t * t - c1 * t * t) * sub.y);
-		result.z = start.z + ((c3 * t * t * t - c1 * t * t) * sub.z);
-		return result;
-	}
+static XMFLOAT3 EaseInBack(const XMFLOAT3& start, XMFLOAT3& end, const float t)
+{
+	XMFLOAT3 result;
+	XMFLOAT3 sub = end - start;
+	const float c1 = 1.70158;
+	const float c3 = c1 + 1;
+	result.x = start.x + ((c3 * t * t * t - c1 * t * t) * sub.x);
+	result.y = start.y + ((c3 * t * t * t - c1 * t * t) * sub.y);
+	result.z = start.z + ((c3 * t * t * t - c1 * t * t) * sub.z);
+	return result;
+}
 
-	static XMFLOAT3 Homing(const XMFLOAT3 &nowPosition, const XMFLOAT3 &target, const XMFLOAT3 speed)
-	{
-		XMFLOAT3 toTarget;
-		toTarget = target - nowPosition;
-		XMFLOAT3 cross = Cross(toTarget, speed);
-		return cross;
-	}
+static XMFLOAT3 EaseOutBack(const XMFLOAT3& start, XMFLOAT3& end, const float t)
+{
+	XMFLOAT3 result;
+	XMFLOAT3 sub = end - start;
+	const float c1 = 1.70158;
+	const float c3 = c1 + 1.0f;
+	//float a = 1 + c3 * pow(t - 1.0f, 3.0f) + c1 * pow(t - 1.0f, 2.0f);
+	result.x = start.x + (1 + c3 * pow(t - 1.0f, 3.0f) + c1 * pow(t - 1.0f, 2.0f)) * sub.x;
+	result.y = start.y + (1 + c3 * pow(t - 1.0f, 3.0f) + c1 * pow(t - 1.0f, 2.0f)) * sub.y;
+	result.z = start.z + (1 + c3 * pow(t - 1.0f, 3.0f) + c1 * pow(t - 1.0f, 2.0f)) * sub.z;
+	return result;
+}
+
+static XMFLOAT3 Homing(const XMFLOAT3& nowPosition, const XMFLOAT3& target, const XMFLOAT3 speed)
+{
+	XMFLOAT3 toTarget;
+	toTarget = target - nowPosition;
+	XMFLOAT3 cross = Cross(toTarget, speed);
+	return cross;
+}
 }
 
 static float Lenght(XMVECTOR position1, XMVECTOR position2)
