@@ -286,7 +286,7 @@ void GameScene::Init()
 	tips[4].CreateSprite(L"Resource/Img/tips/tips_5.png", XMFLOAT3(0, 0, 0));
 	tips[5].CreateSprite(L"Resource/Img/tips/tips_6.png", XMFLOAT3(0, 0, 0));
 	tips[6].CreateSprite(L"Resource/Img/tips/tips_7.png", XMFLOAT3(0, 0, 0));
-	tips[7].CreateSprite(L"Resource/Img/tips/tips_8.png", XMFLOAT3(0, 0, 0));
+	//tips[7].CreateSprite(L"Resource/Img/tips/tips_8.png", XMFLOAT3(0, 0, 0));
 
 	tips_frame.CreateSprite(L"Resource/Img/tips/tips_frame.png", XMFLOAT3(0, 0, 0));
 
@@ -298,7 +298,7 @@ void GameScene::Init()
 	tips_name[4].CreateSprite(L"Resource/Img/tips/connect.png", XMFLOAT3(NAME_START_X[4], NAME_START_Y, 0));
 	tips_name[5].CreateSprite(L"Resource/Img/tips/bookend.png", XMFLOAT3(NAME_START_X[5], NAME_START_Y, 0));
 	tips_name[6].CreateSprite(L"Resource/Img/tips/waltz.png", XMFLOAT3(NAME_START_X[6], NAME_START_Y, 0));
-	tips_name[7].CreateSprite(L"Resource/Img/tips/reversible.png", XMFLOAT3(NAME_START_X[7], NAME_START_Y, 0));
+	//tips_name[7].CreateSprite(L"Resource/Img/tips/reversible.png", XMFLOAT3(NAME_START_X[7], NAME_START_Y, 0));
 
 	tips_system[0].CreateSprite(L"Resource/Img/tips/system.png", XMFLOAT3(SYSTEM_START_X[0] + window_width, SYSTEM_START_Y, 0));
 	tips_system[1].CreateSprite(L"Resource/Img/tips/technic.png", XMFLOAT3(SYSTEM_START_X[1] + window_width, SYSTEM_START_Y, 0));

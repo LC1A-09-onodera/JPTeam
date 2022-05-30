@@ -407,10 +407,10 @@ public://シーンで使うもの
 	};
 
 	Sprite tips_frame;					//tips枠
-	Sprite tips_name[8];				//tips名前
+	Sprite tips_name[7];				//tips名前
 	Sprite tips_system[2];				//tipsシステム
 	Sprite tips_bar;					//tipsバー
-	Sprite tips_text[8];				//tipsテキスト
+	Sprite tips_text[7];				//tipsテキスト
 	bool isInit;
 	bool isFirst = true;
 	float newTips_easeTimer;
