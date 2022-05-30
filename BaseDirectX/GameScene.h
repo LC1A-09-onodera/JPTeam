@@ -157,7 +157,7 @@ public://ÉVÅ[ÉìÇ≈égÇ§Ç‡ÇÃ
 	float eyeEaseTime;
 
 	int resultForTime;
-	const int gameMaxTime = 59;
+	const int gameMaxTime = 5999;
 
 	EachInfo resultMaxConbo[2];
 	EachInfo resultEraseOthello[3];

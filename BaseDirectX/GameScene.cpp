@@ -1016,7 +1016,7 @@ void GameScene::GameUpdate()
 
 void GameScene::ResultUpdate()
 {
-	if ((Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01)) && !isResultStart)
+	if ((Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01)) && !isResultStart && resultEaseTimer >= 1.0f)
 	{
 		SoundStopWave(enterSound);
 		SoundPlayOnce(enterSound);
@@ -1298,7 +1298,7 @@ void GameScene::GameDraw()
 	{
 		sky.each.rotation.x = 0.0f;
 	}
-	else
+	else if(isResultSceneChange)
 	{
 		sky.each.rotation.x = 80.0f;
 	}
