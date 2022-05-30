@@ -1058,9 +1058,9 @@ void GameScene::TitleDraw()
 			}
 		}
 		ParticleControl::Draw();
-		
+
 		ObjectParticles::Draw();
-		
+
 		Lights::Draw();
 		if (isSceneChange == false)
 		{
@@ -1437,7 +1437,6 @@ void GameScene::GameDraw()
 			}
 		}
 
-		
 
 		if (oldDisplay != nowScore)
 		{
@@ -2021,6 +2020,12 @@ void GameScene::GetScoreDraw()
 {
 	for (auto itr = addScore.scores.begin(); itr != addScore.scores.end(); ++itr)
 	{
+		for (int i = 0; i < 7; i++)
+		{
+			itr->scoreEach[i].position = itr->scoreEach[7].position;
+			itr->scoreEach[i].position.m128_f32[0] += (7 - i) * 1.0f;
+			itr->scoreEach[i].scale = { 0.3f, 0.3f, 0.3f };
+		}
 		sNumbersObject[itr->score % 10].Update(&itr->scoreEach[0]);
 		Draw3DObject(sNumbersObject[itr->score % 10]);
 		sNumbersObject[itr->score / 10 % 10].Update(&itr->scoreEach[1]);
@@ -3026,8 +3031,8 @@ void AddScore::Init(int pos, int GetScore)
 	posNum = pos;
 	easeTime = 0.0f;
 	easeUpTime = 0.0f;
-	startPos = {-15.0f, 0, 0};
-	endPos = { -5.0f, 0, 0 };
+	startPos = { -35.0f, 0, 0 };
+	endPos = { -18.0f, 0, 0 };
 	score = GetScore;
 	for (int i = 0; i < 8; i++)
 	{

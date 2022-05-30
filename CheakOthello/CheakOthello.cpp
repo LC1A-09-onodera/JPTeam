@@ -84,9 +84,6 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData, bo
 
 	while (1) //多分whileじゃなくても動く
 	{
-
-		isAddScore = false;
-
 		//判定を取る駒をセット
 		pair<int, int> last = GetCheckOthello();
 		if (!checkOthello) { break; }
@@ -261,6 +258,7 @@ void CheakOthello::CheckLastMove(const vector<vector<SendOthelloData>>& othelloD
 	reachPos.clear();
 	completePos.clear();
 	addScore = 0;
+	isAddScore = false;
 
 	//その場にオセロが存在するかつ、最後に動かしてたかを判定（←ちょっと効率悪そう）
 	for (int i = 0; i < MAX_SIZE_Y; i++)
