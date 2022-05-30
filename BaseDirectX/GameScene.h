@@ -325,14 +325,6 @@ public://シーンで使うもの
 	const int CHANGE_TIMER_FRAME = 90;	//tipsの中身が切り替わるフレーム
 	const int FIRST_SS_DELAY = 180;		//最初のスクショのディレイ
 	const int USE_TEX_0 = 3;			//tips_0で使うテクスチャの数
-	//const int USE_TEX_1 = 3;			//tips_0で使うテクスチャの数
-	//const int USE_TEX_2 = 3;			//tips_0で使うテクスチャの数
-	//const int USE_TEX_3 = 3;			//tips_0で使うテクスチャの数
-	//const int USE_TEX_4 = 3;			//tips_0で使うテクスチャの数
-	//const int USE_TEX_5 = 3;			//tips_0で使うテクスチャの数
-	//const int USE_TEX_6 = 3;			//tips_0で使うテクスチャの数
-	//const int USE_TEX_7 = 3;			//tips_0で使うテクスチャの数
-	//const int USE_TEX_8 = 3;			//tips_0で使うテクスチャの数
 	const float EASE_ADD_TIMER = 0.005f;//加算されるタイマー	
 	const float SIZE_X = 768;			//tipsの中身の画像サイズ_X
 	const float SIZE_Y = 432;			//tipsの中身の画像サイズ_Y
@@ -345,6 +337,21 @@ public://シーンで使うもの
 	Sprite pushButtonBlack[3];
 	Sprite tips[7];						//tips枠
 	Sprite tips_ss[3];					//tips_0中身
+
+	//const int USE_TEX_1 = 3;			//tips_1で使うテクスチャの数
+	//const int USE_TEX_2 = 3;			//tips_2で使うテクスチャの数
+	//const int USE_TEX_3 = 3;			//tips_3で使うテクスチャの数
+	//const int USE_TEX_4 = 3;			//tips_4で使うテクスチャの数
+	//const int USE_TEX_5 = 3;			//tips_5で使うテクスチャの数
+	//const int USE_TEX_6 = 3;			//tips_6で使うテクスチャの数
+
+	//Sprite tips_ss_1[3];					//tips_1中身
+	//Sprite tips_ss_2[3];					//tips_2中身
+	//Sprite tips_ss_3[3];					//tips_3中身
+	//Sprite tips_ss_4[3];					//tips_4中身
+	//Sprite tips_ss_5[3];					//tips_5中身
+	//Sprite tips_ss_6[3];					//tips_6中身
+
 	float size = 0;
 	/*----------新tips用----------*/
 	const float EASE_DELAY = 0.2f;
