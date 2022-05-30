@@ -119,13 +119,18 @@ public://シーンで使うもの
 	float eyeEaseTime;
 
 	int resultForTime;
-	const int gameMaxTime = 5999;
+	const int gameMaxTime = 1;
 
 	EachInfo resultMaxConbo[2];
 	EachInfo resultEraseOthello[3];
 	Model resultScoreKanaModel;
 	Model resultMaxConboModel;
 	Model resultEraseOthelloModel;
+	const float RESULT_EASE_TIMER_COUNT = 0.01f;
+	XMFLOAT3 oldPos[3] = { { 0,0,0 } };
+	XMFLOAT3 addOutBack = { 0,0,0 };
+	float resultEaseTimer = 0.0f;
+	bool isCheck[3] = { false };
 
 	//スコア用
 	//Sprite scoreNum[60];

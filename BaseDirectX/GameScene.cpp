@@ -454,11 +454,11 @@ void GameScene::TitleUpdate()
 				//チュートリアルに飛ぶ
 				if ((Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01)) && !isPouse && !isSceneChange && !isPouseToTiTle && isDrawLogoEnd)
 				{
-					
+
 					titleSelectNum = 0;
-						gameTime = 1;
-						isTipsDraw = false;
-						ToModeSelect();
+					gameTime = 1;
+					isTipsDraw = false;
+					ToModeSelect();
 				}
 			}
 		}
@@ -776,7 +776,14 @@ void GameScene::GameUpdate()
 				Camera::target.v = ShlomonMath::EaseInQuad(eyeStart, eyeEnd, 1.0f);
 				resultForTime = 0;
 				isResultSceneChange = false;
-				if (!isPouseToTitle && !isTutorial) SceneNum = RESULT;
+				if (!isPouseToTitle && !isTutorial)
+				{
+					isCheck[0] = false;
+					isCheck[1] = false;
+					isCheck[2] = false;
+					resultEaseTimer = 0.0f;
+					SceneNum = RESULT;
+				}
 				resultForTime = 0;
 				isResultSceneChange = false;
 				displayScore = checkObject.GetScore();
@@ -1940,49 +1947,138 @@ void GameScene::ResultDraw()
 	othelloStage.each.rotation.x = -90;
 	Draw3DObject(othelloStage);
 	nowScore = checkObject.GetScore();
-	float scoreNum = 2.0f;
-	scoreEach[0].position = { 1.0f + scoreNum * 6, 19.0f, -12.0f, 1.0f };
-	scoreEach[0].scale = { 0.4f, 0.4f, 0.4f };
-	scoreEach[0].rotation.x = -70.0f;
-	sNumbersObject[nowScore % 10].Update(&scoreEach[0]);
-	Draw3DObject(sNumbersObject[nowScore % 10]);
-	scoreEach[1].position = { 1.0f + scoreNum * 5, 19.0f, -12.0f, 1.0f };
-	scoreEach[1].scale = { 0.4f, 0.4f, 0.4f };
-	scoreEach[1].rotation.x = -70.0f;
-	sNumbersObject[nowScore / 10 % 10].Update(&scoreEach[1]);
-	Draw3DObject(sNumbersObject[nowScore / 10 % 10]);
-	scoreEach[2].position = { 1.0f + scoreNum * 4, 19.0f, -12.0f, 1.0f };
-	scoreEach[2].scale = { 0.4f, 0.4f, 0.4f };
-	scoreEach[2].rotation.x = -70.0f;
-	sNumbersObject[nowScore / 100 % 10].Update(&scoreEach[2]);
-	Draw3DObject(sNumbersObject[nowScore / 100 % 10]);
-	scoreEach[3].position = { 1.0f + scoreNum * 3, 19.0f, -12.0f, 1.0f };
-	scoreEach[3].scale = { 0.4f, 0.4f, 0.4f };
-	scoreEach[3].rotation.x = -70.0f;
-	sNumbersObject[nowScore / 1000 % 10].Update(&scoreEach[3]);
-	Draw3DObject(sNumbersObject[nowScore / 1000 % 10]);
-	scoreEach[4].position = { 1.0f + scoreNum * 2, 19.0f, -12.0f, 1.0f };
-	scoreEach[4].scale = { 0.4f, 0.4f, 0.4f };
-	scoreEach[4].rotation.x = -70.0f;
-	sNumbersObject[nowScore / 10000 % 10].Update(&scoreEach[4]);
-	Draw3DObject(sNumbersObject[nowScore / 10000 % 10]);
-	scoreEach[5].position = { 1.0f + scoreNum * 1, 19.0f, -12.0f, 1.0f };
-	scoreEach[5].scale = { 0.4f, 0.4f, 0.4f };
-	scoreEach[5].rotation.x = -70.0f;
-	sNumbersObject[nowScore / 100000 % 10].Update(&scoreEach[5]);
-	Draw3DObject(sNumbersObject[nowScore / 100000 % 10]);
-	scoreEach[6].position = { 1.0f + scoreNum * 0, 19.0f, -12.0f, 1.0f };
-	scoreEach[6].scale = { 0.4f, 0.4f, 0.4f };
-	scoreEach[6].rotation.x = -70.0f;
-	sNumbersObject[nowScore / 1000000 % 10].Update(&scoreEach[6]);
-	Draw3DObject(sNumbersObject[nowScore / 1000000 % 10]);
-	resultScoreKanaModel.each.position = { -5.0f, 19.0f, -12.0f, 1.0f };
-	resultScoreKanaModel.each.scale = { 0.4f, 0.4f, 0.4f };
-	resultScoreKanaModel.each.rotation.x = -70.0f;
+
+	//変数系
+	const float scoreX = -7.5f;
+	const float comboX = -14.0f;
+	const float eraseX = -11.0f;
+	const float leftSideSpace = 50.0f;
+
+	const XMFLOAT3 scoreStartPos = { scoreX - leftSideSpace, 19.0f, -23.0f };
+	const float scoreY = scoreStartPos.y;
+	const float scoreZ = scoreStartPos.z;
+	const XMFLOAT3 scoreGoalPos = { scoreX,scoreY,scoreZ };
+
+	const XMFLOAT3 comboStartPos = { comboX - leftSideSpace, 17.0f, -19.0f };
+	const float comboY = comboStartPos.y;
+	const float comboZ = comboStartPos.z;
+	const XMFLOAT3 comboGoalPos = { comboX,comboY,comboZ };
+
+	const XMFLOAT3 eraseStartPos = { eraseX - leftSideSpace, 15.0f, -15.0f };
+	const float eraseY = eraseStartPos.y;
+	const float eraseZ = eraseStartPos.z;
+	const XMFLOAT3 eraseGoalPos = { eraseX,eraseY,eraseZ };
+
+	const float baseNumX = 3.0f;
+	const float scoreNum = 3.5f;
+	const XMFLOAT3 scale = { 0.6f, 0.6f, 0.6f };
+
+	/*-----スコアのモデル-----*/
+
+	if (resultEaseTimer >= 0 && !isCheck[0])
+	{
+		const float add = 2.0f;
+
+		scoreEach[0].position = { baseNumX + scoreNum * 6 - leftSideSpace + add, scoreY, scoreZ, 1.0f };
+		scoreEach[0].scale = scale;
+		scoreEach[0].rotation.x = -70.0f;
+
+		scoreEach[1].position = { baseNumX + scoreNum * 5 - leftSideSpace + add, scoreY, scoreZ, 1.0f };
+		scoreEach[1].scale = scale;
+		scoreEach[1].rotation.x = -70.0f;
+
+		scoreEach[2].position = { baseNumX + scoreNum * 4 - leftSideSpace + add, scoreY, scoreZ, 1.0f };
+		scoreEach[2].scale = scale;
+		scoreEach[2].rotation.x = -70.0f;
+
+		scoreEach[3].position = { baseNumX + scoreNum * 3 - leftSideSpace + add, scoreY, scoreZ, 1.0f };
+		scoreEach[3].scale = scale;
+		scoreEach[3].rotation.x = -70.0f;
+
+		scoreEach[4].position = { baseNumX + scoreNum * 2 - leftSideSpace + add, scoreY, scoreZ, 1.0f };
+		scoreEach[4].scale = scale;
+		scoreEach[4].rotation.x = -70.0f;
+
+		scoreEach[5].position = { baseNumX + scoreNum * 1 - leftSideSpace + add, scoreY, scoreZ, 1.0f };
+		scoreEach[5].scale = scale;
+		scoreEach[5].rotation.x = -70.0f;
+
+		scoreEach[6].position = { baseNumX + scoreNum * 0 - leftSideSpace + add, scoreY, scoreZ, 1.0f };
+		scoreEach[6].scale = scale;
+		scoreEach[6].rotation.x = -70.0f;
+
+		resultScoreKanaModel.each.position = ConvertXMFLOAT3toXMVECTOR(scoreStartPos);
+		resultScoreKanaModel.each.scale = scale;
+		resultScoreKanaModel.each.rotation.x = -70.0f;
+
+		isCheck[0] = true;
+	}
+	else if (isCheck[0])
+	{
+		XMFLOAT3 start = scoreStartPos;
+		XMFLOAT3 goal = scoreGoalPos;
+		XMFLOAT3 pos = { 0,0,0 };
+		if (resultEaseTimer < 1.0f)
+		{
+			pos = ShlomonMath::EaseOutBack(start, goal, resultEaseTimer);
+			if (oldPos[0].x != 0)
+			{
+				addOutBack = pos - oldPos[0];
+			}
+			oldPos[0] = pos;
+		}
+		else
+		{
+			pos = ShlomonMath::EaseOutBack(start, goal, 1.0f);
+			addOutBack = pos - oldPos[0];
+			oldPos[0] = pos;
+		}
+		resultScoreKanaModel.each.position = ConvertXMFLOAT3toXMVECTOR(pos);
+		resultScoreKanaModel.each.scale = scale;
+		resultScoreKanaModel.each.rotation.x = -70.0f;
+
+		//数字計算
+		scoreEach[0].position += ConvertXMFLOAT3toXMVECTOR(addOutBack);
+		scoreEach[1].position += ConvertXMFLOAT3toXMVECTOR(addOutBack);
+		scoreEach[2].position += ConvertXMFLOAT3toXMVECTOR(addOutBack);
+		scoreEach[3].position += ConvertXMFLOAT3toXMVECTOR(addOutBack);
+		scoreEach[4].position += ConvertXMFLOAT3toXMVECTOR(addOutBack);
+		scoreEach[5].position += ConvertXMFLOAT3toXMVECTOR(addOutBack);
+		scoreEach[6].position += ConvertXMFLOAT3toXMVECTOR(addOutBack);
+
+		if (pos.x == oldPos[0].x && resultEaseTimer > 1.0f && addOutBack.x == 0.0f)
+		{
+			//scoreEach[0].position.m128_f32[0] = baseNumX + scoreNum * 6;
+			//scoreEach[1].position.m128_f32[0] = baseNumX + scoreNum * 5;
+			//scoreEach[2].position.m128_f32[0] = baseNumX + scoreNum * 4;
+			//scoreEach[3].position.m128_f32[0] = baseNumX + scoreNum * 3;
+			//scoreEach[4].position.m128_f32[0] = baseNumX + scoreNum * 2;
+			//scoreEach[5].position.m128_f32[0] = baseNumX + scoreNum * 1;
+			//scoreEach[6].position.m128_f32[0] = baseNumX + scoreNum * 0;
+		}
+	}
 	resultScoreKanaModel.Update();
 	Draw3DObject(resultScoreKanaModel);
 
-	XMFLOAT3 scale = { 0.4f, 0.4f, 0.4f };
+	sNumbersObject[nowScore % 10].Update(&scoreEach[0]);
+	Draw3DObject(sNumbersObject[nowScore % 10]);
+	sNumbersObject[nowScore / 10 % 10].Update(&scoreEach[1]);
+	Draw3DObject(sNumbersObject[nowScore / 10 % 10]);
+	sNumbersObject[nowScore / 100 % 10].Update(&scoreEach[2]);
+	Draw3DObject(sNumbersObject[nowScore / 100 % 10]);
+	sNumbersObject[nowScore / 1000 % 10].Update(&scoreEach[3]);
+	Draw3DObject(sNumbersObject[nowScore / 1000 % 10]);
+	sNumbersObject[nowScore / 10000 % 10].Update(&scoreEach[4]);
+	Draw3DObject(sNumbersObject[nowScore / 10000 % 10]);
+	sNumbersObject[nowScore / 100000 % 10].Update(&scoreEach[5]);
+	Draw3DObject(sNumbersObject[nowScore / 100000 % 10]);
+	sNumbersObject[nowScore / 1000000 % 10].Update(&scoreEach[6]);
+	Draw3DObject(sNumbersObject[nowScore / 1000000 % 10]);
+
+	/*-----スコアのモデル-----*/
+
+
+#pragma region i do not know
 	titleObject.each.position = { -1, 3, 0, 1.0f };
 	titleObject.each.scale = scale;
 	titleObject.Update();
@@ -2010,45 +2106,166 @@ void GameScene::ResultDraw()
 	pushSpace.each.scale = scale4;
 	pushSpace.Update();
 	Draw3DObject(pushSpace);
+#pragma endregion
+
+
+	/*-----最大コンボモデル-----*/
 
 	int combo = checkObject.GetMaxCombo();
 	int reverse = checkObject.GetTotalReverceCount();
-	resultMaxConbo[0].position = { 3.0f, 17.0f, -10.0f, 1.0f };
-	resultMaxConbo[0].scale = scale;
-	resultMaxConbo[0].rotation.x = -70;
-	sNumbersObject[combo % 10].Update(&resultMaxConbo[0]);
-	Draw3DObject(sNumbersObject[combo % 10]);
-	resultMaxConbo[1].position = { 1.0f, 17.0f, -10.0f, 1.0f };
-	resultMaxConbo[1].scale = scale;
-	resultMaxConbo[1].rotation.x = -70;
-	sNumbersObject[combo / 10 % 10].Update(&resultMaxConbo[1]);
-	Draw3DObject(sNumbersObject[combo / 10 % 10]);
-	resultMaxConboModel.each.position = { -9.0f, 17.0f, -10.0f, 1.0f };
-	resultMaxConboModel.each.scale = scale;
-	resultMaxConboModel.each.rotation.x = -70;
+	if (resultEaseTimer - 0.2f >= 0 && !isCheck[1])
+	{
+		const float add = 0.8f;
+
+		resultMaxConbo[0].position = { baseNumX + scoreNum * 1 - leftSideSpace + add, comboY, comboZ, 1.0f };
+		resultMaxConbo[0].scale = scale;
+		resultMaxConbo[0].rotation.x = -70;
+
+		resultMaxConbo[1].position = { baseNumX + scoreNum * 0 - leftSideSpace + add, comboY, comboZ, 1.0f };
+		resultMaxConbo[1].scale = scale;
+		resultMaxConbo[1].rotation.x = -70;
+
+		resultMaxConboModel.each.position = ConvertXMFLOAT3toXMVECTOR(comboStartPos);
+		resultMaxConboModel.each.scale = scale;
+		resultMaxConboModel.each.rotation.x = -70;
+
+		isCheck[1] = true;
+	}
+	else if (isCheck[1])
+	{
+		XMFLOAT3 start = comboStartPos;
+		XMFLOAT3 goal = comboGoalPos;
+		XMFLOAT3 pos = { 0,0,0 };
+		float maxComboModelEase = resultEaseTimer - 0.2f;
+		if (maxComboModelEase > 0)
+		{
+			if (maxComboModelEase < 1.0f)
+			{
+				pos = ShlomonMath::EaseOutBack(start, goal, maxComboModelEase);
+				if (oldPos[1].x != 0)
+				{
+					addOutBack = pos - oldPos[1];
+				}
+				oldPos[1] = pos;
+			}
+			else
+			{
+				pos = ShlomonMath::EaseOutBack(start, goal, 1.0f);
+				addOutBack = pos - oldPos[1];
+				oldPos[1] = pos;
+			}
+		}
+		//else { addOutBack = { 0,0,0 }; }
+		resultMaxConboModel.each.position = ConvertXMFLOAT3toXMVECTOR(pos);
+		resultMaxConboModel.each.scale = scale;
+		resultMaxConboModel.each.rotation.x = -70;
+
+		//数字計算
+		resultMaxConbo[0].position += ConvertXMFLOAT3toXMVECTOR(addOutBack);
+		resultMaxConbo[1].position += ConvertXMFLOAT3toXMVECTOR(addOutBack);
+		if (pos.x == oldPos[1].x && maxComboModelEase > 1.0f && addOutBack.x == 0.0f)
+		{
+			//resultMaxConbo[0].position.m128_f32[0] = baseNumX + scoreNum * 1;
+			//resultMaxConbo[1].position.m128_f32[0] = baseNumX + scoreNum * 0;
+		}
+	}
 	resultMaxConboModel.Update();
 	Draw3DObject(resultMaxConboModel);
 
-	resultEraseOthello[0].position = { 5.0f, 15.0f, -8.0f, 1.0f };
-	resultEraseOthello[0].scale = scale;
-	resultEraseOthello[0].rotation.x = -70;
-	sNumbersObject[reverse % 10].Update(&resultEraseOthello[0]);
-	Draw3DObject(sNumbersObject[reverse % 10]);
-	resultEraseOthello[1].position = { 3.0f, 15.0f, -8.0f, 1.0f };
-	resultEraseOthello[1].scale = scale;
-	resultEraseOthello[1].rotation.x = -70;
-	sNumbersObject[reverse / 10 % 10].Update(&resultEraseOthello[1]);
-	Draw3DObject(sNumbersObject[reverse / 10 % 10]);
-	resultEraseOthello[2].position = { 1.0f, 15.0f, -8.0f, 1.0f };
-	resultEraseOthello[2].scale = scale;
-	resultEraseOthello[2].rotation.x = -70;
-	sNumbersObject[reverse / 100 % 10].Update(&resultEraseOthello[2]);
-	Draw3DObject(sNumbersObject[reverse / 100 % 10]);
-	resultEraseOthelloModel.each.position = { -7.0f, 15.0f, -8.0f, 1.0f };
-	resultEraseOthelloModel.each.scale = scale;
-	resultEraseOthelloModel.each.rotation.x = -70;
+	sNumbersObject[combo % 10].Update(&resultMaxConbo[0]);
+	Draw3DObject(sNumbersObject[combo % 10]);
+	sNumbersObject[combo / 10 % 10].Update(&resultMaxConbo[1]);
+	Draw3DObject(sNumbersObject[combo / 10 % 10]);
+
+	/*-----最大コンボモデル-----*/
+
+
+	/*-----消した合計数モデル-----*/
+
+	if (resultEaseTimer - 0.4f >= 0 && !isCheck[2])
+	{
+		const float add = 3.0f;
+
+		resultEraseOthello[0].position = { baseNumX + scoreNum * 2 - leftSideSpace + add, eraseY, eraseZ, 1.0f };
+		resultEraseOthello[0].scale = scale;
+		resultEraseOthello[0].rotation.x = -70;
+
+		resultEraseOthello[1].position = { baseNumX + scoreNum * 1 - leftSideSpace + add, eraseY, eraseZ, 1.0f };
+		resultEraseOthello[1].scale = scale;
+		resultEraseOthello[1].rotation.x = -70;
+
+		resultEraseOthello[2].position = { baseNumX + scoreNum * 0 - leftSideSpace + add, eraseY, eraseZ, 1.0f };
+		resultEraseOthello[2].scale = scale;
+		resultEraseOthello[2].rotation.x = -70;
+
+		resultEraseOthelloModel.each.position = ConvertXMFLOAT3toXMVECTOR(eraseStartPos);
+		resultEraseOthelloModel.each.scale = scale;
+		resultEraseOthelloModel.each.rotation.x = -70;
+
+		isCheck[2] = true;
+	}
+	else if (isCheck[2])
+	{
+		XMFLOAT3 start = eraseStartPos;
+		XMFLOAT3 goal = eraseGoalPos;
+		XMFLOAT3 pos = { 0,0,0 };
+		float resultEraseOthelloEase = resultEaseTimer - 0.4f;
+		if (resultEraseOthelloEase > 0)
+		{
+			if (resultEraseOthelloEase < 1.0f)
+			{
+				pos = ShlomonMath::EaseOutBack(start, goal, resultEraseOthelloEase);
+				if (oldPos[2].x != 0)
+				{
+					addOutBack = pos - oldPos[2];
+				}
+				oldPos[2] = pos;
+			}
+			else
+			{
+				pos = ShlomonMath::EaseOutBack(start, goal, 1.0f);
+				addOutBack = pos - oldPos[2];
+				oldPos[2] = pos;
+			}
+		}
+		//else { addOutBack = { 0,0,0 }; }
+		resultEraseOthelloModel.each.position = ConvertXMFLOAT3toXMVECTOR(pos);
+		resultEraseOthelloModel.each.scale = scale;
+		resultEraseOthelloModel.each.rotation.x = -70;
+
+		//数字計算
+		resultEraseOthello[0].position += ConvertXMFLOAT3toXMVECTOR(addOutBack);
+		resultEraseOthello[1].position += ConvertXMFLOAT3toXMVECTOR(addOutBack);
+		resultEraseOthello[2].position += ConvertXMFLOAT3toXMVECTOR(addOutBack);
+
+		if (pos.x == oldPos[2].x && resultEraseOthelloEase > 1.0f && addOutBack.x == 0.0f)
+		{
+			//resultEraseOthello[0].position.m128_f32[0] = baseNumX + scoreNum * 2;
+			//resultEraseOthello[1].position.m128_f32[0] = baseNumX + scoreNum * 1;
+			//resultEraseOthello[2].position.m128_f32[0] = baseNumX + scoreNum * 0;
+		}
+	}
 	resultEraseOthelloModel.Update();
 	Draw3DObject(resultEraseOthelloModel);
+
+	sNumbersObject[reverse % 10].Update(&resultEraseOthello[0]);
+	Draw3DObject(sNumbersObject[reverse % 10]);
+	sNumbersObject[reverse / 10 % 10].Update(&resultEraseOthello[1]);
+	Draw3DObject(sNumbersObject[reverse / 10 % 10]);
+	sNumbersObject[reverse / 100 % 10].Update(&resultEraseOthello[2]);
+	Draw3DObject(sNumbersObject[reverse / 100 % 10]);
+
+	/*-----消した合計数モデル-----*/
+
+	//resultのeaseing管理
+	if (resultEaseTimer < 1.4f) { resultEaseTimer += RESULT_EASE_TIMER_COUNT; }
+	else
+	{
+		/*isCheck[0] = false;
+		isCheck[1] = false;
+		isCheck[2] = false;*/
+		resultEaseTimer = 1.4f;
+	}
 
 	//Imgui::DrawImGui();
 
