@@ -1592,18 +1592,18 @@ void GameScene::GameDraw()
 			}
 			else
 			{
-				const float max_shake = 5.0f;
+				/*const float max_shake = 5.0f;
 				if (countDown % 1 == 0)
 				{
 					if (countDown % 2 == 0) { startModel.each.rotation.z = (max_shake) * ((float)countDown / 60.0f); }
 					else { startModel.each.rotation.z = (-max_shake) * ((float)countDown / 60.0f); }
-				}
+				}*/
 				/*else if (countDown % 10 == 0)
 				{
 					startModel.each.rotation.z = -max_shake * ((float)countDown / 60.0f);
 				}*/
 				startModel.each.position.m128_f32[1] -= 0.48f;
-				startModel.each.position.m128_f32[2] -= 0.35f;
+				startModel.each.position.m128_f32[2] -= 0.37f;
 			}
 			startModel.Update();
 			Draw3DObject(startModel);
