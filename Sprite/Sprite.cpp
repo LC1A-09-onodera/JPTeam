@@ -352,39 +352,6 @@ void Sprite::ChangeSizeOther(float wid, float hei)
            {{100.0f, 100.0f, 0.0f}, {1.0f, 1.0f}},
            {{100.0f,   0.0f, 0.0f}, {1.0f, 0.0f}},
     };
-    //頂点シェーダーの読み込みピクセルシェーダーの読み込み頂点レイアウトの読み込み
-    // 頂点シェーダの読み込みとコンパイル
-    //BaseDirectX::result = D3DCompileFromFile(L"spriteVertexShader.hlsl", nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "vs_5_0", D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, 0, &vsBlob, &errorBlob);
-
-    //if (FAILED(BaseDirectX::result)) {
-    //    // errorBlobからエラー内容をstring型にコピー
-    //    std::string errstr;
-    //    errstr.resize(errorBlob->GetBufferSize());
-
-    //    std::copy_n((char *)errorBlob->GetBufferPointer(), errorBlob->GetBufferSize(), errstr.begin());
-    //    errstr += "\n";
-
-    //    // エラー内容を出力ウィンドウに表示
-    //    OutputDebugStringA(errstr.c_str());
-    //    exit(1);
-    //}
-
-    //// ピクセルシェーダの読み込みとコンパイル
-    //BaseDirectX::result = D3DCompileFromFile( L"spritePixelShader.hlsl", nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_5_0", D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, 0, &psBlob, &errorBlob);
-
-    //if (FAILED(BaseDirectX::result)) {
-    //    // errorBlobからエラー内容をstring型にコピー
-    //    std::string errstr;
-    //    errstr.resize(errorBlob->GetBufferSize());
-
-    //    std::copy_n((char *)errorBlob->GetBufferPointer(),
-    //        errorBlob->GetBufferSize(),
-    //        errstr.begin());
-    //    errstr += "\n";
-    //    // エラー内容を出力ウィンドウに表示
-    //    OutputDebugStringA(errstr.c_str());
-    //    exit(1);
-    //}
 
     int sizevb = sizeof(Spritevertices);
 

@@ -996,7 +996,6 @@ ParticleControl::~ParticleControl()
 
 void ParticleControl::Update()
 {
-	
 	for (int i = 0; i < 10; i++)
 	{
 		numbers[i]->Update(Camera::eye.v, Camera::target.v, Camera::up.v);

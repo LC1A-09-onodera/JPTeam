@@ -37,7 +37,6 @@ enum DojoType
 	Conect,
 	Waltz,
 	Bookend,
-	Reversible,
 };
 
 //Connectの全体フロー
@@ -65,7 +64,10 @@ enum WaltzFlow
 
 enum BookendFlow
 {
-	BookEnd0,//開始
+	BookEnd1,//開始
+	BookEnd2,
+	BookEnd3,
+	BookEnd4,
 	BookEndEnd,
 };
 
@@ -249,10 +251,9 @@ namespace OthelloConstData
 	const panelPos tutorialPanel = { 2, 2 };
 	const panelPos DojoPanel = { 5, 2 };
 	const panelPos UndoPanel = { 7, 7 };
-	const panelPos ConectPanel = { 1, 2 };
-	const panelPos WaltzPanel = { 3, 2 };
-	const panelPos BookendPanel = { 5, 2 };
-	const panelPos reversiblePanel = { 7, 2 };
+	const panelPos ConectPanel = { 0, 4 };
+	const panelPos WaltzPanel = { 3, 4 };
+	const panelPos BookendPanel = { 6, 4 };
 	//テキストの表示箇所2D
 	const XMVECTOR moveTextPos = { 400, 0, 0,0 };
 	const XMVECTOR moveAllDeleteCountPos{ 5.0f, 0.0f, 0.0f , 0.0f };
@@ -302,6 +303,7 @@ class Othello
 {
 public:
 	bool isCompleteDraw = false;
+	bool isAlpha = false;
 private:
 	OthelloEachInfo each;
 	OthelloEachInfo completeEach;
@@ -327,7 +329,7 @@ public:
 	void SetScale(XMFLOAT3 &scale) { this->each.scale = scale; }
 public:
 	void Init(OthelloModel *model, OthelloModel *chainModel, OthelloModel *compModel);
-	void Update(int combo);
+	void Update(int combo, bool isNotErase);
 	void Draw();
 	void CompDraw();
 	void Finalize();
@@ -395,7 +397,6 @@ public:
 	void Draw(bool isChanceDraw = true, bool isCompDraw = true);
 	void Finalize();
 	void Controll();
-	void AddPanel();
 
 	const vector<vector<SendOthelloData>> &Send();
 	void Receive(const vector<vector<SendOthelloData>> &data, const vector<pair<int, int>> compPos);
@@ -460,7 +461,7 @@ private://ノルマモード用内部処理関数
 	void CountModelDraw(int count, EachInfo *data = nullptr, EachInfo *dataB = nullptr);
 public://モードセレクト用外部関数
 	//モード選択開始時
-	void ModeSelectStart(int stageNum = -1);
+	void ModeSelectStart(int stageNum = -1, ModeSelectType type = GameModeSelect);
 
 	void ModeSelectControll();
 	//モード選択中
@@ -514,70 +515,81 @@ public:
 private://道場変数
 	DojoType dojoType;
 	//テキスト読みの時間と実行の時間
-	bool isAct = false;
+	bool isAct = true;
 	int TextCount = 0;
 private:
+	void DojoObjectDraw();
+
 #pragma region connect
 	void ConnectStart();
-	void ConnectUpdate(int AlivePanel, int ComboCount);
+	void ConnectUpdate(int AlivePanel, int ComboCount, bool isOn = true);
 	void ConnectDraw();
 	ConectFlow	nowConnectFlow;
 	vector<Othello> ConnectObject;
 	vector<Sprite> ConnectText;
 	void ConnectFirstSpwan();
-	void ConnectFirstUpdate(int AlivePanel, int ComboCount);
+	void ConnectFirstUpdate(int AlivePanel, int ComboCount, bool isOn = true);
 
 	void ConnectSecondSpawn();
-	void ConnectSecondUpdate(int AlivePanel, int ComboCount);
+	void ConnectSecondUpdate(int AlivePanel, int ComboCount, bool isOn = true);
 
 	void ConnectThirdSpawn();
-	void ConnectThirdUpdate(int AlivePanel, int ComboCount);
+	void ConnectThirdUpdate(int AlivePanel, int ComboCount, bool isOn = true);
 
 	void ConnectForceSpawn();
-	void ConnectForceUpdate(int AlivePanel, int ComboCount);
+	void ConnectForceUpdate(int AlivePanel, int ComboCount, bool isOn = true);
 
 	void ConnectFifthSpawn();
-	void ConnectFifthUpdate(int AlivePanel, int ComboCount);
+	void ConnectFifthUpdate(int AlivePanel, int ComboCount, bool isOn = true);
 #pragma endregion
 
 #pragma region Waltz
 	void WaltzStart();
-	void WaltzUpdate(int AlivePanel, int ComboCount);
+	void WaltzUpdate(int AlivePanel, int ComboCount, bool isOn = true);
 	void WaltzDrwa();
 	WaltzFlow	nowWaltzFlow;
 	vector<Othello> WaltzObject;
 	vector<Sprite> WaltzText;
 	void WaltzFirstSpwan();
-	void WaltzFirstUpdate(int AlivePanel, int ComboCount);
+	void WaltzFirstUpdate(int AlivePanel, int ComboCount, bool isOn = true);
 
 	void WaltzSecondSpawn();
-	void WaltzSecondUpdate(int AlivePanel, int ComboCount);
+	void WaltzSecondUpdate(int AlivePanel, int ComboCount, bool isOn = true);
 
 	void WaltzThirdSpawn();
-	void WaltzThirdUpdate(int AlivePanel, int ComboCount);
+	void WaltzThirdUpdate(int AlivePanel, int ComboCount, bool isOn = true);
 
 	void WaltzForceSpawn();
-	void WaltzForceUpdate(int AlivePanel, int ComboCount);
+	void WaltzForceUpdate(int AlivePanel, int ComboCount, bool isOn = true);
+
+	void WaltzFifthSpawn();
+	void WaltzFifthUpdate(int AlivePanel, int ComboCount, bool isOn = true);
+
+	void WaltzSixesSpawn();
+	void WaltzSixesUpdate(int AlivePanel, int ComboCount, bool isOn = true);
+	void WaltzSevensSpawn();
+	void WaltzSevensUpdate(int AlivePanel, int ComboCount, bool isOn = true);
+
 #pragma endregion
 
 #pragma region Bookend
 	void BookendStart();
-	void BookendUpdate(int AlivePanel, int ComboCount);
+	void BookendUpdate(int AlivePanel, int ComboCount, bool isOn = true);
 	void BookendDrwa();
 	BookendFlow	nowBookendFlow;
 	vector<Othello> BookendObject;
 	vector<Sprite> BookendText;
 	void BookendFirstSpwan();
-	void BookendFirstUpdate(int AlivePanel, int ComboCount);
+	void BookendFirstUpdate(int AlivePanel, int ComboCount, bool isOn = true);
 
 	void BookendSecondSpawn();
-	void BookendSecondUpdate(int AlivePanel, int ComboCount);
+	void BookendSecondUpdate(int AlivePanel, int ComboCount, bool isOn = true);
 
 	void BookendThirdSpawn();
-	void BookendThirdUpdate(int AlivePanel, int ComboCount);
+	void BookendThirdUpdate(int AlivePanel, int ComboCount, bool isOn = true);
 
 	void BookendForceSpawn();
-	void BookendForceUpdate(int AlivePanel, int ComboCount);
+	void BookendForceUpdate(int AlivePanel, int ComboCount, bool isOn = true);
 #pragma endregion
 
 private:
@@ -652,7 +664,7 @@ private:
 	void SetSpawnPlayer(int x, int y);
 
 	//特定のマスにパネルを配置する
-	void SetSpawnPanel(int x, int y, bool Front, OthelloType type = NORMAL, bool isRockDraw = true);
+	void SetSpawnPanel(int x, int y, bool Front, OthelloType type = NORMAL, bool isRockDraw = true, bool isSpawn = true);
 
 private:
 	panelPos playerPanelPos;
@@ -703,6 +715,7 @@ private:
 
 	bool isFieldUpdate = false;
 
+	bool isDojoDraw = false;
 	TutorialSceneFlow::TutorialScene scenes = TutorialSceneFlow::TutorialEnd;
 
 	int TutorialTimer = 0;

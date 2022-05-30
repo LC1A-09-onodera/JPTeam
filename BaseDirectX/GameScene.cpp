@@ -34,6 +34,7 @@ void GameScene::SceneManageUpdateAndDraw()
 	{
 	case TITLE:
 		TitleUpdate();
+
 		TitleDraw();
 		break;
 	case SELECT:
@@ -340,6 +341,7 @@ void GameScene::Init()
 	EndModel.CreateModel("end", ShaderManager::playerShader);
 	ChackBoxModel.CreateModel("check_box", ShaderManager::playerShader);
 	CheckModel.CreateModel("check", ShaderManager::playerShader);
+	reverseAddObject.CreateModel("add", ShaderManager::playerShader);
 	for (int i = 0; i < 2; i++)
 	{
 		pouseKakko[i].CreateConstBuff0();
@@ -471,97 +473,97 @@ void GameScene::TitleUpdate()
 			}
 		}
 		//ポーズ画面に移行する
-		if (!isPouse && (Input::KeyTrigger(DIK_ESCAPE) || directInput->IsButtonPush(directInput->ButtonPouse)))
-		{
-			isPouse = true;
-			selectPouse = 0;
-		}
+		//if (!isPouse && !isSceneChange && !isResultSceneChange && isDrawLogoEnd && (Input::KeyTrigger(DIK_ESCAPE) || directInput->IsButtonPush(directInput->ButtonPouse)))
+		//{
+		//	isGameEnd = true;
+		//	/*isPouse = true;
+		//	selectPouse = 0;*/
+		//}
 		//ポーズ中の処理
-		else if (isPouse)
+		//else if (isPouse)
+		//{
+		//	bool W = directInput->IsButtonPush(directInput->UpButton) && directInput->leftStickX() == 0 && directInput->leftStickY() == 0;
+		//	bool S = directInput->IsButtonPush(directInput->DownButton) && directInput->leftStickX() == 0 && directInput->leftStickY() == 0;
+		//	if (Input::KeyTrigger(DIK_W) || W)
+		//	{
+		//		SoundStopWave(selectSound);
+		//		SoundPlayOnce(selectSound);
+		//		if (selectPouse == -1)
+		//		{
+		//			selectPouse = selectMaxPouse;
+		//		}
+		//		else
+		//		{
+		//			selectPouse--;
+		//		}
+		//	}
+		//	else if (Input::KeyTrigger(DIK_S) || S)
+		//	{
+		//		SoundStopWave(selectSound);
+		//		SoundPlayOnce(selectSound);
+		//		if (selectPouse == selectMaxPouse)
+		//		{
+		//			selectPouse = -1;
+		//		}
+		//		else
+		//		{
+		//			selectPouse++;
+		//		}
+		//	}
+		//	if ((Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01)))
+		//	{
+		//		//リザルトに戻る
+		//		if (selectPouse == -1)
+		//		{
+		//			if (isSupport)
+		//			{
+		//				isSupport = false;
+		//			}
+		//			else
+		//			{
+		//				isSupport = true;
+		//			}
+		//		}
+		//		else if (selectPouse == 0)
+		//		{
+		//			isPouse = false;
+		//		}
+		//		else if (selectPouse == 1)
+		//		{
+		//			gameTime = 0;
+		//			isPouse = false;
+		//			select = false;
+		//			checkObject.Init();
+		//		}
+		//		else if (selectPouse == 2)
+		//		{
+		//			isGameEnd = true;
+		//			checkObject.Init();
+		//		}
+		//	}
+		//	if (Input::KeyTrigger(DIK_ESCAPE) || directInput->IsButtonPush(directInput->ButtonPouse))
+		//	{
+		//		isPouse = false;
+		//	}
+		//}
+		//if (!isGameEnd)
+		if (!isPouse)
 		{
-			bool W = directInput->IsButtonPush(directInput->UpButton) && directInput->leftStickX() == 0 && directInput->leftStickY() == 0;
-			bool S = directInput->IsButtonPush(directInput->DownButton) && directInput->leftStickX() == 0 && directInput->leftStickY() == 0;
-			if (Input::KeyTrigger(DIK_W) || W)
-			{
-				SoundStopWave(selectSound);
-				SoundPlayOnce(selectSound);
-				if (selectPouse == -1)
-				{
-					selectPouse = selectMaxPouse;
-				}
-				else
-				{
-					selectPouse--;
-				}
-			}
-			else if (Input::KeyTrigger(DIK_S) || S)
-			{
-				SoundStopWave(selectSound);
-				SoundPlayOnce(selectSound);
-				if (selectPouse == selectMaxPouse)
-				{
-					selectPouse = -1;
-				}
-				else
-				{
-					selectPouse++;
-				}
-			}
-			if ((Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01)))
-			{
-				//リザルトに戻る
-				if (selectPouse == -1)
-				{
-					if (isSupport)
-					{
-						isSupport = false;
-					}
-					else
-					{
-						isSupport = true;
-					}
-				}
-				else if (selectPouse == 0)
-				{
-					isPouse = false;
-				}
-				else if (selectPouse == 1)
-				{
-					gameTime = 0;
-					isPouse = false;
-					select = false;
-					checkObject.Init();
-				}
-				else if (selectPouse == 2)
-				{
-					isGameEnd = true;
-					checkObject.Init();
-				}
-			}
-			if (Input::KeyTrigger(DIK_ESCAPE) || directInput->IsButtonPush(directInput->ButtonPouse))
-			{
-				isPouse = false;
-			}
+			ObjectParticles::Update(othelloManager.GetPressPanellPos(), checkObject.GetCombo());
+			ObjectParticles::Update(othelloManager.GetPressPanellPos(), checkObject.GetNameAndCombos());
 		}
-		ObjectParticles::Update(othelloManager.GetPressPanellPos(), checkObject.GetCombo());
+		else
+		{
+
+		}
 		light->SetLightDir(XMFLOAT3(Camera::GetTargetDirection()));
 		LightUpdate();
-		sky.each.rotation.y += 1.0f;
-		sky.Update();
 	}
 	//ゲーム中ポーズ画面からタイトルへ戻す
 	if (isPouseToTiTle && sceneChageType != 30 && sceneChageType != 31)
 	{
 		PouseToTitleUpdate();
 	}
-	/*if (isPouseToTiTle && sceneChageType != 30)
-	{
-		PouseToTitleUpdate();
-	}
-	else if (sceneChageType == 30)
-	{
-		NormaToModeSelectUpdate();
-	}*/
 #pragma endregion
 }
 
@@ -650,14 +652,19 @@ void GameScene::GameUpdate()
 			//-----------------------------------
 			OthlloPlayer::Update();
 			othelloManager.Controll();
-			if (isTutorial)
+			if (isTutorial && !isToDojo)
 			{
 				//チュートリアルのアップデート
 				othelloManager.TutorialUpdate(checkObject.GetCombo());
 			}
 			else
 			{
-				if (!selectMode)
+				//ここでアップデートしてみてほしい
+				if (isToDojo)
+				{
+					othelloManager.DojoUpdate(checkObject.GetCombo());
+				}
+				else if (!selectMode)
 				{
 					//ゲーム中のアップデート？
 					othelloManager.Update(checkObject.GetCombo());
@@ -692,12 +699,17 @@ void GameScene::GameUpdate()
 			//リーチ目の更新
 			othelloManager.SpawnChances(checkObject.GetReachDatas());
 			//ゲーム中のカウントダウン減少
-			if (!isTutorial && !selectMode)
+			if (!isTutorial && !selectMode && !isToDojo)
 			{
 				gameTime--;
 			}
+			else if (isToDojo && othelloManager.DojoEnd())
+			{
+				NormaToModeSelect();
+				//終わった時の処理入れたいかな
+			}
 			//チュートリアル終わった時の処理
-			else if (othelloManager.IsTutorialEnd() && isTutorial)
+			else if (othelloManager.IsTutorialEnd() && isTutorial && !isToDojo)
 			{
 				PouseToTitle();
 			}
@@ -796,7 +808,7 @@ void GameScene::GameUpdate()
 		}
 	}
 	//ポーズへ行く
-	if (!isPouse && (Input::KeyTrigger(DIK_ESCAPE) || directInput->IsButtonPush(directInput->ButtonPouse)) && (countDown <= 0 || isModeSelect) && !isTipsDraw)
+	if (!isPouse && !isSceneChange && (Input::KeyTrigger(DIK_ESCAPE) || directInput->IsButtonPush(directInput->ButtonPouse)) && (countDown <= 0 || isModeSelect) && !isTipsDraw)
 	{
 		isPouse = true;
 		selectPouse = 0;
@@ -1001,13 +1013,12 @@ void GameScene::GameUpdate()
 
 void GameScene::ResultUpdate()
 {
-	if (Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01))
+	if ((Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01)) && !isResultStart)
 	{
 		SoundStopWave(enterSound);
 		SoundPlayOnce(enterSound);
 		OthlloPlayer::SetPosition(XMFLOAT3(0, 0, -2));
-		SoundPlayLoop(BGMSound);
-		//isSceneChange = false;
+		SoundPlayOnce(BGMSound);
 		ToTitle();
 	}
 	if (isResultStart)
@@ -1033,15 +1044,19 @@ void GameScene::TitleDraw()
 	BaseDirectX::clearColor[3] = 0.0f;
 	BaseDirectX::UpdateFront();
 
-	titleLogo[0].SpriteDraw();
-	titleLogo[1].SpriteDraw();
-	titleLogo[2].SpriteDraw();
-	titleLogo[3].SpriteDraw();
-
+	if (!isDrawLogoEnd)
+	{
+		titleLogo[0].SpriteDraw();
+		titleLogo[1].SpriteDraw();
+		titleLogo[2].SpriteDraw();
+		titleLogo[3].SpriteDraw();
+	}
 	/*-----この中で処理書いてください-----*/
 	if (isDrawLogo)
 	{
 		sky.each.rotation.x = 0.0f;
+		sky.each.rotation.y += 1.0f;
+		sky.Update();
 		Draw3DObject(sky);
 		//Draw3DObject(othelloStage);
 		if (isPouseToTiTle)
@@ -1053,7 +1068,9 @@ void GameScene::TitleDraw()
 			}
 		}
 		ParticleControl::Draw();
+
 		ObjectParticles::Draw();
+
 		Lights::Draw();
 		if (isSceneChange == false)
 		{
@@ -1074,7 +1091,7 @@ void GameScene::TitleDraw()
 			backGround.Update(&backGroundEach[1]);
 			Draw3DObject(backGround);
 			XMFLOAT3 scale2 = { 0.3f, 0.3f, 0.3f };
-			startModel.each.position = { -1.0f + 6.0f, -2.0f, 0, 1.0f };
+			startModel.each.position = { 0.0f /*+ 6.0f*/, -2.0f, 0, 1.0f };
 			if (titleSelectNum == 0)
 			{
 				XMFLOAT3 scale = startModel.each.scale;
@@ -1089,22 +1106,7 @@ void GameScene::TitleDraw()
 			startModel.each.rotation = { 0, 0, 0 };
 			startModel.Update();
 			Draw3DObject(startModel);
-			XMFLOAT3 scale3 = { 0.3f, 0.3f, 0.3f };
-			tutorialObject.each.position = { -1 - 6.0f, -2.0f, 0, 1.0f };
-			if (titleSelectNum == 1)
-			{
-				XMFLOAT3 scale = tutorialObject.each.scale;
-				if (scale.x > 0.3f) { scale = { 0.3f, 0.3f, 0.3f }; }
-				scale.x -= 0.001f;
-				scale.y -= 0.001f;
-				scale.z -= 0.001f;
-				if (scale.x < 0.276f) { scale = { 0.3f, 0.3f, 0.3f }; }
-				tutorialObject.each.scale = scale;
-			}
-			else { tutorialObject.each.scale = scale3; }
-			tutorialObject.each.rotation = { 0, 0, 0 };
-			tutorialObject.Update();
-			Draw3DObject(tutorialObject);
+
 			XMFLOAT3 scale4 = { 0.3f, 0.3f, 0.3f };
 			pushSpace.each.position = { -1 + 6.0f, -5.0f, 0, 1.0f };
 			pushSpace.each.scale = scale4;
@@ -1115,31 +1117,17 @@ void GameScene::TitleDraw()
 			pushA.each.rotation = { 0, 0, 0 };
 			pushA.Update();
 			Draw3DObject(pushA);
-			//Draw3DObject(pushSpace);
 		}
 		if (!isPouseToTiTle)
 		{
 			if (titleSelectNum == 0)
 			{
-				kakko[1].each.position = { -1 + 10.5f, -2.0f, 0, 1.0f };
+				kakko[1].each.position = { -1 + 5.5f, -2.0f, 0, 1.0f };
 				kakko[1].each.rotation.x += 1.0f;
 				kakko[1].each.scale = { 1.0f, 1.0f , 1.0f };
 				kakko[1].Update();
 				Draw3DObject(kakko[1]);
-				kakko[0].each.position = { -1 + 1.5f, -2.0f, 0, 1.0f };
-				kakko[0].each.rotation.x += 1.0f;
-				kakko[0].each.scale = { 1.0f, 1.0f , 1.0f };
-				kakko[0].Update();
-				Draw3DObject(kakko[0]);
-			}
-			else
-			{
-				kakko[1].each.position = { -1 - 0.5f, -2.0f, 0, 1.0f };
-				kakko[1].each.rotation.x += 1.0f;
-				kakko[1].each.scale = { 1.0f, 1.0f , 1.0f };
-				kakko[1].Update();
-				Draw3DObject(kakko[1]);
-				kakko[0].each.position = { -1 - 11.5f, -2.0f, 0, 1.0f };
+				kakko[0].each.position = { -1 - 3.5f, -2.0f, 0, 1.0f };
 				kakko[0].each.rotation.x += 1.0f;
 				kakko[0].each.scale = { 1.0f, 1.0f , 1.0f };
 				kakko[0].Update();
@@ -1175,6 +1163,13 @@ void GameScene::TitleDraw()
 			TiTleModel.each.scale = pouseMinSizeConst;
 			EndModel.each.scale = pouseMinSizeConst;
 			ChackBoxModel.each.scale = pouseMinSizeConst;
+
+			SupportModel.each.rotation = { 0, 0, 0 };
+			BackModel.each.rotation = { 0, 0, 0 };
+			TiTleModel.each.rotation = { 0, 0, 0 };
+			EndModel.each.rotation = { 0, 0, 0 };
+			ChackBoxModel.each.rotation = { 0, 0, 0 };
+
 			pouseKakko[0].position = { -1.0f, 1.0f, -3.0f, 1.0f };
 			pouseKakko[1].position = { 3.0f, 1.0f, -3.0f, 1.0f };
 			pouseKakko[0].scale = { 0.35f, 0.35f, 0.35f };
@@ -1187,6 +1182,13 @@ void GameScene::TitleDraw()
 			TiTleModel.each.scale = pouseNowSize;
 			EndModel.each.scale = pouseMinSizeConst;
 			ChackBoxModel.each.scale = pouseMinSizeConst;
+
+			SupportModel.each.rotation = { 0, 0, 0 };
+			BackModel.each.rotation = { 0, 0, 0 };
+			TiTleModel.each.rotation = { 0, 0, 0 };
+			EndModel.each.rotation = { 0, 0, 0 };
+			ChackBoxModel.each.rotation = { 0, 0, 0 };
+
 			pouseKakko[0].position = { -1.0f, -1.0f, -3.0f, 1.0f };
 			pouseKakko[1].position = { 3.0f, -1.0f, -3.0f, 1.0f };
 			pouseKakko[0].scale = { 0.35f, 0.35f, 0.35f };
@@ -1199,6 +1201,13 @@ void GameScene::TitleDraw()
 			TiTleModel.each.scale = pouseMinSizeConst;
 			EndModel.each.scale = pouseNowSize;
 			ChackBoxModel.each.scale = pouseMinSizeConst;
+
+			SupportModel.each.rotation = { 0, 0, 0 };
+			BackModel.each.rotation = { 0, 0, 0 };
+			TiTleModel.each.rotation = { 0, 0, 0 };
+			EndModel.each.rotation = { 0, 0, 0 };
+			ChackBoxModel.each.rotation = { 0, 0, 0 };
+
 			pouseKakko[0].position = { -1.0f, -3.0f, -3.0f, 1.0f };
 			pouseKakko[1].position = { 3.0f, -3.0f, -3.0f, 1.0f };
 			pouseKakko[0].scale = { 0.35f, 0.35f, 0.35f };
@@ -1211,6 +1220,13 @@ void GameScene::TitleDraw()
 			TiTleModel.each.scale = pouseMinSizeConst;
 			EndModel.each.scale = pouseMinSizeConst;
 			ChackBoxModel.each.scale = pouseMinSizeConst;
+
+			SupportModel.each.rotation = { 0, 0, 0 };
+			BackModel.each.rotation = { 0, 0, 0 };
+			TiTleModel.each.rotation = { 0, 0, 0 };
+			EndModel.each.rotation = { 0, 0, 0 };
+			ChackBoxModel.each.rotation = { 0, 0, 0 };
+
 			pouseKakko[0].position = { -1.0f, 3.0f, -3.0f, 1.0f };
 			pouseKakko[1].position = { 7.0f, 3.0f, -3.0f, 1.0f };
 			pouseKakko[0].scale = { 0.35f, 0.35f, 0.35f };
@@ -1387,6 +1403,16 @@ void GameScene::GameDraw()
 		//playerの頭上にスコアを出す
 		if (checkObject.IsAddScore() && !isTutorial && !isPouseToTiTle && !isResultSceneChange)
 		{
+			reverseDisplay = true;
+			reverseDisplayTime = 0;
+		}
+		if (reverseDisplay)
+		{
+			reverseDisplayTime++;
+			if (reverseDisplayTime > MaxReverseDisplayTime)
+			{
+				reverseDisplay = false;
+			}
 			int addComboint = checkObject.GetCombo();
 			if (addComboint < 10 && addComboint >= 1)
 			{
@@ -1430,7 +1456,6 @@ void GameScene::GameDraw()
 				Draw3DObject(reverseObject);
 			}
 		}
-
 		if (oldDisplay != nowScore)
 		{
 			scoreChange = true;
@@ -1535,6 +1560,13 @@ void GameScene::GameDraw()
 			scoreObject.Update();
 			Draw3DObject(scoreObject);
 		}
+
+		if (checkObject.IsAddScore())
+		{
+			addScore.Init(0, checkObject.GetAddScore());
+		}
+		addScore.Update();
+		GetScoreDraw();
 	}
 	if (!isSceneChange && !isPouseToTiTle)
 	{
@@ -1668,6 +1700,11 @@ void GameScene::GameDraw()
 	{
 		othelloManager.TutorialTextDraw();
 	}
+	if (isToDojo && !isTipsDraw && isCameraModed && countDown <= 0)
+	{
+		//ここでdojoのdraw
+		othelloManager.DojoDraw();
+	}
 	if (isPouse)
 	{
 		pouseBackEach.position = { 0, 0, -1.0f, 1.0f };
@@ -1787,52 +1824,7 @@ void GameScene::GameDraw()
 		ChackBoxModel.each.position = { -2.8f, -1.0f, -5.0f, 1.0f };
 		ChackBoxModel.Update();
 		Draw3DObject(ChackBoxModel);
-		/*pouseBack.ChangeSize(1280, 720);
-		pouseBack.position.m128_f32[0] = 0;
-		pouseBack.position.m128_f32[1] = 0;
-		pouseBack.SpriteDraw();
-		backSprite.position.m128_f32[0] = window_width / 2 - 100;
-		backSprite.position.m128_f32[1] = window_height / 2;
-		backSprite.SpriteDraw();
-		titleSprite.position.m128_f32[0] = window_width / 2 - 100;
-		titleSprite.position.m128_f32[1] = window_height / 2 + 80;
-		titleSprite.SpriteDraw();
-		endSprite.position.m128_f32[0] = window_width / 2 - 100;
-		endSprite.position.m128_f32[1] = window_height / 2 + 170;
-		endSprite.SpriteDraw();
-		if (selectPouse == 0)
-		{
-			kagikakkoStartSprite.ChangeSize(30, 70);
-			kagikakkoStartSprite.position.m128_f32[0] = window_width / 2 - 140;
-			kagikakkoStartSprite.position.m128_f32[1] = window_height / 2 + 5;
-			kagikakkoStartSprite.SpriteDraw();
-			kagikakkoEndSprite.ChangeSize(30, 70);
-			kagikakkoEndSprite.position.m128_f32[0] = window_width / 2 + 125;
-			kagikakkoEndSprite.position.m128_f32[1] = window_height / 2 + 5;
-			kagikakkoEndSprite.SpriteDraw();
-		}
-		else if (selectPouse == 1)
-		{
-			kagikakkoStartSprite.ChangeSize(30, 70);
-			kagikakkoStartSprite.position.m128_f32[0] = window_width / 2 - 140;
-			kagikakkoStartSprite.position.m128_f32[1] = window_height / 2 + 80;
-			kagikakkoStartSprite.SpriteDraw();
-			kagikakkoEndSprite.ChangeSize(30, 70);
-			kagikakkoEndSprite.position.m128_f32[0] = window_width / 2 + 125;
-			kagikakkoEndSprite.position.m128_f32[1] = window_height / 2 + 80;
-			kagikakkoEndSprite.SpriteDraw();
-		}
-		else if (selectPouse == 2)
-		{
-			kagikakkoStartSprite.ChangeSize(30, 70);
-			kagikakkoStartSprite.position.m128_f32[0] = window_width / 2 - 140;
-			kagikakkoStartSprite.position.m128_f32[1] = window_height / 2 + 170;
-			kagikakkoStartSprite.SpriteDraw();
-			kagikakkoEndSprite.ChangeSize(30, 70);
-			kagikakkoEndSprite.position.m128_f32[0] = window_width / 2 + 75;
-			kagikakkoEndSprite.position.m128_f32[1] = window_height / 2 + 170;
-			kagikakkoEndSprite.SpriteDraw();
-		}*/
+
 	}
 
 	//tips用
@@ -1846,14 +1838,9 @@ void GameScene::GameDraw()
 	if (isTipsDraw)
 	{
 		isTipsDrawTrigger = true;
-		//pushButton_green.Update();
-
 		tips_ss[0].SpriteDraw();
 		tips_ss[1].SpriteDraw();
 		tips_ss[2].SpriteDraw();
-		//tips_ss[3].SpriteDraw();
-		//tips[tipsCounts].SpriteDraw();
-
 		tips_frame.SpriteDraw();
 		tips_name[tipsCounts].SpriteDraw();
 		if (tipsCounts < 5) { tips_system[0].SpriteDraw(); }
@@ -1863,14 +1850,6 @@ void GameScene::GameDraw()
 
 		if (isTipsButtonDraw)
 		{
-			/*Draw3DObject(pushButton_green);
-			pushButton_black.Update(&pushButton[0]);
-			Draw3DObject(pushButton_black);
-			pushButton_black.Update(&pushButton[1]);
-			Draw3DObject(pushButton_black);
-			pushButton_black.Update(&pushButton[2]);
-			Draw3DObject(pushButton_black);*/
-
 			if (size < ander_size - 5) { size = max_size; }
 			size -= sub_size;
 			pushButtonGreen.ChangeSizeOther(size, size);
@@ -1901,14 +1880,6 @@ void GameScene::GameDraw()
 	{
 		if (!isSceneChange && !isResultSceneChange)
 		{
-			/*Draw3DObject(pushButton_green);
-			pushButton_black.Update(&pushButton[0]);
-			Draw3DObject(pushButton_black);
-			pushButton_black.Update(&pushButton[1]);
-			Draw3DObject(pushButton_black);
-			pushButton_black.Update(&pushButton[2]);
-			Draw3DObject(pushButton_black);*/
-
 			if (size < ander_size - 5) { size = max_size; }
 			size -= sub_size;
 			pushButtonGreen.ChangeSizeOther(size, size);
@@ -1944,8 +1915,11 @@ void GameScene::ResultDraw()
 	sky.each.rotation.y += 1.0f;
 	sky.Update();
 	Draw3DObject(sky);
-	othelloStage.each.rotation.x = -90;
-	Draw3DObject(othelloStage);
+	if (!isResultStart)
+	{
+		othelloStage.each.rotation.x = -90;
+		Draw3DObject(othelloStage);
+	}
 	nowScore = checkObject.GetScore();
 
 	//変数系
@@ -2273,6 +2247,80 @@ void GameScene::ResultDraw()
 	BaseDirectX::UpdateBack();
 }
 
+void GameScene::GetScoreDraw()
+{
+	for (auto itr = addScore.scores.begin(); itr != addScore.scores.end(); ++itr)
+	{
+		for (int i = 0; i < 7; i++)
+		{
+			itr->scoreEach[i].position = itr->scoreEach[7].position;
+			itr->scoreEach[i].position.m128_f32[0] += (7 - i) * 1.3f;
+			itr->scoreEach[i].scale = { 0.3f, 0.3f, 0.3f };
+			itr->scoreEach[i].rotation.x = -30;
+		}
+		sNumbersObject[itr->score % 10].Update(&itr->scoreEach[0]);
+		Draw3DObject(sNumbersObject[itr->score % 10]);
+		sNumbersObject[itr->score / 10 % 10].Update(&itr->scoreEach[1]);
+		Draw3DObject(sNumbersObject[itr->score / 10 % 10]);
+		bool isPuslDraw = false;
+		if (itr->score > 100)
+		{
+			sNumbersObject[itr->score / 100 % 10].Update(&itr->scoreEach[2]);
+			Draw3DObject(sNumbersObject[itr->score / 100 % 10]);
+		}
+		else if (!isPuslDraw)
+		{
+			isPuslDraw = true;
+			reverseAddObject.Update(&itr->scoreEach[2]);
+			Draw3DObject(reverseAddObject);
+		}
+		if (itr->score > 1000)
+		{
+			sNumbersObject[itr->score / 1000 % 10].Update(&itr->scoreEach[3]);
+			Draw3DObject(sNumbersObject[itr->score / 1000 % 10]);
+		}
+		else if (!isPuslDraw)
+		{
+			isPuslDraw = true;
+			reverseAddObject.Update(&itr->scoreEach[3]);
+			Draw3DObject(reverseAddObject);
+		}
+		if (itr->score > 10000)
+		{
+			sNumbersObject[itr->score / 10000 % 10].Update(&itr->scoreEach[4]);
+			Draw3DObject(sNumbersObject[itr->score / 10000 % 10]);
+		}
+		else if (!isPuslDraw)
+		{
+			isPuslDraw = true;
+			reverseAddObject.Update(&itr->scoreEach[4]);
+			Draw3DObject(reverseAddObject);
+		}
+		if (itr->score > 100000)
+		{
+			sNumbersObject[itr->score / 100000 % 10].Update(&itr->scoreEach[5]);
+			Draw3DObject(sNumbersObject[itr->score / 100000 % 10]);
+		}
+		else if (!isPuslDraw)
+		{
+			isPuslDraw = true;
+			reverseAddObject.Update(&itr->scoreEach[5]);
+			Draw3DObject(reverseAddObject);
+		}
+		if (itr->score > 1000000)
+		{
+			sNumbersObject[itr->score / 100000 % 10].Update(&itr->scoreEach[6]);
+			Draw3DObject(sNumbersObject[itr->score / 1000000 % 10]);
+		}
+		else if (!isPuslDraw)
+		{
+			isPuslDraw = true;
+			reverseAddObject.Update(&itr->scoreEach[5]);
+			Draw3DObject(reverseAddObject);
+		}
+	}
+}
+
 void GameScene::ReStart()
 {
 	//SoundStopWave(timeUpSound);
@@ -2403,7 +2451,7 @@ void GameScene::ToGame4(bool flags, bool isToTutorial, bool isToDojo)
 	eyeEnd = gameNowEye;
 	camTargetStart = { -1, 1, 0 };
 	camTargetEnd = { -1, 0, 0 };
-
+	addScore.Reset();
 	eyeEaseTime = 0.0f;
 	sceneChangeAfterTime = 0.0f;
 	this->isToTutorial = isToTutorial;
@@ -2955,6 +3003,10 @@ void GameScene::ToTitle()
 	camTargetEnd = { -1, 1, -15 };
 	eyeEaseTime = 0.0f;
 	isResultStart = true;
+	addScore.Reset();
+	ObjectParticles::othelloFrame.DeleteAllParticle();
+	ObjectParticles::othello.DeleteAllParticle();
+	ObjectParticles::frame.DeleteAllParticle();
 }
 
 void GameScene::ToTitleUpdate()
@@ -2978,6 +3030,7 @@ void GameScene::ToResult()
 	SoundStopWave(BGMSound);
 	SoundStopWave(timeUpSound);
 	SoundPlayOnce(timeUpSound);
+	addScore.Reset();
 	for (auto triangleItr = OthelloManager::othellos.begin(); triangleItr != OthelloManager::othellos.end(); ++triangleItr)
 	{
 		XMFLOAT3 pos = triangleItr->GetPosition();
@@ -2999,6 +3052,7 @@ void GameScene::ToResult()
 void GameScene::PouseToTitle()
 {
 	//gameTime = 0;
+	addScore.Reset();
 	sceneChageType = 20;
 	isPouseToTiTle = true;
 	isPouse = false;
@@ -3071,6 +3125,7 @@ void GameScene::PouseToTitleUpdate()
 
 void GameScene::NormaToModeSelect()
 {
+	addScore.Reset();
 	sceneChageType = 30;
 	pouseToTitleEaseTime1 = 0.0f;
 	isBackGroundOthello = false;
@@ -3124,6 +3179,7 @@ void GameScene::NormaToModeSelect2()
 {//初期化
 	checkObject.Init();
 	//シーンが変わることを伝える
+	addScore.Reset();
 	isSceneChange = true;
 	//シーンの種類を決める
 	sceneChageType = 31;
@@ -3251,4 +3307,102 @@ void GameScene::LightUpdate()
 	light->SetSpotLightColor(0, XMFLOAT3(spotLightColor));
 	light->SetSpotLightAtten(0, XMFLOAT3(spotLightAtten));
 	light->SetSpotLightAngle(0, XMFLOAT2(spotLightAngle));
+}
+
+void AddScore::Init(int pos, int GetScore)
+{
+	isAppeared = false;
+	isUpToed = false;
+	isActive = true;
+	posNum = pos;
+	easeTime = 0.0f;
+	easeUpTime = 0.0f;
+	startPos = { -37.0f, 0, 0 };
+	endPos = { -20.0f, 0, 0 };
+	score = GetScore;
+	for (int i = 0; i < 8; i++)
+	{
+		scoreEach[i].CreateConstBuff0();
+		scoreEach[i].CreateConstBuff1();
+	}
+}
+
+void AddScore::Update()
+{
+	if (isActive)
+	{
+		if (!isAppeared)
+		{
+			scoreEach[7].position = ConvertXMFLOAT3toXMVECTOR(ShlomonMath::EaseOutBack(startPos, endPos, easeTime));
+			easeTime += easeUpCount;
+			if (easeTime >= 1.0f)
+			{
+				easeTime = 1.0f;
+				isAppeared = true;
+				scoreEach[7].position = ConvertXMFLOAT3toXMVECTOR(ShlomonMath::EaseOutBack(startPos, endPos, easeTime));
+			}
+		}
+		else if (isUp)
+		{
+			UpUpdate();
+		}
+	}
+}
+
+void AddScore::UpInit()
+{
+	easeUpTime = 0.0f;
+	isUp = true;
+	UpToStartPos = ConvertXMVECTORtoXMFLOAT3(scoreEach[7].position);
+	UpToEndPos = UpToStartPos;
+	UpToEndPos.y += 3.0f;
+}
+
+void AddScore::UpUpdate()
+{
+	easeUpTime += easeUpCount;
+	scoreEach[7].position = ConvertXMFLOAT3toXMVECTOR(ShlomonMath::EaseInQuad(UpToStartPos, UpToEndPos, easeUpTime));
+	if (easeUpTime >= 1.0f)
+	{
+		easeUpTime = 1.0f;
+		scoreEach[7].position = ConvertXMFLOAT3toXMVECTOR(ShlomonMath::EaseInQuad(UpToStartPos, UpToEndPos, easeUpTime));
+		isUpToed = false;
+	}
+}
+
+void AddScoreManager::Init(int PosNum, int GetScore)
+{
+	for (auto itr = scores.begin(); itr != scores.end(); ++itr)
+	{
+		itr->UpInit();
+	}
+	AddScore ex;
+	ex.Init(nowDisplayNum, GetScore);
+	scores.push_back(ex);
+	if (scores.size() > MaxNum)
+	{
+		auto itr = scores.begin();
+		scores.erase(itr);
+	}
+	if (PosNum < MaxNum)
+	{
+		PosNum++;
+	}
+	else
+	{
+		PosNum = MaxNum;
+	}
+}
+
+void AddScoreManager::Update()
+{
+	for (auto itr = scores.begin(); itr != scores.end(); ++itr)
+	{
+		itr->Update();
+	}
+}
+
+void AddScoreManager::Reset()
+{
+	scores.clear();
 }
