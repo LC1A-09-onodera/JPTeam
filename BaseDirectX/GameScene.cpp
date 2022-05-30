@@ -1011,8 +1011,7 @@ void GameScene::ResultUpdate()
 		SoundStopWave(enterSound);
 		SoundPlayOnce(enterSound);
 		OthlloPlayer::SetPosition(XMFLOAT3(0, 0, -2));
-		SoundPlayLoop(BGMSound);
-		//isSceneChange = false;
+		SoundPlayOnce(BGMSound);
 		ToTitle();
 	}
 	if (isResultStart)
@@ -1909,8 +1908,12 @@ void GameScene::ResultDraw()
 	sky.each.rotation.y += 1.0f;
 	sky.Update();
 	Draw3DObject(sky);
-	othelloStage.each.rotation.x = -90;
-	Draw3DObject(othelloStage);
+	if (!isResultStart)
+	{
+		othelloStage.each.rotation.x = -90;
+
+		Draw3DObject(othelloStage);
+	}
 	nowScore = checkObject.GetScore();
 	float scoreNum = 2.0f;
 	scoreEach[0].position = { 1.0f + scoreNum * 6, 19.0f, -12.0f, 1.0f };
@@ -2784,6 +2787,7 @@ void GameScene::ToTitle()
 	camTargetEnd = { -1, 1, -15 };
 	eyeEaseTime = 0.0f;
 	isResultStart = true;
+	addScore.Reset();
 	ObjectParticles::othelloFrame.DeleteAllParticle();
 	ObjectParticles::othello.DeleteAllParticle();
 	ObjectParticles::frame.DeleteAllParticle();
@@ -3113,13 +3117,13 @@ void AddScore::Update()
 	{
 		if (!isAppeared)
 		{
-			scoreEach[7].position = ConvertXMFLOAT3toXMVECTOR(ShlomonMath::EaseInQuad(startPos, endPos, easeTime));
+			scoreEach[7].position = ConvertXMFLOAT3toXMVECTOR(ShlomonMath::EaseOutBack(startPos, endPos, easeTime));
 			easeTime += easeUpCount;
 			if (easeTime >= 1.0f)
 			{
 				easeTime = 1.0f;
 				isAppeared = true;
-				scoreEach[7].position = ConvertXMFLOAT3toXMVECTOR(ShlomonMath::EaseInQuad(startPos, endPos, easeTime));
+				scoreEach[7].position = ConvertXMFLOAT3toXMVECTOR(ShlomonMath::EaseOutBack(startPos, endPos, easeTime));
 			}
 		}
 		else if (isUp)

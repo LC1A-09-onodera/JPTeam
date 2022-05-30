@@ -286,7 +286,6 @@ static XMFLOAT3 EaseOutBack(const XMFLOAT3& start, XMFLOAT3& end, const float t)
 	XMFLOAT3 sub = end - start;
 	const float c1 = 1.70158;
 	const float c3 = c1 + 1.0f;
-	//float a = 1 + c3 * pow(t - 1.0f, 3.0f) + c1 * pow(t - 1.0f, 2.0f);
 	result.x = start.x + (1 + c3 * pow(t - 1.0f, 3.0f) + c1 * pow(t - 1.0f, 2.0f)) * sub.x;
 	result.y = start.y + (1 + c3 * pow(t - 1.0f, 3.0f) + c1 * pow(t - 1.0f, 2.0f)) * sub.y;
 	result.z = start.z + (1 + c3 * pow(t - 1.0f, 3.0f) + c1 * pow(t - 1.0f, 2.0f)) * sub.z;
