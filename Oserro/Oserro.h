@@ -678,6 +678,21 @@ private:
 	static TextModel ScoreTextModel;
 	static TextModel ScoreAttackTextModel;
 	static TextModel NormaModeTextModel;
+
+	static TextModel ConnectModel;
+	EachInfo ConnectTextDrawData;
+
+	static TextModel WaltzModel;
+	EachInfo WaltzTextDrawData;
+
+	static TextModel BookendModel;
+	EachInfo BookendTextDrawData;
+
+	static TextModel TechTrainingModel;
+	EachInfo TechTrainingTextDrawData;
+
+	static TextModel UndoModel;
+	EachInfo UndoTextDrawData;
 	static vector<vector<SendOthelloData>> sendDatas;
 
 	bool isOnPanel = true;
@@ -711,6 +726,7 @@ private:
 	EachInfo SubNormaDrawData;
 	EachInfo ScoreAttackDrawData;
 	EachInfo NormaModeTextDrawData;
+
 	Sprite NormaPanelsText;
 	Sprite NormaComboText;
 	Sprite NormaScoreText;

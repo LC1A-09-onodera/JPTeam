@@ -55,6 +55,22 @@ private:
 	bool isNormaToSelect;
 	void NormaToModeSelect2();
 	void NormaToModeSelectUpdate2();
+	static const int scoreNum = 7;
+	class GetScoreEachs
+	{
+	public:
+		EachInfo scores[8];
+		int scoreObjectNum;
+		float easeTime = 0.0f;
+		void Init();
+		void Update();
+	};
+
+	const XMFLOAT3 ScoreGoalPos = {-8.0f, 0, 0};
+	const XMFLOAT3 ScoreStartPos = {-15.0f, 0, 0};
+	bool addScore = false;
+	list<GetScoreEachs> getScores;
+	void GetScoreUpdate();
 public:
 	GameScene();
 	~GameScene();

@@ -20,6 +20,11 @@ TextModel OthelloManager::ComboTextModel;
 TextModel OthelloManager::ScoreTextModel;
 TextModel OthelloManager::ScoreAttackTextModel;
 TextModel OthelloManager::NormaModeTextModel;
+TextModel OthelloManager::ConnectModel;
+TextModel OthelloManager::WaltzModel;
+TextModel OthelloManager::BookendModel;
+TextModel OthelloManager::TechTrainingModel;
+TextModel OthelloManager::UndoModel;
 ChanceModel OthelloManager::chanceModelBlue;
 ChanceModel OthelloManager::chanceModelOrange;
 vector<vector<SendOthelloData>> OthelloManager::sendDatas;
@@ -685,6 +690,11 @@ void OthelloManager::Init(Tex num[10], Model numModel[10])
 	compModel.CreateModel("a_button", ShaderManager::othelloShader);
 	chanceModelBlue.CreateModel("chance_1", ShaderManager::othelloShader);
 	chanceModelOrange.CreateModel("chance", ShaderManager::othelloShader);
+	ConnectModel.CreateModel("connect", ShaderManager::othelloShader);
+	WaltzModel.CreateModel("waltz", ShaderManager::othelloShader);
+	BookendModel.CreateModel("bookend", ShaderManager::othelloShader);
+	TechTrainingModel.CreateModel("tech_training", ShaderManager::othelloShader);
+	UndoModel.CreateModel("back_kana", ShaderManager::othelloShader);
 	sendDatas.resize(fieldSize);
 
 
@@ -797,6 +807,32 @@ void OthelloManager::Init(Tex num[10], Model numModel[10])
 	NormaModeTextDrawData.rotation.x = -30.0f;
 	NormaModeTextDrawData.CreateConstBuff0();
 	NormaModeTextDrawData.CreateConstBuff1();
+
+	TechTrainingTextDrawData.scale = { textBaseScale, textBaseScale, textBaseScale };
+	TechTrainingTextDrawData.rotation.x = -30.0f;
+	TechTrainingTextDrawData.CreateConstBuff0();
+	TechTrainingTextDrawData.CreateConstBuff1();
+
+	UndoTextDrawData.rotation.x = -30.0f;
+	UndoTextDrawData.scale = { textBaseScale, textBaseScale, textBaseScale };
+	UndoTextDrawData.CreateConstBuff0();
+	UndoTextDrawData.CreateConstBuff1();
+
+	BookendTextDrawData.rotation.x = -30.0f;
+	BookendTextDrawData.scale = { textBaseScale, textBaseScale, textBaseScale };
+	BookendTextDrawData.CreateConstBuff0();
+	BookendTextDrawData.CreateConstBuff1();
+
+	WaltzTextDrawData.rotation.x = -30.0f;
+	WaltzTextDrawData.scale = { textBaseScale, textBaseScale, textBaseScale };
+	WaltzTextDrawData.CreateConstBuff0();
+	WaltzTextDrawData.CreateConstBuff1();
+
+	ConnectTextDrawData.rotation.x = -30.0f;
+
+	ConnectTextDrawData.scale = { textBaseScale, textBaseScale, textBaseScale };
+	ConnectTextDrawData.CreateConstBuff0();
+	ConnectTextDrawData.CreateConstBuff1();
 
 	CountDrawData.resize(5);
 	numberModel.resize(10);
@@ -2094,6 +2130,8 @@ void OthelloManager::ModeSelectModelDraw(bool isDraw)
 		{
 			ScoreAttackTextModel.Update(&ScoreAttackDrawData);
 			Draw3DObject(ScoreAttackTextModel);
+			TechTrainingModel.Update(&TechTrainingTextDrawData);
+			Draw3DObject(TechTrainingModel);
 
 			if (GetEnterModeType() != GameMode::NormaMode) { return; }
 
@@ -2440,6 +2478,67 @@ void OthelloManager::SetTextPos(bool isNormaMode, int stageNum)
 	{
 		SetModeSelectEachInfo(ScoreAttackDrawData, ScoreAttackPanel);
 	}
+
+	if (nowType == GameModeSelect && playerPanelPos == DojoPanel)
+	{
+		//“GŒÅ‚Ò
+		TechTrainingTextDrawData.position = scoreAttackTextPos + (FloatAnimationDistance * textAnimationRate);
+		SetPickupModeEachInfo(TechTrainingTextDrawData);
+		TechTrainingTextDrawData.scale = { 0.5f,0.5f ,0.5f };
+	}
+	else
+	{
+		SetModeSelectEachInfo(TechTrainingTextDrawData, DojoPanel);
+	}
+
+	if (nowType == DojoSelect && playerPanelPos == UndoPanel)
+	{
+		//“GŒÅ‚Ò
+		UndoTextDrawData.position = scoreAttackTextPos + (FloatAnimationDistance * textAnimationRate);
+		SetPickupModeEachInfo(UndoTextDrawData);
+		UndoTextDrawData.scale = { 0.5f,0.5f ,0.5f };
+	}
+	else
+	{
+		SetModeSelectEachInfo(UndoTextDrawData, UndoPanel);
+	}
+
+	if (nowType == DojoSelect && playerPanelPos == ConectPanel)
+	{
+		//“GŒÅ‚Ò
+		ConnectTextDrawData.position = scoreAttackTextPos + (FloatAnimationDistance * textAnimationRate);
+		SetPickupModeEachInfo(ConnectTextDrawData);
+		ConnectTextDrawData.scale = { 0.5f,0.5f ,0.5f };
+	}
+	else
+	{
+		SetModeSelectEachInfo(ConnectTextDrawData, ConectPanel);
+	}
+
+	if (nowType == DojoSelect && playerPanelPos == WaltzPanel)
+	{
+		//“GŒÅ‚Ò
+		WaltzTextDrawData.position = scoreAttackTextPos + (FloatAnimationDistance * textAnimationRate);
+		SetPickupModeEachInfo(WaltzTextDrawData);
+		WaltzTextDrawData.scale = { 0.5f,0.5f ,0.5f };
+	}
+	else
+	{
+		SetModeSelectEachInfo(WaltzTextDrawData, WaltzPanel);
+	}
+
+	if (nowType == DojoSelect && playerPanelPos == BookendPanel)
+	{
+		//“GŒÅ‚Ò
+		BookendTextDrawData.position = scoreAttackTextPos + (FloatAnimationDistance * textAnimationRate);
+		SetPickupModeEachInfo(BookendTextDrawData);
+		BookendTextDrawData.scale = { 0.5f,0.5f ,0.5f };
+	}
+	else
+	{
+		SetModeSelectEachInfo(BookendTextDrawData, BookendPanel);
+	}
+
 	list<NormaModeFieldData>::iterator data;
 	if (isNormaMode)
 	{
