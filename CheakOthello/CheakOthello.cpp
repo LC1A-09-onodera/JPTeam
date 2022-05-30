@@ -258,6 +258,7 @@ void CheakOthello::CheckLastMove(const vector<vector<SendOthelloData>>& othelloD
 	reachData.clear();
 	reachPos.clear();
 	completePos.clear();
+	addScore = 0;
 
 	//その場にオセロが存在するかつ、最後に動かしてたかを判定（←ちょっと効率悪そう）
 	for (int i = 0; i < MAX_SIZE_Y; i++)
