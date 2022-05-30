@@ -303,6 +303,7 @@ class Othello
 {
 public:
 	bool isCompleteDraw = false;
+	bool isAlpha = false;
 private:
 	OthelloEachInfo each;
 	OthelloEachInfo completeEach;
@@ -328,7 +329,7 @@ public:
 	void SetScale(XMFLOAT3 &scale) { this->each.scale = scale; }
 public:
 	void Init(OthelloModel *model, OthelloModel *chainModel, OthelloModel *compModel);
-	void Update(int combo);
+	void Update(int combo, bool isNotErase);
 	void Draw();
 	void CompDraw();
 	void Finalize();
@@ -517,67 +518,78 @@ private://ìπèÍïœêî
 	bool isAct = true;
 	int TextCount = 0;
 private:
+	void DojoObjectDraw();
+
 #pragma region connect
 	void ConnectStart();
-	void ConnectUpdate(int AlivePanel, int ComboCount);
+	void ConnectUpdate(int AlivePanel, int ComboCount, bool isOn = true);
 	void ConnectDraw();
 	ConectFlow	nowConnectFlow;
 	vector<Othello> ConnectObject;
 	vector<Sprite> ConnectText;
 	void ConnectFirstSpwan();
-	void ConnectFirstUpdate(int AlivePanel, int ComboCount);
+	void ConnectFirstUpdate(int AlivePanel, int ComboCount, bool isOn = true);
 
 	void ConnectSecondSpawn();
-	void ConnectSecondUpdate(int AlivePanel, int ComboCount);
+	void ConnectSecondUpdate(int AlivePanel, int ComboCount, bool isOn = true);
 
 	void ConnectThirdSpawn();
-	void ConnectThirdUpdate(int AlivePanel, int ComboCount);
+	void ConnectThirdUpdate(int AlivePanel, int ComboCount, bool isOn = true);
 
 	void ConnectForceSpawn();
-	void ConnectForceUpdate(int AlivePanel, int ComboCount);
+	void ConnectForceUpdate(int AlivePanel, int ComboCount, bool isOn = true);
 
 	void ConnectFifthSpawn();
-	void ConnectFifthUpdate(int AlivePanel, int ComboCount);
+	void ConnectFifthUpdate(int AlivePanel, int ComboCount, bool isOn = true);
 #pragma endregion
 
 #pragma region Waltz
 	void WaltzStart();
-	void WaltzUpdate(int AlivePanel, int ComboCount);
+	void WaltzUpdate(int AlivePanel, int ComboCount, bool isOn = true);
 	void WaltzDrwa();
 	WaltzFlow	nowWaltzFlow;
 	vector<Othello> WaltzObject;
 	vector<Sprite> WaltzText;
 	void WaltzFirstSpwan();
-	void WaltzFirstUpdate(int AlivePanel, int ComboCount);
+	void WaltzFirstUpdate(int AlivePanel, int ComboCount, bool isOn = true);
 
 	void WaltzSecondSpawn();
-	void WaltzSecondUpdate(int AlivePanel, int ComboCount);
+	void WaltzSecondUpdate(int AlivePanel, int ComboCount, bool isOn = true);
 
 	void WaltzThirdSpawn();
-	void WaltzThirdUpdate(int AlivePanel, int ComboCount);
+	void WaltzThirdUpdate(int AlivePanel, int ComboCount, bool isOn = true);
 
 	void WaltzForceSpawn();
-	void WaltzForceUpdate(int AlivePanel, int ComboCount);
+	void WaltzForceUpdate(int AlivePanel, int ComboCount, bool isOn = true);
+
+	void WaltzFifthSpawn();
+	void WaltzFifthUpdate(int AlivePanel, int ComboCount, bool isOn = true);
+
+	void WaltzSixesSpawn();
+	void WaltzSixesUpdate(int AlivePanel, int ComboCount, bool isOn = true);
+	void WaltzSevensSpawn();
+	void WaltzSevensUpdate(int AlivePanel, int ComboCount, bool isOn = true);
+
 #pragma endregion
 
 #pragma region Bookend
 	void BookendStart();
-	void BookendUpdate(int AlivePanel, int ComboCount);
+	void BookendUpdate(int AlivePanel, int ComboCount, bool isOn = true);
 	void BookendDrwa();
 	BookendFlow	nowBookendFlow;
 	vector<Othello> BookendObject;
 	vector<Sprite> BookendText;
 	void BookendFirstSpwan();
-	void BookendFirstUpdate(int AlivePanel, int ComboCount);
+	void BookendFirstUpdate(int AlivePanel, int ComboCount, bool isOn = true);
 
 	void BookendSecondSpawn();
-	void BookendSecondUpdate(int AlivePanel, int ComboCount);
+	void BookendSecondUpdate(int AlivePanel, int ComboCount, bool isOn = true);
 
 	void BookendThirdSpawn();
-	void BookendThirdUpdate(int AlivePanel, int ComboCount);
+	void BookendThirdUpdate(int AlivePanel, int ComboCount, bool isOn = true);
 
 	void BookendForceSpawn();
-	void BookendForceUpdate(int AlivePanel, int ComboCount);
+	void BookendForceUpdate(int AlivePanel, int ComboCount, bool isOn = true);
 #pragma endregion
 
 private:
@@ -703,6 +715,7 @@ private:
 
 	bool isFieldUpdate = false;
 
+	bool isDojoDraw = false;
 	TutorialSceneFlow::TutorialScene scenes = TutorialSceneFlow::TutorialEnd;
 
 	int TutorialTimer = 0;

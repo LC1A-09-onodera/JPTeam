@@ -1911,7 +1911,6 @@ void GameScene::ResultDraw()
 	if (!isResultStart)
 	{
 		othelloStage.each.rotation.x = -90;
-
 		Draw3DObject(othelloStage);
 	}
 	nowScore = checkObject.GetScore();
