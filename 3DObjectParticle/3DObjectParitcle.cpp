@@ -460,16 +460,6 @@ void ObjectParticle::Update(FrameEach* each)
 		matTrans = XMMatrixTranslation(this->each.position.m128_f32[0], this->each.position.m128_f32[1], this->each.position.m128_f32[2]);
 		matWorld = XMMatrixIdentity();
 
-		//ビルボード
-		//if (billboard)
-		//{
-		//    matWorld *= BaseDirectX::matBillboard;//ビルボードをかける
-		//}
-		//ビルボードY
-		//if (billboard)
-		//{
-		//    matWorld *= Camera::matBillboardY;//ビルボードをかける
-		//}
 		matWorld *= matScale;
 		matWorld *= matRot;
 		matWorld *= matTrans;
@@ -485,13 +475,10 @@ void ObjectParticle::Update(FrameEach* each)
 		FrameConstBuff* constMap0 = nullptr;
 		if (SUCCEEDED(this->each.constBuff0->Map(0, nullptr, (void**)&constMap0)))
 		{
-			//constMap0->mat = matWorld * Camera::matView * BaseDirectX::matProjection;
 			constMap0->viewproj = Camera::matView * BaseDirectX::matProjection;
 			constMap0->world = matWorld;
 			constMap0->cameraPos = cameraPos;
-			//constMap0->flash = 1;
 			constMap0->flash = flash;
-			//constMap0->colorType = this->each.colorType;
 			if (each->colorType > 0)
 			{
 				constMap0->colorType = each->colorType;
@@ -522,17 +509,6 @@ void ObjectParticle::Update(FrameEach* each)
 		matRot *= XMMatrixRotationY(XMConvertToRadians(this->each.rotation.y));
 		matTrans = XMMatrixTranslation(this->each.position.m128_f32[0], this->each.position.m128_f32[1], this->each.position.m128_f32[2]);
 		matWorld = XMMatrixIdentity();
-
-		//ビルボード
-		//if (billboard)
-		//{
-		//    matWorld *= BaseDirectX::matBillboard;//ビルボードをかける
-		//}
-		//ビルボードY
-		//if (billboard)
-		//{
-		//    matWorld *= Camera::matBillboardY;//ビルボードをかける
-		//}
 		matWorld *= matScale;
 		matWorld *= matRot;
 		matWorld *= matTrans;
@@ -548,13 +524,10 @@ void ObjectParticle::Update(FrameEach* each)
 		FrameConstBuff* constMap0 = nullptr;
 		if (SUCCEEDED(this->each.constBuff0->Map(0, nullptr, (void**)&constMap0)))
 		{
-			//constMap0->mat = matWorld * Camera::matView * BaseDirectX::matProjection;
 			constMap0->viewproj = Camera::matView * BaseDirectX::matProjection;
 			constMap0->world = matWorld;
 			constMap0->cameraPos = cameraPos;
-			//constMap0->flash = 1;
 			constMap0->flash = flash;
-			//constMap0->colorType = this->each.colorType;
 			constMap0->colorType = colorType;
 			this->each.constBuff0->Unmap(0, nullptr);
 		}
@@ -667,7 +640,6 @@ void ObjectParticle3D::InitTarget(XMFLOAT3& emitter)
 void ObjectParticle3D::InitTornado(XMFLOAT3& emitter)
 {
 	time = 1;
-	//each.position = ConvertXMFLOAT3toXMVECTOR(emitter);
 	startPosition = { 0, 0, 10 };
 	each.CreateConstBuff0();
 	each.CreateConstBuff1();

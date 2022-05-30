@@ -67,7 +67,7 @@ public:
 	static D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc;
 	static ComPtr<ID3D12DescriptorHeap> dsvHeap;
 	static D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc;
-	static const int ObjectNum = 100;
+	static const int ObjectNum = 150;
 	static const int TexBufferNum = 256;
 	static D3D12_CPU_DESCRIPTOR_HANDLE cpuDescHandleSRV[TexBufferNum];
 	static D3D12_GPU_DESCRIPTOR_HANDLE gpuDescHandleSRV[TexBufferNum];

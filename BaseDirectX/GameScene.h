@@ -13,6 +13,39 @@
 
 enum GameSceneName { TITLE, SELECT, GAME, END, RESULT };
 
+class AddScore
+{
+public:
+	EachInfo scoreEach[8];
+	XMFLOAT3 startPos;
+	XMFLOAT3 endPos;
+	XMFLOAT3 UpToStartPos;
+	XMFLOAT3 UpToEndPos;
+	bool isAppeared = false;
+	bool isUpToed = false;
+	bool isUp = false;
+	bool isActive = false;
+	int posNum = 0;
+	const float easeUpCount = 0.02f;
+	float easeTime = 0.0f;
+	float easeUpTime = 0.0f;
+	int score;
+	void Init(int pos, int GetScore);
+	void Update();
+	void UpInit();
+	void UpUpdate();
+};
+
+class AddScoreManager
+{
+public:
+	const int MaxNum = 3;
+	list<AddScore> scores;
+	void Init(int PosNum, int GetScore);
+	void Update();
+	int nowDisplayNum;
+};
+
 class GameScene
 {
 private:
@@ -28,6 +61,7 @@ private:
 	void EndDraw();
 	void SelectDraw();
 	void ResultDraw();
+	void GetScoreDraw();
 	int SceneNum = TITLE;
 	void ReStart();
 	void ToGame();
@@ -56,21 +90,8 @@ private:
 	void NormaToModeSelect2();
 	void NormaToModeSelectUpdate2();
 	static const int scoreNum = 7;
-	class GetScoreEachs
-	{
-	public:
-		EachInfo scores[8];
-		int scoreObjectNum;
-		float easeTime = 0.0f;
-		void Init();
-		void Update();
-	};
 
-	const XMFLOAT3 ScoreGoalPos = {-8.0f, 0, 0};
-	const XMFLOAT3 ScoreStartPos = {-15.0f, 0, 0};
-	bool addScore = false;
-	list<GetScoreEachs> getScores;
-	void GetScoreUpdate();
+
 public:
 	GameScene();
 	~GameScene();
@@ -149,7 +170,6 @@ public://シーンで使うもの
 	Sprite timeUp;
 	Sprite startSprite;
 	Tex num[10];
-
 
 	Model sky;
 	Model othelloStage;
@@ -412,4 +432,5 @@ public://シーンで使うもの
 	float pouseSelectTime1;
 	float pouseSelectTime2;
 	//-------------------------------
+	AddScoreManager addScore;
 };

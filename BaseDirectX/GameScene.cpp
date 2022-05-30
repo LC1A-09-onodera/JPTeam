@@ -34,6 +34,7 @@ void GameScene::SceneManageUpdateAndDraw()
 	{
 	case TITLE:
 		TitleUpdate();
+
 		TitleDraw();
 		break;
 	case SELECT:
@@ -454,11 +455,11 @@ void GameScene::TitleUpdate()
 				//チュートリアルに飛ぶ
 				if ((Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01)) && !isPouse && !isSceneChange && !isPouseToTiTle && isDrawLogoEnd)
 				{
-					
+					//isGameEnd = true;
 					titleSelectNum = 0;
-						gameTime = 1;
-						isTipsDraw = false;
-						ToModeSelect();
+					gameTime = 1;
+					isTipsDraw = false;
+					ToModeSelect();
 				}
 			}
 		}
@@ -471,10 +472,11 @@ void GameScene::TitleUpdate()
 			}
 		}
 		//ポーズ画面に移行する
-		if (!isPouse && (Input::KeyTrigger(DIK_ESCAPE) || directInput->IsButtonPush(directInput->ButtonPouse)))
+		if (!isPouse && !isSceneChange && !isResultSceneChange && isDrawLogoEnd && (Input::KeyTrigger(DIK_ESCAPE) || directInput->IsButtonPush(directInput->ButtonPouse)))
 		{
-			isPouse = true;
-			selectPouse = 0;
+			isGameEnd = true;
+			/*isPouse = true;
+			selectPouse = 0;*/
 		}
 		//ポーズ中の処理
 		else if (isPouse)
@@ -543,11 +545,18 @@ void GameScene::TitleUpdate()
 				isPouse = false;
 			}
 		}
-		ObjectParticles::Update(othelloManager.GetPressPanellPos(), checkObject.GetCombo());
+		//if (!isGameEnd)
+		if (!isPouse)
+		{
+			ObjectParticles::Update(othelloManager.GetPressPanellPos(), checkObject.GetCombo());
+			ObjectParticles::Update(othelloManager.GetPressPanellPos(), checkObject.GetNameAndCombos());
+		}
+		else
+		{
+
+		}
 		light->SetLightDir(XMFLOAT3(Camera::GetTargetDirection()));
 		LightUpdate();
-		sky.each.rotation.y += 1.0f;
-		sky.Update();
 	}
 	//ゲーム中ポーズ画面からタイトルへ戻す
 	if (isPouseToTiTle && sceneChageType != 30 && sceneChageType != 31)
@@ -642,7 +651,7 @@ void GameScene::GameUpdate()
 			//-----------------------------------
 			OthlloPlayer::Update();
 			othelloManager.Controll();
-			if (isTutorial && !isToDojo )
+			if (isTutorial && !isToDojo)
 			{
 				//チュートリアルのアップデート
 				othelloManager.TutorialUpdate(checkObject.GetCombo());
@@ -790,7 +799,7 @@ void GameScene::GameUpdate()
 		}
 	}
 	//ポーズへ行く
-	if (!isPouse && (Input::KeyTrigger(DIK_ESCAPE) || directInput->IsButtonPush(directInput->ButtonPouse)) && (countDown <= 0 || isModeSelect) && !isTipsDraw)
+	if (!isPouse && !isSceneChange && (Input::KeyTrigger(DIK_ESCAPE) || directInput->IsButtonPush(directInput->ButtonPouse)) && (countDown <= 0 || isModeSelect) && !isTipsDraw)
 	{
 		isPouse = true;
 		selectPouse = 0;
@@ -1027,11 +1036,13 @@ void GameScene::TitleDraw()
 	BaseDirectX::clearColor[3] = 0.0f;
 	BaseDirectX::UpdateFront();
 
-	titleLogo[0].SpriteDraw();
-	titleLogo[1].SpriteDraw();
-	titleLogo[2].SpriteDraw();
-	titleLogo[3].SpriteDraw();
-
+	if (!isDrawLogoEnd)
+	{
+		titleLogo[0].SpriteDraw();
+		titleLogo[1].SpriteDraw();
+		titleLogo[2].SpriteDraw();
+		titleLogo[3].SpriteDraw();
+	}
 	/*-----この中で処理書いてください-----*/
 	if (isDrawLogo)
 	{
@@ -1047,7 +1058,9 @@ void GameScene::TitleDraw()
 			}
 		}
 		ParticleControl::Draw();
+		
 		ObjectParticles::Draw();
+		
 		Lights::Draw();
 		if (isSceneChange == false)
 		{
@@ -1068,7 +1081,7 @@ void GameScene::TitleDraw()
 			backGround.Update(&backGroundEach[1]);
 			Draw3DObject(backGround);
 			XMFLOAT3 scale2 = { 0.3f, 0.3f, 0.3f };
-			startModel.each.position = { -1.0f + 6.0f, -2.0f, 0, 1.0f };
+			startModel.each.position = { 0.0f /*+ 6.0f*/, -2.0f, 0, 1.0f };
 			if (titleSelectNum == 0)
 			{
 				XMFLOAT3 scale = startModel.each.scale;
@@ -1083,22 +1096,7 @@ void GameScene::TitleDraw()
 			startModel.each.rotation = { 0, 0, 0 };
 			startModel.Update();
 			Draw3DObject(startModel);
-			XMFLOAT3 scale3 = { 0.3f, 0.3f, 0.3f };
-			tutorialObject.each.position = { -1 - 6.0f, -2.0f, 0, 1.0f };
-			if (titleSelectNum == 1)
-			{
-				XMFLOAT3 scale = tutorialObject.each.scale;
-				if (scale.x > 0.3f) { scale = { 0.3f, 0.3f, 0.3f }; }
-				scale.x -= 0.001f;
-				scale.y -= 0.001f;
-				scale.z -= 0.001f;
-				if (scale.x < 0.276f) { scale = { 0.3f, 0.3f, 0.3f }; }
-				tutorialObject.each.scale = scale;
-			}
-			else { tutorialObject.each.scale = scale3; }
-			tutorialObject.each.rotation = { 0, 0, 0 };
-			tutorialObject.Update();
-			Draw3DObject(tutorialObject);
+
 			XMFLOAT3 scale4 = { 0.3f, 0.3f, 0.3f };
 			pushSpace.each.position = { -1 + 6.0f, -5.0f, 0, 1.0f };
 			pushSpace.each.scale = scale4;
@@ -1109,31 +1107,17 @@ void GameScene::TitleDraw()
 			pushA.each.rotation = { 0, 0, 0 };
 			pushA.Update();
 			Draw3DObject(pushA);
-			//Draw3DObject(pushSpace);
 		}
 		if (!isPouseToTiTle)
 		{
 			if (titleSelectNum == 0)
 			{
-				kakko[1].each.position = { -1 + 10.5f, -2.0f, 0, 1.0f };
+				kakko[1].each.position = { -1 + 5.5f, -2.0f, 0, 1.0f };
 				kakko[1].each.rotation.x += 1.0f;
 				kakko[1].each.scale = { 1.0f, 1.0f , 1.0f };
 				kakko[1].Update();
 				Draw3DObject(kakko[1]);
-				kakko[0].each.position = { -1 + 1.5f, -2.0f, 0, 1.0f };
-				kakko[0].each.rotation.x += 1.0f;
-				kakko[0].each.scale = { 1.0f, 1.0f , 1.0f };
-				kakko[0].Update();
-				Draw3DObject(kakko[0]);
-			}
-			else
-			{
-				kakko[1].each.position = { -1 - 0.5f, -2.0f, 0, 1.0f };
-				kakko[1].each.rotation.x += 1.0f;
-				kakko[1].each.scale = { 1.0f, 1.0f , 1.0f };
-				kakko[1].Update();
-				Draw3DObject(kakko[1]);
-				kakko[0].each.position = { -1 - 11.5f, -2.0f, 0, 1.0f };
+				kakko[0].each.position = { -1 - 3.5f, -2.0f, 0, 1.0f };
 				kakko[0].each.rotation.x += 1.0f;
 				kakko[0].each.scale = { 1.0f, 1.0f , 1.0f };
 				kakko[0].Update();
@@ -1453,6 +1437,8 @@ void GameScene::GameDraw()
 			}
 		}
 
+		
+
 		if (oldDisplay != nowScore)
 		{
 			scoreChange = true;
@@ -1557,6 +1543,13 @@ void GameScene::GameDraw()
 			scoreObject.Update();
 			Draw3DObject(scoreObject);
 		}
+
+		if (checkObject.IsAddScore())
+		{
+			addScore.Init(0, checkObject.GetAddScore());
+		}
+		addScore.Update();
+		GetScoreDraw();
 	}
 	if (!isSceneChange && !isPouseToTiTle)
 	{
@@ -1814,7 +1807,7 @@ void GameScene::GameDraw()
 		ChackBoxModel.each.position = { -2.8f, -1.0f, -5.0f, 1.0f };
 		ChackBoxModel.Update();
 		Draw3DObject(ChackBoxModel);
-		
+
 	}
 
 	//tips用
@@ -2022,6 +2015,27 @@ void GameScene::ResultDraw()
 
 	//描画コマンドここまで
 	BaseDirectX::UpdateBack();
+}
+
+void GameScene::GetScoreDraw()
+{
+	for (auto itr = addScore.scores.begin(); itr != addScore.scores.end(); ++itr)
+	{
+		sNumbersObject[itr->score % 10].Update(&itr->scoreEach[0]);
+		Draw3DObject(sNumbersObject[itr->score % 10]);
+		sNumbersObject[itr->score / 10 % 10].Update(&itr->scoreEach[1]);
+		Draw3DObject(sNumbersObject[itr->score / 10 % 10]);
+		sNumbersObject[itr->score / 100 % 10].Update(&itr->scoreEach[2]);
+		Draw3DObject(sNumbersObject[itr->score / 100 % 10]);
+		sNumbersObject[itr->score / 1000 % 10].Update(&itr->scoreEach[3]);
+		Draw3DObject(sNumbersObject[itr->score / 1000 % 10]);
+		sNumbersObject[itr->score / 10000 % 10].Update(&itr->scoreEach[4]);
+		Draw3DObject(sNumbersObject[itr->score / 10000 % 10]);
+		sNumbersObject[itr->score / 100000 % 10].Update(&itr->scoreEach[5]);
+		Draw3DObject(sNumbersObject[itr->score / 100000 % 10]);
+		sNumbersObject[itr->score / 100000 % 10].Update(&itr->scoreEach[6]);
+		Draw3DObject(sNumbersObject[itr->score / 1000000 % 10]);
+	}
 }
 
 void GameScene::ReStart()
@@ -2970,13 +2984,6 @@ void GameScene::NormaToModeSelectUpdate2()
 	Camera::Update();
 }
 
-void GameScene::GetScoreUpdate()
-{
-	checkObject.IsAddScore();
-	int getScore = checkObject.GetAddScore();
-	
-}
-
 void GameScene::EndDraw()
 {
 	//PostEffectのPreDraw
@@ -3011,11 +3018,94 @@ void GameScene::LightUpdate()
 	light->SetSpotLightAngle(0, XMFLOAT2(spotLightAngle));
 }
 
-void GameScene::GetScoreEachs::Init()
+void AddScore::Init(int pos, int GetScore)
 {
-	//for (int i = 0;i < GameScene::scoreNum;)
+	isAppeared = false;
+	isUpToed = false;
+	isActive = true;
+	posNum = pos;
+	easeTime = 0.0f;
+	easeUpTime = 0.0f;
+	startPos = {-15.0f, 0, 0};
+	endPos = { -5.0f, 0, 0 };
+	score = GetScore;
+	for (int i = 0; i < 8; i++)
+	{
+		scoreEach[i].CreateConstBuff0();
+		scoreEach[i].CreateConstBuff1();
+	}
 }
 
-void GameScene::GetScoreEachs::Update()
+void AddScore::Update()
 {
+	if (isActive)
+	{
+		if (!isAppeared)
+		{
+			scoreEach[7].position = ConvertXMFLOAT3toXMVECTOR(ShlomonMath::EaseInQuad(startPos, endPos, easeTime));
+			easeTime += easeUpCount;
+			if (easeTime >= 1.0f)
+			{
+				easeTime = 1.0f;
+				scoreEach[7].position = ConvertXMFLOAT3toXMVECTOR(ShlomonMath::EaseInQuad(startPos, endPos, easeTime));
+			}
+		}
+		else if (isUp)
+		{
+			UpUpdate();
+		}
+	}
+}
+
+void AddScore::UpInit()
+{
+	easeUpTime = 0.0f;
+	UpToStartPos = ConvertXMVECTORtoXMFLOAT3(scoreEach[7].position);
+	UpToEndPos = UpToStartPos;
+	UpToEndPos.y += 3.0f;
+}
+
+void AddScore::UpUpdate()
+{
+	easeTime += easeUpCount;
+	scoreEach[7].position = ConvertXMFLOAT3toXMVECTOR(ShlomonMath::EaseInQuad(startPos, endPos, easeUpTime));
+	if (easeUpTime >= 1.0f)
+	{
+		easeUpTime = 1.0f;
+		scoreEach[7].position = ConvertXMFLOAT3toXMVECTOR(ShlomonMath::EaseInQuad(startPos, endPos, easeUpTime));
+		isUpToed = false;
+	}
+}
+
+void AddScoreManager::Init(int PosNum, int GetScore)
+{
+	AddScore ex;
+	ex.Init(nowDisplayNum, GetScore);
+	scores.push_back(ex);
+	if (scores.size() > MaxNum)
+	{
+		auto itr = scores.begin();
+		scores.erase(itr);
+	}
+	if (PosNum < MaxNum)
+	{
+		PosNum++;
+	}
+	else
+	{
+		PosNum = MaxNum;
+		auto itr = scores.begin();
+		++itr;
+		itr->UpInit();
+		++itr;
+		itr->UpInit();
+	}
+}
+
+void AddScoreManager::Update()
+{
+	for (auto itr = scores.begin(); itr != scores.end(); ++itr)
+	{
+		itr->Update();
+	}
 }
