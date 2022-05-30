@@ -473,79 +473,79 @@ void GameScene::TitleUpdate()
 			}
 		}
 		//ポーズ画面に移行する
-		if (!isPouse && !isSceneChange && !isResultSceneChange && isDrawLogoEnd && (Input::KeyTrigger(DIK_ESCAPE) || directInput->IsButtonPush(directInput->ButtonPouse)))
-		{
-			isGameEnd = true;
-			/*isPouse = true;
-			selectPouse = 0;*/
-		}
+		//if (!isPouse && !isSceneChange && !isResultSceneChange && isDrawLogoEnd && (Input::KeyTrigger(DIK_ESCAPE) || directInput->IsButtonPush(directInput->ButtonPouse)))
+		//{
+		//	isGameEnd = true;
+		//	/*isPouse = true;
+		//	selectPouse = 0;*/
+		//}
 		//ポーズ中の処理
-		else if (isPouse)
-		{
-			bool W = directInput->IsButtonPush(directInput->UpButton) && directInput->leftStickX() == 0 && directInput->leftStickY() == 0;
-			bool S = directInput->IsButtonPush(directInput->DownButton) && directInput->leftStickX() == 0 && directInput->leftStickY() == 0;
-			if (Input::KeyTrigger(DIK_W) || W)
-			{
-				SoundStopWave(selectSound);
-				SoundPlayOnce(selectSound);
-				if (selectPouse == -1)
-				{
-					selectPouse = selectMaxPouse;
-				}
-				else
-				{
-					selectPouse--;
-				}
-			}
-			else if (Input::KeyTrigger(DIK_S) || S)
-			{
-				SoundStopWave(selectSound);
-				SoundPlayOnce(selectSound);
-				if (selectPouse == selectMaxPouse)
-				{
-					selectPouse = -1;
-				}
-				else
-				{
-					selectPouse++;
-				}
-			}
-			if ((Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01)))
-			{
-				//リザルトに戻る
-				if (selectPouse == -1)
-				{
-					if (isSupport)
-					{
-						isSupport = false;
-					}
-					else
-					{
-						isSupport = true;
-					}
-				}
-				else if (selectPouse == 0)
-				{
-					isPouse = false;
-				}
-				else if (selectPouse == 1)
-				{
-					gameTime = 0;
-					isPouse = false;
-					select = false;
-					checkObject.Init();
-				}
-				else if (selectPouse == 2)
-				{
-					isGameEnd = true;
-					checkObject.Init();
-				}
-			}
-			if (Input::KeyTrigger(DIK_ESCAPE) || directInput->IsButtonPush(directInput->ButtonPouse))
-			{
-				isPouse = false;
-			}
-		}
+		//else if (isPouse)
+		//{
+		//	bool W = directInput->IsButtonPush(directInput->UpButton) && directInput->leftStickX() == 0 && directInput->leftStickY() == 0;
+		//	bool S = directInput->IsButtonPush(directInput->DownButton) && directInput->leftStickX() == 0 && directInput->leftStickY() == 0;
+		//	if (Input::KeyTrigger(DIK_W) || W)
+		//	{
+		//		SoundStopWave(selectSound);
+		//		SoundPlayOnce(selectSound);
+		//		if (selectPouse == -1)
+		//		{
+		//			selectPouse = selectMaxPouse;
+		//		}
+		//		else
+		//		{
+		//			selectPouse--;
+		//		}
+		//	}
+		//	else if (Input::KeyTrigger(DIK_S) || S)
+		//	{
+		//		SoundStopWave(selectSound);
+		//		SoundPlayOnce(selectSound);
+		//		if (selectPouse == selectMaxPouse)
+		//		{
+		//			selectPouse = -1;
+		//		}
+		//		else
+		//		{
+		//			selectPouse++;
+		//		}
+		//	}
+		//	if ((Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01)))
+		//	{
+		//		//リザルトに戻る
+		//		if (selectPouse == -1)
+		//		{
+		//			if (isSupport)
+		//			{
+		//				isSupport = false;
+		//			}
+		//			else
+		//			{
+		//				isSupport = true;
+		//			}
+		//		}
+		//		else if (selectPouse == 0)
+		//		{
+		//			isPouse = false;
+		//		}
+		//		else if (selectPouse == 1)
+		//		{
+		//			gameTime = 0;
+		//			isPouse = false;
+		//			select = false;
+		//			checkObject.Init();
+		//		}
+		//		else if (selectPouse == 2)
+		//		{
+		//			isGameEnd = true;
+		//			checkObject.Init();
+		//		}
+		//	}
+		//	if (Input::KeyTrigger(DIK_ESCAPE) || directInput->IsButtonPush(directInput->ButtonPouse))
+		//	{
+		//		isPouse = false;
+		//	}
+		//}
 		//if (!isGameEnd)
 		if (!isPouse)
 		{
@@ -1006,7 +1006,7 @@ void GameScene::GameUpdate()
 
 void GameScene::ResultUpdate()
 {
-	if (Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01))
+	if ((Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01)) && !isResultStart)
 	{
 		SoundStopWave(enterSound);
 		SoundPlayOnce(enterSound);
@@ -1049,6 +1049,8 @@ void GameScene::TitleDraw()
 	if (isDrawLogo)
 	{
 		sky.each.rotation.x = 0.0f;
+		sky.each.rotation.y += 1.0f;
+		sky.Update();
 		Draw3DObject(sky);
 		//Draw3DObject(othelloStage);
 		if (isPouseToTiTle)
@@ -1692,7 +1694,7 @@ void GameScene::GameDraw()
 	{
 		othelloManager.TutorialTextDraw();
 	}
-	if (isToDojo)
+	if (isToDojo && !isTipsDraw && isCameraModed && countDown <= 0)
 	{
 		//ここでdojoのdraw
 		othelloManager.DojoDraw();
@@ -2230,7 +2232,7 @@ void GameScene::ToGame4(bool flags, bool isToTutorial, bool isToDojo)
 	eyeEnd = gameNowEye;
 	camTargetStart = { -1, 1, 0 };
 	camTargetEnd = { -1, 0, 0 };
-
+	addScore.Reset();
 	eyeEaseTime = 0.0f;
 	sceneChangeAfterTime = 0.0f;
 	this->isToTutorial = isToTutorial;
@@ -2782,6 +2784,9 @@ void GameScene::ToTitle()
 	camTargetEnd = { -1, 1, -15 };
 	eyeEaseTime = 0.0f;
 	isResultStart = true;
+	ObjectParticles::othelloFrame.DeleteAllParticle();
+	ObjectParticles::othello.DeleteAllParticle();
+	ObjectParticles::frame.DeleteAllParticle();
 }
 
 void GameScene::ToTitleUpdate()
@@ -2805,6 +2810,7 @@ void GameScene::ToResult()
 	SoundStopWave(BGMSound);
 	SoundStopWave(timeUpSound);
 	SoundPlayOnce(timeUpSound);
+	addScore.Reset();
 	for (auto triangleItr = OthelloManager::othellos.begin(); triangleItr != OthelloManager::othellos.end(); ++triangleItr)
 	{
 		XMFLOAT3 pos = triangleItr->GetPosition();
@@ -2826,6 +2832,7 @@ void GameScene::ToResult()
 void GameScene::PouseToTitle()
 {
 	//gameTime = 0;
+	addScore.Reset();
 	sceneChageType = 20;
 	isPouseToTiTle = true;
 	isPouse = false;
@@ -2898,6 +2905,7 @@ void GameScene::PouseToTitleUpdate()
 
 void GameScene::NormaToModeSelect()
 {
+	addScore.Reset();
 	sceneChageType = 30;
 	pouseToTitleEaseTime1 = 0.0f;
 	isBackGroundOthello = false;
@@ -2951,6 +2959,7 @@ void GameScene::NormaToModeSelect2()
 {//初期化
 	checkObject.Init();
 	//シーンが変わることを伝える
+	addScore.Reset();
 	isSceneChange = true;
 	//シーンの種類を決める
 	sceneChageType = 31;
@@ -3171,4 +3180,9 @@ void AddScoreManager::Update()
 	{
 		itr->Update();
 	}
+}
+
+void AddScoreManager::Reset()
+{
+	scores.clear();
 }

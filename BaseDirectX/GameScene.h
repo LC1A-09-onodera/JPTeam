@@ -43,6 +43,7 @@ public:
 	list<AddScore> scores;
 	void Init(int PosNum, int GetScore);
 	void Update();
+	void Reset();
 	int nowDisplayNum;
 };
 
