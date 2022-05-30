@@ -793,6 +793,9 @@ void GameScene::GameUpdate()
 					isCheck[0] = false;
 					isCheck[1] = false;
 					isCheck[2] = false;
+					oldPos[0] = { 0,0,0 };
+					oldPos[1] = { 0,0,0 };
+					oldPos[2] = { 0,0,0 };
 					resultEaseTimer = 0.0f;
 					SceneNum = RESULT;
 				}
@@ -2020,34 +2023,24 @@ void GameScene::ResultDraw()
 		scoreEach[5].position += ConvertXMFLOAT3toXMVECTOR(addOutBack);
 		scoreEach[6].position += ConvertXMFLOAT3toXMVECTOR(addOutBack);
 
-		if (pos.x == oldPos[0].x && resultEaseTimer > 1.0f && addOutBack.x == 0.0f)
-		{
-			//scoreEach[0].position.m128_f32[0] = baseNumX + scoreNum * 6;
-			//scoreEach[1].position.m128_f32[0] = baseNumX + scoreNum * 5;
-			//scoreEach[2].position.m128_f32[0] = baseNumX + scoreNum * 4;
-			//scoreEach[3].position.m128_f32[0] = baseNumX + scoreNum * 3;
-			//scoreEach[4].position.m128_f32[0] = baseNumX + scoreNum * 2;
-			//scoreEach[5].position.m128_f32[0] = baseNumX + scoreNum * 1;
-			//scoreEach[6].position.m128_f32[0] = baseNumX + scoreNum * 0;
-		}
-	}
-	resultScoreKanaModel.Update();
-	Draw3DObject(resultScoreKanaModel);
+		resultScoreKanaModel.Update();
+		Draw3DObject(resultScoreKanaModel);
 
-	sNumbersObject[nowScore % 10].Update(&scoreEach[0]);
-	Draw3DObject(sNumbersObject[nowScore % 10]);
-	sNumbersObject[nowScore / 10 % 10].Update(&scoreEach[1]);
-	Draw3DObject(sNumbersObject[nowScore / 10 % 10]);
-	sNumbersObject[nowScore / 100 % 10].Update(&scoreEach[2]);
-	Draw3DObject(sNumbersObject[nowScore / 100 % 10]);
-	sNumbersObject[nowScore / 1000 % 10].Update(&scoreEach[3]);
-	Draw3DObject(sNumbersObject[nowScore / 1000 % 10]);
-	sNumbersObject[nowScore / 10000 % 10].Update(&scoreEach[4]);
-	Draw3DObject(sNumbersObject[nowScore / 10000 % 10]);
-	sNumbersObject[nowScore / 100000 % 10].Update(&scoreEach[5]);
-	Draw3DObject(sNumbersObject[nowScore / 100000 % 10]);
-	sNumbersObject[nowScore / 1000000 % 10].Update(&scoreEach[6]);
-	Draw3DObject(sNumbersObject[nowScore / 1000000 % 10]);
+		sNumbersObject[nowScore % 10].Update(&scoreEach[0]);
+		Draw3DObject(sNumbersObject[nowScore % 10]);
+		sNumbersObject[nowScore / 10 % 10].Update(&scoreEach[1]);
+		Draw3DObject(sNumbersObject[nowScore / 10 % 10]);
+		sNumbersObject[nowScore / 100 % 10].Update(&scoreEach[2]);
+		Draw3DObject(sNumbersObject[nowScore / 100 % 10]);
+		sNumbersObject[nowScore / 1000 % 10].Update(&scoreEach[3]);
+		Draw3DObject(sNumbersObject[nowScore / 1000 % 10]);
+		sNumbersObject[nowScore / 10000 % 10].Update(&scoreEach[4]);
+		Draw3DObject(sNumbersObject[nowScore / 10000 % 10]);
+		sNumbersObject[nowScore / 100000 % 10].Update(&scoreEach[5]);
+		Draw3DObject(sNumbersObject[nowScore / 100000 % 10]);
+		sNumbersObject[nowScore / 1000000 % 10].Update(&scoreEach[6]);
+		Draw3DObject(sNumbersObject[nowScore / 1000000 % 10]);
+	}
 
 	/*-----スコアのモデル-----*/
 
@@ -2137,19 +2130,15 @@ void GameScene::ResultDraw()
 		//数字計算
 		resultMaxConbo[0].position += ConvertXMFLOAT3toXMVECTOR(addOutBack);
 		resultMaxConbo[1].position += ConvertXMFLOAT3toXMVECTOR(addOutBack);
-		if (pos.x == oldPos[1].x && maxComboModelEase > 1.0f && addOutBack.x == 0.0f)
-		{
-			//resultMaxConbo[0].position.m128_f32[0] = baseNumX + scoreNum * 1;
-			//resultMaxConbo[1].position.m128_f32[0] = baseNumX + scoreNum * 0;
-		}
-	}
-	resultMaxConboModel.Update();
-	Draw3DObject(resultMaxConboModel);
 
-	sNumbersObject[combo % 10].Update(&resultMaxConbo[0]);
-	Draw3DObject(sNumbersObject[combo % 10]);
-	sNumbersObject[combo / 10 % 10].Update(&resultMaxConbo[1]);
-	Draw3DObject(sNumbersObject[combo / 10 % 10]);
+		resultMaxConboModel.Update();
+		Draw3DObject(resultMaxConboModel);
+
+		sNumbersObject[combo % 10].Update(&resultMaxConbo[0]);
+		Draw3DObject(sNumbersObject[combo % 10]);
+		sNumbersObject[combo / 10 % 10].Update(&resultMaxConbo[1]);
+		Draw3DObject(sNumbersObject[combo / 10 % 10]);
+	}
 
 	/*-----最大コンボモデル-----*/
 
@@ -2212,22 +2201,16 @@ void GameScene::ResultDraw()
 		resultEraseOthello[1].position += ConvertXMFLOAT3toXMVECTOR(addOutBack);
 		resultEraseOthello[2].position += ConvertXMFLOAT3toXMVECTOR(addOutBack);
 
-		if (pos.x == oldPos[2].x && resultEraseOthelloEase > 1.0f && addOutBack.x == 0.0f)
-		{
-			//resultEraseOthello[0].position.m128_f32[0] = baseNumX + scoreNum * 2;
-			//resultEraseOthello[1].position.m128_f32[0] = baseNumX + scoreNum * 1;
-			//resultEraseOthello[2].position.m128_f32[0] = baseNumX + scoreNum * 0;
-		}
-	}
-	resultEraseOthelloModel.Update();
-	Draw3DObject(resultEraseOthelloModel);
+		resultEraseOthelloModel.Update();
+		Draw3DObject(resultEraseOthelloModel);
 
-	sNumbersObject[reverse % 10].Update(&resultEraseOthello[0]);
-	Draw3DObject(sNumbersObject[reverse % 10]);
-	sNumbersObject[reverse / 10 % 10].Update(&resultEraseOthello[1]);
-	Draw3DObject(sNumbersObject[reverse / 10 % 10]);
-	sNumbersObject[reverse / 100 % 10].Update(&resultEraseOthello[2]);
-	Draw3DObject(sNumbersObject[reverse / 100 % 10]);
+		sNumbersObject[reverse % 10].Update(&resultEraseOthello[0]);
+		Draw3DObject(sNumbersObject[reverse % 10]);
+		sNumbersObject[reverse / 10 % 10].Update(&resultEraseOthello[1]);
+		Draw3DObject(sNumbersObject[reverse / 10 % 10]);
+		sNumbersObject[reverse / 100 % 10].Update(&resultEraseOthello[2]);
+		Draw3DObject(sNumbersObject[reverse / 100 % 10]);
+	}
 
 	/*-----消した合計数モデル-----*/
 
