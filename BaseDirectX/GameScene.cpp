@@ -1026,7 +1026,7 @@ void GameScene::GameUpdate()
 
 void GameScene::ResultUpdate()
 {
-	if ((Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01)) && !isResultStart)
+	if ((Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01)) && !isResultStart && resultEaseTimer >= 1.0f)
 	{
 		SoundStopWave(enterSound);
 		SoundPlayOnce(enterSound);
@@ -1308,7 +1308,7 @@ void GameScene::GameDraw()
 	{
 		sky.each.rotation.x = 0.0f;
 	}
-	else
+	else if (isResultSceneChange)
 	{
 		sky.each.rotation.x = 80.0f;
 	}
@@ -1591,6 +1591,7 @@ void GameScene::GameDraw()
 	if (countDown > 0 && isSceneChange == false && isModeSelect == false)
 	{
 		XMFLOAT3 scale = { 0.7f, 0.7f, 0.7f };
+
 		if (countDown < 60)
 		{
 			if (countDown == 59)
@@ -1602,16 +1603,6 @@ void GameScene::GameDraw()
 			}
 			else
 			{
-				/*const float max_shake = 5.0f;
-				if (countDown % 1 == 0)
-				{
-					if (countDown % 2 == 0) { startModel.each.rotation.z = (max_shake) * ((float)countDown / 60.0f); }
-					else { startModel.each.rotation.z = (-max_shake) * ((float)countDown / 60.0f); }
-				}*/
-				/*else if (countDown % 10 == 0)
-				{
-					startModel.each.rotation.z = -max_shake * ((float)countDown / 60.0f);
-				}*/
 				startModel.each.position.m128_f32[1] -= 0.48f;
 				startModel.each.position.m128_f32[2] -= 0.37f;
 			}
@@ -1620,12 +1611,6 @@ void GameScene::GameDraw()
 		}
 		else
 		{
-			/*scoreEach[0].position = { -1, 5.0f, -2.0f, 1.0f };
-			scoreEach[0].scale = scale;
-			scoreEach[0].rotation.x = -30.0f;
-			sNumbersObject[countDown / 60].Update(&scoreEach[0]);
-			Draw3DObject(sNumbersObject[countDown / 60]);*/
-
 			countDownInfo.position.m128_f32[0] = 0.0f;
 			countDownInfo.position.m128_f32[1] = 0.0f;
 			countDownInfo.position.m128_f32[2] = -2.0f;
@@ -1659,44 +1644,48 @@ void GameScene::GameDraw()
 			countDownNumber[local_countDown].Update(&countDownInfo);
 			Draw3DObject(countDownNumber[local_countDown]);
 		}
+
 	}
 
 	if (gameTime > 0 && countDown <= 0 && !isTutorial)
 	{
-		if (gameTime / 60 < DRAW_COUNTDOWN_COUNT)
+		if (!isPouseToTiTle)
 		{
-			countDownInfo.position.m128_f32[0] = 0.0f;
-			countDownInfo.position.m128_f32[1] = 0.0f;
-			countDownInfo.position.m128_f32[2] = -2.0f;
-			countDownInfo.scale = { 1.7f, 2.5f, 1.7f };
-			countDownInfo.rotation.x = -30.0f;
-			int countDown = gameTime / 60;
-			float floatCountDown = gameTime / 60.0f - countDown;
-			if (floatCountDown < 0.02f) { countDownInfo.alpha = 0.2f; }
-			else if (floatCountDown < 0.5f) { countDownInfo.alpha -= 0.01f; }
-			else { countDownInfo.alpha = 0.5f; }
-			if (countDown % 2 == 0)
+			if (gameTime / 60 < DRAW_COUNTDOWN_COUNT)
 			{
-				int random = rand();
-				if (!isSetRand)
+				countDownInfo.position.m128_f32[0] = 0.0f;
+				countDownInfo.position.m128_f32[1] = 0.0f;
+				countDownInfo.position.m128_f32[2] = -2.0f;
+				countDownInfo.scale = { 1.7f, 2.5f, 1.7f };
+				countDownInfo.rotation.x = -30.0f;
+				int countDown = gameTime / 60;
+				float floatCountDown = gameTime / 60.0f - countDown;
+				if (floatCountDown < 0.02f) { countDownInfo.alpha = 0.2f; }
+				else if (floatCountDown < 0.5f) { countDownInfo.alpha -= 0.01f; }
+				else { countDownInfo.alpha = 0.5f; }
+				if (countDown % 2 == 0)
 				{
-					countDownInfo.rotation.y = random % 8;
+					int random = rand();
+					if (!isSetRand)
+					{
+						countDownInfo.rotation.y = random % 8;
+					}
+					isSetRand = true;
+					countDownInfo.rotation.z = -6.0f;
 				}
-				isSetRand = true;
-				countDownInfo.rotation.z = -6.0f;
-			}
-			else
-			{
-				int random = rand();
-				if (!isSetRand)
+				else
 				{
-					countDownInfo.rotation.y = random % 8 - 8;
+					int random = rand();
+					if (!isSetRand)
+					{
+						countDownInfo.rotation.y = random % 8 - 8;
+					}
+					isSetRand = true;
+					countDownInfo.rotation.z = 6.0f;
 				}
-				isSetRand = true;
-				countDownInfo.rotation.z = 6.0f;
+				countDownNumber[countDown].Update(&countDownInfo);
+				Draw3DObject(countDownNumber[countDown]);
 			}
-			countDownNumber[countDown].Update(&countDownInfo);
-			Draw3DObject(countDownNumber[countDown]);
 		}
 	}
 	else { if (countDown < 59) { isSetRand = false; } }
