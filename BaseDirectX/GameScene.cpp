@@ -693,8 +693,9 @@ void GameScene::GameUpdate()
 			{
 				gameTime--;
 			}
-			else if (isToDojo)
+			else if (isToDojo && othelloManager.DojoEnd())
 			{
+				othelloManager.ModeSelectStart(1, ModeSelectType::DojoSelect);
 				//終わった時の処理入れたいかな
 			}
 			//チュートリアル終わった時の処理

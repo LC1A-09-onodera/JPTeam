@@ -1596,8 +1596,10 @@ bool OthelloManager::DojoEnd()
 		isEnd = nowConnectFlow == ConnectEnd;
 		break;
 	case Waltz:
+		isEnd = nowWaltzFlow == WaltzEnd;
 		break;
 	case Bookend:
+	isEnd = nowBookendFlow == BookEndEnd;
 		break;
 	default:
 		break;
@@ -1956,7 +1958,7 @@ void OthelloManager::WaltzForceUpdate(int AlivePanel, int ComboCount)
 }
 #pragma endregion
 
-//ñ¢
+//Ç‚Ç‚çœ
 #pragma region Boolend
 //ñ¢
 void OthelloManager::BookendStart()
