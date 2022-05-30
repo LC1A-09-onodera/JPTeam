@@ -1820,13 +1820,42 @@ void OthelloManager::ConnectFifthUpdate(int AlivePanel, int ComboCount)
 void OthelloManager::WaltzStart()
 {
 	nowWaltzFlow = Waltz1;
-
+	isAct = false;
+	AllDeletePanel();
+	isAct = false;
+	nowWaltzFlow = Waltz1;
+	WaltzFirstSpwan();
 }
 //未
 void OthelloManager::WaltzUpdate(int AlivePanel, int ComboCount)
 {
-
-
+	switch (nowWaltzFlow)
+	{
+	case Waltz1:
+		WaltzFirstUpdate(AlivePanel, ComboCount);
+		break;
+	case Waltz2:
+		WaltzSecondUpdate(AlivePanel, ComboCount);
+		break;
+	case Waltz3:
+		WaltzThirdUpdate(AlivePanel, ComboCount);
+		break;
+	case Waltz4:
+		WaltzForceUpdate(AlivePanel, ComboCount);
+		break;
+	case Waltz5:
+		break;
+	case Waltz6:
+		break;
+	case Waltz7:
+		break;
+	case Waltz8:
+		break;
+	case WaltzEnd:
+		break;
+	default:
+		break;
+	}
 }
 //未
 void OthelloManager::WaltzDrwa()
@@ -1847,40 +1876,83 @@ void OthelloManager::WaltzFirstSpwan()
 //未
 void OthelloManager::WaltzFirstUpdate(int AlivePanel, int ComboCount)
 {
+	if (!isAct)
+	{
 
+	}
+	else
+	{
+		if (/*クリア*/false)
+		{
+
+		}
+	}
 }
 
 //未
 void OthelloManager::WaltzSecondSpawn()
 {
-
+	isAct = false;
+	nowWaltzFlow = Waltz1;
 }
 //未
 void OthelloManager::WaltzSecondUpdate(int AlivePanel, int ComboCount)
 {
+	if (!isAct)
+	{
 
+	}
+	else
+	{
+		if (/*クリア*/false)
+		{
+
+		}
+	}
 }
 
 //未
 void OthelloManager::WaltzThirdSpawn()
 {
-
+	isAct = false;
+	nowWaltzFlow = Waltz1;
 }
 //未
 void OthelloManager::WaltzThirdUpdate(int AlivePanel, int ComboCount)
 {
+	if (!isAct)
+	{
 
+	}
+	else
+	{
+		if (/*クリア*/false)
+		{
+
+		}
+	}
 }
 
 //未
 void OthelloManager::WaltzForceSpawn()
 {
-
+	isAct = false;
+	nowWaltzFlow = Waltz1;
 }
 //未
 void OthelloManager::WaltzForceUpdate(int AlivePanel, int ComboCount)
 {
+	if (!isAct)
+	{
 
+	}
+	else
+	{
+		if (/*クリア*/false)
+		{
+
+		}
+	}
 }
 #pragma endregion
 
@@ -1889,15 +1961,36 @@ void OthelloManager::WaltzForceUpdate(int AlivePanel, int ComboCount)
 //未
 void OthelloManager::BookendStart()
 {
+	isAct = false;
+	AllDeletePanel();
+	BookendFirstSpwan();
 	nowBookendFlow = BookEnd1;
 }
-//未
+//済
 void OthelloManager::BookendUpdate(int AlivePanel, int ComboCount)
 {
-
+	switch (nowBookendFlow)
+	{
+	case BookEnd1:
+		BookendFirstUpdate(AlivePanel, ComboCount);
+		break;
+	case BookEnd2:
+		BookendSecondUpdate(AlivePanel, ComboCount);
+		break;
+	case BookEnd3:
+		BookendThirdUpdate(AlivePanel, ComboCount);
+		break;
+	case BookEnd4:
+		BookendForceUpdate(AlivePanel, ComboCount);
+		break;
+	case BookEndEnd:
+		break;
+	default:
+		break;
+	}
 
 }
-//未
+//済
 void OthelloManager::BookendDrwa()
 {
 	if (TextCount >= BookendText.size())
@@ -1907,37 +2000,109 @@ void OthelloManager::BookendDrwa()
 	BookendText[TextCount].SpriteDraw();
 }
 
-//未
+//済
 void OthelloManager::BookendFirstSpwan()
 {
-
+	SetSpawnPanel(0, 0, false);
+	for (int i = 1; i < 8; i++)
+	{
+		SetSpawnPanel(i, 0, true);
+	}
+	SetSpawnPlayer(7, 0);
 }
-//未
+//済
 void OthelloManager::BookendFirstUpdate(int AlivePanel, int ComboCount)
 {
-
+	if (!isAct)
+	{
+		if (A())
+		{
+			TextCount++;
+		}
+		if (TextCount > 5)
+		{
+			isAct = true;
+		}
+	}
+	else
+	{
+		if (AlivePanel <= 1)
+		{
+			BookendSecondSpawn();
+		}
+	}
 }
 
-//未
+//済
 void OthelloManager::BookendSecondSpawn()
 {
-
+	isAct = false;
+	for (int i = 2; i < 6; i++)
+	{
+		SetSpawnPanel(7, i, false);
+	}
+	nowBookendFlow = BookEnd2;
 }
-//未
+//済
 void OthelloManager::BookendSecondUpdate(int AlivePanel, int ComboCount)
 {
-
+	if (!isAct)
+	{
+		if (A())
+		{
+			TextCount++;
+		}
+		if (TextCount > 8)
+		{
+			isAct = true;
+		}
+	}
+	else
+	{
+		if (AlivePanel <= 1)
+		{
+			BookendThirdSpawn();
+		}
+	}
 }
 
-//未
+//済
 void OthelloManager::BookendThirdSpawn()
 {
-
+	isAct = false;
+	for (int i = 0; i < 6; i++)
+	{
+		SetSpawnPanel(i, 5, true);
+	}
+	nowBookendFlow = BookEnd3;
 }
-//未
+//済
 void OthelloManager::BookendThirdUpdate(int AlivePanel, int ComboCount)
 {
+	if (AlivePanel <= 1)
+	{
+		isAct = false;
 
+		if (A())
+		{
+			TextCount++;
+		}
+		if (TextCount > 10)
+		{
+		nowBookendFlow = BookEndEnd;
+		}
+	}
+	else if (!isAct)
+	{
+		if (A())
+		{
+			TextCount++;
+		}
+		if (TextCount > 9)
+		{
+			isAct = true;
+		}
+	}
 }
 
 //未
@@ -1948,9 +2113,38 @@ void OthelloManager::BookendForceSpawn()
 //未
 void OthelloManager::BookendForceUpdate(int AlivePanel, int ComboCount)
 {
+	if (!isAct)
+	{
 
+	}
+	else
+	{
+		if (/*クリア*/false)
+		{
+
+		}
+	}
 }
 #pragma endregion
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 void OthelloManager::ModeSelectUpdate()
 {
