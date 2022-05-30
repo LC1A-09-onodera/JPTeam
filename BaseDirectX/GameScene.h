@@ -157,7 +157,7 @@ public://シーンで使うもの
 	float eyeEaseTime;
 
 	int resultForTime;
-	const int gameMaxTime = 59;
+	const int gameMaxTime = 590;
 
 	EachInfo resultMaxConbo[2];
 	EachInfo resultEraseOthello[3];
@@ -325,6 +325,14 @@ public://シーンで使うもの
 	const int CHANGE_TIMER_FRAME = 90;	//tipsの中身が切り替わるフレーム
 	const int FIRST_SS_DELAY = 180;		//最初のスクショのディレイ
 	const int USE_TEX_0 = 3;			//tips_0で使うテクスチャの数
+	//const int USE_TEX_1 = 3;			//tips_0で使うテクスチャの数
+	//const int USE_TEX_2 = 3;			//tips_0で使うテクスチャの数
+	//const int USE_TEX_3 = 3;			//tips_0で使うテクスチャの数
+	//const int USE_TEX_4 = 3;			//tips_0で使うテクスチャの数
+	//const int USE_TEX_5 = 3;			//tips_0で使うテクスチャの数
+	//const int USE_TEX_6 = 3;			//tips_0で使うテクスチャの数
+	//const int USE_TEX_7 = 3;			//tips_0で使うテクスチャの数
+	//const int USE_TEX_8 = 3;			//tips_0で使うテクスチャの数
 	const float EASE_ADD_TIMER = 0.005f;//加算されるタイマー	
 	const float SIZE_X = 768;			//tipsの中身の画像サイズ_X
 	const float SIZE_Y = 432;			//tipsの中身の画像サイズ_Y
@@ -335,7 +343,7 @@ public://シーンで使うもの
 	//Model pushButton_green;				//ボタン緑
 	Sprite pushButtonGreen;
 	Sprite pushButtonBlack[3];
-	Sprite tips[8];						//tips枠
+	Sprite tips[7];						//tips枠
 	Sprite tips_ss[3];					//tips_0中身
 	float size = 0;
 	/*----------新tips用----------*/
@@ -356,9 +364,15 @@ public://シーンで使うもの
 	};
 	const float NAME_START_Y = 50;				//スタート_Y
 
-	const float SYSTEM_X = 1110;				//ゴール_X
+	const float SYSTEM_X[2] = {					//ゴール_X
+		1110,
+		1080
+	};
 	const float SYSTEM_Y = 178;					//ゴール_Y
-	const float SYSTEM_START_X = 1280 + 118;	//スタート_X
+	const float SYSTEM_START_X[2] = {			//スタート_X
+		118,
+		149
+	};
 	const float SYSTEM_START_Y = 178;			//スタート_Y
 
 	const float BAR_X = 869;					//ゴール_X

@@ -300,8 +300,8 @@ void GameScene::Init()
 	tips_name[6].CreateSprite(L"Resource/Img/tips/waltz.png", XMFLOAT3(NAME_START_X[6], NAME_START_Y, 0));
 	tips_name[7].CreateSprite(L"Resource/Img/tips/reversible.png", XMFLOAT3(NAME_START_X[7], NAME_START_Y, 0));
 
-	tips_system[0].CreateSprite(L"Resource/Img/tips/system.png", XMFLOAT3(SYSTEM_START_X, SYSTEM_START_Y, 0));
-	tips_system[1].CreateSprite(L"Resource/Img/tips/technic.png", XMFLOAT3(SYSTEM_START_X, SYSTEM_START_Y, 0));
+	tips_system[0].CreateSprite(L"Resource/Img/tips/system.png", XMFLOAT3(SYSTEM_START_X[0] + window_width, SYSTEM_START_Y, 0));
+	tips_system[1].CreateSprite(L"Resource/Img/tips/technic.png", XMFLOAT3(SYSTEM_START_X[1] + window_width, SYSTEM_START_Y, 0));
 
 	tips_bar.CreateSprite(L"Resource/Img/tips/tips_bar.png", XMFLOAT3(BAR_START_X, BAR_START_Y, 0));
 
@@ -312,7 +312,7 @@ void GameScene::Init()
 	tips_text[4].CreateSprite(L"Resource/Img/tips/connect_text.png", XMFLOAT3(TEXT_START_X[4] + window_width, TEXT_START_Y, 0));
 	tips_text[5].CreateSprite(L"Resource/Img/tips/bookend_text.png", XMFLOAT3(TEXT_START_X[5] + window_width, TEXT_START_Y, 0));
 	tips_text[6].CreateSprite(L"Resource/Img/tips/waltz_text.png", XMFLOAT3(TEXT_START_X[6] + window_width, TEXT_START_Y, 0));
-	tips_text[7].CreateSprite(L"Resource/Img/tips/reversible_text.png", XMFLOAT3(TEXT_START_X[7] + window_width, TEXT_START_Y, 0));
+	//tips_text[7].CreateSprite(L"Resource/Img/tips/reversible_text.png", XMFLOAT3(TEXT_START_X[7] + window_width, TEXT_START_Y, 0));
 	isInit = false;
 	newTips_easeTimer = 0;
 	/*----------êVtipsóp----------*/
@@ -920,7 +920,17 @@ void GameScene::GameUpdate()
 		XMFLOAT3 text = ConvertXMVECTORtoXMFLOAT3(tips_text[tipsCounts].position);
 
 		XMFLOAT3 name_Goal = { NAME_X,NAME_Y,0 };
-		XMFLOAT3 system_Goal = { SYSTEM_X,SYSTEM_Y,0 };
+		XMFLOAT3 system_Goal;
+
+		if (tipsCounts < 5)
+		{
+			system_Goal = { SYSTEM_X[0], SYSTEM_Y,0 };
+		}
+		else
+		{
+			system_Goal = { SYSTEM_X[1], SYSTEM_Y, 0 };
+		}
+
 		XMFLOAT3 bar_Goal = { BAR_X,BAR_Y,0 };
 		//XMFLOAT3 text_Goal = { TEXT_X,TEXT_Y,0 };
 		XMFLOAT3 text_Goal = { TEXT_X[tipsCounts],TEXT_Y,0 };
@@ -999,8 +1009,8 @@ void GameScene::GameUpdate()
 			changeTimerFrame = 0;
 			newTips_easeTimer = 0.0f;
 			tips_name[tipsCounts].position = { NAME_START_X[tipsCounts],NAME_START_Y,0,0 };
-			if (tipsCounts < 5) { tips_system[0].position = { SYSTEM_START_X,SYSTEM_START_Y,0,0 }; }
-			else { tips_system[1].position = { SYSTEM_START_X,SYSTEM_START_Y,0,0 }; }
+			if (tipsCounts < 5) { tips_system[0].position = { SYSTEM_START_X[0] + window_width,SYSTEM_START_Y,0,0 }; }
+			else { tips_system[1].position = { SYSTEM_START_X[1] + window_width,SYSTEM_START_Y,0,0 }; }
 			tips_bar.position = { BAR_START_X,BAR_START_Y,0,0 };
 			//tips_text[tipsCounts].position = { TEXT_START_X,TEXT_START_Y,0,0 };
 			tips_text[tipsCounts].position = { TEXT_START_X[tipsCounts] + window_width,TEXT_START_Y,0,0 };
@@ -1876,7 +1886,7 @@ void GameScene::GameDraw()
 	{
 		tipsCounts++;
 		isTipsDrawTrigger = false;
-		if (tipsCounts >= 8) { tipsCounts = 0; }
+		if (tipsCounts >= 7) { tipsCounts = 0; }
 	}
 
 	else if (isCameraModed)
