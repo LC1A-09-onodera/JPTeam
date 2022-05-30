@@ -84,12 +84,14 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData, bo
 
 	while (1) //多分whileじゃなくても動く
 	{
+
+		isAddScore = false;
+
 		//判定を取る駒をセット
 		pair<int, int> last = GetCheckOthello();
 		if (!checkOthello) { break; }
 
 		totalDeleteOthello = 0;
-		isAddScore = false;
 		isSand = false;
 
 		//全方位チェック
