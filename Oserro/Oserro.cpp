@@ -1455,11 +1455,11 @@ void OthelloManager::Move(const XMFLOAT3 &MousePos)
 }
 
 
-void OthelloManager::ModeSelectStart(int stageNum)
+void OthelloManager::ModeSelectStart(int stageNum, ModeSelectType type)
 {
 
 	XMFLOAT3 startPos = OthlloPlayer::GetPosition();
-
+	nowType = type;
 	startPos.z = 0.0f;
 	XMFLOAT3 stagePos = startPos - stageLeftTop - XMFLOAT3{ -cellScale / 2, cellScale / 2 , 0 };
 
@@ -1482,7 +1482,14 @@ void OthelloManager::ModeSelectStart(int stageNum)
 	//	SetChanceObject(stageCount, 7 - stageCount, false);
 	//}
 	//MinSpawn(false);
-	SetGameModeSelectPanel(stageNum);
+	if (type == DojoSelect)
+	{
+		SelectDojoPanel();
+	}
+	else
+	{
+		SetGameModeSelectPanel(stageNum);
+	}
 }
 
 void OthelloManager::DojoStart()
@@ -1516,33 +1523,26 @@ void OthelloManager::DojoUpdate(int combo)
 	int panelCount = 0;
 	int comboMax = 0;
 	bool tutorialOnPlayer = false;
-	if (isAct)
+	for (; itr != othellos.end(); ++itr)
 	{
-		for (; itr != othellos.end(); ++itr)
+		itr->Update(combo);
+		if (!itr->GetIsActive())
 		{
-			itr->Update(combo);
-			if (!itr->GetIsActive())
-			{
-				panelCount++;
-			}
-			if (itr->GetGameData()->comboCount > comboMax)
-			{
-				comboMax = itr->GetGameData()->comboCount;
-			}
-
-			if (!tutorialOnPlayer)
-			{
-				tutorialOnPlayer = (itr->GetGameData()->widthPos == playerPanelPos.x && itr->GetGameData()->heightPos == playerPanelPos.y);
-			}
+			panelCount++;
 		}
-		if (A())
+		if (itr->GetGameData()->comboCount > comboMax)
 		{
-			isFieldUpdate = true;
+			comboMax = itr->GetGameData()->comboCount;
+		}
+
+		if (!tutorialOnPlayer)
+		{
+			tutorialOnPlayer = (itr->GetGameData()->widthPos == playerPanelPos.x && itr->GetGameData()->heightPos == playerPanelPos.y);
 		}
 	}
-	else
+	if (A())
 	{
-		playerNotMove();
+		isFieldUpdate = true;
 	}
 	bool retry = (Input::KeyTrigger(DIK_R) || directInput->IsButtonPush(directInput->Button03));
 
@@ -1565,6 +1565,10 @@ void OthelloManager::DojoUpdate(int combo)
 
 void OthelloManager::DojoDraw()
 {
+	if (isAct)
+	{
+		return;
+	}
 	//スイッチ文で道場の内容分岐
 	switch (dojoType)
 	{
@@ -1601,10 +1605,13 @@ bool OthelloManager::DojoEnd()
 	return isEnd;
 }
 
+//済
 #pragma region Connect
 //済
 void OthelloManager::ConnectStart()
 {
+	isAct = false;
+	AllDeletePanel();
 	nowConnectFlow = Connect1;
 	ConnectFirstSpwan();
 }
@@ -1657,13 +1664,12 @@ void OthelloManager::ConnectFirstUpdate(int AlivePanel, int ComboCount)
 {
 	if (!isAct)
 	{
-		playerNotMove();
 		if (A())
 		{
 			TextCount++;
 		}
 		//テキストが一定より進んだら
-		if (TextCount > 3)
+		if (TextCount > 2)
 		{
 			isAct = true;
 		}
@@ -1689,33 +1695,29 @@ void OthelloManager::ConnectSecondSpawn()
 //済
 void OthelloManager::ConnectSecondUpdate(int AlivePanel, int ComboCount)
 {
-	if (!isAct)
+	//生きてるパネルがなくなったら
+	if (AlivePanel <= 0)
 	{
-		playerNotMove();
+		isAct = false;
+		if (A())
+		{
+			TextCount++;
+		}
+		if (TextCount > 11)
+		{
+			ConnectThirdSpawn();
+		}
+	}
+	else if (!isAct)
+	{
 		if (A())
 		{
 			TextCount++;
 		}
 		//テキストカウントが一定を超えたら
-		if (TextCount > 9)
+		if (TextCount > 8)
 		{
 			isAct = true;
-		}
-	}
-	else
-	{
-		//生きてるパネルがなくなったら
-		if (AlivePanel <= 0)
-		{
-			playerNotMove();
-			if (A())
-			{
-				TextCount++;
-			}
-			if (TextCount > 12)
-			{
-				ConnectThirdSpawn();
-			}
 		}
 	}
 }
@@ -1769,60 +1771,64 @@ void OthelloManager::ConnectForceUpdate(int AlivePanel, int ComboCount)
 //済
 void OthelloManager::ConnectFifthSpawn()
 {
-	SetSpawnPanel(3, 0, false);
-	SetSpawnPanel(3, 1, true);
-	SetSpawnPanel(3, 2, true);
-	SetSpawnPanel(3, 4, false);
+	SetSpawnPanel(2, 0, false);
+	SetSpawnPanel(2, 1, true);
+	SetSpawnPanel(2, 2, true);
+	SetSpawnPanel(2, 4, false);
 	nowConnectFlow = Connect5;
 	isAct = false;
 }
 //済
 void OthelloManager::ConnectFifthUpdate(int AlivePanel, int ComboCount)
 {
-	if (!isAct)
+	//生きてるパネルがなくなったら
+	if (AlivePanel <= 0)
 	{
-		playerNotMove();
+		isAct = false;
+		if (A())
+		{
+			TextCount++;
+		}
+		if (TextCount > 16)
+		{
+			nowConnectFlow = ConnectEnd;
+		}
+	}
+	else if (!isAct)
+	{
 		if (A())
 		{
 			TextCount++;
 		}
 		//テキストカウントが一定を超えたら
-		if (TextCount > 15)
+		if (TextCount > 14)
 		{
 			isAct = true;
 		}
 	}
 	else
 	{
-		//生きてるパネルがなくなったら
-		if (AlivePanel <= 0)
-		{
-			playerNotMove();
-			if (A())
-			{
-				TextCount++;
-			}
-			if (TextCount > 17)
-			{
-				nowConnectFlow = ConnectEnd;
-			}
-		}
+
 	}
 }
 #pragma endregion
 
 
+//未
 #pragma region Waltz
+//未
 void OthelloManager::WaltzStart()
 {
 	nowWaltzFlow = Waltz1;
 
 }
+//未
 void OthelloManager::WaltzUpdate(int AlivePanel, int ComboCount)
 {
 
 
 }
+//未
 void OthelloManager::WaltzDrwa()
 {
 	if (TextCount >= WaltzText.size())
@@ -1833,55 +1839,65 @@ void OthelloManager::WaltzDrwa()
 
 }
 
+//未
 void OthelloManager::WaltzFirstSpwan()
 {
 
 }
+//未
 void OthelloManager::WaltzFirstUpdate(int AlivePanel, int ComboCount)
 {
 
 }
 
+//未
 void OthelloManager::WaltzSecondSpawn()
 {
 
 }
+//未
 void OthelloManager::WaltzSecondUpdate(int AlivePanel, int ComboCount)
 {
 
 }
 
+//未
 void OthelloManager::WaltzThirdSpawn()
 {
 
 }
+//未
 void OthelloManager::WaltzThirdUpdate(int AlivePanel, int ComboCount)
 {
 
 }
 
+//未
 void OthelloManager::WaltzForceSpawn()
 {
 
 }
+//未
 void OthelloManager::WaltzForceUpdate(int AlivePanel, int ComboCount)
 {
 
 }
 #pragma endregion
 
-
+//未
 #pragma region Boolend
+//未
 void OthelloManager::BookendStart()
 {
-
-
+	nowBookendFlow = BookEnd1;
 }
+//未
 void OthelloManager::BookendUpdate(int AlivePanel, int ComboCount)
 {
 
 
 }
+//未
 void OthelloManager::BookendDrwa()
 {
 	if (TextCount >= BookendText.size())
@@ -1891,37 +1907,45 @@ void OthelloManager::BookendDrwa()
 	BookendText[TextCount].SpriteDraw();
 }
 
+//未
 void OthelloManager::BookendFirstSpwan()
 {
 
 }
+//未
 void OthelloManager::BookendFirstUpdate(int AlivePanel, int ComboCount)
 {
 
 }
 
+//未
 void OthelloManager::BookendSecondSpawn()
 {
 
 }
+//未
 void OthelloManager::BookendSecondUpdate(int AlivePanel, int ComboCount)
 {
 
 }
 
+//未
 void OthelloManager::BookendThirdSpawn()
 {
 
 }
+//未
 void OthelloManager::BookendThirdUpdate(int AlivePanel, int ComboCount)
 {
 
 }
 
+//未
 void OthelloManager::BookendForceSpawn()
 {
 
 }
+//未
 void OthelloManager::BookendForceUpdate(int AlivePanel, int ComboCount)
 {
 
@@ -1930,6 +1954,8 @@ void OthelloManager::BookendForceUpdate(int AlivePanel, int ComboCount)
 
 void OthelloManager::ModeSelectUpdate()
 {
+
+	isAct = true;
 	//死ぬ
 	DeadPanel();
 	//更新
@@ -2695,26 +2721,6 @@ void OthelloManager::RemovePlayer()
 	}
 }
 
-void OthelloManager::AddPanel()
-{
-	//Othello panelA, panelB, panelC, panelD;
-	//panelA.Spawn(NORMAL, 0, 1, true);
-	//panelA.Init(&oserroModel);
-	//othellos.push_back(panelA);
-
-	//panelB.Spawn(NORMAL, 1, 1, false);
-	//panelB.Init(&oserroModel);
-	//othellos.push_back(panelB);
-
-	//panelC.Spawn(NORMAL, 2, 0, true);
-	//panelC.Init(&oserroModel);
-	//othellos.push_back(panelC);
-
-	//panelD.Spawn(NORMAL, 2, 1, false);
-	//panelD.Init(&oserroModel);
-	//othellos.push_back(panelD);
-}
-
 const vector<vector<SendOthelloData>> &OthelloManager::Send()
 {
 	SendOthelloData empty;
@@ -2735,7 +2741,10 @@ const vector<vector<SendOthelloData>> &OthelloManager::Send()
 			sendDatas[i][j] = empty;
 		}
 	}
-
+	if (!isAct)
+	{
+		return sendDatas;
+	}
 	//今存在する駒を突っ込んでいく
 	auto itr = othellos.begin();
 	for (; itr != othellos.end(); itr++)
@@ -2786,7 +2795,7 @@ void OthelloManager::Receive(const vector<vector<SendOthelloData>> &data, const 
 {
 	sendDatas = data;
 
-	if (othellos.size() == 0)
+	if (othellos.size() == 0 || !isAct)
 	{
 		return;
 	}
@@ -3180,7 +3189,8 @@ void OthelloManager::KeySetPlayer()
 		}
 	}
 	//動いていない
-	if (x == playerPanelPos.x && y == playerPanelPos.y)
+
+	if (x == playerPanelPos.x && y == playerPanelPos.y || !isAct)
 	{
 		playerNotMove();
 		return;
@@ -3967,7 +3977,7 @@ void OthelloManager::whyStepSpawn()
 
 }
 
-void OthelloManager::SetSpawnPanel(int x, int y, bool Front, OthelloType type, bool isRockDraw)
+void OthelloManager::SetSpawnPanel(int x, int y, bool Front, OthelloType type, bool isRockDraw, bool isSpawn)
 {
 	Othello data;
 	if (type == WALL)
@@ -3983,8 +3993,14 @@ void OthelloManager::SetSpawnPanel(int x, int y, bool Front, OthelloType type, b
 	{
 		data.Init(&oserroModel, &stopOserroModel, &compModel);
 	}
-	data.Spawn(type, x, y, Front);
-
+	if (isSpawn)
+	{
+		data.Spawn(type, x, y, Front);
+	}
+	else
+	{
+		data.Borne(type, x, y, Front);
+	}
 	if (type == WALL)
 	{//タイプが壁だったら大きくしてる
 		data.SetScale(XMFLOAT3(1, 1, 1));

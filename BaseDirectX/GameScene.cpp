@@ -652,7 +652,7 @@ void GameScene::GameUpdate()
 				//ここでアップデートしてみてほしい
 				if (isToDojo)
 				{
-					int hoge = 0;
+					othelloManager.DojoUpdate(checkObject.GetCombo());
 				}
 				else if (!selectMode)
 				{
@@ -1693,7 +1693,7 @@ void GameScene::GameDraw()
 	if (isToDojo)
 	{
 		//ここでdojoのdraw
-
+		othelloManager.DojoDraw();
 	}
 	if (isPouse)
 	{
