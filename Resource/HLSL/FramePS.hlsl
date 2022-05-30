@@ -94,155 +94,158 @@ float4 main(VSOutput input) : SV_TARGET
 	float4 result;
 	//texcolor.a = 0.5f;
 	result = shadecolor * texcolor;
-	result.a = 1.0f;
-	result.r += 0.3f;
-	result.g += 0.3f;
-	result.b += 0.3f;
-    if (colorType == 0)
-    {
-        result.x = 0.0f;
-        result.y = 0.0f;
-        result.z = 0.0f;
-    }
-	if (colorType == 1)
-	{
-        result.x = 0.78f;
-        result.y = 0.0f;
-        result.z = 0.04f;
-        return result;
-    }
-	if (colorType == 2)
-	{
-        result.x = 0.82f;
-        result.y = 0.51f;
-        result.z = 0.0f;
-        return result;
-    }
-	if (colorType == 3)
-	{
-        result.x = 0.87f;
-        result.y = 0.82f;
-        result.z = 0.0f;
-        return result;
-    }
-    if (colorType == 4)
-    {
-        result.x = 0.48f;
-        result.y = 0.67f;
-        result.z = 0.09f;
-        return result;
-    }
-	if (colorType == 5)
-    {
-        result.x = 0.0f;
-        result.y = 0.53f;
-        result.z = 0.24f;
-        return result;
-    }
-	if (colorType == 6)
-    {
-        result.x = 0.0f;
-        result.y = 0.54f;
-        result.z = 0.51f;
-        return result;
-    }
-	if (colorType == 7)
-    {
-        result.x = 0.0f;
-        result.y = 0.55f;
-        result.z = 0.80f;
-        return result;
-    }
-    if (colorType == 8)
-    {
-        result.x = 0.42f;
-        result.y = 0.61f;
-        result.z = 0.682f;
-        return result;
-    }
-	if (colorType == 9)
-    {
-        result.x = 0.47f;
-        result.y = 0.42f;
-        result.z = 0.69f;
-        return result;
-    }
-	if (colorType == 10)
-    {
-        result.x = 0.73f;
-        result.y = 0.47f;
-        result.z = 0.69f;
-        return result;
-    }
-    if (colorType == 11)
-    {
-        result.x = 0.73f;
-        result.y = 0.47f;
-        result.z = 0.69f;
-        return result;
-    }
-    if (colorType == 12)
-    {
-        result.x = 0.73f;
-        result.y = 0.47f;
-        result.z = 0.69f;
-        return result;
-    }
-    if (colorType == 13)
-    {
-        result.x = 0.73f;
-        result.y = 0.47f;
-        result.z = 0.69f;
-        return result;
-    }
-    if (colorType == 14)
-    {
-        result.x = 0.73f;
-        result.y = 0.47f;
-        result.z = 0.69f;
-        return result;
-    }
-    if (colorType == 15)
-    {
-        result.x = 0.73f;
-        result.y = 0.47f;
-        result.z = 0.69f;
-        return result;
-    }
-    if (colorType == 16)
-    {
-        result.x = 0.73f;
-        result.y = 0.47f;
-        result.z = 0.69f;
-        return result;
-    }
-    if (colorType == 17)
-    {
-        result.x = 0.73f;
-        result.y = 0.47f;
-        result.z = 0.69f;
-        return result;
-    }
-    if (colorType == 18)
-    {
-        result.x = 0.73f;
-        result.y = 0.47f;
-        result.z = 0.69f;
-        return result;
-    }
-    if (colorType == 19)
-    {
-        result.x = 0.73f;
-        result.y = 0.47f;
-        result.z = 0.69f;
-        return result;
-    }
-    if (colorType == 20)
-    {
-        result.x = 0.73f;
-        result.y = 0.47f;
-        result.z = 0.69f;
-        return result;
-    }
+	//result.a = 1.0f;
+	//result.r += 0.3f;
+	//result.g += 0.3f;
+	//result.b += 0.3f;
+    result.x = 1.0f;
+    result.y = 0.99f;
+    result.z = 0.6f;
+ //   if (colorType == 0)
+ //   {
+ //       result.x = 0.0f;
+ //       result.y = 0.0f;
+ //       result.z = 0.0f;
+ //   }
+	//if (colorType == 1)
+	//{
+ //       result.x = 0.78f;
+ //       result.y = 0.0f;
+ //       result.z = 0.04f;
+ //       return result;
+ //   }
+	//if (colorType == 2)
+	//{
+ //       result.x = 0.82f;
+ //       result.y = 0.51f;
+ //       result.z = 0.0f;
+ //       return result;
+ //   }
+	//if (colorType == 3)
+	//{
+ //       result.x = 0.87f;
+ //       result.y = 0.82f;
+ //       result.z = 0.0f;
+ //       return result;
+ //   }
+ //   if (colorType == 4)
+ //   {
+ //       result.x = 0.48f;
+ //       result.y = 0.67f;
+ //       result.z = 0.09f;
+ //       return result;
+ //   }
+	//if (colorType == 5)
+ //   {
+ //       result.x = 0.0f;
+ //       result.y = 0.53f;
+ //       result.z = 0.24f;
+ //       return result;
+ //   }
+	//if (colorType == 6)
+ //   {
+ //       result.x = 0.0f;
+ //       result.y = 0.54f;
+ //       result.z = 0.51f;
+ //       return result;
+ //   }
+	//if (colorType == 7)
+ //   {
+ //       result.x = 0.0f;
+ //       result.y = 0.55f;
+ //       result.z = 0.80f;
+ //       return result;
+ //   }
+ //   if (colorType == 8)
+ //   {
+ //       result.x = 0.42f;
+ //       result.y = 0.61f;
+ //       result.z = 0.682f;
+ //       return result;
+ //   }
+	//if (colorType == 9)
+ //   {
+ //       result.x = 0.47f;
+ //       result.y = 0.42f;
+ //       result.z = 0.69f;
+ //       return result;
+ //   }
+	//if (colorType == 10)
+ //   {
+ //       result.x = 0.73f;
+ //       result.y = 0.47f;
+ //       result.z = 0.69f;
+ //       return result;
+ //   }
+ //   if (colorType == 11)
+ //   {
+ //       result.x = 0.73f;
+ //       result.y = 0.47f;
+ //       result.z = 0.69f;
+ //       return result;
+ //   }
+ //   if (colorType == 12)
+ //   {
+ //       result.x = 0.73f;
+ //       result.y = 0.47f;
+ //       result.z = 0.69f;
+ //       return result;
+ //   }
+ //   if (colorType == 13)
+ //   {
+ //       result.x = 0.73f;
+ //       result.y = 0.47f;
+ //       result.z = 0.69f;
+ //       return result;
+ //   }
+ //   if (colorType == 14)
+ //   {
+ //       result.x = 0.73f;
+ //       result.y = 0.47f;
+ //       result.z = 0.69f;
+ //       return result;
+ //   }
+ //   if (colorType == 15)
+ //   {
+ //       result.x = 0.73f;
+ //       result.y = 0.47f;
+ //       result.z = 0.69f;
+ //       return result;
+ //   }
+ //   if (colorType == 16)
+ //   {
+ //       result.x = 0.73f;
+ //       result.y = 0.47f;
+ //       result.z = 0.69f;
+ //       return result;
+ //   }
+ //   if (colorType == 17)
+ //   {
+ //       result.x = 0.73f;
+ //       result.y = 0.47f;
+ //       result.z = 0.69f;
+ //       return result;
+ //   }
+ //   if (colorType == 18)
+ //   {
+ //       result.x = 0.73f;
+ //       result.y = 0.47f;
+ //       result.z = 0.69f;
+ //       return result;
+ //   }
+ //   if (colorType == 19)
+ //   {
+ //       result.x = 0.73f;
+ //       result.y = 0.47f;
+ //       result.z = 0.69f;
+ //       return result;
+ //   }
+ //   if (colorType == 20)
+ //   {
+ //       result.x = 0.73f;
+ //       result.y = 0.47f;
+ //       result.z = 0.69f;
+ //       return result;
+ //   }
     return result;
 }

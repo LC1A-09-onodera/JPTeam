@@ -37,7 +37,6 @@ enum DojoType
 	Conect,
 	Waltz,
 	Bookend,
-	Reversible,
 };
 
 //Connectの全体フロー
@@ -249,10 +248,9 @@ namespace OthelloConstData
 	const panelPos tutorialPanel = { 2, 2 };
 	const panelPos DojoPanel = { 5, 2 };
 	const panelPos UndoPanel = { 7, 7 };
-	const panelPos ConectPanel = { 1, 2 };
-	const panelPos WaltzPanel = { 3, 2 };
-	const panelPos BookendPanel = { 5, 2 };
-	const panelPos reversiblePanel = { 7, 2 };
+	const panelPos ConectPanel = { 0, 4 };
+	const panelPos WaltzPanel = { 3, 4 };
+	const panelPos BookendPanel = { 6, 4 };
 	//テキストの表示箇所2D
 	const XMVECTOR moveTextPos = { 400, 0, 0,0 };
 	const XMVECTOR moveAllDeleteCountPos{ 5.0f, 0.0f, 0.0f , 0.0f };

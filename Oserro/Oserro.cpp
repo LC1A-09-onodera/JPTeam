@@ -690,11 +690,7 @@ void OthelloManager::Init(Tex num[10], Model numModel[10])
 	compModel.CreateModel("a_button", ShaderManager::othelloShader);
 	chanceModelBlue.CreateModel("chance_1", ShaderManager::othelloShader);
 	chanceModelOrange.CreateModel("chance", ShaderManager::othelloShader);
-	ConnectModel.CreateModel("connect", ShaderManager::othelloShader);
-	WaltzModel.CreateModel("waltz", ShaderManager::othelloShader);
-	BookendModel.CreateModel("bookend", ShaderManager::othelloShader);
-	TechTrainingModel.CreateModel("tech_training", ShaderManager::othelloShader);
-	UndoModel.CreateModel("back_kana", ShaderManager::othelloShader);
+
 	sendDatas.resize(fieldSize);
 
 
@@ -703,6 +699,11 @@ void OthelloManager::Init(Tex num[10], Model numModel[10])
 	ScoreTextModel.CreateModel("score_kana", ShaderManager::playerShader);
 	ScoreAttackTextModel.CreateModel("score_attack", ShaderManager::playerShader);
 	NormaModeTextModel.CreateModel("norma", ShaderManager::playerShader);
+	ConnectModel.CreateModel("connect", ShaderManager::playerShader);
+	WaltzModel.CreateModel("waltz", ShaderManager::playerShader);
+	BookendModel.CreateModel("bookend", ShaderManager::playerShader);
+	TechTrainingModel.CreateModel("tech_training", ShaderManager::playerShader);
+	UndoModel.CreateModel("back_kana", ShaderManager::playerShader);
 	auto itr = sendDatas.begin();
 	for (; itr != sendDatas.end(); itr++)
 	{
@@ -1500,8 +1501,6 @@ void OthelloManager::DojoStart()
 	case Bookend:
 		BookendStart();
 		break;
-	case Reversible:
-		break;
 	default:
 		break;
 	}
@@ -1558,8 +1557,6 @@ void OthelloManager::DojoUpdate(int combo)
 	case Bookend:
 		BookendUpdate(panelCount, comboMax);
 		break;
-	case Reversible:
-		break;
 	default:
 		break;
 	}
@@ -1580,8 +1577,6 @@ void OthelloManager::DojoDraw()
 	case Bookend:
 		BookendDrwa();
 		break;
-	case Reversible:
-		break;
 	default:
 		break;
 	}
@@ -1599,8 +1594,6 @@ bool OthelloManager::DojoEnd()
 	case Waltz:
 		break;
 	case Bookend:
-		break;
-	case Reversible:
 		break;
 	default:
 		break;
@@ -1995,10 +1988,6 @@ void OthelloManager::SelectUpdateDojo()
 	{
 		dojoType = DojoType::Bookend;
 	}
-	else if (playerPanelPos == reversiblePanel)
-	{
-		dojoType = DojoType::Reversible;
-	}
 	else if (playerPanelPos == UndoPanel)
 	{
 		nowType = ModeSelectType::GameModeSelect;
@@ -2021,10 +2010,7 @@ bool OthelloManager::SelectDojoPanel()
 	{
 		isOnpanel = true;
 	}
-	else if (playerPanelPos == reversiblePanel)
-	{
-		isOnpanel = true;
-	}
+
 
 	return isOnpanel;
 }
@@ -2130,6 +2116,7 @@ void OthelloManager::ModeSelectModelDraw(bool isDraw)
 		{
 			ScoreAttackTextModel.Update(&ScoreAttackDrawData);
 			Draw3DObject(ScoreAttackTextModel);
+
 			TechTrainingModel.Update(&TechTrainingTextDrawData);
 			Draw3DObject(TechTrainingModel);
 
@@ -2172,6 +2159,21 @@ void OthelloManager::ModeSelectModelDraw(bool isDraw)
 				PanelTextModel.Update(&SubNormaDrawData);
 				Draw3DObject(PanelTextModel);
 			}
+		}
+		else if (nowType == ModeSelectType::DojoSelect)
+		{
+			UndoModel.Update(&UndoTextDrawData);
+			Draw3DObject(UndoModel);
+
+			ConnectModel.Update(&ConnectTextDrawData);
+			Draw3DObject(ConnectModel);
+
+			WaltzModel.Update(&WaltzTextDrawData);
+			Draw3DObject(WaltzModel);
+
+			BookendModel.Update(&BookendTextDrawData);
+			Draw3DObject(BookendModel);
+
 		}
 	}
 }
@@ -2328,7 +2330,6 @@ void OthelloManager::SetDojoModeSelectPanel(int startPos)
 	SetSpawnPanel(ConectPanel.x, ConectPanel.y, true, STOP, false);
 	SetSpawnPanel(WaltzPanel.x, WaltzPanel.y, true, STOP, false);
 	SetSpawnPanel(BookendPanel.x, BookendPanel.y, true, STOP, false);
-	SetSpawnPanel(reversiblePanel.x, reversiblePanel.y, true, STOP, false);
 	SetSpawnPanel(UndoPanel.x, UndoPanel.y, true, STOP, false);
 
 
