@@ -542,7 +542,7 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y, int last_x, in
 						{
 							if (addScore < othelloDatas[pair_y][pair_x].score)
 							{
-								addScore = othelloDatas[pair_y][pair_x].score;
+								addScore = othelloDatas[pair_y][pair_x].score * maxComboCount;
 							}
 							totalScore += othelloDatas[pair_y][pair_x].score * maxComboCount;
 							//baseScore += othelloDatas[pair_y][pair_x].score;
