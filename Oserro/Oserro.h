@@ -37,7 +37,6 @@ enum DojoType
 	Conect,
 	Waltz,
 	Bookend,
-	Reversible,
 };
 
 //Connectの全体フロー
@@ -65,7 +64,10 @@ enum WaltzFlow
 
 enum BookendFlow
 {
-	BookEnd0,//開始
+	BookEnd1,//開始
+	BookEnd2,
+	BookEnd3,
+	BookEnd4,
 	BookEndEnd,
 };
 
@@ -249,10 +251,9 @@ namespace OthelloConstData
 	const panelPos tutorialPanel = { 2, 2 };
 	const panelPos DojoPanel = { 5, 2 };
 	const panelPos UndoPanel = { 7, 7 };
-	const panelPos ConectPanel = { 1, 2 };
-	const panelPos WaltzPanel = { 3, 2 };
-	const panelPos BookendPanel = { 5, 2 };
-	const panelPos reversiblePanel = { 7, 2 };
+	const panelPos ConectPanel = { 0, 4 };
+	const panelPos WaltzPanel = { 3, 4 };
+	const panelPos BookendPanel = { 6, 4 };
 	//テキストの表示箇所2D
 	const XMVECTOR moveTextPos = { 400, 0, 0,0 };
 	const XMVECTOR moveAllDeleteCountPos{ 5.0f, 0.0f, 0.0f , 0.0f };
@@ -395,7 +396,6 @@ public:
 	void Draw(bool isChanceDraw = true, bool isCompDraw = true);
 	void Finalize();
 	void Controll();
-	void AddPanel();
 
 	const vector<vector<SendOthelloData>> &Send();
 	void Receive(const vector<vector<SendOthelloData>> &data, const vector<pair<int, int>> compPos);
@@ -460,7 +460,7 @@ private://ノルマモード用内部処理関数
 	void CountModelDraw(int count, EachInfo *data = nullptr, EachInfo *dataB = nullptr);
 public://モードセレクト用外部関数
 	//モード選択開始時
-	void ModeSelectStart(int stageNum = -1);
+	void ModeSelectStart(int stageNum = -1, ModeSelectType type = GameModeSelect);
 
 	void ModeSelectControll();
 	//モード選択中
@@ -514,7 +514,7 @@ public:
 private://道場変数
 	DojoType dojoType;
 	//テキスト読みの時間と実行の時間
-	bool isAct = false;
+	bool isAct = true;
 	int TextCount = 0;
 private:
 #pragma region connect
@@ -652,7 +652,7 @@ private:
 	void SetSpawnPlayer(int x, int y);
 
 	//特定のマスにパネルを配置する
-	void SetSpawnPanel(int x, int y, bool Front, OthelloType type = NORMAL, bool isRockDraw = true);
+	void SetSpawnPanel(int x, int y, bool Front, OthelloType type = NORMAL, bool isRockDraw = true, bool isSpawn = true);
 
 private:
 	panelPos playerPanelPos;

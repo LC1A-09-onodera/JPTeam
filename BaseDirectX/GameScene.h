@@ -433,4 +433,8 @@ public://ƒV[ƒ“‚Åg‚¤‚à‚Ì
 	float pouseSelectTime2;
 	//-------------------------------
 	AddScoreManager addScore;
+	Model reverseAddObject;
+	bool reverseDisplay = false;
+	int reverseDisplayTime = 0;
+	const int MaxReverseDisplayTime = 120;
 };

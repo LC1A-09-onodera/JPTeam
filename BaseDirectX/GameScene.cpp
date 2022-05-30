@@ -341,6 +341,7 @@ void GameScene::Init()
 	EndModel.CreateModel("end", ShaderManager::playerShader);
 	ChackBoxModel.CreateModel("check_box", ShaderManager::playerShader);
 	CheckModel.CreateModel("check", ShaderManager::playerShader);
+	reverseAddObject.CreateModel("add", ShaderManager::playerShader);
 	for (int i = 0; i < 2; i++)
 	{
 		pouseKakko[i].CreateConstBuff0();
@@ -661,7 +662,7 @@ void GameScene::GameUpdate()
 				//ここでアップデートしてみてほしい
 				if (isToDojo)
 				{
-					int hoge = 0;
+					othelloManager.DojoUpdate(checkObject.GetCombo());
 				}
 				else if (!selectMode)
 				{
@@ -702,12 +703,13 @@ void GameScene::GameUpdate()
 			{
 				gameTime--;
 			}
-			else if (isToDojo)
+			else if (isToDojo && othelloManager.DojoEnd())
 			{
+				NormaToModeSelect();
 				//終わった時の処理入れたいかな
 			}
 			//チュートリアル終わった時の処理
-			else if (othelloManager.IsTutorialEnd() && isTutorial)
+			else if (othelloManager.IsTutorialEnd() && isTutorial && !isToDojo)
 			{
 				PouseToTitle();
 			}
@@ -1393,6 +1395,16 @@ void GameScene::GameDraw()
 		//playerの頭上にスコアを出す
 		if (checkObject.IsAddScore() && !isTutorial && !isPouseToTiTle && !isResultSceneChange)
 		{
+			reverseDisplay = true;
+			reverseDisplayTime = 0;
+		}
+		if (reverseDisplay)
+		{
+			reverseDisplayTime++;
+			if (reverseDisplayTime > MaxReverseDisplayTime)
+			{
+				reverseDisplay = false;
+			}
 			int addComboint = checkObject.GetCombo();
 			if (addComboint < 10 && addComboint >= 1)
 			{
@@ -1436,8 +1448,6 @@ void GameScene::GameDraw()
 				Draw3DObject(reverseObject);
 			}
 		}
-
-
 		if (oldDisplay != nowScore)
 		{
 			scoreChange = true;
@@ -1685,7 +1695,7 @@ void GameScene::GameDraw()
 	if (isToDojo)
 	{
 		//ここでdojoのdraw
-
+		othelloManager.DojoDraw();
 	}
 	if (isPouse)
 	{
@@ -2023,23 +2033,70 @@ void GameScene::GetScoreDraw()
 		for (int i = 0; i < 7; i++)
 		{
 			itr->scoreEach[i].position = itr->scoreEach[7].position;
-			itr->scoreEach[i].position.m128_f32[0] += (7 - i) * 1.0f;
+			itr->scoreEach[i].position.m128_f32[0] += (7 - i) * 1.3f;
 			itr->scoreEach[i].scale = { 0.3f, 0.3f, 0.3f };
+			itr->scoreEach[i].rotation.x = -30;
 		}
 		sNumbersObject[itr->score % 10].Update(&itr->scoreEach[0]);
 		Draw3DObject(sNumbersObject[itr->score % 10]);
 		sNumbersObject[itr->score / 10 % 10].Update(&itr->scoreEach[1]);
 		Draw3DObject(sNumbersObject[itr->score / 10 % 10]);
-		sNumbersObject[itr->score / 100 % 10].Update(&itr->scoreEach[2]);
-		Draw3DObject(sNumbersObject[itr->score / 100 % 10]);
-		sNumbersObject[itr->score / 1000 % 10].Update(&itr->scoreEach[3]);
-		Draw3DObject(sNumbersObject[itr->score / 1000 % 10]);
-		sNumbersObject[itr->score / 10000 % 10].Update(&itr->scoreEach[4]);
-		Draw3DObject(sNumbersObject[itr->score / 10000 % 10]);
-		sNumbersObject[itr->score / 100000 % 10].Update(&itr->scoreEach[5]);
-		Draw3DObject(sNumbersObject[itr->score / 100000 % 10]);
-		sNumbersObject[itr->score / 100000 % 10].Update(&itr->scoreEach[6]);
-		Draw3DObject(sNumbersObject[itr->score / 1000000 % 10]);
+		bool isPuslDraw = false;
+		if (itr->score > 100)
+		{
+			sNumbersObject[itr->score / 100 % 10].Update(&itr->scoreEach[2]);
+			Draw3DObject(sNumbersObject[itr->score / 100 % 10]);
+		}
+		else if (!isPuslDraw)
+		{
+			isPuslDraw = true;
+			reverseAddObject.Update(&itr->scoreEach[2]);
+			Draw3DObject(reverseAddObject);
+		}
+		if (itr->score > 1000)
+		{
+			sNumbersObject[itr->score / 1000 % 10].Update(&itr->scoreEach[3]);
+			Draw3DObject(sNumbersObject[itr->score / 1000 % 10]);
+		}
+		else if (!isPuslDraw)
+		{
+			isPuslDraw = true;
+			reverseAddObject.Update(&itr->scoreEach[3]);
+			Draw3DObject(reverseAddObject);
+		}
+		if (itr->score > 10000)
+		{
+			sNumbersObject[itr->score / 10000 % 10].Update(&itr->scoreEach[4]);
+			Draw3DObject(sNumbersObject[itr->score / 10000 % 10]);
+		}
+		else if (!isPuslDraw)
+		{
+			isPuslDraw = true;
+			reverseAddObject.Update(&itr->scoreEach[4]);
+			Draw3DObject(reverseAddObject);
+		}
+		if (itr->score > 100000)
+		{
+			sNumbersObject[itr->score / 100000 % 10].Update(&itr->scoreEach[5]);
+			Draw3DObject(sNumbersObject[itr->score / 100000 % 10]);
+		}
+		else if (!isPuslDraw)
+		{
+			isPuslDraw = true;
+			reverseAddObject.Update(&itr->scoreEach[5]);
+			Draw3DObject(reverseAddObject);
+		}
+		if (itr->score > 1000000)
+		{
+			sNumbersObject[itr->score / 100000 % 10].Update(&itr->scoreEach[6]);
+			Draw3DObject(sNumbersObject[itr->score / 1000000 % 10]);
+		}
+		else if (!isPuslDraw)
+		{
+			isPuslDraw = true;
+			reverseAddObject.Update(&itr->scoreEach[5]);
+			Draw3DObject(reverseAddObject);
+		}
 	}
 }
 
@@ -3031,8 +3088,8 @@ void AddScore::Init(int pos, int GetScore)
 	posNum = pos;
 	easeTime = 0.0f;
 	easeUpTime = 0.0f;
-	startPos = { -35.0f, 0, 0 };
-	endPos = { -18.0f, 0, 0 };
+	startPos = { -37.0f, 0, 0 };
+	endPos = { -20.0f, 0, 0 };
 	score = GetScore;
 	for (int i = 0; i < 8; i++)
 	{
@@ -3052,6 +3109,7 @@ void AddScore::Update()
 			if (easeTime >= 1.0f)
 			{
 				easeTime = 1.0f;
+				isAppeared = true;
 				scoreEach[7].position = ConvertXMFLOAT3toXMVECTOR(ShlomonMath::EaseInQuad(startPos, endPos, easeTime));
 			}
 		}
@@ -3065,6 +3123,7 @@ void AddScore::Update()
 void AddScore::UpInit()
 {
 	easeUpTime = 0.0f;
+	isUp = true;
 	UpToStartPos = ConvertXMVECTORtoXMFLOAT3(scoreEach[7].position);
 	UpToEndPos = UpToStartPos;
 	UpToEndPos.y += 3.0f;
@@ -3072,18 +3131,22 @@ void AddScore::UpInit()
 
 void AddScore::UpUpdate()
 {
-	easeTime += easeUpCount;
-	scoreEach[7].position = ConvertXMFLOAT3toXMVECTOR(ShlomonMath::EaseInQuad(startPos, endPos, easeUpTime));
+	easeUpTime += easeUpCount;
+	scoreEach[7].position = ConvertXMFLOAT3toXMVECTOR(ShlomonMath::EaseInQuad(UpToStartPos, UpToEndPos, easeUpTime));
 	if (easeUpTime >= 1.0f)
 	{
 		easeUpTime = 1.0f;
-		scoreEach[7].position = ConvertXMFLOAT3toXMVECTOR(ShlomonMath::EaseInQuad(startPos, endPos, easeUpTime));
+		scoreEach[7].position = ConvertXMFLOAT3toXMVECTOR(ShlomonMath::EaseInQuad(UpToStartPos, UpToEndPos, easeUpTime));
 		isUpToed = false;
 	}
 }
 
 void AddScoreManager::Init(int PosNum, int GetScore)
 {
+	for (auto itr = scores.begin(); itr != scores.end(); ++itr)
+	{
+		itr->UpInit();
+	}
 	AddScore ex;
 	ex.Init(nowDisplayNum, GetScore);
 	scores.push_back(ex);
@@ -3099,11 +3162,6 @@ void AddScoreManager::Init(int PosNum, int GetScore)
 	else
 	{
 		PosNum = MaxNum;
-		auto itr = scores.begin();
-		++itr;
-		itr->UpInit();
-		++itr;
-		itr->UpInit();
 	}
 }
 
