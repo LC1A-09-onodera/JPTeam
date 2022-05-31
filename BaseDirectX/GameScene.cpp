@@ -617,18 +617,18 @@ void GameScene::GameUpdate()
 				ToGame4(true, false, true);
 				titleSelectNum = 0;
 
-				/*if (DojoType::Bookend)
+				if (othelloManager.dojoType == DojoType::Bookend)
 				{
 					tipsCounts = 5;
 				}
-				else if (DojoType::Conect)
+				else if (othelloManager.dojoType == DojoType::Conect)
 				{
 					tipsCounts = 4;
 				}
-				else if (DojoType::Waltz)
+				else if (othelloManager.dojoType == DojoType::Waltz)
 				{
 					tipsCounts = 6;
-				}*/
+				}
 			}
 #pragma endregion
 		}
@@ -651,11 +651,11 @@ void GameScene::GameUpdate()
 			{
 				//チュートリアルのアップデート
 				othelloManager.TutorialUpdate(checkObject.GetCombo());
-				/*bool isTuEnd = true;
-				if (isTuEnd)
+				
+				if (othelloManager.tutorialEndFlag)
 				{
 					NormaToModeSelect();
-				}*/
+				}
 			}
 			else
 			{
@@ -1804,7 +1804,10 @@ void GameScene::GameDraw()
 	}
 	ObjectParticles::Draw();
 	ParticleControl::Draw();
-	if (!isPouseToTiTle)othelloManager.Draw(isSupport, isSupport);
+	if (!isPouseToTiTle)
+	{
+		othelloManager.Draw(isSupport, isSupport);
+	}
 	if (countDown > 0 && isSceneChange == false && isModeSelect == false)
 	{
 		XMFLOAT3 scale = { 0.7f, 0.7f, 0.7f };
@@ -1864,7 +1867,7 @@ void GameScene::GameDraw()
 
 	}
 
-	if (gameTime > 0 && countDown <= 0 && !isTutorial)
+	if (gameTime > 0 && countDown <= 0 && !isTutorial && !isToDojo)
 	{
 		if (!isPouseToTiTle)
 		{
@@ -1915,7 +1918,7 @@ void GameScene::GameDraw()
 	{
 		othelloManager.ModeSelectModelDraw(true);
 	}
-	if (gameTime > 0 && countDown <= 0 && isTutorial)
+	if (!isToDojo && gameTime > 0 && countDown <= 0 && isTutorial)
 	{
 		othelloManager.TutorialTextDraw();
 	}
@@ -2193,7 +2196,7 @@ void GameScene::ResultDraw()
 		const int rankB = 30000;
 		const int rankA = 200000;
 		const int rankS = 999999;
-		nowScore = 1000000;
+		//nowScore = 1000000;
 
 		XMFLOAT3 max_size = { 3.5f,3.5f,3.5f };
 		XMFLOAT3 goal_size = { 1.5f,1.5f,1.5f };

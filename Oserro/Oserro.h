@@ -256,6 +256,8 @@ namespace OthelloConstData
 	const panelPos ConectPanel = { 0, 4 };
 	const panelPos WaltzPanel = { 3, 4 };
 	const panelPos BookendPanel = { 6, 4 };
+	const panelPos TutorialStartPanel = {3, 3};
+	const panelPos TutorialSecondPos = {0, 0};
 	//テキストの表示箇所2D
 	const XMVECTOR moveTextPos = { 400, 0, 0,0 };
 	const XMVECTOR moveAllDeleteCountPos{ 5.0f, 0.0f, 0.0f , 0.0f };
@@ -416,6 +418,7 @@ public:
 	bool GetIsSendDataUpdate();
 	void EraseChanceObject();
 
+	bool tutorialEndFlag = false;
 public://チュートリアルの関数
 	void TutorialUpdate(int combo);
 
@@ -427,13 +430,10 @@ public://チュートリアルの関数
 	std::list<XMFLOAT3> &GetPressPanellPos();
 	void TutorialStart();
 private:
-	//挟むチュートリアルでーす
 	void whySandwichSpawn();
 
-	//連鎖のチュートリアルだよ～ん
 	void whyChainSpawn();
 
-	//落ちてしまった場合の復帰方法だよ
 	void whyStepSpawn();
 private:
 	bool A();
@@ -515,8 +515,9 @@ public:
 	void DojoDraw();
 	bool DojoEnd();
 	bool GetDojoIsStart();
-private://道場変数
 	DojoType dojoType;
+private://道場変数
+	
 	//テキスト読みの時間と実行の時間
 	bool isAct = true;
 	int TextCount = 0;
@@ -599,6 +600,12 @@ private:
 
 	void BookendSixesSpawn();
 	void BookendSixesUpdate(int AlivePanel, int ComboCount, bool isOn = true);
+#pragma endregion
+
+#pragma region tutorial
+	vector<Sprite> tutorialTexts;
+	Othello tutorialOthello;
+	bool isTutorialDraw = false;
 #pragma endregion
 
 private:
