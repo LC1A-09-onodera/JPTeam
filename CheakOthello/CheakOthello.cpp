@@ -110,7 +110,7 @@ void CheakOthello::Update(const vector<vector<SendOthelloData>>& othelloData, bo
 		/*-----右斜め下-----*/
 		OthelloCheck(Direction_X::EAST, Direction_Y::SOUTH, last.first, last.second, false);
 
-		if (totalDeleteOthello > 1) { AddScore(); }
+		AddScore();
 		if (isCombosCheck) { ChangeScoreAndCombo(); }
 
 		if (!isSand)
@@ -538,35 +538,30 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y, int last_x, in
 						{
 							maxScore = othelloDatas[pair_y][pair_x].score;
 						}
-						if (i == 0)
-						{
-							if (addScore < othelloDatas[pair_y][pair_x].score)
-							{
-								addScore = othelloDatas[pair_y][pair_x].score * maxComboCount;
-							}
-							totalScore += othelloDatas[pair_y][pair_x].score * maxComboCount;
-							//baseScore += othelloDatas[pair_y][pair_x].score;
-						}
 						pair_x += direction_x;
 						pair_y += direction_y;
 					}
 
-					//全部空だった場合（1コンボ目）
-					//if (maxChainName.empty())
-					//{
-					//	//初期化
-					//	pair_x = last_x;
-					//	pair_y = last_y;
+					addScore += maxScore * maxComboCount;
+					//totalScore += othelloDatas[pair_y][pair_x].score * maxComboCount;
+					//baseScore += othelloDatas[pair_y][pair_x].score;
 
-					//	for (int i = 0; i <= loop + 1; i++)
-					//	{
-					//		othelloDatas[pair_y][pair_x].chainName = random;
-					//		pair_x += direction_x;
-					//		pair_y += direction_y;
-					//	}
-					//}
+				//全部空だった場合（1コンボ目）
+				//if (maxChainName.empty())
+				//{
+				//	//初期化
+				//	pair_x = last_x;
+				//	pair_y = last_y;
 
-					//コンボを繋げた場合
+				//	for (int i = 0; i <= loop + 1; i++)
+				//	{
+				//		othelloDatas[pair_y][pair_x].chainName = random;
+				//		pair_x += direction_x;
+				//		pair_y += direction_y;
+				//	}
+				//}
+
+				//コンボを繋げた場合
 					if (maxChainName.size() == 1)
 					{
 						//int chainName = maxChainName.front();
@@ -783,9 +778,13 @@ void CheakOthello::OthelloCheck(int direction_x, int direction_y, int last_x, in
 
 void CheakOthello::AddScore()
 {
-	totalScore = (int)(totalScore * powf(OTHELLO_BONUS, totalDeleteOthello - 1));
+	if (totalDeleteOthello > 1)
+	{
+		addScore *= powf(OTHELLO_BONUS, totalDeleteOthello - 1);
+	}
 	totalDeleteOthello = 0;
-} 
+	totalScore += addScore;
+}
 
 void CheakOthello::ChangeScoreAndCombo()
 {
@@ -879,6 +878,64 @@ void CheakOthello::CheckReachOthello(int direction_x, int direction_y, int last_
 				}
 				break;
 			}
+		}
+	}
+
+	//リバーシブル専用
+	lastX = last_x;
+	lastY = last_y;
+	int count = 0;
+	bool isReversibleReach = false;
+	//bool isSandCheck = false;
+	pair<int, int> reversibleReachPos;
+
+	while (1)
+	{
+		lastX += direction_x;
+		lastY += direction_y;
+
+		if (lastX < 0 || lastX > OthelloConstData::fieldSize - 1) { break; }
+		if (lastY < 0 || lastY > OthelloConstData::fieldSize - 1) { break; }
+		if (othelloDatas[lastY][lastX].type == NONE) { break; }
+
+		if (othelloDatas[lastY][lastX].isFront != side)
+		{
+			reversibleReachPos = make_pair(lastY, lastX);
+			isReversibleReach = true;
+			break;
+		}
+		else
+		{
+			if (!othelloDatas[lastY][lastX].isSandwich) { count++; }
+		}
+	}
+
+	if (isReversibleReach)
+	{
+		lastX = last_x;
+		lastY = last_y;
+
+		while (1)
+		{
+			//bool isSandwich = false;
+			lastX += direction_x * -1;
+			lastY += direction_y * -1;
+
+			if (lastX < 0 || lastX > OthelloConstData::fieldSize - 1) { break; }
+			if (lastY < 0 || lastY > OthelloConstData::fieldSize - 1) { break; }
+			if (othelloDatas[lastY][lastX].type == NONE) { break; }
+
+			if (othelloDatas[lastY][lastX].isFront != side)
+			{
+				if (count > 0)
+				{
+					completePos.push_back(make_pair(lastY, lastX));
+					completePos.push_back(reversibleReachPos);
+					break;
+				}
+				else { break; }
+			}
+			if (!othelloDatas[lastY][lastX].isSandwich) { count++; }
 		}
 	}
 }

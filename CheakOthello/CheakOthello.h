@@ -70,6 +70,8 @@ private:
 
 	bool reachCheck[8][8] = { false };
 
+	//bool isSideSame = false;
+
 public:
 	CheakOthello();
 	~CheakOthello();
