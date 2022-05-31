@@ -1233,9 +1233,54 @@ void GameScene::GameUpdate()
 			tips_text[tipsCounts].position = { TEXT_START_X[tipsCounts] + window_width,TEXT_START_Y,0,0 };
 
 			tipsDrawNum = 0;
-			tips_ss[0].position = { START_X,START_Y,0,0 };
-			tips_ss[1].position = { START_X - SIZE_X,START_Y,0,0 };
-			tips_ss[2].position = { START_X - SIZE_X,START_Y,0,0 };
+			if (tipsCounts == 0)
+			{
+				tips_ss[0].position = { START_X,START_Y,0,0 };
+				tips_ss[1].position = { START_X - SIZE_X,START_Y,0,0 };
+				tips_ss[2].position = { START_X - SIZE_X,START_Y,0,0 };
+			}
+			else if (tipsCounts == 1)
+			{
+				tips_ss_1[0].position = { START_X,START_Y,0,0 };
+				tips_ss_1[1].position = { START_X - SIZE_X,START_Y,0,0 };
+				tips_ss_1[2].position = { START_X - SIZE_X,START_Y,0,0 };
+			}
+			else if (tipsCounts == 2)
+			{
+				tips_ss_2[0].position = { START_X,START_Y,0,0 };
+				tips_ss_2[1].position = { START_X - SIZE_X,START_Y,0,0 };
+				tips_ss_2[2].position = { START_X - SIZE_X,START_Y,0,0 };
+			}
+			else if (tipsCounts == 3)
+			{
+				tips_ss_3[0].position = { START_X,START_Y,0,0 };
+				tips_ss_3[1].position = { START_X - SIZE_X,START_Y,0,0 };
+			}
+			else if (tipsCounts == 4)
+			{
+				tips_ss_4[0].position = { START_X,START_Y,0,0 };
+				tips_ss_4[1].position = { START_X - SIZE_X,START_Y,0,0 };
+				tips_ss_4[2].position = { START_X - SIZE_X,START_Y,0,0 };
+			}
+			else if (tipsCounts == 5)
+			{
+				tips_ss_5[0].position = { START_X,START_Y,0,0 };
+				tips_ss_5[1].position = { START_X - SIZE_X,START_Y,0,0 };
+				tips_ss_5[2].position = { START_X - SIZE_X,START_Y,0,0 };
+				tips_ss_5[3].position = { START_X - SIZE_X,START_Y,0,0 };
+				tips_ss_5[4].position = { START_X - SIZE_X,START_Y,0,0 };
+			}
+			else if (tipsCounts == 6)
+			{
+
+				tips_ss_6[0].position = { START_X,START_Y,0,0 };
+				tips_ss_6[1].position = { START_X - SIZE_X,START_Y,0,0 };
+				tips_ss_6[2].position = { START_X - SIZE_X,START_Y,0,0 };
+				tips_ss_6[3].position = { START_X - SIZE_X,START_Y,0,0 };
+				tips_ss_6[4].position = { START_X - SIZE_X,START_Y,0,0 };
+				tips_ss_6[5].position = { START_X - SIZE_X,START_Y,0,0 };
+				tips_ss_6[6].position = { START_X - SIZE_X,START_Y,0,0 };
+			}
 			isInit = false;
 		}
 	}
@@ -2203,14 +2248,24 @@ void GameScene::ResultDraw()
 
 		XMFLOAT3 max_size = { 3.5f,3.5f,3.5f };
 		XMFLOAT3 goal_size = { 1.5f,1.5f,1.5f };
+		XMFLOAT3 rankA_goal_size = { 2.0f,2.0f,2.0f };
 
 		XMFLOAT4 rankPos = { 0.0f, 12.0f, -7.0f, 1.0f };
 		XMFLOAT3 rankRot = { -70.0f, 0.0f, 0.0f };
 		if (rankEase1 < 1.0f)
 		{
-			rankScale = ShlomonMath::EaseInQuad(rankNormalSize, max_size, rankEase1);
-			rankEase1 += 0.05f;
-			if (rankEase1 > 1.0f) { rankScale = ShlomonMath::EaseInQuad(rankNormalSize, max_size, rankEase1); }
+			if (nowScore > rankA)
+			{
+				rankScale = ShlomonMath::EaseInQuad(rankNormalSize, max_size, rankEase1);
+				rankEase1 += 0.05f;
+				if (rankEase1 > 1.0f) { rankScale = ShlomonMath::EaseInQuad(rankNormalSize, max_size, rankEase1); }
+			}
+			else
+			{
+				rankScale = ShlomonMath::EaseInQuad(rankNormalSize, rankA_goal_size, rankEase1);
+				rankEase1 += 0.05f;
+				if (rankEase1 > 1.0f) { rankScale = ShlomonMath::EaseInQuad(rankNormalSize, rankA_goal_size, rankEase1); }
+			}
 		}
 		else if (rankEase2 < 1.0f)
 		{
@@ -2225,7 +2280,7 @@ void GameScene::ResultDraw()
 			}
 			else
 			{
-				rankScale = ShlomonMath::EaseInQuad(max_size, goal_size, rankEase2);
+				rankScale = ShlomonMath::EaseInQuad(rankA_goal_size, goal_size, rankEase2);
 				rankEase2 += 0.02f;
 			}
 		}
