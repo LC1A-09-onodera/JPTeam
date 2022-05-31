@@ -316,7 +316,7 @@ void CheakOthello::CheckLastMove(const vector<vector<SendOthelloData>>& othelloD
 			if (!othelloDatas[i][j].isMove) { continue; }
 
 
-			CheckPlayerMath(make_pair(i, j));
+			//CheckPlayerMath(make_pair(i, j));
 			othelloSide.push_back(othelloDatas[i][j].isFront);
 			comboOthelloDataPos.push_back(std::make_pair(i, j));
 			//break;
