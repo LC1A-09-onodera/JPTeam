@@ -1764,6 +1764,11 @@ bool OthelloManager::DojoEnd()
 	return isEnd;
 }
 
+void OthelloManager::DojoDrawErace()
+{
+	isDojoDraw = false;
+}
+
 //çœ
 #pragma region Connect
 //çœ
@@ -2017,7 +2022,7 @@ void OthelloManager::WaltzFirstSpwan()
 	nowWaltzFlow = Waltz1;
 	SetSpawnPanel(1, 1, false);
 	SetSpawnPanel(2, 1, true);
-
+	SetSpawnPlayer(1, 1);
 	WaltzObject[0].Spawn(NORMAL, 6, 1, true);
 	WaltzObject[1].Spawn(NORMAL, 7, 1, false);
 }

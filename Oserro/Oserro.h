@@ -514,6 +514,8 @@ public:
 	void DojoUpdate(int combo);
 	void DojoDraw();
 	bool DojoEnd();
+
+	void DojoDrawErace();
 	bool GetDojoIsStart();
 private://“¹ê•Ï”
 	DojoType dojoType;
