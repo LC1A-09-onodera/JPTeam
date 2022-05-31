@@ -179,13 +179,14 @@ public://シーンで使うもの
 
 	Model sky;
 	Model othelloStage;
-
+	int BGMSoundCount = 0;
 	SoundData selectSound;
 	SoundData timeUpSound;
 	SoundData enterSound;
 	SoundData BGMSound;
 	SoundData countdDownSound;
 	SoundData startSound;
+	SoundData BGMSound2;
 	bool isPouse;
 	int selectPouse = 0;
 	const int selectMaxPouse = 2;
@@ -457,4 +458,11 @@ public://シーンで使うもの
 	bool reverseDisplay = false;
 	int reverseDisplayTime = 0;
 	const int MaxReverseDisplayTime = 120;
+
+	Model rankModel[5];
+	XMFLOAT3 rankNormalSize = {0.5f, 0.5f, 0.5f};
+	XMFLOAT3 rankMaxSize = {1.0f, 1.0f, 1.0f};
+	XMFLOAT3 rankScale;
+	float rankEase1 = 0.0f;
+	float rankEase2 = 0.0f;
 };
