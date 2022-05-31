@@ -524,7 +524,7 @@ void GameScene::TitleUpdate()
 				Draw3DObject(ObjectParticles::othello2.object);
 			}
 		}
-		
+
 		if (!isPouse)
 		{
 			ObjectParticles::Update(othelloManager.GetPressPanellPos(), checkObject.GetCombo());
@@ -2186,62 +2186,104 @@ void GameScene::ResultDraw()
 	}
 	nowScore = checkObject.GetScore();
 
-	XMFLOAT4 rankPos = { 16.0f, 12.0f, -12.0f, 1.0f };
-	XMFLOAT3 rankRot = { -70.0f, 0.0f, 0.0f };
-	if (rankEase1 < 1.0f)
+	//•]‰¿‚Ì•¶Žš•`‰æ
+	if (isScoreDrawEnd)
 	{
-		rankScale = ShlomonMath::EaseInQuad(rankNormalSize, rankMaxSize, rankEase1);
-		rankEase1 += 0.05f;
+		const int rankC = 1000;
+		const int rankB = 30000;
+		const int rankA = 200000;
+		const int rankS = 999999;
+		nowScore = 1000000;
+
+		XMFLOAT3 max_size = { 3.5f,3.5f,3.5f };
+		XMFLOAT3 goal_size = { 1.5f,1.5f,1.5f };
+
+		XMFLOAT4 rankPos = { 0.0f, 12.0f, -7.0f, 1.0f };
+		XMFLOAT3 rankRot = { -70.0f, 0.0f, 0.0f };
+		if (rankEase1 < 1.0f)
+		{
+			rankScale = ShlomonMath::EaseInQuad(rankNormalSize, max_size, rankEase1);
+			rankEase1 += 0.05f;
+			if (rankEase1 > 1.0f) { rankScale = ShlomonMath::EaseInQuad(rankNormalSize, max_size, rankEase1); }
+		}
+		else if (rankEase2 < 1.0f)
+		{
+			if (nowScore > rankA)
+			{
+				if (scaleCount < 20) { scaleCount++; }
+				else
+				{
+					rankScale = ShlomonMath::EaseInQuad(max_size, goal_size, rankEase2);
+					rankEase2 += 0.02f;
+				}
+			}
+			else
+			{
+				rankScale = ShlomonMath::EaseInQuad(max_size, goal_size, rankEase2);
+				rankEase2 += 0.02f;
+			}
+		}
+		else
+		{
+			rankScale = ShlomonMath::EaseInQuad(max_size, goal_size, 1.0f);
+		}
+
+		if (nowScore <= rankC)
+		{
+			rankModel[0].each.scale = rankScale;
+			rankModel[0].each.position = { rankPos.x, rankPos.y, rankPos.z, rankPos.w };
+			rankModel[0].each.rotation = rankRot;
+			rankModel[0].Update();
+			Draw3DObject(rankModel[0]);
+		}
+		else if (nowScore <= rankB)
+		{
+			rankModel[1].each.scale = rankScale;
+			rankModel[1].each.position = { rankPos.x, rankPos.y, rankPos.z, rankPos.w };
+			rankModel[1].each.rotation = rankRot;
+			rankModel[1].Update();
+			Draw3DObject(rankModel[1]);
+		}
+		else if (nowScore <= rankA)
+		{
+			rankModel[2].each.scale = rankScale;
+			rankModel[2].each.position = { rankPos.x, rankPos.y, rankPos.z, rankPos.w };
+			rankModel[2].each.rotation = rankRot;
+			rankModel[2].Update();
+			Draw3DObject(rankModel[2]);
+		}
+		else if (nowScore <= rankS)
+		{
+			rankModel[3].each.scale = rankScale;
+			rankModel[3].each.position = { rankPos.x, rankPos.y, rankPos.z, rankPos.w };
+			rankModel[3].each.rotation = rankRot;
+
+			if (rankEase1 < 1.0f)
+			{
+				rankModel[3].each.rotation.z += changeRot;
+				changeRot *= -1;
+			}
+
+			rankModel[3].Update();
+			Draw3DObject(rankModel[3]);
+		}
+		else
+		{
+			rankModel[4].each.scale = rankScale;
+			rankModel[4].each.position = { rankPos.x, rankPos.y, rankPos.z, rankPos.w };
+			rankModel[4].each.rotation = rankRot;
+
+			if (rankEase1 < 1.0f)
+			{
+				rankModel[4].each.rotation.z += changeRot;
+				changeRot *= -1;
+			}
+
+			rankModel[4].Update();
+			Draw3DObject(rankModel[4]);
+		}
 	}
-	else if (rankEase2 < 1.0f)
-	{
-		rankScale = ShlomonMath::EaseInQuad(rankMaxSize, rankNormalSize, rankEase2);
-		rankEase2 += 0.02f;
-	}
-	else
-	{
-		rankScale = ShlomonMath::EaseInQuad(rankMaxSize, rankNormalSize, 1.0f);
-	}
-	if (nowScore <= 1000)
-	{
-		rankModel[0].each.scale = rankScale;
-		rankModel[0].each.position = { rankPos.x, rankPos.y, rankPos.z, rankPos.w };
-		rankModel[0].each.rotation = rankRot;
-		rankModel[0].Update();
-		Draw3DObject(rankModel[0]);
-	}
-	else if (nowScore <= 50000)
-	{
-		rankModel[1].each.scale = rankScale;
-		rankModel[1].each.position = { rankPos.x, rankPos.y, rankPos.z, rankPos.w };
-		rankModel[1].each.rotation = rankRot;
-		rankModel[1].Update();
-		Draw3DObject(rankModel[1]);
-	}
-	else if (nowScore <= 300000)
-	{
-		rankModel[2].each.scale = rankScale;
-		rankModel[2].each.position = { rankPos.x, rankPos.y, rankPos.z, rankPos.w };
-		rankModel[2].each.rotation = rankRot;
-		rankModel[2].Update();
-		Draw3DObject(rankModel[2]);
-	}
-	else if (nowScore <= 999999)
-	{
-		rankModel[3].each.scale = rankScale;
-		rankModel[3].each.position = { rankPos.x, rankPos.y, rankPos.z, rankPos.w };
-		rankModel[3].each.rotation = rankRot;
-		rankModel[3].Update();
-		Draw3DObject(rankModel[3]);
-	}
-	else
-	{
-		rankModel[4].each.scale = rankScale;
-		rankModel[4].each.position = { rankPos.x, rankPos.y, rankPos.z, rankPos.w };
-		rankModel[4].each.rotation = rankRot;
-		rankModel[4].Update();
-		Draw3DObject(rankModel[4]);
-	}
+
 	//•Ï”Œn
 	const float scoreX = -7.5f;
 	const float comboX = -14.0f;
@@ -2539,6 +2581,7 @@ void GameScene::ResultDraw()
 		isCheck[1] = false;
 		isCheck[2] = false;*/
 		resultEaseTimer = 1.4f;
+		isScoreDrawEnd = true;
 	}
 
 	//Imgui::DrawImGui();
@@ -3348,6 +3391,8 @@ void GameScene::ToResult()
 	select = false;
 	sceneChageType = 0;
 	ObjectParticles::othelloFrame.DeleteAllParticle();
+	scaleCount = 0;
+	isScoreDrawEnd = false;
 }
 
 void GameScene::PouseToTitle()

@@ -157,7 +157,7 @@ public://シーンで使うもの
 	float eyeEaseTime;
 
 	int resultForTime;
-	const int gameMaxTime = 5999;
+	const int gameMaxTime = 1;
 
 	EachInfo resultMaxConbo[2];
 	EachInfo resultEraseOthello[3];
@@ -476,9 +476,12 @@ public://シーンで使うもの
 	const int MaxReverseDisplayTime = 120;
 
 	Model rankModel[5];
-	XMFLOAT3 rankNormalSize = {0.5f, 0.5f, 0.5f};
-	XMFLOAT3 rankMaxSize = {1.0f, 1.0f, 1.0f};
+	XMFLOAT3 rankNormalSize = { 0.5f, 0.5f, 0.5f };
+	//XMFLOAT3 rankMaxSize = { 2.0f, 2.0f, 2.0f };
 	XMFLOAT3 rankScale;
 	float rankEase1 = 0.0f;
 	float rankEase2 = 0.0f;
+	float changeRot = 7.5f;
+	int scaleCount = 0;
+	bool isScoreDrawEnd = false;
 };
