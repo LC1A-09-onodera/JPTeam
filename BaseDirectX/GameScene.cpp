@@ -318,9 +318,45 @@ void GameScene::Init()
 	/*----------êVtipsóp----------*/
 	tips_cont.CreateSprite(L"Resource/Img/tips/tips_1.png", XMFLOAT3(0, 0, 0));
 
+	//à⁄ìÆ
 	tips_ss[0].CreateSprite(L"Resource/Img/tips/in_tips_0.png", XMFLOAT3(START_X, START_Y, 0));
 	tips_ss[1].CreateSprite(L"Resource/Img/tips/in_tips_1.png", XMFLOAT3(START_X - SIZE_X, START_Y, 0));
 	tips_ss[2].CreateSprite(L"Resource/Img/tips/in_tips_2.png", XMFLOAT3(START_X - SIZE_X, START_Y, 0));
+
+	//ÉäÉoÅ[ÉX
+	tips_ss_1[0].CreateSprite(L"Resource/Img/tips/in_tips_3.png", XMFLOAT3(START_X, START_Y, 0));
+	tips_ss_1[1].CreateSprite(L"Resource/Img/tips/in_tips_4.png", XMFLOAT3(START_X - SIZE_X, START_Y, 0));
+	tips_ss_1[2].CreateSprite(L"Resource/Img/tips/in_tips_5.png", XMFLOAT3(START_X - SIZE_X, START_Y, 0));
+
+	//ÉäÅ[É`
+	tips_ss_2[0].CreateSprite(L"Resource/Img/tips/in_tips_6.png", XMFLOAT3(START_X, START_Y, 0));
+	tips_ss_2[1].CreateSprite(L"Resource/Img/tips/in_tips_7.png", XMFLOAT3(START_X - SIZE_X, START_Y, 0));
+	tips_ss_2[2].CreateSprite(L"Resource/Img/tips/in_tips_8.png", XMFLOAT3(START_X - SIZE_X, START_Y, 0));
+
+	//ï«
+	tips_ss_3[0].CreateSprite(L"Resource/Img/tips/in_tips_9.png", XMFLOAT3(START_X, START_Y, 0));
+	tips_ss_3[1].CreateSprite(L"Resource/Img/tips/in_tips_10.png", XMFLOAT3(START_X - SIZE_X, START_Y, 0));
+
+	//ÉRÉlÉNÉg
+	tips_ss_4[0].CreateSprite(L"Resource/Img/tips/in_tips_11.png", XMFLOAT3(START_X, START_Y, 0));
+	tips_ss_4[1].CreateSprite(L"Resource/Img/tips/in_tips_12.png", XMFLOAT3(START_X - SIZE_X, START_Y, 0));
+	tips_ss_4[2].CreateSprite(L"Resource/Img/tips/in_tips_13.png", XMFLOAT3(START_X - SIZE_X, START_Y, 0));
+
+	//ÉuÉbÉNÉGÉìÉh
+	tips_ss_5[0].CreateSprite(L"Resource/Img/tips/in_tips_14.png", XMFLOAT3(START_X, START_Y, 0));
+	tips_ss_5[1].CreateSprite(L"Resource/Img/tips/in_tips_15.png", XMFLOAT3(START_X - SIZE_X, START_Y, 0));
+	tips_ss_5[2].CreateSprite(L"Resource/Img/tips/in_tips_16.png", XMFLOAT3(START_X - SIZE_X, START_Y, 0));
+	tips_ss_5[3].CreateSprite(L"Resource/Img/tips/in_tips_17.png", XMFLOAT3(START_X - SIZE_X, START_Y, 0));
+	tips_ss_5[4].CreateSprite(L"Resource/Img/tips/in_tips_18.png", XMFLOAT3(START_X - SIZE_X, START_Y, 0));
+
+	//ÉèÉãÉc
+	tips_ss_6[0].CreateSprite(L"Resource/Img/tips/in_tips_19.png", XMFLOAT3(START_X, START_Y, 0));
+	tips_ss_6[1].CreateSprite(L"Resource/Img/tips/in_tips_20.png", XMFLOAT3(START_X - SIZE_X, START_Y, 0));
+	tips_ss_6[2].CreateSprite(L"Resource/Img/tips/in_tips_19.png", XMFLOAT3(START_X - SIZE_X, START_Y, 0));
+	tips_ss_6[3].CreateSprite(L"Resource/Img/tips/in_tips_20.png", XMFLOAT3(START_X - SIZE_X, START_Y, 0));
+	tips_ss_6[4].CreateSprite(L"Resource/Img/tips/in_tips_19.png", XMFLOAT3(START_X - SIZE_X, START_Y, 0));
+	tips_ss_6[5].CreateSprite(L"Resource/Img/tips/in_tips_20.png", XMFLOAT3(START_X - SIZE_X, START_Y, 0));
+	tips_ss_6[6].CreateSprite(L"Resource/Img/tips/in_tips_19.png", XMFLOAT3(START_X - SIZE_X, START_Y, 0));
 
 	for (int i = 0; i < 2; i++)
 	{
@@ -961,42 +997,257 @@ void GameScene::GameUpdate()
 		//íÜêgÇÃà⁄ìÆ
 		if (!moveTips)
 		{
+			if (tips_easeTimer != 0) { tips_easeTimer = 0; }
+
 			if (isFirst) { changeTimerFrame -= FIRST_SS_DELAY; isFirst = false; }
 			if (changeTimerFrame < CHANGE_TIMER_FRAME) { changeTimerFrame++; }
 			else { changeTimerFrame = 0; moveTips = true; }
 		}
 		else
 		{
-			//åªç›ï`âÊÇ≥ÇÍÇƒÇÈtips
-			XMFLOAT3 ssPos0 = ConvertXMVECTORtoXMFLOAT3(tips_ss[tipsDrawNum].position);
-			//Ç±ÇÍÇ©ÇÁï`âÊÇ≥ÇÍÇÈtips
-			XMFLOAT3 ssPos1 = { 0,0,0 };
-			if (tipsDrawNum >= USE_TEX_0 - 1) { ssPos1 = ConvertXMVECTORtoXMFLOAT3(tips_ss[0].position); }
-			else { ssPos1 = ConvertXMVECTORtoXMFLOAT3(tips_ss[tipsDrawNum + 1].position); }
-
-			XMFLOAT3 ssPos0_Goal = { START_X + SIZE_X,START_Y,0 };
-			XMFLOAT3 ssPos1_Goal = { START_X,START_Y,0 };
-
-			if (tips_easeTimer < 1.0f) { tips_easeTimer += EASE_ADD_TIMER; }
-			if (tips_easeTimer > 1.0f) { tips_easeTimer = 1.0f; }
-
-			ssPos0 = ShlomonMath::EaseInQuad(ssPos0, ssPos0_Goal, tips_easeTimer);
-			ssPos1 = ShlomonMath::EaseInQuad(ssPos1, ssPos1_Goal, tips_easeTimer);
-
-			tips_ss[tipsDrawNum].position = ConvertXMFLOAT3toXMVECTOR(ssPos0);
-			if (tipsDrawNum >= USE_TEX_0 - 1) { tips_ss[0].position = ConvertXMFLOAT3toXMVECTOR(ssPos1); }
-			else { tips_ss[tipsDrawNum + 1].position = ConvertXMFLOAT3toXMVECTOR(ssPos1); }
-
-			if (tips_easeTimer == 1.0f)
+			if (tipsCounts == 0)
 			{
-				tips_ss[tipsDrawNum].position = ConvertXMFLOAT3toXMVECTOR(
-					XMFLOAT3(START_X - SIZE_X, START_Y, 0)
-				);
+				//åªç›ï`âÊÇ≥ÇÍÇƒÇÈtips
+				XMFLOAT3 ssPos0 = ConvertXMVECTORtoXMFLOAT3(tips_ss[tipsDrawNum].position);
+				//Ç±ÇÍÇ©ÇÁï`âÊÇ≥ÇÍÇÈtips
+				XMFLOAT3 ssPos1 = { 0,0,0 };
+				if (tipsDrawNum >= USE_TEX_0[tipsCounts] - 1) { ssPos1 = ConvertXMVECTORtoXMFLOAT3(tips_ss[0].position); }
+				else { ssPos1 = ConvertXMVECTORtoXMFLOAT3(tips_ss[tipsDrawNum + 1].position); }
 
-				tipsDrawNum++;
-				if (tipsDrawNum > USE_TEX_0 - 1) { tipsDrawNum = 0; }
-				tips_easeTimer = 0;
-				moveTips = false;
+				XMFLOAT3 ssPos0_Goal = { START_X + SIZE_X,START_Y,0 };
+				XMFLOAT3 ssPos1_Goal = { START_X,START_Y,0 };
+
+				if (tips_easeTimer < 1.0f) { tips_easeTimer += EASE_ADD_TIMER; }
+				if (tips_easeTimer > 1.0f) { tips_easeTimer = 1.0f; }
+
+				ssPos0 = ShlomonMath::EaseInQuad(ssPos0, ssPos0_Goal, tips_easeTimer);
+				ssPos1 = ShlomonMath::EaseInQuad(ssPos1, ssPos1_Goal, tips_easeTimer);
+
+				tips_ss[tipsDrawNum].position = ConvertXMFLOAT3toXMVECTOR(ssPos0);
+				if (tipsDrawNum >= USE_TEX_0[tipsCounts] - 1) { tips_ss[0].position = ConvertXMFLOAT3toXMVECTOR(ssPos1); }
+				else { tips_ss[tipsDrawNum + 1].position = ConvertXMFLOAT3toXMVECTOR(ssPos1); }
+
+				if (tips_easeTimer == 1.0f)
+				{
+					tips_ss[tipsDrawNum].position = ConvertXMFLOAT3toXMVECTOR(
+						XMFLOAT3(START_X - SIZE_X, START_Y, 0)
+					);
+
+					tipsDrawNum++;
+					if (tipsDrawNum > USE_TEX_0[tipsCounts] - 1) { tipsDrawNum = 0; }
+					tips_easeTimer = 0;
+					moveTips = false;
+				}
+			}
+
+			else if (tipsCounts == 1)
+			{
+				//åªç›ï`âÊÇ≥ÇÍÇƒÇÈtips
+				XMFLOAT3 ssPos0 = ConvertXMVECTORtoXMFLOAT3(tips_ss_1[tipsDrawNum].position);
+				//Ç±ÇÍÇ©ÇÁï`âÊÇ≥ÇÍÇÈtips
+				XMFLOAT3 ssPos1 = { 0,0,0 };
+				if (tipsDrawNum >= USE_TEX_0[tipsCounts] - 1) { ssPos1 = ConvertXMVECTORtoXMFLOAT3(tips_ss_1[0].position); }
+				else { ssPos1 = ConvertXMVECTORtoXMFLOAT3(tips_ss_1[tipsDrawNum + 1].position); }
+
+				XMFLOAT3 ssPos0_Goal = { START_X + SIZE_X,START_Y,0 };
+				XMFLOAT3 ssPos1_Goal = { START_X,START_Y,0 };
+
+				if (tips_easeTimer < 1.0f) { tips_easeTimer += EASE_ADD_TIMER; }
+				if (tips_easeTimer > 1.0f) { tips_easeTimer = 1.0f; }
+
+				ssPos0 = ShlomonMath::EaseInQuad(ssPos0, ssPos0_Goal, tips_easeTimer);
+				ssPos1 = ShlomonMath::EaseInQuad(ssPos1, ssPos1_Goal, tips_easeTimer);
+
+				tips_ss_1[tipsDrawNum].position = ConvertXMFLOAT3toXMVECTOR(ssPos0);
+				if (tipsDrawNum >= USE_TEX_0[tipsCounts] - 1) { tips_ss_1[0].position = ConvertXMFLOAT3toXMVECTOR(ssPos1); }
+				else { tips_ss_1[tipsDrawNum + 1].position = ConvertXMFLOAT3toXMVECTOR(ssPos1); }
+
+				if (tips_easeTimer == 1.0f)
+				{
+					tips_ss_1[tipsDrawNum].position = ConvertXMFLOAT3toXMVECTOR(
+						XMFLOAT3(START_X - SIZE_X, START_Y, 0)
+					);
+
+					tipsDrawNum++;
+					if (tipsDrawNum > USE_TEX_0[tipsCounts] - 1) { tipsDrawNum = 0; }
+					tips_easeTimer = 0;
+					moveTips = false;
+				}
+			}
+
+			else if (tipsCounts == 2)
+			{
+				//åªç›ï`âÊÇ≥ÇÍÇƒÇÈtips
+				XMFLOAT3 ssPos0 = ConvertXMVECTORtoXMFLOAT3(tips_ss_2[tipsDrawNum].position);
+				//Ç±ÇÍÇ©ÇÁï`âÊÇ≥ÇÍÇÈtips
+				XMFLOAT3 ssPos1 = { 0,0,0 };
+				if (tipsDrawNum >= USE_TEX_0[tipsCounts] - 1) { ssPos1 = ConvertXMVECTORtoXMFLOAT3(tips_ss_2[0].position); }
+				else { ssPos1 = ConvertXMVECTORtoXMFLOAT3(tips_ss_2[tipsDrawNum + 1].position); }
+
+				XMFLOAT3 ssPos0_Goal = { START_X + SIZE_X,START_Y,0 };
+				XMFLOAT3 ssPos1_Goal = { START_X,START_Y,0 };
+
+				if (tips_easeTimer < 1.0f) { tips_easeTimer += EASE_ADD_TIMER; }
+				if (tips_easeTimer > 1.0f) { tips_easeTimer = 1.0f; }
+
+				ssPos0 = ShlomonMath::EaseInQuad(ssPos0, ssPos0_Goal, tips_easeTimer);
+				ssPos1 = ShlomonMath::EaseInQuad(ssPos1, ssPos1_Goal, tips_easeTimer);
+
+				tips_ss_2[tipsDrawNum].position = ConvertXMFLOAT3toXMVECTOR(ssPos0);
+				if (tipsDrawNum >= USE_TEX_0[tipsCounts] - 1) { tips_ss_2[0].position = ConvertXMFLOAT3toXMVECTOR(ssPos1); }
+				else { tips_ss_2[tipsDrawNum + 1].position = ConvertXMFLOAT3toXMVECTOR(ssPos1); }
+
+				if (tips_easeTimer == 1.0f)
+				{
+					tips_ss_2[tipsDrawNum].position = ConvertXMFLOAT3toXMVECTOR(
+						XMFLOAT3(START_X - SIZE_X, START_Y, 0)
+					);
+
+					tipsDrawNum++;
+					if (tipsDrawNum > USE_TEX_0[tipsCounts] - 1) { tipsDrawNum = 0; }
+					tips_easeTimer = 0;
+					moveTips = false;
+				}
+			}
+
+			else if (tipsCounts == 3)
+			{
+				//åªç›ï`âÊÇ≥ÇÍÇƒÇÈtips
+				XMFLOAT3 ssPos0 = ConvertXMVECTORtoXMFLOAT3(tips_ss_3[tipsDrawNum].position);
+				//Ç±ÇÍÇ©ÇÁï`âÊÇ≥ÇÍÇÈtips
+				XMFLOAT3 ssPos1 = { 0,0,0 };
+				if (tipsDrawNum >= USE_TEX_0[tipsCounts] - 1) { ssPos1 = ConvertXMVECTORtoXMFLOAT3(tips_ss_3[0].position); }
+				else { ssPos1 = ConvertXMVECTORtoXMFLOAT3(tips_ss_3[tipsDrawNum + 1].position); }
+
+				XMFLOAT3 ssPos0_Goal = { START_X + SIZE_X,START_Y,0 };
+				XMFLOAT3 ssPos1_Goal = { START_X,START_Y,0 };
+
+				if (tips_easeTimer < 1.0f) { tips_easeTimer += EASE_ADD_TIMER; }
+				if (tips_easeTimer > 1.0f) { tips_easeTimer = 1.0f; }
+
+				ssPos0 = ShlomonMath::EaseInQuad(ssPos0, ssPos0_Goal, tips_easeTimer);
+				ssPos1 = ShlomonMath::EaseInQuad(ssPos1, ssPos1_Goal, tips_easeTimer);
+
+				tips_ss_3[tipsDrawNum].position = ConvertXMFLOAT3toXMVECTOR(ssPos0);
+				if (tipsDrawNum >= USE_TEX_0[tipsCounts] - 1) { tips_ss_3[0].position = ConvertXMFLOAT3toXMVECTOR(ssPos1); }
+				else { tips_ss_3[tipsDrawNum + 1].position = ConvertXMFLOAT3toXMVECTOR(ssPos1); }
+
+				if (tips_easeTimer == 1.0f)
+				{
+					tips_ss_3[tipsDrawNum].position = ConvertXMFLOAT3toXMVECTOR(
+						XMFLOAT3(START_X - SIZE_X, START_Y, 0)
+					);
+
+					tipsDrawNum++;
+					if (tipsDrawNum > USE_TEX_0[tipsCounts] - 1) { tipsDrawNum = 0; }
+					tips_easeTimer = 0;
+					moveTips = false;
+				}
+			}
+
+			else if (tipsCounts == 4)
+			{
+				//åªç›ï`âÊÇ≥ÇÍÇƒÇÈtips
+				XMFLOAT3 ssPos0 = ConvertXMVECTORtoXMFLOAT3(tips_ss_4[tipsDrawNum].position);
+				//Ç±ÇÍÇ©ÇÁï`âÊÇ≥ÇÍÇÈtips
+				XMFLOAT3 ssPos1 = { 0,0,0 };
+				if (tipsDrawNum >= USE_TEX_0[tipsCounts] - 1) { ssPos1 = ConvertXMVECTORtoXMFLOAT3(tips_ss_4[0].position); }
+				else { ssPos1 = ConvertXMVECTORtoXMFLOAT3(tips_ss_4[tipsDrawNum + 1].position); }
+
+				XMFLOAT3 ssPos0_Goal = { START_X + SIZE_X,START_Y,0 };
+				XMFLOAT3 ssPos1_Goal = { START_X,START_Y,0 };
+
+				if (tips_easeTimer < 1.0f) { tips_easeTimer += EASE_ADD_TIMER; }
+				if (tips_easeTimer > 1.0f) { tips_easeTimer = 1.0f; }
+
+				ssPos0 = ShlomonMath::EaseInQuad(ssPos0, ssPos0_Goal, tips_easeTimer);
+				ssPos1 = ShlomonMath::EaseInQuad(ssPos1, ssPos1_Goal, tips_easeTimer);
+
+				tips_ss_4[tipsDrawNum].position = ConvertXMFLOAT3toXMVECTOR(ssPos0);
+				if (tipsDrawNum >= USE_TEX_0[tipsCounts] - 1) { tips_ss_4[0].position = ConvertXMFLOAT3toXMVECTOR(ssPos1); }
+				else { tips_ss_4[tipsDrawNum + 1].position = ConvertXMFLOAT3toXMVECTOR(ssPos1); }
+
+				if (tips_easeTimer == 1.0f)
+				{
+					tips_ss_4[tipsDrawNum].position = ConvertXMFLOAT3toXMVECTOR(
+						XMFLOAT3(START_X - SIZE_X, START_Y, 0)
+					);
+
+					tipsDrawNum++;
+					if (tipsDrawNum > USE_TEX_0[tipsCounts] - 1) { tipsDrawNum = 0; }
+					tips_easeTimer = 0;
+					moveTips = false;
+				}
+			}
+
+			else if (tipsCounts == 5)
+			{
+				//åªç›ï`âÊÇ≥ÇÍÇƒÇÈtips
+				XMFLOAT3 ssPos0 = ConvertXMVECTORtoXMFLOAT3(tips_ss_5[tipsDrawNum].position);
+				//Ç±ÇÍÇ©ÇÁï`âÊÇ≥ÇÍÇÈtips
+				XMFLOAT3 ssPos1 = { 0,0,0 };
+				if (tipsDrawNum >= USE_TEX_0[tipsCounts] - 1) { ssPos1 = ConvertXMVECTORtoXMFLOAT3(tips_ss_5[0].position); }
+				else { ssPos1 = ConvertXMVECTORtoXMFLOAT3(tips_ss_5[tipsDrawNum + 1].position); }
+
+				XMFLOAT3 ssPos0_Goal = { START_X + SIZE_X,START_Y,0 };
+				XMFLOAT3 ssPos1_Goal = { START_X,START_Y,0 };
+
+				if (tips_easeTimer < 1.0f) { tips_easeTimer += EASE_ADD_TIMER; }
+				if (tips_easeTimer > 1.0f) { tips_easeTimer = 1.0f; }
+
+				ssPos0 = ShlomonMath::EaseInQuad(ssPos0, ssPos0_Goal, tips_easeTimer);
+				ssPos1 = ShlomonMath::EaseInQuad(ssPos1, ssPos1_Goal, tips_easeTimer);
+
+				tips_ss_5[tipsDrawNum].position = ConvertXMFLOAT3toXMVECTOR(ssPos0);
+				if (tipsDrawNum >= USE_TEX_0[tipsCounts] - 1) { tips_ss_5[0].position = ConvertXMFLOAT3toXMVECTOR(ssPos1); }
+				else { tips_ss_5[tipsDrawNum + 1].position = ConvertXMFLOAT3toXMVECTOR(ssPos1); }
+
+				if (tips_easeTimer == 1.0f)
+				{
+					tips_ss_5[tipsDrawNum].position = ConvertXMFLOAT3toXMVECTOR(
+						XMFLOAT3(START_X - SIZE_X, START_Y, 0)
+					);
+
+					tipsDrawNum++;
+					if (tipsDrawNum > USE_TEX_0[tipsCounts] - 1) { tipsDrawNum = 0; }
+					tips_easeTimer = 0;
+					moveTips = false;
+				}
+			}
+
+			else if (tipsCounts == 6)
+			{
+				//åªç›ï`âÊÇ≥ÇÍÇƒÇÈtips
+				XMFLOAT3 ssPos0 = ConvertXMVECTORtoXMFLOAT3(tips_ss_6[tipsDrawNum].position);
+				//Ç±ÇÍÇ©ÇÁï`âÊÇ≥ÇÍÇÈtips
+				XMFLOAT3 ssPos1 = { 0,0,0 };
+				if (tipsDrawNum >= USE_TEX_0[tipsCounts] - 1) { ssPos1 = ConvertXMVECTORtoXMFLOAT3(tips_ss_6[0].position); }
+				else { ssPos1 = ConvertXMVECTORtoXMFLOAT3(tips_ss_6[tipsDrawNum + 1].position); }
+
+				XMFLOAT3 ssPos0_Goal = { START_X + SIZE_X,START_Y,0 };
+				XMFLOAT3 ssPos1_Goal = { START_X,START_Y,0 };
+
+				if (tips_easeTimer < 1.0f) { tips_easeTimer += EASE_ADD_TIMER; }
+				if (tips_easeTimer > 1.0f) { tips_easeTimer = 1.0f; }
+
+				ssPos0 = ShlomonMath::EaseInQuad(ssPos0, ssPos0_Goal, tips_easeTimer);
+				ssPos1 = ShlomonMath::EaseInQuad(ssPos1, ssPos1_Goal, tips_easeTimer);
+
+				tips_ss_6[tipsDrawNum].position = ConvertXMFLOAT3toXMVECTOR(ssPos0);
+				if (tipsDrawNum >= USE_TEX_0[tipsCounts] - 1) { tips_ss_6[0].position = ConvertXMFLOAT3toXMVECTOR(ssPos1); }
+				else { tips_ss_6[tipsDrawNum + 1].position = ConvertXMFLOAT3toXMVECTOR(ssPos1); }
+
+				if (tips_easeTimer == 1.0f)
+				{
+					tips_ss_6[tipsDrawNum].position = ConvertXMFLOAT3toXMVECTOR(
+						XMFLOAT3(START_X - SIZE_X, START_Y, 0)
+					);
+
+					tipsDrawNum++;
+					if (tipsDrawNum > USE_TEX_0[tipsCounts] - 1) { tipsDrawNum = 0; }
+					tips_easeTimer = 0;
+					moveTips = false;
+				}
 			}
 		}
 	}
@@ -1840,9 +2091,54 @@ void GameScene::GameDraw()
 	if (isTipsDraw)
 	{
 		isTipsDrawTrigger = true;
-		tips_ss[0].SpriteDraw();
-		tips_ss[1].SpriteDraw();
-		tips_ss[2].SpriteDraw();
+		if (tipsCounts == 0)
+		{
+			tips_ss[0].SpriteDraw();
+			tips_ss[1].SpriteDraw();
+			tips_ss[2].SpriteDraw();
+		}
+		else if (tipsCounts == 1)
+		{
+			tips_ss_1[0].SpriteDraw();
+			tips_ss_1[1].SpriteDraw();
+			tips_ss_1[2].SpriteDraw();
+		}
+		else if (tipsCounts == 2)
+		{
+			tips_ss_2[0].SpriteDraw();
+			tips_ss_2[1].SpriteDraw();
+			tips_ss_2[2].SpriteDraw();
+		}
+		else if (tipsCounts == 3)
+		{
+			tips_ss_3[0].SpriteDraw();
+			tips_ss_3[1].SpriteDraw();
+		}
+		else if (tipsCounts == 4)
+		{
+			tips_ss_4[0].SpriteDraw();
+			tips_ss_4[1].SpriteDraw();
+			tips_ss_4[2].SpriteDraw();
+		}
+		else if (tipsCounts == 5)
+		{
+			tips_ss_5[0].SpriteDraw();
+			tips_ss_5[1].SpriteDraw();
+			tips_ss_5[2].SpriteDraw();
+			tips_ss_5[3].SpriteDraw();
+			tips_ss_5[4].SpriteDraw();
+		}
+		else if (tipsCounts == 6)
+		{
+			tips_ss_6[0].SpriteDraw();
+			tips_ss_6[1].SpriteDraw();
+			tips_ss_6[2].SpriteDraw();
+			tips_ss_6[3].SpriteDraw();
+			tips_ss_6[4].SpriteDraw();
+			tips_ss_6[5].SpriteDraw();
+			tips_ss_6[6].SpriteDraw();
+		}
+
 		tips_frame.SpriteDraw();
 		tips_name[tipsCounts].SpriteDraw();
 		if (tipsCounts < 5) { tips_system[0].SpriteDraw(); }

@@ -324,7 +324,15 @@ public://シーンで使うもの
 	//tips用
 	const int CHANGE_TIMER_FRAME = 90;	//tipsの中身が切り替わるフレーム
 	const int FIRST_SS_DELAY = 180;		//最初のスクショのディレイ
-	const int USE_TEX_0 = 3;			//tips_0で使うテクスチャの数
+	const int USE_TEX_0[7] = {			//tips_0で使うテクスチャの数
+		3,
+		3,
+		3,
+		2,
+		3,
+		5,
+		7
+	};
 	const float EASE_ADD_TIMER = 0.005f;//加算されるタイマー	
 	const float SIZE_X = 768;			//tipsの中身の画像サイズ_X
 	const float SIZE_Y = 432;			//tipsの中身の画像サイズ_Y
@@ -345,12 +353,12 @@ public://シーンで使うもの
 	//const int USE_TEX_5 = 3;			//tips_5で使うテクスチャの数
 	//const int USE_TEX_6 = 3;			//tips_6で使うテクスチャの数
 
-	//Sprite tips_ss_1[3];					//tips_1中身
-	//Sprite tips_ss_2[3];					//tips_2中身
-	//Sprite tips_ss_3[3];					//tips_3中身
-	//Sprite tips_ss_4[3];					//tips_4中身
-	//Sprite tips_ss_5[3];					//tips_5中身
-	//Sprite tips_ss_6[3];					//tips_6中身
+	Sprite tips_ss_1[3];					//tips_1中身
+	Sprite tips_ss_2[3];					//tips_2中身
+	Sprite tips_ss_3[2];					//tips_3中身
+	Sprite tips_ss_4[3];					//tips_4中身
+	Sprite tips_ss_5[5];					//tips_5中身
+	Sprite tips_ss_6[7];					//tips_6中身
 
 	float size = 0;
 	/*----------新tips用----------*/
