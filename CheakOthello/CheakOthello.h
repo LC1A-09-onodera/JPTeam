@@ -70,6 +70,8 @@ private:
 
 	bool reachCheck[8][8] = { false };
 
+	bool isSamePos = false;
+
 	//bool isSideSame = false;
 
 public:
@@ -97,6 +99,7 @@ public:
 	const int GetMaxCombo() { return maxCombo; }
 	const int GetTotalReverceCount() { return totalReverceCount; }
 	const vector<pair<int, int>> GetCompletePos() { return completePos; }
+	const bool GetSamePlayer() { return isSamePos; }
 
 private:
 	//盤面チェック
@@ -122,4 +125,20 @@ private:
 	}
 
 	void ResetAddScore() { addScore = 0; }
+
+	//自機と消せるマスの位置判定
+	void CheckPlayerMath(pair<int, int> pos)
+	{
+		isSamePos = false;
+		for (auto itr = completePos.begin(); itr != completePos.end(); ++itr)
+		{
+			if (pos.first == itr->first)
+			{
+				if (pos.second == itr->second)
+				{
+					isSamePos = true;
+				}
+			}
+		}
+	};
 };
