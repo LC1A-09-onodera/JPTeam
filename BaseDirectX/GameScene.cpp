@@ -2175,18 +2175,28 @@ void GameScene::ResultDraw()
 		const int rankB = 30000;
 		const int rankA = 200000;
 		const int rankS = 999999;
-		nowScore = 1000000;
+		nowScore = 2000;
 
 		XMFLOAT3 max_size = { 3.5f,3.5f,3.5f };
 		XMFLOAT3 goal_size = { 1.5f,1.5f,1.5f };
+		XMFLOAT3 rankA_goal_size = { 2.0f,2.0f,2.0f };
 
 		XMFLOAT4 rankPos = { 0.0f, 12.0f, -7.0f, 1.0f };
 		XMFLOAT3 rankRot = { -70.0f, 0.0f, 0.0f };
 		if (rankEase1 < 1.0f)
 		{
-			rankScale = ShlomonMath::EaseInQuad(rankNormalSize, max_size, rankEase1);
-			rankEase1 += 0.05f;
-			if (rankEase1 > 1.0f) { rankScale = ShlomonMath::EaseInQuad(rankNormalSize, max_size, rankEase1); }
+			if (nowScore > rankA)
+			{
+				rankScale = ShlomonMath::EaseInQuad(rankNormalSize, max_size, rankEase1);
+				rankEase1 += 0.05f;
+				if (rankEase1 > 1.0f) { rankScale = ShlomonMath::EaseInQuad(rankNormalSize, max_size, rankEase1); }
+			}
+			else
+			{
+				rankScale = ShlomonMath::EaseInQuad(rankNormalSize, rankA_goal_size, rankEase1);
+				rankEase1 += 0.05f;
+				if (rankEase1 > 1.0f) { rankScale = ShlomonMath::EaseInQuad(rankNormalSize, rankA_goal_size, rankEase1); }
+			}
 		}
 		else if (rankEase2 < 1.0f)
 		{
@@ -2201,7 +2211,7 @@ void GameScene::ResultDraw()
 			}
 			else
 			{
-				rankScale = ShlomonMath::EaseInQuad(max_size, goal_size, rankEase2);
+				rankScale = ShlomonMath::EaseInQuad(rankA_goal_size, goal_size, rankEase2);
 				rankEase2 += 0.02f;
 			}
 		}
