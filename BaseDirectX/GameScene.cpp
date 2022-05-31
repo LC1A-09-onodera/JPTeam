@@ -2220,7 +2220,7 @@ void GameScene::ResultDraw()
 		const int rankB = 30000;
 		const int rankA = 200000;
 		const int rankS = 999999;
-		nowScore = 2000;
+		//nowScore = 2000;
 
 		XMFLOAT3 max_size = { 3.5f,3.5f,3.5f };
 		XMFLOAT3 goal_size = { 1.5f,1.5f,1.5f };
