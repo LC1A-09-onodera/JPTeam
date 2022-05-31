@@ -1215,9 +1215,54 @@ void GameScene::GameUpdate()
 			tips_text[tipsCounts].position = { TEXT_START_X[tipsCounts] + window_width,TEXT_START_Y,0,0 };
 
 			tipsDrawNum = 0;
-			tips_ss[0].position = { START_X,START_Y,0,0 };
-			tips_ss[1].position = { START_X - SIZE_X,START_Y,0,0 };
-			tips_ss[2].position = { START_X - SIZE_X,START_Y,0,0 };
+			if (tipsCounts == 0)
+			{
+				tips_ss[0].position = { START_X,START_Y,0,0 };
+				tips_ss[1].position = { START_X - SIZE_X,START_Y,0,0 };
+				tips_ss[2].position = { START_X - SIZE_X,START_Y,0,0 };
+			}
+			else if (tipsCounts == 1)
+			{
+				tips_ss_1[0].position = { START_X,START_Y,0,0 };
+				tips_ss_1[1].position = { START_X - SIZE_X,START_Y,0,0 };
+				tips_ss_1[2].position = { START_X - SIZE_X,START_Y,0,0 };
+			}
+			else if (tipsCounts == 2)
+			{
+				tips_ss_2[0].position = { START_X,START_Y,0,0 };
+				tips_ss_2[1].position = { START_X - SIZE_X,START_Y,0,0 };
+				tips_ss_2[2].position = { START_X - SIZE_X,START_Y,0,0 };
+			}
+			else if (tipsCounts == 3)
+			{
+				tips_ss_3[0].position = { START_X,START_Y,0,0 };
+				tips_ss_3[1].position = { START_X - SIZE_X,START_Y,0,0 };
+			}
+			else if (tipsCounts == 4)
+			{
+				tips_ss_4[0].position = { START_X,START_Y,0,0 };
+				tips_ss_4[1].position = { START_X - SIZE_X,START_Y,0,0 };
+				tips_ss_4[2].position = { START_X - SIZE_X,START_Y,0,0 };
+			}
+			else if (tipsCounts == 5)
+			{
+				tips_ss_5[0].position = { START_X,START_Y,0,0 };
+				tips_ss_5[1].position = { START_X - SIZE_X,START_Y,0,0 };
+				tips_ss_5[2].position = { START_X - SIZE_X,START_Y,0,0 };
+				tips_ss_5[3].position = { START_X - SIZE_X,START_Y,0,0 };
+				tips_ss_5[4].position = { START_X - SIZE_X,START_Y,0,0 };
+			}
+			else if (tipsCounts == 6)
+			{
+
+				tips_ss_6[0].position = { START_X,START_Y,0,0 };
+				tips_ss_6[1].position = { START_X - SIZE_X,START_Y,0,0 };
+				tips_ss_6[2].position = { START_X - SIZE_X,START_Y,0,0 };
+				tips_ss_6[3].position = { START_X - SIZE_X,START_Y,0,0 };
+				tips_ss_6[4].position = { START_X - SIZE_X,START_Y,0,0 };
+				tips_ss_6[5].position = { START_X - SIZE_X,START_Y,0,0 };
+				tips_ss_6[6].position = { START_X - SIZE_X,START_Y,0,0 };
+			}
 			isInit = false;
 		}
 	}
