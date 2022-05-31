@@ -1924,6 +1924,10 @@ void GameScene::GameDraw()
 	}
 	if (isToDojo && !isTipsDraw && isCameraModed && countDown <= 0)
 	{
+		if (isSceneChange || isResultSceneChange)
+		{
+			othelloManager.DojoDrawErace();
+		}
 		//‚±‚±‚Ådojo‚Ìdraw
 		othelloManager.DojoDraw();
 	}
@@ -2196,7 +2200,6 @@ void GameScene::ResultDraw()
 		const int rankB = 30000;
 		const int rankA = 200000;
 		const int rankS = 999999;
-		//nowScore = 1000000;
 
 		XMFLOAT3 max_size = { 3.5f,3.5f,3.5f };
 		XMFLOAT3 goal_size = { 1.5f,1.5f,1.5f };
@@ -3311,7 +3314,7 @@ void GameScene::ToModeSelect()
 	isTipsButtonDraw = false;
 	//
 	isModeSelect = true;
-
+	othelloManager.DojoDrawErace();
 	isTipsOk = false;
 	isStageDisplay = false;
 	goToGameTime = 0.0f;
