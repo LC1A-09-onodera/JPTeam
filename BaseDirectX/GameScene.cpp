@@ -524,7 +524,7 @@ void GameScene::TitleUpdate()
 				Draw3DObject(ObjectParticles::othello2.object);
 			}
 		}
-		
+
 		if (!isPouse)
 		{
 			ObjectParticles::Update(othelloManager.GetPressPanellPos(), checkObject.GetCombo());
@@ -2168,6 +2168,9 @@ void GameScene::ResultDraw()
 	}
 	nowScore = checkObject.GetScore();
 
+	//•]‰¿‚Ì•¶Žš•`‰æ
+	const XMFLOAT3 max_size = { 3.0f,3.0f,3.0f };
+	const XMFLOAT3 goal_size = { 1.5f,1.5f,1.5f };
 	XMFLOAT4 rankPos = { 16.0f, 12.0f, -12.0f, 1.0f };
 	XMFLOAT3 rankRot = { -70.0f, 0.0f, 0.0f };
 	if (rankEase1 < 1.0f)
@@ -2184,7 +2187,13 @@ void GameScene::ResultDraw()
 	{
 		rankScale = ShlomonMath::EaseInQuad(rankMaxSize, rankNormalSize, 1.0f);
 	}
-	if (nowScore <= 1000)
+
+	const int rankC = 1000;
+	const int rankB = 50000;
+	const int rankA = 300000;
+	const int rankS = 999999;
+
+	if (nowScore <= rankC)
 	{
 		rankModel[0].each.scale = rankScale;
 		rankModel[0].each.position = { rankPos.x, rankPos.y, rankPos.z, rankPos.w };
@@ -2192,7 +2201,7 @@ void GameScene::ResultDraw()
 		rankModel[0].Update();
 		Draw3DObject(rankModel[0]);
 	}
-	else if (nowScore <= 50000)
+	else if (nowScore <= rankB)
 	{
 		rankModel[1].each.scale = rankScale;
 		rankModel[1].each.position = { rankPos.x, rankPos.y, rankPos.z, rankPos.w };
@@ -2200,7 +2209,7 @@ void GameScene::ResultDraw()
 		rankModel[1].Update();
 		Draw3DObject(rankModel[1]);
 	}
-	else if (nowScore <= 300000)
+	else if (nowScore <= rankA)
 	{
 		rankModel[2].each.scale = rankScale;
 		rankModel[2].each.position = { rankPos.x, rankPos.y, rankPos.z, rankPos.w };
@@ -2208,7 +2217,7 @@ void GameScene::ResultDraw()
 		rankModel[2].Update();
 		Draw3DObject(rankModel[2]);
 	}
-	else if (nowScore <= 999999)
+	else if (nowScore <= rankS)
 	{
 		rankModel[3].each.scale = rankScale;
 		rankModel[3].each.position = { rankPos.x, rankPos.y, rankPos.z, rankPos.w };
