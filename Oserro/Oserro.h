@@ -68,6 +68,8 @@ enum BookendFlow
 	BookEnd2,
 	BookEnd3,
 	BookEnd4,
+	BookEnd5,
+	BookEnd6,
 	BookEndEnd,
 };
 
@@ -591,6 +593,12 @@ private:
 
 	void BookendForceSpawn();
 	void BookendForceUpdate(int AlivePanel, int ComboCount, bool isOn = true);
+
+	void BookendFifthSpawn();
+	void BookendFifthUpdate(int AlivePanel, int ComboCount, bool isOn = true);
+
+	void BookendSixesSpawn();
+	void BookendSixesUpdate(int AlivePanel, int ComboCount, bool isOn = true);
 #pragma endregion
 
 private:
