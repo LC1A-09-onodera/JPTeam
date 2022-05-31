@@ -921,18 +921,19 @@ void OthelloManager::Init(Tex num[10], Model numModel[10])
 		e.ChangeSize(1280, 300);
 		e.position = XMVECTOR{ 0, 720 - (300 + 30), 0, 0 };
 	}
-	BookendText.resize(11);
+	BookendText.resize(12);
 	BookendText[0].CreateSprite(L"Resource/Img/bookend_text/bookend_text_0.png", XMFLOAT3{});
 	BookendText[1].CreateSprite(L"Resource/Img/bookend_text/bookend_text_1.png", XMFLOAT3{});
 	BookendText[2].CreateSprite(L"Resource/Img/bookend_text/bookend_text_2.png", XMFLOAT3{});
 	BookendText[3].CreateSprite(L"Resource/Img/bookend_text/bookend_text_3.png", XMFLOAT3{});
 	BookendText[4].CreateSprite(L"Resource/Img/bookend_text/bookend_text_4.png", XMFLOAT3{});
 	BookendText[5].CreateSprite(L"Resource/Img/bookend_text/bookend_text_5.png", XMFLOAT3{});
-	BookendText[6].CreateSprite(L"Resource/Img/bookend_text/bookend_text_6.png", XMFLOAT3{});
-	BookendText[7].CreateSprite(L"Resource/Img/bookend_text/bookend_text_7.png", XMFLOAT3{});
-	BookendText[8].CreateSprite(L"Resource/Img/bookend_text/bookend_text_8.png", XMFLOAT3{});
-	BookendText[9].CreateSprite(L"Resource/Img/bookend_text/bookend_text_9.png", XMFLOAT3{});
-	BookendText[10].CreateSprite(L"Resource/Img/bookend_text/bookend_text_10.png", XMFLOAT3{});
+	BookendText[6].CreateSprite(L"Resource/Img/bookend_text/bookend_text_11.png", XMFLOAT3{});
+	BookendText[7].CreateSprite(L"Resource/Img/bookend_text/bookend_text_6.png", XMFLOAT3{});
+	BookendText[8].CreateSprite(L"Resource/Img/bookend_text/bookend_text_7.png", XMFLOAT3{});
+	BookendText[9].CreateSprite(L"Resource/Img/bookend_text/bookend_text_8.png", XMFLOAT3{});
+	BookendText[10].CreateSprite(L"Resource/Img/bookend_text/bookend_text_9.png", XMFLOAT3{});
+	BookendText[11].CreateSprite(L"Resource/Img/bookend_text/bookend_text_10.png", XMFLOAT3{});
 	for (auto &e : BookendText)
 	{
 		e.ChangeSize(1280, 300);
@@ -951,13 +952,15 @@ void OthelloManager::Init(Tex num[10], Model numModel[10])
 #pragma endregion
 
 #pragma region Bookend
-	BookendObject.resize(1);
+	BookendObject.resize(8);
+	int BookendPos = 0;
 	for (auto &e : BookendObject)
 	{
 		e.Init(&oserroModel, &stopOserroModel, &compModel);
-		e.Spawn(NORMAL, 0, 0, true);
+		e.Spawn(NORMAL, BookendPos, 0, true);
 		e.Update(0, false);
 		e.isAlpha = true;
+		BookendPos++;
 	}
 #pragma endregion
 
@@ -1257,6 +1260,10 @@ void OthelloManager::NormaUpdate(int combo)
 void OthelloManager::Draw(bool isChanceDraw, bool isCompDraw)
 {
 	OthelloDraw();
+	if (isDojoDraw)
+	{
+		DojoObjectDraw();
+	}
 	if (isChanceDraw)
 	{
 		ChanceDraw();
@@ -1265,10 +1272,7 @@ void OthelloManager::Draw(bool isChanceDraw, bool isCompDraw)
 	{
 		CompDraw();
 	}
-	if (isDojoDraw)
-	{
-		DojoObjectDraw();
-	}
+
 }
 
 void OthelloManager::OthelloDraw()
@@ -2222,6 +2226,12 @@ void OthelloManager::BookendUpdate(int AlivePanel, int ComboCount, bool isOn)
 	case BookEnd4:
 		BookendForceUpdate(AlivePanel, ComboCount, isOn);
 		break;
+	case BookEnd5:
+		BookendFifthUpdate(AlivePanel, ComboCount, isOn);
+		break;
+	case BookEnd6:
+		BookendSixesUpdate(AlivePanel, ComboCount, isOn);
+		break;
 	case BookEndEnd:
 		break;
 	default:
@@ -2247,7 +2257,11 @@ void OthelloManager::BookendFirstSpwan()
 	{
 		SetSpawnPanel(i, 0, true);
 	}
+	BookendObject[0].Spawn(NORMAL, 0, 0, false);
+	BookendObject[6].Spawn(NORMAL, 6, 1, false);
+	isDojoDraw = true;
 	SetSpawnPlayer(7, 0);
+
 }
 //Ï
 void OthelloManager::BookendFirstUpdate(int AlivePanel, int ComboCount, bool isOn)
@@ -2258,31 +2272,30 @@ void OthelloManager::BookendFirstUpdate(int AlivePanel, int ComboCount, bool isO
 		{
 			TextCount++;
 		}
-		if (TextCount > 5)
+		if (TextCount > 3)
 		{
 			isAct = true;
 		}
 	}
 	else
 	{
-		if (AlivePanel <= 1)
+		if (isOn)
 		{
 			BookendSecondSpawn();
 		}
 	}
 }
 
-//Ï
+//2
 void OthelloManager::BookendSecondSpawn()
 {
 	isAct = false;
-	for (int i = 2; i < 6; i++)
-	{
-		SetSpawnPanel(7, i, false);
-	}
 	nowBookendFlow = BookEnd2;
+
+	BookendObject[6].Spawn(NORMAL, 7, 1, true);
+	isDojoDraw = true;
+
 }
-//Ï
 void OthelloManager::BookendSecondUpdate(int AlivePanel, int ComboCount, bool isOn)
 {
 	if (!isAct)
@@ -2291,47 +2304,64 @@ void OthelloManager::BookendSecondUpdate(int AlivePanel, int ComboCount, bool is
 		{
 			TextCount++;
 		}
-		if (TextCount > 8)
+		if (TextCount > 6)
 		{
 			isAct = true;
 		}
 	}
 	else
 	{
-		if (AlivePanel <= 1)
+		if (isOn)
 		{
 			BookendThirdSpawn();
 		}
 	}
 }
 
-//Ï
+//3
 void OthelloManager::BookendThirdSpawn()
 {
-	isAct = false;
-	for (int i = 0; i < 6; i++)
-	{
-		SetSpawnPanel(i, 5, true);
-	}
+	isAct = true;
 	nowBookendFlow = BookEnd3;
+	BookendObject[7].Spawn(NORMAL, 6, 0, false);
 }
-//Ï
 void OthelloManager::BookendThirdUpdate(int AlivePanel, int ComboCount, bool isOn)
 {
-	if (AlivePanel <= 1)
+	if (isOn)
 	{
-		isAct = false;
-
-		if (A())
-		{
-			TextCount++;
-		}
-		if (TextCount > 10)
-		{
-			nowBookendFlow = BookEndEnd;
-		}
+		BookendForceSpawn();
 	}
-	else if (!isAct)
+}
+
+//4
+void OthelloManager::BookendForceSpawn()
+{
+	isAct = true;
+	nowBookendFlow = BookEnd4;
+}
+void OthelloManager::BookendForceUpdate(int AlivePanel, int ComboCount, bool isOn)
+{
+
+		if (AlivePanel <= 7)
+		{
+			BookendFifthSpawn();
+		}
+}
+
+//Ï
+void OthelloManager::BookendFifthSpawn()
+{
+	isAct = false;
+	for (int i = 2; i < 6; i++)
+	{
+		SetSpawnPanel(7, i, false);
+	}
+	nowBookendFlow = BookEnd5;
+}
+//Ï
+void OthelloManager::BookendFifthUpdate(int AlivePanel, int ComboCount, bool isOn)
+{
+	if (!isAct)
 	{
 		if (A())
 		{
@@ -2342,29 +2372,61 @@ void OthelloManager::BookendThirdUpdate(int AlivePanel, int ComboCount, bool isO
 			isAct = true;
 		}
 	}
-}
-
-//–¢
-void OthelloManager::BookendForceSpawn()
-{
-
-}
-//–¢
-void OthelloManager::BookendForceUpdate(int AlivePanel, int ComboCount, bool isOn)
-{
-	if (!isAct)
-	{
-
-	}
 	else
 	{
-		if (/*ƒNƒŠƒA*/false)
+		if (AlivePanel <= 1)
 		{
+			BookendSixesSpawn();
+		}
+	}
+}
 
+//Ï
+void OthelloManager::BookendSixesSpawn()
+{
+	isAct = false;
+	for (int i = 0; i < 6; i++)
+	{
+		SetSpawnPanel(i, 5, true);
+	}
+	nowBookendFlow = BookEnd6;
+}
+//Ï
+void OthelloManager::BookendSixesUpdate(int AlivePanel, int ComboCount, bool isOn)
+{
+	if (AlivePanel <= 1)
+	{
+		isAct = false;
+
+		if (A())
+		{
+			TextCount++;
+		}
+		if (TextCount > 11)
+		{
+			nowBookendFlow = BookEndEnd;
+		}
+	}
+	else if (!isAct)
+	{
+		if (A())
+		{
+			TextCount++;
+		}
+		if (TextCount > 10)
+		{
+			isAct = true;
 		}
 	}
 }
 #pragma endregion
+
+
+
+
+
+
+
 
 void OthelloManager::ModeSelectUpdate()
 {
@@ -3456,7 +3518,7 @@ void OthelloManager::SpawnPanel(bool isInGame)
 		itr = othellos.begin();
 		for (; itr != othellos.end(); itr++)
 		{
-			if (itr->GetGameData()->widthPos == x && itr->GetGameData()->heightPos == y || (playerPanelPos == panelPos{x, y}))
+			if (itr->GetGameData()->widthPos == x && itr->GetGameData()->heightPos == y || (playerPanelPos == panelPos{ x, y }))
 			{
 				if (itr->GetGameData()->type == NORMAL)
 				{
