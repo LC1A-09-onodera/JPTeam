@@ -616,6 +616,19 @@ void GameScene::GameUpdate()
 				gameTime = gameMaxTime;
 				ToGame4(true, false, true);
 				titleSelectNum = 0;
+
+				if (othelloManager.dojoType == DojoType::Bookend)
+				{
+					tipsCounts = 5;
+				}
+				else if (othelloManager.dojoType == DojoType::Conect)
+				{
+					tipsCounts = 4;
+				}
+				else if (othelloManager.dojoType == DojoType::Waltz)
+				{
+					tipsCounts = 6;
+				}
 			}
 #pragma endregion
 		}
@@ -638,6 +651,11 @@ void GameScene::GameUpdate()
 			{
 				//チュートリアルのアップデート
 				othelloManager.TutorialUpdate(checkObject.GetCombo());
+				
+				if (othelloManager.tutorialEndFlag)
+				{
+					NormaToModeSelect();
+				}
 			}
 			else
 			{
@@ -1831,7 +1849,10 @@ void GameScene::GameDraw()
 	}
 	ObjectParticles::Draw();
 	ParticleControl::Draw();
-	if (!isPouseToTiTle)othelloManager.Draw(isSupport, isSupport);
+	if (!isPouseToTiTle)
+	{
+		othelloManager.Draw(isSupport, isSupport);
+	}
 	if (countDown > 0 && isSceneChange == false && isModeSelect == false)
 	{
 		XMFLOAT3 scale = { 0.7f, 0.7f, 0.7f };
@@ -1891,7 +1912,7 @@ void GameScene::GameDraw()
 
 	}
 
-	if (gameTime > 0 && countDown <= 0 && !isTutorial)
+	if (gameTime > 0 && countDown <= 0 && !isTutorial && !isToDojo)
 	{
 		if (!isPouseToTiTle)
 		{
@@ -1942,12 +1963,16 @@ void GameScene::GameDraw()
 	{
 		othelloManager.ModeSelectModelDraw(true);
 	}
-	if (gameTime > 0 && countDown <= 0 && isTutorial)
+	if (!isToDojo && gameTime > 0 && countDown <= 0 && isTutorial)
 	{
 		othelloManager.TutorialTextDraw();
 	}
 	if (isToDojo && !isTipsDraw && isCameraModed && countDown <= 0)
 	{
+		if (isSceneChange || isResultSceneChange)
+		{
+			othelloManager.DojoDrawErace();
+		}
 		//ここでdojoのdraw
 		othelloManager.DojoDraw();
 	}
@@ -2220,7 +2245,6 @@ void GameScene::ResultDraw()
 		const int rankB = 30000;
 		const int rankA = 200000;
 		const int rankS = 999999;
-		//nowScore = 2000;
 
 		XMFLOAT3 max_size = { 3.5f,3.5f,3.5f };
 		XMFLOAT3 goal_size = { 1.5f,1.5f,1.5f };
@@ -3345,7 +3369,7 @@ void GameScene::ToModeSelect()
 	isTipsButtonDraw = false;
 	//
 	isModeSelect = true;
-
+	othelloManager.DojoDrawErace();
 	isTipsOk = false;
 	isStageDisplay = false;
 	goToGameTime = 0.0f;

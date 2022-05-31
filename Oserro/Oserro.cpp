@@ -747,6 +747,25 @@ void OthelloManager::Init(Tex num[10], Model numModel[10])
 		stageCountTextItr++;
 		stageCount++;
 	}
+
+	tutorialTexts.resize(10);
+	tutorialTexts[0].CreateSprite(L"Resource/Img/tutorial/tutorial_0.png", XMFLOAT3(0, 0, 0));
+	tutorialTexts[1].CreateSprite(L"Resource/Img/tutorial/tutorial_1.png", XMFLOAT3(0, 0, 0));
+	tutorialTexts[2].CreateSprite(L"Resource/Img/tutorial/tutorial_2.png", XMFLOAT3(0, 0, 0));
+	tutorialTexts[3].CreateSprite(L"Resource/Img/tutorial/tutorial_4.png", XMFLOAT3(0, 0, 0));
+	tutorialTexts[4].CreateSprite(L"Resource/Img/tutorial/tutorial_5.png", XMFLOAT3(0, 0, 0));
+	tutorialTexts[5].CreateSprite(L"Resource/Img/tutorial/tutorial_6.png", XMFLOAT3(0, 0, 0));
+	tutorialTexts[6].CreateSprite(L"Resource/Img/tutorial/tutorial_7.png", XMFLOAT3(0, 0, 0));
+	tutorialTexts[7].CreateSprite(L"Resource/Img/tutorial/tutorial_8.png", XMFLOAT3(0, 0, 0));
+	tutorialTexts[8].CreateSprite(L"Resource/Img/tutorial/tutorial_9.png", XMFLOAT3(0, 0, 0));
+	tutorialTexts[9].CreateSprite(L"Resource/Img/tutorial/tutorial_10.png", XMFLOAT3(0, 0, 0));
+
+	float changeScale = 0.5f;
+	for (auto &e : tutorialTexts)
+	{
+		e.ChangeSize(1280, 300);
+		e.position = XMVECTOR{ 0, 720 - (300), 0, 0 };
+	}
 	TutorialText1.CreateSprite(L"Resource/Img/string_0.png", XMFLOAT3(0, 0, 0));
 	TutorialText2.CreateSprite(L"Resource/Img/string_01.png", XMFLOAT3(0, 0, 0));
 	TutorialText3.CreateSprite(L"Resource/Img/string_02.png", XMFLOAT3(0, 0, 0));
@@ -760,7 +779,6 @@ void OthelloManager::Init(Tex num[10], Model numModel[10])
 	NormaComboText.CreateSprite(L"Resource/Img/combo_UI.png", XMFLOAT3(0, 0, 0));
 	NormaScoreText.CreateSprite(L"Resource/Img/score_UI.png", XMFLOAT3(0, 0, 0));
 
-	float changeScale = 0.5f;
 
 	TutorialText1.ChangeSize(1227 * changeScale, 332 * changeScale);
 	TutorialText2.ChangeSize(1158 * changeScale, 207 * changeScale);
@@ -964,6 +982,12 @@ void OthelloManager::Init(Tex num[10], Model numModel[10])
 	}
 #pragma endregion
 
+#pragma region tutorial
+	tutorialOthello.Init(&oserroModel, &stopOserroModel, &compModel);
+	tutorialOthello.Spawn(NORMAL, 0, 0, true);
+	tutorialOthello.Update(0, false);
+	tutorialOthello.isAlpha = true;
+#pragma endregion
 }
 
 void OthelloManager::Update(int combo)
@@ -993,6 +1017,8 @@ void OthelloManager::Update(int combo)
 
 void OthelloManager::TutorialUpdate(int combo)
 {
+	isTutorialDraw = false;
+
 	//死ぬ
 	DeadPanel();
 
@@ -1020,9 +1046,10 @@ void OthelloManager::TutorialUpdate(int combo)
 	}
 	if (A())
 	{
+		TextCount++;
 		isFieldUpdate = true;
 	}
-	bool retry = (Input::KeyTrigger(DIK_R) || directInput->IsButtonPush(directInput->Button03));
+	bool retry = false;
 
 
 	switch (scenes)
@@ -1032,10 +1059,16 @@ void OthelloManager::TutorialUpdate(int combo)
 		break;
 
 	case TutorialSceneFlow::SandwichUpdate:
+
+		if (TextCount > 3)
+		{
+			isAct = true;
+		}
 		//全部消したらチュートリアル１クリア
-		if (panelCount <= 0)
+		if (playerPanelPos == TutorialStartPanel)
 		{
 			isTutorialClear = true;
+			isAct = false;
 		}
 
 		//チュートリアルクリアしたらタイマースタート
@@ -1050,10 +1083,6 @@ void OthelloManager::TutorialUpdate(int combo)
 			scenes = TutorialSceneFlow::ChainSpawn;
 			ObjectParticles::othelloFrame.DeleteAllParticle();
 		}
-		if (retry)
-		{
-			whySandwichSpawn();
-		}
 		break;
 
 
@@ -1062,9 +1091,19 @@ void OthelloManager::TutorialUpdate(int combo)
 		break;
 
 	case TutorialSceneFlow::ChainUpdate:
-		if (comboMax >= 2)
+
+		if (TextCount > 5)
+		{
+			isAct = true;
+		}
+		if (playerPanelPos == TutorialSecondPos)
 		{
 			isTutorialClear = true;
+			isAct = false;
+		}
+		else
+		{
+			isTutorialDraw = true;
 		}
 
 		//チュートリアルクリアしたらタイマースタート
@@ -1090,13 +1129,17 @@ void OthelloManager::TutorialUpdate(int combo)
 		break;
 
 	case TutorialSceneFlow::StepUpdate:
-		RandumSetPanel();
-		//SaveSpawn();
+
+		if (TextCount >= 9)
+		{
+			isAct = true;
+		}
 
 		TutorialEndTextCount++;
-		if (tutorialOnPlayer)
+		if (panelCount <= 0)
 		{
-			//isTutorialClear = true;
+			isTutorialClear = true;
+			isAct = false;
 		}
 
 		if (isTutorialClear)
@@ -1107,18 +1150,18 @@ void OthelloManager::TutorialUpdate(int combo)
 		if (TutorialTimer >= tutorialTimerLimit)
 		{
 			//scenes = TutorialSceneFlow::TutorialEnd;
-			ObjectParticles::othelloFrame.DeleteAllParticle();
+			tutorialEndFlag = true;
 		}
 
-		if (retry)
-		{
-			whyStepSpawn();
-		}
 		break;
 	case TutorialSceneFlow::TutorialEnd:
 		break;
 	default:
 		break;
+	}
+	if (TextCount >= tutorialTexts.size())
+	{
+		TextCount = tutorialTexts.size() -1;
 	}
 }
 
@@ -1133,14 +1176,14 @@ void OthelloManager::TutorialTextDraw()
 	//やり直しテキスト描画
 	//TutorialRetryText.SpriteDraw();
 
+
 	switch (scenes)
 	{
 	case TutorialSceneFlow::SandwichSpawn:
 		break;
 	case TutorialSceneFlow::SandwichUpdate:
-		back.position.m128_f32[1] = 500;
-		back.ChangeSize(1280, 280);
-		back.SpriteDraw();
+		//テキストの描画
+
 		if (isTutorialClear)
 		{
 			//CongraturationText.SpriteDraw();
@@ -1152,7 +1195,6 @@ void OthelloManager::TutorialTextDraw()
 		}
 		else
 		{
-			TutorialText1.SpriteDraw();
 		}
 
 		//テキストの描画
@@ -1161,9 +1203,7 @@ void OthelloManager::TutorialTextDraw()
 		break;
 	case TutorialSceneFlow::ChainUpdate:
 		//テキストの描画
-		back.position.m128_f32[1] = 550;
-		back.ChangeSize(1280, 280);
-		back.SpriteDraw();
+
 		if (isTutorialClear)
 		{
 			//CongraturationText.SpriteDraw();
@@ -1175,23 +1215,13 @@ void OthelloManager::TutorialTextDraw()
 		}
 		else
 		{
-			textChangeTimer++;
-			if (textChange)
-			{
-				TutorialText3.SpriteDraw();
-			}
-			else
-			{
-				TutorialText2.SpriteDraw();
-			}
 		}
 
 		break;
 	case TutorialSceneFlow::StepSpawn:
 		break;
 	case TutorialSceneFlow::StepUpdate:
-		back.position.m128_f32[1] = 550;
-		back.SpriteDraw();
+
 		if (isTutorialClear)
 		{
 			//CongraturationText.SpriteDraw();
@@ -1203,27 +1233,31 @@ void OthelloManager::TutorialTextDraw()
 		}
 		else
 		{
-			textChangeTimer++;
-			if (textChange)
+		}
+		if (isTutorialClear)
+		{
+			back.position.m128_f32[1] = 420;
+			back.ChangeSize(1280, 300);
+			back.SpriteDraw();
+			if (!isAct)
 			{
-				TutorialText5.SpriteDraw();
-			}
-			else
-			{
-				TutorialText4.SpriteDraw();
-			}
-			if (TutorialEndTextCount >= tutorialEndTextTimer)
-			{
-				TutorialText6.SpriteDraw();
+				tutorialTexts[TextCount].SpriteDraw();
 			}
 		}
-
 		//テキストの描画
 		break;
 	case TutorialSceneFlow::TutorialEnd:
+
 		break;
 	default:
 		break;
+	}
+	if (!isAct && !isTutorialClear)
+	{
+		back.position.m128_f32[1] = 420;
+		back.ChangeSize(1280, 300);
+		back.SpriteDraw();
+		tutorialTexts[TextCount].SpriteDraw();
 	}
 }
 
@@ -1263,6 +1297,11 @@ void OthelloManager::Draw(bool isChanceDraw, bool isCompDraw)
 	if (isDojoDraw)
 	{
 		DojoObjectDraw();
+	}
+	if (isTutorialDraw)
+	{
+		tutorialOthello.Update(1, false);
+		tutorialOthello.Draw();
 	}
 	if (isChanceDraw)
 	{
@@ -1498,6 +1537,8 @@ void OthelloManager::Move(const XMFLOAT3 &MousePos)
 void OthelloManager::ModeSelectStart(int stageNum, ModeSelectType type)
 {
 	isDojoDraw = false;
+	isTutorialDraw = false;
+	tutorialEndFlag = false;
 	XMFLOAT3 startPos = OthlloPlayer::GetPosition();
 	nowType = type;
 	startPos.z = 0.0f;
@@ -1721,6 +1762,11 @@ bool OthelloManager::DojoEnd()
 		break;
 	}
 	return isEnd;
+}
+
+void OthelloManager::DojoDrawErace()
+{
+	isDojoDraw = false;
 }
 
 //済
@@ -1976,7 +2022,7 @@ void OthelloManager::WaltzFirstSpwan()
 	nowWaltzFlow = Waltz1;
 	SetSpawnPanel(1, 1, false);
 	SetSpawnPanel(2, 1, true);
-
+	SetSpawnPlayer(1, 1);
 	WaltzObject[0].Spawn(NORMAL, 6, 1, true);
 	WaltzObject[1].Spawn(NORMAL, 7, 1, false);
 }
@@ -2342,10 +2388,10 @@ void OthelloManager::BookendForceSpawn()
 void OthelloManager::BookendForceUpdate(int AlivePanel, int ComboCount, bool isOn)
 {
 
-		if (AlivePanel <= 7)
-		{
-			BookendFifthSpawn();
-		}
+	if (AlivePanel <= 7)
+	{
+		BookendFifthSpawn();
+	}
 }
 
 //済
@@ -4398,34 +4444,6 @@ void TextModel::Update(EachInfo *each, XMMATRIX *addRot)
 	}
 
 }
-void OthelloManager::whySandwichSpawn()
-{
-	AllDeletePanel();
-
-	SetPlayerAndPanel(2, 4, false);
-	SetSpawnPanel(4, 4, false);
-	SetSpawnPanel(5, 4, true);
-
-	scenes = TutorialSceneFlow::SandwichUpdate;
-	TutorialTimer = 0;
-	isTutorialClear = false;
-}
-
-void OthelloManager::whyChainSpawn()
-{
-	AllDeletePanel();
-
-	SetSpawnPanel(4, 2, true);
-	SetSpawnPanel(4, 3, false);
-	SetPlayerAndPanel(3, 4, true);
-	SetSpawnPanel(4, 4, false);
-	SetSpawnPanel(5, 4, true);
-
-	scenes = TutorialSceneFlow::ChainUpdate;
-	TutorialTimer = 0;
-	isTutorialClear = false;
-
-}
 
 void OthelloManager::EraseChanceObject()
 {
@@ -4449,21 +4467,44 @@ void OthelloManager::SpawnChances(const vector<pair<int, int>> &pos)
 
 void OthelloManager::TutorialStart()
 {
+	tutorialEndFlag = false;
+	TextCount = 0;
 	whySandwichSpawn();
+}
+
+void OthelloManager::whySandwichSpawn()
+{
+	AllDeletePanel();
+	isAct = false;
+
+	SetSpawnPlayer(7, 0);
+	SetSpawnPanel(TutorialStartPanel.x, TutorialStartPanel.y, true);
+
+	scenes = TutorialSceneFlow::SandwichUpdate;
+	TutorialTimer = 0;
+	isTutorialClear = false;
+}
+
+void OthelloManager::whyChainSpawn()
+{
+	TextCount = 4;
+	isAct = false;
+	scenes = TutorialSceneFlow::ChainUpdate;
+	TutorialTimer = 0;
+	isTutorialClear = false;
+
 }
 
 void OthelloManager::whyStepSpawn()
 {
-	AllDeletePanel();
-
-	SetSpawnPlayer(4, 5);
-	SetSpawnPanel(3, 4, true);
-	SetSpawnPanel(4, 4, false);
-	SetSpawnPanel(5, 4, true);
+	isAct = false;
+	SetSpawnPanel(1, 0, false);
+	SetSpawnPanel(2, 0, true);
 
 	scenes = TutorialSceneFlow::StepUpdate;
+	TextCount = 6;
+
 	TutorialTimer = 0;
-	TutorialEndTextCount = 0;
 	isTutorialClear = false;
 
 }
