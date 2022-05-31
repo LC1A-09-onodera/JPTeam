@@ -151,11 +151,12 @@ void GameScene::Init()
 	SoundLoad("Resource/Sound/bgm_.wav", BGMSound);
 	SoundLoad("Resource/Sound/start_.wav", startSound);
 	SoundLoad("Resource/Sound/count_down_.wav", countdDownSound);
+	SoundLoad("Resource/Sound/bgm2_.wav", BGMSound2);
 	sceneChangeSprite2.CreateSprite(L"Resource/Img/SceneChange.png", XMFLOAT3(-1280, -720, 0));
 	checkObject.SoundInit();
 	selectGameTypeActive = false;
 	selectGameType = 1;
-	SoundPlayLoop(BGMSound);
+	SoundPlayOnce(BGMSound2);
 	reverseObject.CreateModel("reverse", ShaderManager::playerShader);
 
 	const float OthelloR = 1.8f;
@@ -378,6 +379,21 @@ void GameScene::Init()
 	ChackBoxModel.CreateModel("check_box", ShaderManager::playerShader);
 	CheckModel.CreateModel("check", ShaderManager::playerShader);
 	reverseAddObject.CreateModel("add", ShaderManager::playerShader);
+	rankModel[0].CreateModel("rank_c", ShaderManager::playerShader);
+	rankModel[1].CreateModel("rank_b", ShaderManager::playerShader);
+	rankModel[2].CreateModel("rank_a", ShaderManager::playerShader);
+	rankModel[3].CreateModel("rank_s", ShaderManager::playerShader);
+	rankModel[4].CreateModel("rank_s+", ShaderManager::playerShader);
+	addScoreModel[0].CreateModel("score_num_0", ShaderManager::playerShader);
+	addScoreModel[1].CreateModel("score_num_1", ShaderManager::playerShader);
+	addScoreModel[2].CreateModel("score_num_2", ShaderManager::playerShader);
+	addScoreModel[3].CreateModel("score_num_3", ShaderManager::playerShader);
+	addScoreModel[4].CreateModel("score_num_4", ShaderManager::playerShader);
+	addScoreModel[5].CreateModel("score_num_5", ShaderManager::playerShader);
+	addScoreModel[6].CreateModel("score_num_6", ShaderManager::playerShader);
+	addScoreModel[7].CreateModel("score_num_7", ShaderManager::playerShader);
+	addScoreModel[8].CreateModel("score_num_8", ShaderManager::playerShader);
+	addScoreModel[9].CreateModel("score_num_9", ShaderManager::playerShader);
 	for (int i = 0; i < 2; i++)
 	{
 		pouseKakko[i].CreateConstBuff0();
@@ -398,13 +414,13 @@ void GameScene::Init()
 
 void GameScene::TitleUpdate()
 {
-	static int BGMSoundCount = 0;
+	//static int BGMSoundCount = 0;
 	BGMSoundCount++;
-	if (BGMSoundCount > 51 * 60)
+	if (BGMSoundCount > 26 * 60)
 	{
 		BGMSoundCount = 0;
-		SoundStopWave(BGMSound);
-		SoundPlayOnce(BGMSound);
+		SoundStopWave(BGMSound2);
+		SoundPlayOnce(BGMSound2);
 	}
 	//SoundPlayLoop(BGMSound);
 	if (!isDrawLogo)
@@ -508,81 +524,7 @@ void GameScene::TitleUpdate()
 				Draw3DObject(ObjectParticles::othello2.object);
 			}
 		}
-		//ポーズ画面に移行する
-		//if (!isPouse && !isSceneChange && !isResultSceneChange && isDrawLogoEnd && (Input::KeyTrigger(DIK_ESCAPE) || directInput->IsButtonPush(directInput->ButtonPouse)))
-		//{
-		//	isGameEnd = true;
-		//	/*isPouse = true;
-		//	selectPouse = 0;*/
-		//}
-		//ポーズ中の処理
-		//else if (isPouse)
-		//{
-		//	bool W = directInput->IsButtonPush(directInput->UpButton) && directInput->leftStickX() == 0 && directInput->leftStickY() == 0;
-		//	bool S = directInput->IsButtonPush(directInput->DownButton) && directInput->leftStickX() == 0 && directInput->leftStickY() == 0;
-		//	if (Input::KeyTrigger(DIK_W) || W)
-		//	{
-		//		SoundStopWave(selectSound);
-		//		SoundPlayOnce(selectSound);
-		//		if (selectPouse == -1)
-		//		{
-		//			selectPouse = selectMaxPouse;
-		//		}
-		//		else
-		//		{
-		//			selectPouse--;
-		//		}
-		//	}
-		//	else if (Input::KeyTrigger(DIK_S) || S)
-		//	{
-		//		SoundStopWave(selectSound);
-		//		SoundPlayOnce(selectSound);
-		//		if (selectPouse == selectMaxPouse)
-		//		{
-		//			selectPouse = -1;
-		//		}
-		//		else
-		//		{
-		//			selectPouse++;
-		//		}
-		//	}
-		//	if ((Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01)))
-		//	{
-		//		//リザルトに戻る
-		//		if (selectPouse == -1)
-		//		{
-		//			if (isSupport)
-		//			{
-		//				isSupport = false;
-		//			}
-		//			else
-		//			{
-		//				isSupport = true;
-		//			}
-		//		}
-		//		else if (selectPouse == 0)
-		//		{
-		//			isPouse = false;
-		//		}
-		//		else if (selectPouse == 1)
-		//		{
-		//			gameTime = 0;
-		//			isPouse = false;
-		//			select = false;
-		//			checkObject.Init();
-		//		}
-		//		else if (selectPouse == 2)
-		//		{
-		//			isGameEnd = true;
-		//			checkObject.Init();
-		//		}
-		//	}
-		//	if (Input::KeyTrigger(DIK_ESCAPE) || directInput->IsButtonPush(directInput->ButtonPouse))
-		//	{
-		//		isPouse = false;
-		//	}
-		//}
-		//if (!isGameEnd)
+		
 		if (!isPouse)
 		{
 			ObjectParticles::Update(othelloManager.GetPressPanellPos(), checkObject.GetCombo());
@@ -614,13 +556,16 @@ void GameScene::SelectUpdate()
 void GameScene::GameUpdate()
 {
 	//BGMを無理やり流す--------------------------
-	static int BGMSoundCount = 0;
-	BGMSoundCount++;
-	if (BGMSoundCount > 51 * 60)
+	if (isModeSelect)
 	{
-		BGMSoundCount = 0;
-		SoundStopWave(BGMSound);
-		SoundPlayOnce(BGMSound);
+		//static int BGMSoundCount = 0;
+		BGMSoundCount++;
+		if (BGMSoundCount > 26 * 60)
+		{
+			BGMSoundCount = 0;
+			SoundStopWave(BGMSound2);
+			SoundPlayOnce(BGMSound2);
+		}
 	}
 	//-------------------------------------------
 	light->SetLightDir(XMFLOAT3(Camera::GetTargetDirection()));
@@ -637,15 +582,24 @@ void GameScene::GameUpdate()
 			othelloManager.ModeSelectUpdate();
 			//使用例
 #pragma region example
+			if (othelloManager.InMode() && othelloManager.GetEnterModeType() == GameMode::Tutorial)
+			{
+				//Initとシーン遷移を入れる
+				isTutorial = true;
+				othelloManager.AllDeletePanel();
+				gameTime = gameMaxTime;
+				ToGame4(true, true);
+				titleSelectNum = 0;
+			}
 			//スコアアタックを選択した
-			if (othelloManager.InMode() && othelloManager.GetEnterModeType() == GameMode::ScoreAttack)
+			else if (othelloManager.InMode() && othelloManager.GetEnterModeType() == GameMode::ScoreAttack)
 			{
 				isTutorial = false;
 				ToGame4();
 				othelloManager.AllDeletePanel();
 			}
 			//ノルマモードを選択した
-			if (othelloManager.InMode() && othelloManager.GetEnterModeType() == GameMode::NormaMode)
+			else if (othelloManager.InMode() && othelloManager.GetEnterModeType() == GameMode::NormaMode)
 			{
 				othelloManager.AllDeletePanel();
 				gameTime = gameMaxTime;
@@ -655,15 +609,7 @@ void GameScene::GameUpdate()
 				titleSelectNum = 0;
 				selectStageNum = othelloManager.GetEnterNormaStage();
 			}
-			if (othelloManager.InMode() && othelloManager.GetEnterModeType() == GameMode::Tutorial)
-			{
-				//Initとシーン遷移を入れる
-				othelloManager.AllDeletePanel();
-				gameTime = gameMaxTime;
-				ToGame4(true, true);
-				titleSelectNum = 0;
-			}
-			if (othelloManager.InMode() && othelloManager.GetEnterModeType() == GameMode::Dojo)
+			else if (othelloManager.InMode() && othelloManager.GetEnterModeType() == GameMode::Dojo)
 			{
 				//Initとシーン遷移を入れる
 				othelloManager.AllDeletePanel();
@@ -677,11 +623,11 @@ void GameScene::GameUpdate()
 		else if (countDown <= 0)
 		{
 			//BGM流す---------------------------
-			static int BGMSoundCount = 0;
-			BGMSoundCount++;
-			if (BGMSoundCount > 51 * 60)
+			static int BGMSoundCount2 = 0;
+			BGMSoundCount2++;
+			if (BGMSoundCount2 > 51 * 60)
 			{
-				BGMSoundCount = 0;
+				BGMSoundCount2 = 0;
 				SoundStopWave(BGMSound);
 				SoundPlayOnce(BGMSound);
 			}
@@ -753,7 +699,7 @@ void GameScene::GameUpdate()
 		}
 		else
 		{
-			SoundStopWave(BGMSound);
+			SoundStopWave(BGMSound2);
 			countDown--;
 		}
 	}
@@ -833,6 +779,8 @@ void GameScene::GameUpdate()
 					oldPos[1] = { 0,0,0 };
 					oldPos[2] = { 0,0,0 };
 					resultEaseTimer = 0.0f;
+					rankEase1 = 0.0f;
+					rankEase2 = 0.0f;
 					SceneNum = RESULT;
 				}
 				resultForTime = 0;
@@ -847,7 +795,7 @@ void GameScene::GameUpdate()
 		}
 	}
 	//ポーズへ行く
-	if (!isPouse && !isSceneChange && (Input::KeyTrigger(DIK_ESCAPE) || directInput->IsButtonPush(directInput->ButtonPouse)) && (countDown <= 0 || isModeSelect) && !isTipsDraw)
+	if (!isPouse && !isSceneChange && othelloManager.GetIsAct() && (Input::KeyTrigger(DIK_ESCAPE) || directInput->IsButtonPush(directInput->ButtonPouse)) && (countDown <= 0 || isModeSelect) && !isTipsDraw)
 	{
 		isPouse = true;
 		selectPouse = 0;
@@ -1282,7 +1230,7 @@ void GameScene::ResultUpdate()
 		SoundStopWave(enterSound);
 		SoundPlayOnce(enterSound);
 		OthlloPlayer::SetPosition(XMFLOAT3(0, 0, -2));
-		SoundPlayOnce(BGMSound);
+		SoundPlayOnce(BGMSound2);
 		ToTitle();
 	}
 	if (isResultStart)
@@ -2220,6 +2168,62 @@ void GameScene::ResultDraw()
 	}
 	nowScore = checkObject.GetScore();
 
+	XMFLOAT4 rankPos = { 16.0f, 12.0f, -12.0f, 1.0f };
+	XMFLOAT3 rankRot = { -70.0f, 0.0f, 0.0f };
+	if (rankEase1 < 1.0f)
+	{
+		rankScale = ShlomonMath::EaseInQuad(rankNormalSize, rankMaxSize, rankEase1);
+		rankEase1 += 0.05f;
+	}
+	else if (rankEase2 < 1.0f)
+	{
+		rankScale = ShlomonMath::EaseInQuad(rankMaxSize, rankNormalSize, rankEase2);
+		rankEase2 += 0.02f;
+	}
+	else
+	{
+		rankScale = ShlomonMath::EaseInQuad(rankMaxSize, rankNormalSize, 1.0f);
+	}
+	if (nowScore <= 1000)
+	{
+		rankModel[0].each.scale = rankScale;
+		rankModel[0].each.position = { rankPos.x, rankPos.y, rankPos.z, rankPos.w };
+		rankModel[0].each.rotation = rankRot;
+		rankModel[0].Update();
+		Draw3DObject(rankModel[0]);
+	}
+	else if (nowScore <= 50000)
+	{
+		rankModel[1].each.scale = rankScale;
+		rankModel[1].each.position = { rankPos.x, rankPos.y, rankPos.z, rankPos.w };
+		rankModel[1].each.rotation = rankRot;
+		rankModel[1].Update();
+		Draw3DObject(rankModel[1]);
+	}
+	else if (nowScore <= 300000)
+	{
+		rankModel[2].each.scale = rankScale;
+		rankModel[2].each.position = { rankPos.x, rankPos.y, rankPos.z, rankPos.w };
+		rankModel[2].each.rotation = rankRot;
+		rankModel[2].Update();
+		Draw3DObject(rankModel[2]);
+	}
+	else if (nowScore <= 999999)
+	{
+		rankModel[3].each.scale = rankScale;
+		rankModel[3].each.position = { rankPos.x, rankPos.y, rankPos.z, rankPos.w };
+		rankModel[3].each.rotation = rankRot;
+		rankModel[3].Update();
+		Draw3DObject(rankModel[3]);
+	}
+	else
+	{
+		rankModel[4].each.scale = rankScale;
+		rankModel[4].each.position = { rankPos.x, rankPos.y, rankPos.z, rankPos.w };
+		rankModel[4].each.rotation = rankRot;
+		rankModel[4].Update();
+		Draw3DObject(rankModel[4]);
+	}
 	//変数系
 	const float scoreX = -7.5f;
 	const float comboX = -14.0f;
@@ -2536,6 +2540,7 @@ void GameScene::GetScoreDraw()
 			itr->scoreEach[i].scale = { 0.3f, 0.3f, 0.3f };
 			itr->scoreEach[i].rotation.x = -30;
 		}
+
 		sNumbersObject[itr->score % 10].Update(&itr->scoreEach[0]);
 		Draw3DObject(sNumbersObject[itr->score % 10]);
 		sNumbersObject[itr->score / 10 % 10].Update(&itr->scoreEach[1]);
