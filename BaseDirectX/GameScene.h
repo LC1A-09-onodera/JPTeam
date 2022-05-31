@@ -26,7 +26,7 @@ public:
 	bool isUp = false;
 	bool isActive = false;
 	int posNum = 0;
-	const float easeUpCount = 0.02f;
+	const float easeUpCount = 0.05f;
 	float easeTime = 0.0f;
 	float easeUpTime = 0.0f;
 	int score;
