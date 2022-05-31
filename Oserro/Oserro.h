@@ -669,6 +669,7 @@ private:
 
 private:
 	panelPos playerPanelPos;
+	panelPos nextMovePos = {};
 	int spawnTimer = 0;
 	int moveCount = 0;
 

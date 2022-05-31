@@ -1910,7 +1910,7 @@ void OthelloManager::ConnectFifthUpdate(int AlivePanel, int ComboCount, bool isO
 }
 #pragma endregion
 
-//–¢
+//Ï
 #pragma region Waltz
 //Ï
 void OthelloManager::WaltzStart()
@@ -3456,7 +3456,7 @@ void OthelloManager::SpawnPanel(bool isInGame)
 		itr = othellos.begin();
 		for (; itr != othellos.end(); itr++)
 		{
-			if (itr->GetGameData()->widthPos == x && itr->GetGameData()->heightPos == y)
+			if (itr->GetGameData()->widthPos == x && itr->GetGameData()->heightPos == y || (playerPanelPos == panelPos{x, y}))
 			{
 				if (itr->GetGameData()->type == NORMAL)
 				{
