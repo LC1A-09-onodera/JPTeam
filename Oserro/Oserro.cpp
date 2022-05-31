@@ -25,6 +25,7 @@ TextModel OthelloManager::WaltzModel;
 TextModel OthelloManager::BookendModel;
 TextModel OthelloManager::TechTrainingModel;
 TextModel OthelloManager::UndoModel;
+TextModel OthelloManager::TutorialModel;
 ChanceModel OthelloManager::chanceModelBlue;
 ChanceModel OthelloManager::chanceModelOrange;
 vector<vector<SendOthelloData>> OthelloManager::sendDatas;
@@ -706,6 +707,7 @@ void OthelloManager::Init(Tex num[10], Model numModel[10])
 	BookendModel.CreateModel("bookend", ShaderManager::playerShader);
 	TechTrainingModel.CreateModel("tech_training", ShaderManager::playerShader);
 	UndoModel.CreateModel("back_kana", ShaderManager::playerShader);
+	TutorialModel.CreateModel("tutorial_kana", ShaderManager::playerShader);
 	auto itr = sendDatas.begin();
 	for (; itr != sendDatas.end(); itr++)
 	{
@@ -821,6 +823,11 @@ void OthelloManager::Init(Tex num[10], Model numModel[10])
 	UndoTextDrawData.CreateConstBuff0();
 	UndoTextDrawData.CreateConstBuff1();
 
+	TutorialTextDrawData.rotation.x = -30.0f;
+	TutorialTextDrawData.scale = { textBaseScale, textBaseScale, textBaseScale };
+	TutorialTextDrawData.CreateConstBuff0();
+	TutorialTextDrawData.CreateConstBuff1();
+
 	BookendTextDrawData.rotation.x = -30.0f;
 	BookendTextDrawData.scale = { textBaseScale, textBaseScale, textBaseScale };
 	BookendTextDrawData.CreateConstBuff0();
@@ -868,7 +875,7 @@ void OthelloManager::Init(Tex num[10], Model numModel[10])
 	}
 
 
-	ConnectText.resize(17);
+	ConnectText.resize(13);
 
 	ConnectText[0].CreateSprite(L"Resource/Img/connect/connect_text_0.png", XMFLOAT3{});
 	ConnectText[1].CreateSprite(L"Resource/Img/connect/connect_text_1.png", XMFLOAT3{});
@@ -882,11 +889,8 @@ void OthelloManager::Init(Tex num[10], Model numModel[10])
 	ConnectText[9].CreateSprite(L"Resource/Img/connect/connect_text_9.png", XMFLOAT3{});
 	ConnectText[10].CreateSprite(L"Resource/Img/connect/connect_text_10.png", XMFLOAT3{});
 	ConnectText[11].CreateSprite(L"Resource/Img/connect/connect_text_11.png", XMFLOAT3{});
-	ConnectText[12].CreateSprite(L"Resource/Img/connect/connect_text_12.png", XMFLOAT3{});
-	ConnectText[13].CreateSprite(L"Resource/Img/connect/connect_text_13.png", XMFLOAT3{});
-	ConnectText[14].CreateSprite(L"Resource/Img/connect/connect_text_14.png", XMFLOAT3{});
-	ConnectText[15].CreateSprite(L"Resource/Img/connect/connect_text_15.png", XMFLOAT3{});
-	ConnectText[16].CreateSprite(L"Resource/Img/connect/connect_text_16.png", XMFLOAT3{});
+	ConnectText[12].CreateSprite(L"Resource/Img/connect/connect_text_16.png", XMFLOAT3{});
+
 
 	for (auto &e : ConnectText)
 	{
@@ -1797,8 +1801,8 @@ void OthelloManager::ConnectFirstUpdate(int AlivePanel, int ComboCount, bool isO
 //済
 void OthelloManager::ConnectSecondSpawn()
 {
-	SetSpawnPanel(4, 5, true);
-	SetSpawnPanel(5, 5, false);
+	SetSpawnPanel(4, 4, true);
+	SetSpawnPanel(5, 4, false);
 	nowConnectFlow = Connect2;
 	isAct = false;
 }
@@ -1835,8 +1839,8 @@ void OthelloManager::ConnectSecondUpdate(int AlivePanel, int ComboCount, bool is
 //済
 void OthelloManager::ConnectThirdSpawn()
 {
-	SetSpawnPanel(4, 4, false);
-	SetSpawnPanel(4, 3, true);
+	SetSpawnPanel(5, 3, false);
+	SetSpawnPanel(5, 2, true);
 	nowConnectFlow = Connect3;
 	isAct = true;
 }
@@ -1858,8 +1862,8 @@ void OthelloManager::ConnectThirdUpdate(int AlivePanel, int ComboCount, bool isO
 //済
 void OthelloManager::ConnectForceSpawn()
 {
-	SetSpawnPanel(2, 3, true);
-	SetSpawnPanel(1, 3, false);
+	SetSpawnPanel(3, 2, true);
+	SetSpawnPanel(2, 2, false);
 	nowConnectFlow = Connect4;
 	isAct = true;
 }
@@ -1881,12 +1885,11 @@ void OthelloManager::ConnectForceUpdate(int AlivePanel, int ComboCount, bool isO
 //済
 void OthelloManager::ConnectFifthSpawn()
 {
-	SetSpawnPanel(2, 0, false);
-	SetSpawnPanel(2, 1, true);
-	SetSpawnPanel(2, 2, true);
-	SetSpawnPanel(2, 4, false);
+	SetSpawnPanel(3, 3, false);
+	SetSpawnPanel(3, 4, true);
+
 	nowConnectFlow = Connect5;
-	isAct = false;
+	isAct = true;
 }
 //済
 void OthelloManager::ConnectFifthUpdate(int AlivePanel, int ComboCount, bool isOn)
@@ -1899,26 +1902,10 @@ void OthelloManager::ConnectFifthUpdate(int AlivePanel, int ComboCount, bool isO
 		{
 			TextCount++;
 		}
-		if (TextCount > 16)
+		if (TextCount > 12)
 		{
 			nowConnectFlow = ConnectEnd;
 		}
-	}
-	else if (!isAct)
-	{
-		if (A())
-		{
-			TextCount++;
-		}
-		//テキストカウントが一定を超えたら
-		if (TextCount > 14)
-		{
-			isAct = true;
-		}
-	}
-	else
-	{
-
 	}
 }
 #pragma endregion
@@ -2379,25 +2366,6 @@ void OthelloManager::BookendForceUpdate(int AlivePanel, int ComboCount, bool isO
 }
 #pragma endregion
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 void OthelloManager::ModeSelectUpdate()
 {
 
@@ -2592,6 +2560,9 @@ void OthelloManager::ModeSelectModelDraw(bool isDraw)
 			TechTrainingModel.Update(&TechTrainingTextDrawData);
 			Draw3DObject(TechTrainingModel);
 
+			TutorialModel.Update(&TutorialTextDrawData);
+			Draw3DObject(TutorialModel);
+
 			if (GetEnterModeType() != GameMode::NormaMode) { return; }
 
 			NormaModeTextDrawData.position = XMVECTOR{ 0.0f, 18.0f, -1.0f ,0 } + (FloatAnimationDistance * textAnimationRate);
@@ -2777,7 +2748,7 @@ void OthelloManager::SetGameModeSelectPanel(int startPos)
 	bool isDefault = startPos <= 0;
 	if (isDefault)
 	{
-		SetSpawnPlayer(7, 7);
+		SetSpawnPlayer(4, 4);
 	}
 	else
 	{
@@ -2810,7 +2781,7 @@ void OthelloManager::SetDojoModeSelectPanel(int startPos)
 	bool isDefault = startPos <= 0;
 	if (isDefault)
 	{
-		SetSpawnPlayer(7, 7);
+		SetSpawnPlayer(3, 6);
 	}
 	else
 	{
@@ -2974,6 +2945,18 @@ void OthelloManager::SetTextPos(bool isNormaMode, int stageNum)
 	else
 	{
 		SetModeSelectEachInfo(UndoTextDrawData, UndoPanel);
+	}
+
+	if (nowType == GameModeSelect && playerPanelPos == tutorialPanel)
+	{
+		//敵固ぴ
+		TutorialTextDrawData.position = scoreAttackTextPos + (FloatAnimationDistance * textAnimationRate);
+		SetPickupModeEachInfo(TutorialTextDrawData);
+		TutorialTextDrawData.scale = { 0.5f,0.5f ,0.5f };
+	}
+	else
+	{
+		SetModeSelectEachInfo(TutorialTextDrawData, tutorialPanel);
 	}
 
 	if (nowType == DojoSelect && playerPanelPos == ConectPanel)

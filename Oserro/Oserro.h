@@ -247,10 +247,10 @@ namespace OthelloConstData
 		const int breathLevelTimerMax = 60;
 	};
 	const panelPos normaMode = { 0, 0 };
-	const panelPos ScoreAttackPanel = { 2, 5 };
-	const panelPos tutorialPanel = { 2, 2 };
-	const panelPos DojoPanel = { 5, 2 };
-	const panelPos UndoPanel = { 7, 7 };
+	const panelPos ScoreAttackPanel = { 1, 5 };
+	const panelPos tutorialPanel = { 1, 2 };
+	const panelPos DojoPanel = { 6, 2 };
+	const panelPos UndoPanel = { 3, 7 };
 	const panelPos ConectPanel = { 0, 4 };
 	const panelPos WaltzPanel = { 3, 4 };
 	const panelPos BookendPanel = { 6, 4 };
@@ -451,6 +451,7 @@ public://ノルマモード用関数
 	void NormaTextDraw(int stageNum, bool isDraw);
 	void NormaTextModelDraw(int stageNum, bool isDraw);
 	int GetNormaStagesCount();
+	bool GetIsAct() { return isAct; }
 	list<NormaModeFieldData>::iterator GetNormaStage(int num);
 private://ノルマモード用内部処理関数
 	void StartNormaField(int stageNum = 0);
@@ -705,6 +706,10 @@ private:
 
 	static TextModel UndoModel;
 	EachInfo UndoTextDrawData;
+
+	static TextModel TutorialModel;
+	EachInfo TutorialTextDrawData;
+
 	static vector<vector<SendOthelloData>> sendDatas;
 
 	bool isOnPanel = true;
