@@ -616,6 +616,19 @@ void GameScene::GameUpdate()
 				gameTime = gameMaxTime;
 				ToGame4(true, false, true);
 				titleSelectNum = 0;
+
+				/*if (DojoType::Bookend)
+				{
+					tipsCounts = 5;
+				}
+				else if (DojoType::Conect)
+				{
+					tipsCounts = 4;
+				}
+				else if (DojoType::Waltz)
+				{
+					tipsCounts = 6;
+				}*/
 			}
 #pragma endregion
 		}
@@ -638,6 +651,11 @@ void GameScene::GameUpdate()
 			{
 				//チュートリアルのアップデート
 				othelloManager.TutorialUpdate(checkObject.GetCombo());
+				/*bool isTuEnd = true;
+				if (isTuEnd)
+				{
+					NormaToModeSelect();
+				}*/
 			}
 			else
 			{
