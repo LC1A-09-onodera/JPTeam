@@ -468,6 +468,7 @@ public://ƒV[ƒ“‚Åg‚¤‚à‚Ì
 	float pouseSelectTime1;
 	float pouseSelectTime2;
 	//-------------------------------
+	Model addScoreModel[10];
 	AddScoreManager addScore;
 	Model reverseAddObject;
 	bool reverseDisplay = false;

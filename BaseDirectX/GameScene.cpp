@@ -384,6 +384,16 @@ void GameScene::Init()
 	rankModel[2].CreateModel("rank_a", ShaderManager::playerShader);
 	rankModel[3].CreateModel("rank_s", ShaderManager::playerShader);
 	rankModel[4].CreateModel("rank_s+", ShaderManager::playerShader);
+	addScoreModel[0].CreateModel("score_num_0", ShaderManager::playerShader);
+	addScoreModel[1].CreateModel("score_num_1", ShaderManager::playerShader);
+	addScoreModel[2].CreateModel("score_num_2", ShaderManager::playerShader);
+	addScoreModel[3].CreateModel("score_num_3", ShaderManager::playerShader);
+	addScoreModel[4].CreateModel("score_num_4", ShaderManager::playerShader);
+	addScoreModel[5].CreateModel("score_num_5", ShaderManager::playerShader);
+	addScoreModel[6].CreateModel("score_num_6", ShaderManager::playerShader);
+	addScoreModel[7].CreateModel("score_num_7", ShaderManager::playerShader);
+	addScoreModel[8].CreateModel("score_num_8", ShaderManager::playerShader);
+	addScoreModel[9].CreateModel("score_num_9", ShaderManager::playerShader);
 	for (int i = 0; i < 2; i++)
 	{
 		pouseKakko[i].CreateConstBuff0();
@@ -514,81 +524,7 @@ void GameScene::TitleUpdate()
 				Draw3DObject(ObjectParticles::othello2.object);
 			}
 		}
-		//ポーズ画面に移行する
-		//if (!isPouse && !isSceneChange && !isResultSceneChange && isDrawLogoEnd && (Input::KeyTrigger(DIK_ESCAPE) || directInput->IsButtonPush(directInput->ButtonPouse)))
-		//{
-		//	isGameEnd = true;
-		//	/*isPouse = true;
-		//	selectPouse = 0;*/
-		//}
-		//ポーズ中の処理
-		//else if (isPouse)
-		//{
-		//	bool W = directInput->IsButtonPush(directInput->UpButton) && directInput->leftStickX() == 0 && directInput->leftStickY() == 0;
-		//	bool S = directInput->IsButtonPush(directInput->DownButton) && directInput->leftStickX() == 0 && directInput->leftStickY() == 0;
-		//	if (Input::KeyTrigger(DIK_W) || W)
-		//	{
-		//		SoundStopWave(selectSound);
-		//		SoundPlayOnce(selectSound);
-		//		if (selectPouse == -1)
-		//		{
-		//			selectPouse = selectMaxPouse;
-		//		}
-		//		else
-		//		{
-		//			selectPouse--;
-		//		}
-		//	}
-		//	else if (Input::KeyTrigger(DIK_S) || S)
-		//	{
-		//		SoundStopWave(selectSound);
-		//		SoundPlayOnce(selectSound);
-		//		if (selectPouse == selectMaxPouse)
-		//		{
-		//			selectPouse = -1;
-		//		}
-		//		else
-		//		{
-		//			selectPouse++;
-		//		}
-		//	}
-		//	if ((Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(directInput->Button01)))
-		//	{
-		//		//リザルトに戻る
-		//		if (selectPouse == -1)
-		//		{
-		//			if (isSupport)
-		//			{
-		//				isSupport = false;
-		//			}
-		//			else
-		//			{
-		//				isSupport = true;
-		//			}
-		//		}
-		//		else if (selectPouse == 0)
-		//		{
-		//			isPouse = false;
-		//		}
-		//		else if (selectPouse == 1)
-		//		{
-		//			gameTime = 0;
-		//			isPouse = false;
-		//			select = false;
-		//			checkObject.Init();
-		//		}
-		//		else if (selectPouse == 2)
-		//		{
-		//			isGameEnd = true;
-		//			checkObject.Init();
-		//		}
-		//	}
-		//	if (Input::KeyTrigger(DIK_ESCAPE) || directInput->IsButtonPush(directInput->ButtonPouse))
-		//	{
-		//		isPouse = false;
-		//	}
-		//}
-		//if (!isGameEnd)
+		
 		if (!isPouse)
 		{
 			ObjectParticles::Update(othelloManager.GetPressPanellPos(), checkObject.GetCombo());
@@ -858,7 +794,7 @@ void GameScene::GameUpdate()
 		}
 	}
 	//ポーズへ行く
-	if (!isPouse && !isSceneChange && (Input::KeyTrigger(DIK_ESCAPE) || directInput->IsButtonPush(directInput->ButtonPouse)) && (countDown <= 0 || isModeSelect) && !isTipsDraw)
+	if (!isPouse && !isSceneChange && othelloManager.GetIsAct() && (Input::KeyTrigger(DIK_ESCAPE) || directInput->IsButtonPush(directInput->ButtonPouse)) && (countDown <= 0 || isModeSelect) && !isTipsDraw)
 	{
 		isPouse = true;
 		selectPouse = 0;
@@ -2603,6 +2539,7 @@ void GameScene::GetScoreDraw()
 			itr->scoreEach[i].scale = { 0.3f, 0.3f, 0.3f };
 			itr->scoreEach[i].rotation.x = -30;
 		}
+
 		sNumbersObject[itr->score % 10].Update(&itr->scoreEach[0]);
 		Draw3DObject(sNumbersObject[itr->score % 10]);
 		sNumbersObject[itr->score / 10 % 10].Update(&itr->scoreEach[1]);
