@@ -582,15 +582,24 @@ void GameScene::GameUpdate()
 			othelloManager.ModeSelectUpdate();
 			//使用例
 #pragma region example
+			if (othelloManager.InMode() && othelloManager.GetEnterModeType() == GameMode::Tutorial)
+			{
+				//Initとシーン遷移を入れる
+				isTutorial = true;
+				othelloManager.AllDeletePanel();
+				gameTime = gameMaxTime;
+				ToGame4(true, true);
+				titleSelectNum = 0;
+			}
 			//スコアアタックを選択した
-			if (othelloManager.InMode() && othelloManager.GetEnterModeType() == GameMode::ScoreAttack)
+			else if (othelloManager.InMode() && othelloManager.GetEnterModeType() == GameMode::ScoreAttack)
 			{
 				isTutorial = false;
 				ToGame4();
 				othelloManager.AllDeletePanel();
 			}
 			//ノルマモードを選択した
-			if (othelloManager.InMode() && othelloManager.GetEnterModeType() == GameMode::NormaMode)
+			else if (othelloManager.InMode() && othelloManager.GetEnterModeType() == GameMode::NormaMode)
 			{
 				othelloManager.AllDeletePanel();
 				gameTime = gameMaxTime;
@@ -600,15 +609,7 @@ void GameScene::GameUpdate()
 				titleSelectNum = 0;
 				selectStageNum = othelloManager.GetEnterNormaStage();
 			}
-			if (othelloManager.InMode() && othelloManager.GetEnterModeType() == GameMode::Tutorial)
-			{
-				//Initとシーン遷移を入れる
-				othelloManager.AllDeletePanel();
-				gameTime = gameMaxTime;
-				ToGame4(true, true);
-				titleSelectNum = 0;
-			}
-			if (othelloManager.InMode() && othelloManager.GetEnterModeType() == GameMode::Dojo)
+			else if (othelloManager.InMode() && othelloManager.GetEnterModeType() == GameMode::Dojo)
 			{
 				//Initとシーン遷移を入れる
 				othelloManager.AllDeletePanel();
